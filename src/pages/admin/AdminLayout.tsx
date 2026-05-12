@@ -57,9 +57,23 @@ const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: ty
       ))}
     </nav>
     <div className="p-3 border-t border-border">
-      <Button variant="ghost" className="w-full justify-start gap-2" onClick={onSignOut}>
-        <LogOut className="h-4 w-4" /> Sign out
-      </Button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" className="w-full justify-start gap-2">
+            <LogOut className="h-4 w-4" /> Sign out
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out of Eraya Admin?</AlertDialogTitle>
+            <AlertDialogDescription>You'll need to sign in again to access the admin panel.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onSignOut}>Sign Out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   </div>
 );

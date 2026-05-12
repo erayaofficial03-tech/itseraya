@@ -44,6 +44,44 @@ export type Database = {
         }
         Relationships: []
       }
+      enquiries: {
+        Row: {
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          id: string
+          product_id: string | null
+          product_name: string
+          product_price: number | null
+        }
+        Insert: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          id?: string
+          product_id?: string | null
+          product_name: string
+          product_price?: number | null
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          id?: string
+          product_id?: string | null
+          product_name?: string
+          product_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiries_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_images: {
         Row: {
           created_at: string
@@ -133,6 +171,7 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          is_blocked: boolean
         }
         Insert: {
           avatar_url?: string | null
@@ -140,6 +179,7 @@ export type Database = {
           email: string
           full_name?: string | null
           id: string
+          is_blocked?: boolean
         }
         Update: {
           avatar_url?: string | null
@@ -147,50 +187,252 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          is_blocked?: boolean
         }
         Relationships: []
       }
       settings: {
         Row: {
+          admin_brand_color: string | null
+          admin_panel_title: string | null
+          admin_welcome_message: string | null
+          announcement_bg_color: string | null
+          announcement_dismissible: boolean | null
+          announcement_text: string | null
+          announcement_text_color: string | null
+          announcement_visible: boolean | null
+          catalogue_download_label: string | null
+          catalogue_heading: string | null
+          catalogue_subtext: string | null
+          category_empty_message: string | null
+          category_pieces_label: string | null
+          color_accent: string | null
+          color_background: string | null
+          color_primary: string | null
+          color_text: string | null
+          enquiry_button_color: string | null
+          favicon_url: string | null
+          footer_copyright: string | null
+          footer_links_visible: boolean | null
+          footer_show_logo: boolean | null
+          footer_show_social: boolean | null
+          footer_show_whatsapp: boolean | null
+          footer_tagline: string | null
+          footer_whatsapp_label: string | null
           hero_cta_label: string | null
+          hero_cta_url: string | null
           hero_headline: string | null
           hero_image_url: string | null
+          hero_overlay_opacity: number | null
           hero_subtext: string | null
           id: number
+          install_prompt_button_label: string | null
+          install_prompt_text: string | null
+          install_prompt_visible: boolean | null
           logo_url: string | null
+          nav_catalogue_label: string | null
+          nav_home_label: string | null
+          nav_show_search: boolean | null
+          pdf_footer_text: string | null
+          pdf_primary_color: string | null
+          pdf_store_name: string | null
+          pdf_tagline: string | null
+          product_description_label: string | null
+          product_enquiry_button_label: string | null
+          product_pdf_button_label: string | null
+          product_related_title: string | null
+          product_share_button_label: string | null
+          product_tag_visible: boolean | null
+          pwa_background_color: string | null
+          pwa_description: string | null
+          pwa_name: string | null
+          pwa_short_name: string | null
+          pwa_theme_color: string | null
+          section_categories_title: string | null
+          section_categories_visible: boolean | null
+          section_featured_title: string | null
+          section_featured_visible: boolean | null
+          section_new_arrivals_title: string | null
+          section_new_arrivals_visible: boolean | null
+          section_sale_title: string | null
+          section_sale_visible: boolean | null
+          section_trending_title: string | null
+          section_trending_visible: boolean | null
+          seo_description: string | null
+          seo_og_image_url: string | null
+          seo_title: string | null
+          store_address: string | null
+          store_city: string | null
+          store_email: string | null
           store_name: string
+          store_phone: string | null
           tagline: string
           updated_at: string
           usp_fade_speed_ms: number
           usp_interval_ms: number
+          whatsapp_message_template: string | null
           whatsapp_number: string | null
         }
         Insert: {
+          admin_brand_color?: string | null
+          admin_panel_title?: string | null
+          admin_welcome_message?: string | null
+          announcement_bg_color?: string | null
+          announcement_dismissible?: boolean | null
+          announcement_text?: string | null
+          announcement_text_color?: string | null
+          announcement_visible?: boolean | null
+          catalogue_download_label?: string | null
+          catalogue_heading?: string | null
+          catalogue_subtext?: string | null
+          category_empty_message?: string | null
+          category_pieces_label?: string | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_primary?: string | null
+          color_text?: string | null
+          enquiry_button_color?: string | null
+          favicon_url?: string | null
+          footer_copyright?: string | null
+          footer_links_visible?: boolean | null
+          footer_show_logo?: boolean | null
+          footer_show_social?: boolean | null
+          footer_show_whatsapp?: boolean | null
+          footer_tagline?: string | null
+          footer_whatsapp_label?: string | null
           hero_cta_label?: string | null
+          hero_cta_url?: string | null
           hero_headline?: string | null
           hero_image_url?: string | null
+          hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
+          install_prompt_button_label?: string | null
+          install_prompt_text?: string | null
+          install_prompt_visible?: boolean | null
           logo_url?: string | null
+          nav_catalogue_label?: string | null
+          nav_home_label?: string | null
+          nav_show_search?: boolean | null
+          pdf_footer_text?: string | null
+          pdf_primary_color?: string | null
+          pdf_store_name?: string | null
+          pdf_tagline?: string | null
+          product_description_label?: string | null
+          product_enquiry_button_label?: string | null
+          product_pdf_button_label?: string | null
+          product_related_title?: string | null
+          product_share_button_label?: string | null
+          product_tag_visible?: boolean | null
+          pwa_background_color?: string | null
+          pwa_description?: string | null
+          pwa_name?: string | null
+          pwa_short_name?: string | null
+          pwa_theme_color?: string | null
+          section_categories_title?: string | null
+          section_categories_visible?: boolean | null
+          section_featured_title?: string | null
+          section_featured_visible?: boolean | null
+          section_new_arrivals_title?: string | null
+          section_new_arrivals_visible?: boolean | null
+          section_sale_title?: string | null
+          section_sale_visible?: boolean | null
+          section_trending_title?: string | null
+          section_trending_visible?: boolean | null
+          seo_description?: string | null
+          seo_og_image_url?: string | null
+          seo_title?: string | null
+          store_address?: string | null
+          store_city?: string | null
+          store_email?: string | null
           store_name?: string
+          store_phone?: string | null
           tagline?: string
           updated_at?: string
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
+          whatsapp_message_template?: string | null
           whatsapp_number?: string | null
         }
         Update: {
+          admin_brand_color?: string | null
+          admin_panel_title?: string | null
+          admin_welcome_message?: string | null
+          announcement_bg_color?: string | null
+          announcement_dismissible?: boolean | null
+          announcement_text?: string | null
+          announcement_text_color?: string | null
+          announcement_visible?: boolean | null
+          catalogue_download_label?: string | null
+          catalogue_heading?: string | null
+          catalogue_subtext?: string | null
+          category_empty_message?: string | null
+          category_pieces_label?: string | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_primary?: string | null
+          color_text?: string | null
+          enquiry_button_color?: string | null
+          favicon_url?: string | null
+          footer_copyright?: string | null
+          footer_links_visible?: boolean | null
+          footer_show_logo?: boolean | null
+          footer_show_social?: boolean | null
+          footer_show_whatsapp?: boolean | null
+          footer_tagline?: string | null
+          footer_whatsapp_label?: string | null
           hero_cta_label?: string | null
+          hero_cta_url?: string | null
           hero_headline?: string | null
           hero_image_url?: string | null
+          hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
+          install_prompt_button_label?: string | null
+          install_prompt_text?: string | null
+          install_prompt_visible?: boolean | null
           logo_url?: string | null
+          nav_catalogue_label?: string | null
+          nav_home_label?: string | null
+          nav_show_search?: boolean | null
+          pdf_footer_text?: string | null
+          pdf_primary_color?: string | null
+          pdf_store_name?: string | null
+          pdf_tagline?: string | null
+          product_description_label?: string | null
+          product_enquiry_button_label?: string | null
+          product_pdf_button_label?: string | null
+          product_related_title?: string | null
+          product_share_button_label?: string | null
+          product_tag_visible?: boolean | null
+          pwa_background_color?: string | null
+          pwa_description?: string | null
+          pwa_name?: string | null
+          pwa_short_name?: string | null
+          pwa_theme_color?: string | null
+          section_categories_title?: string | null
+          section_categories_visible?: boolean | null
+          section_featured_title?: string | null
+          section_featured_visible?: boolean | null
+          section_new_arrivals_title?: string | null
+          section_new_arrivals_visible?: boolean | null
+          section_sale_title?: string | null
+          section_sale_visible?: boolean | null
+          section_trending_title?: string | null
+          section_trending_visible?: boolean | null
+          seo_description?: string | null
+          seo_og_image_url?: string | null
+          seo_title?: string | null
+          store_address?: string | null
+          store_city?: string | null
+          store_email?: string | null
           store_name?: string
+          store_phone?: string | null
           tagline?: string
           updated_at?: string
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
+          whatsapp_message_template?: string | null
           whatsapp_number?: string | null
         }
         Relationships: []

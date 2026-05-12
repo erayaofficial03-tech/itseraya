@@ -30,14 +30,114 @@ export type Product = {
 
 export type Settings = {
   id: number;
+  // Brand
   store_name: string;
   tagline: string;
   logo_url: string | null;
+  favicon_url: string | null;
   whatsapp_number: string | null;
+
+  // Colors (hex)
+  color_primary: string | null;
+  color_background: string | null;
+  color_text: string | null;
+  color_accent: string | null;
+
+  // Hero
   hero_image_url: string | null;
   hero_headline: string | null;
   hero_subtext: string | null;
   hero_cta_label: string | null;
+  hero_cta_url: string | null;
+  hero_overlay_opacity: number | null;
+
+  // Homepage sections
+  section_categories_title: string | null;
+  section_categories_visible: boolean | null;
+  section_new_arrivals_title: string | null;
+  section_new_arrivals_visible: boolean | null;
+  section_trending_title: string | null;
+  section_trending_visible: boolean | null;
+  section_sale_title: string | null;
+  section_sale_visible: boolean | null;
+  section_featured_title: string | null;
+  section_featured_visible: boolean | null;
+
+  // Navigation
+  nav_home_label: string | null;
+  nav_catalogue_label: string | null;
+  nav_show_search: boolean | null;
+
+  // Product page
+  product_enquiry_button_label: string | null;
+  product_share_button_label: string | null;
+  product_pdf_button_label: string | null;
+  product_description_label: string | null;
+  product_related_title: string | null;
+  product_tag_visible: boolean | null;
+
+  // Catalogue / Category
+  catalogue_heading: string | null;
+  catalogue_subtext: string | null;
+  catalogue_download_label: string | null;
+  category_empty_message: string | null;
+  category_pieces_label: string | null;
+
+  // WhatsApp
+  whatsapp_message_template: string | null;
+  enquiry_button_color: string | null;
+
+  // Footer
+  footer_tagline: string | null;
+  footer_copyright: string | null;
+  footer_show_logo: boolean | null;
+  footer_show_social: boolean | null;
+  footer_show_whatsapp: boolean | null;
+  footer_whatsapp_label: string | null;
+  footer_links_visible: boolean | null;
+
+  // Announcement bar
+  announcement_visible: boolean | null;
+  announcement_text: string | null;
+  announcement_bg_color: string | null;
+  announcement_text_color: string | null;
+  announcement_dismissible: boolean | null;
+
+  // PDF
+  pdf_store_name: string | null;
+  pdf_tagline: string | null;
+  pdf_footer_text: string | null;
+  pdf_primary_color: string | null;
+
+  // SEO
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_og_image_url: string | null;
+
+  // Contact
+  store_address: string | null;
+  store_email: string | null;
+  store_phone: string | null;
+  store_city: string | null;
+
+  // PWA
+  pwa_name: string | null;
+  pwa_short_name: string | null;
+  pwa_description: string | null;
+  pwa_theme_color: string | null;
+  pwa_background_color: string | null;
+
+  // Install prompt
+  install_prompt_visible: boolean | null;
+  install_prompt_text: string | null;
+  install_prompt_button_label: string | null;
+
+  // Admin
+  admin_panel_title: string | null;
+  admin_welcome_message: string | null;
+  admin_brand_color: string | null;
+
+  // USP carousel (legacy, kept)
   usp_interval_ms: number;
   usp_fade_speed_ms: number;
 };

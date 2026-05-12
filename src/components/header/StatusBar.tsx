@@ -1,30 +1,28 @@
 import { useEffect, useState } from "react";
 
+const usps = [
+  "Handcrafted with love",
+  "Free shipping on orders over ₹999",
+  "Easy WhatsApp enquiries",
+  "New arrivals every week",
+];
+
 const StatusBar = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
-  const usps = [
-    "Free shipping over €50",
-    "365 days warranty",
-    "+100,000 happy customers"
-  ];
+  const [i, setI] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % usps.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [usps.length]);
+    const t = setInterval(() => setI((n) => (n + 1) % usps.length), 3500);
+    return () => clearInterval(t);
+  }, []);
 
   return (
-    <div className="bg-status-bar text-status-bar-foreground py-2">
-      <div className="container mx-auto px-4 text-center">
-        <p 
-          key={currentIndex}
-          className="text-sm font-light transition-all duration-700 ease-in-out opacity-100 animate-fade-in"
+    <div className="w-full bg-charcoal text-ivory">
+      <div className="max-w-7xl mx-auto px-4 h-8 flex items-center justify-center overflow-hidden">
+        <p
+          key={i}
+          className="text-[11px] sm:text-xs font-light tracking-[0.2em] uppercase animate-fade-in"
         >
-          {usps[currentIndex]}
+          {usps[i]}
         </p>
       </div>
     </div>

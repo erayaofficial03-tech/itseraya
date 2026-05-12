@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
-  Users, Inbox, Megaphone, Palette, Type, Search,
+  Users, Inbox, Megaphone, Palette, Type, Search, ScrollText,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
   { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },
   { to: "/admin/enquiries", icon: Inbox, label: "Enquiries", role: "staff" },
   { to: "/admin/users", icon: Users, label: "Users", role: "admin" },
+  { to: "/admin/audit", icon: ScrollText, label: "Audit Log", role: "staff" },
   { to: "/admin/settings", icon: SettingsIcon, label: "Store Settings", role: "admin" },
 ];
 

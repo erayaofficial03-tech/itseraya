@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Search, Ban, ShieldCheck, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { logAudit } from "@/lib/auditLog";
 
 type AppRole = "admin" | "manager" | "customer";
 type UserRow = {
@@ -92,6 +93,7 @@ const UsersAdmin = () => {
     if (insErr) { toast.error(insErr.message); return; }
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, role: next } : x)));
     toast.success(`${u.email} is now ${next}`);
+    logAudit({ action: "role_change", target_id: u.id, target_email: u.email, details: { from: u.role, to: next } });
   };
 
   const toggleBlock = async (u: UserRow) => {
@@ -100,6 +102,7 @@ const UsersAdmin = () => {
     if (error) { toast.error(error.message); return; }
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, is_blocked: next } : x)));
     toast.success(next ? "User blocked" : "User unblocked");
+    logAudit({ action: next ? "user_blocked" : "user_unblocked", target_id: u.id, target_email: u.email });
   };
 
   const deleteUser = async (u: UserRow) => {
@@ -110,6 +113,7 @@ const UsersAdmin = () => {
     setUsers((prev) => prev.filter((x) => x.id !== u.id));
     toast.success("User removed");
     setConfirmDelete(null);
+    logAudit({ action: "user_deleted", target_id: u.id, target_email: u.email, details: { role: u.role } });
   };
 
   const filtered = useMemo(() => {

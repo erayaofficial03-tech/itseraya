@@ -34,6 +34,7 @@ const AnnouncementAdmin = lazy(() => import("./pages/admin/AnnouncementAdmin"));
 const BrandAdmin = lazy(() => import("./pages/admin/BrandAdmin"));
 const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
 const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
+const AuditLogAdmin = lazy(() => import("./pages/admin/AuditLogAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -96,6 +97,7 @@ const App = () => (
                 <Route path="admins" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="users" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="enquiries" element={<EnquiriesAdmin />} />
+                <Route path="audit" element={<AuditLogAdmin />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

@@ -46,7 +46,12 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const { error } = await supabase.from("settings").update({
-      ...form, whatsapp_number: cleanWa || null,
+      store_name: form.store_name,
+      tagline: form.tagline,
+      logo_url: form.logo_url || null,
+      whatsapp_number: cleanWa || null,
+      usp_interval_ms: form.usp_interval_ms,
+      usp_fade_speed_ms: form.usp_fade_speed_ms,
     }).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);

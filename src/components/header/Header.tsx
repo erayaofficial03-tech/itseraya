@@ -1,12 +1,25 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const logo = settings?.logo_url || erayaLogo;
 
@@ -14,6 +27,8 @@ const Header = () => {
     `text-sm font-medium tracking-wide transition-colors ${
       isActive ? "text-gold" : "text-foreground hover:text-gold"
     }`;
+
+  const initials = user?.email?.[0]?.toUpperCase() || "U";
 
   return (
     <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
@@ -36,7 +51,28 @@ const Header = () => {
           <img src={logo} alt={settings?.store_name || "Eraya"} className="h-10 w-auto" />
         </Link>
 
-        <div className="w-10" />
+        <div className="flex items-center">
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-border">
+                  <span className="text-xs font-medium">{initials}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); navigate("/"); }}>
+                  <LogOut className="h-4 w-4 mr-2" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="gap-2">
+              <Link to="/login"><User className="h-4 w-4" /> <span className="hidden sm:inline">Sign in</span></Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       {open && (
@@ -49,6 +85,9 @@ const Header = () => {
               </NavLink>
             ))}
             <NavLink to="/catalogue" onClick={() => setOpen(false)} className="block py-1">Catalogue</NavLink>
+            {!user && (
+              <Link to="/login" onClick={() => setOpen(false)} className="block py-1 text-gold">Sign in</Link>
+            )}
           </div>
         </div>
       )}

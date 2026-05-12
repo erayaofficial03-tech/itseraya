@@ -22,9 +22,12 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
         )}
       </div>
       <Carousel opts={{ align: "start", loop: false }} className="w-full">
-        <CarouselContent>
+        <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4 lg:-ml-5">
           {products.map((p) => (
-            <CarouselItem key={p.id} className="basis-1/3 md:basis-1/4 lg:basis-1/6 pr-2 sm:pr-3 md:pr-4 lg:pr-5">
+            <CarouselItem
+              key={p.id}
+              className="pl-2 sm:pl-3 md:pl-4 lg:pl-5 basis-1/3 md:basis-1/4 lg:basis-1/6"
+            >
               <ProductCard product={p} />
             </CarouselItem>
           ))}

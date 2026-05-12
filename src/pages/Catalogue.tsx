@@ -29,7 +29,7 @@ const Catalogue = () => {
             <FileDown /> Download Full Catalogue as PDF
           </Button>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-2 gap-y-6 sm:gap-x-3 md:gap-x-4 md:gap-y-8 lg:gap-x-5 lg:gap-y-10">
           {visible.map((p) => <ProductCard key={p.id} product={p} showWhatsAppIcon />)}
         </div>
       </main>

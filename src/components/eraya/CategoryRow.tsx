@@ -9,7 +9,7 @@ const CategoryRow = () => {
   return (
     <section className="w-full px-6 mb-16">
       <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">Shop by Category</h2>
-      <div className="flex md:grid gap-2 md:gap-3 md:grid-cols-6 lg:grid-cols-8 overflow-x-auto md:overflow-visible pb-2 -mx-6 px-6 md:mx-0 md:px-0 snap-x">
+      <div className="flex md:grid gap-3 md:gap-4 lg:gap-5 md:grid-cols-6 lg:grid-cols-8 overflow-x-auto md:overflow-visible pb-2 -mx-6 px-6 md:mx-0 md:px-0 snap-x">
         {visible.map((c) => (
           <Link
             key={c.id}

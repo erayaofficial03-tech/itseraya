@@ -1,18 +1,15 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, User, LogOut, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-react";
+import { Menu, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
-import { useSettings, useCategories, useProducts } from "@/lib/queries";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";

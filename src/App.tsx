@@ -51,6 +51,9 @@ const Public = ({ children }: { children: React.ReactNode }) => (
 const Admin = ({ children }: { children: React.ReactNode }) => (
   <RoleGuard require="admin">{children}</RoleGuard>
 );
+const AdminOnly = ({ children }: { children: React.ReactNode }) => (
+  <RoleGuard require="adminOnly">{children}</RoleGuard>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

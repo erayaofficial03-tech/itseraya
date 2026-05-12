@@ -19,7 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAdmin, loading } = useAuth();
-  const redirectTo = new URLSearchParams(location.search).get("redirect") || "/";
+  const redirectTo = safeRedirect(new URLSearchParams(location.search).get("redirect"), "/");
 
   useEffect(() => {
     if (loading || !user) return;

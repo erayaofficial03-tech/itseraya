@@ -250,6 +250,7 @@ const ProductsAdmin = () => {
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
                   <p className="font-medium truncate">{p.name}</p>
+                  <p className="text-[10px] font-mono tracking-wider text-muted-foreground">{p.sku}</p>
                   <p className="text-xs text-muted-foreground">{p.categories?.name}</p>
                   <p className="text-sm text-gold mt-1">
                     {formatINR(p.discounted_price ?? p.original_price)}

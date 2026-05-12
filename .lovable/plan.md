@@ -1,45 +1,49 @@
 ## Goal
-Guarantee that signing in with `admin@itseraya.in` (or any user with the `admin` role) always lands on `/admin`, while every other user lands on the storefront home (`/` on `itseraya.in`).
+Auto-generate a unique SKU for every product in the format `ERY/YY/NNN`, where:
+- `YY` = 2-digit year of when the product is created (IST), e.g. `26` for 2026.
+- `NNN` = zero-padded sequence that **resets to `001` on 1 Jan each year**, scoped per-year (so 2026 starts at `001` regardless of 2025 totals).
+- Existing 12 products without a SKU get backfilled in `created_at` order, grouped by their creation year.
+- The SKU is shown in the admin product list and on the public product detail page (replacing the hard-coded `LE-PTH-001`).
 
-## Why this isn't fully reliable today
-`Login.tsx` already branches on `isAdmin`, but `useAuth` resolves `isAdmin` asynchronously after `onAuthStateChange` fires. On a fresh email/password sign-in the sequence is:
+## Database changes (single migration)
 
-1. `signInWithPassword` succeeds → `onAuthStateChange` fires.
-2. `user` is set, `isAdmin` is still `false` (role query hasn't returned).
-3. `Login`'s `useEffect` runs and navigates to `/` before the role check completes.
+1. **Add column**
+   - `products.sku TEXT` — nullable initially so the backfill can populate it, then set `NOT NULL` + `UNIQUE`.
 
-Result: an admin can briefly land on `/` instead of `/admin`. We need the redirect to wait for the role check.
+2. **Sequence helper**
+   - Create function `public.next_product_sku()` that:
+     - Reads the current year in IST (`(now() AT TIME ZONE 'Asia/Kolkata')`).
+     - Finds the max existing `NNN` for that year by scanning `products.sku LIKE 'ERY/<yy>/%'` and returns `MAX(substring) + 1`, padded to 3 digits (auto-widens past 999 — `LPAD(n::text, 3, '0')` keeps width but doesn't truncate).
+     - Returns `'ERY/' || yy || '/' || padded`.
+   - Concurrency-safe via `LOCK TABLE public.products IN SHARE ROW EXCLUSIVE MODE` inside the function so two simultaneous inserts can't collide. (Acceptable for an admin-only insert path.)
 
-## Changes
+3. **Trigger**
+   - `BEFORE INSERT ON public.products` — if `NEW.sku IS NULL OR NEW.sku = ''`, set `NEW.sku := public.next_product_sku()` using `NEW.created_at`'s year (so manual back-dated inserts honor the year).
 
-### 1. `src/hooks/useAuth.ts`
-Add a `roleChecked` flag that flips to `true` only after the `user_roles` query resolves (or when there is no user). Expose it alongside `isAdmin`.
+4. **Backfill**
+   - One-time SQL inside the migration:
+     - `UPDATE products` ordered by `(created_at, id)` partitioned by `EXTRACT(year FROM created_at AT TIME ZONE 'Asia/Kolkata')`, assigning `ERY/<yy>/<row_number>` only where `sku IS NULL`.
 
-```ts
-const [roleChecked, setRoleChecked] = useState(false);
-// set false when user changes, true once role lookup resolves (or no user)
-```
+5. **Lock it down**
+   - `ALTER TABLE products ALTER COLUMN sku SET NOT NULL;`
+   - `CREATE UNIQUE INDEX products_sku_key ON products(sku);`
 
-### 2. `src/pages/Login.tsx`
-- Pull `roleChecked` from `useAuth`.
-- Gate the redirect on `roleChecked` so the navigation always sees the final `isAdmin` value.
+RLS already covers the table; no policy changes needed (admins manage; public reads visible).
 
-```ts
-useEffect(() => {
-  if (loading || !user || !roleChecked) return;
-  navigate(isAdmin ? "/admin" : redirectTo, { replace: true });
-}, [user, isAdmin, roleChecked, loading, navigate, redirectTo]);
-```
+## Frontend changes (after migration is approved)
 
-### 3. `src/pages/admin/AdminLogin.tsx`
-Apply the same `roleChecked` gate so the existing admin-login page benefits from the same correctness fix.
+1. **`src/lib/queries.ts`** — add `sku: string` to `Product` type.
+2. **`src/pages/admin/ProductsAdmin.tsx`**
+   - Show the SKU under the product name in the list (e.g. small mono caption `ERY/26/007`).
+   - Do **not** add a SKU input to the form — it's auto-assigned on insert and immutable in the UI.
+3. **`src/components/product/ProductDescription.tsx`**
+   - Replace hard-coded `LE-PTH-001` with `{product.sku}`. Pass `product` through props if not already available (quick prop add).
 
 ## Out of scope
-- No DB / trigger changes — the existing `handle_new_user` trigger already grants `admin` to `admin@itseraya.in` and `erayaofficial03@gmail.com`.
-- No hard-coded email check in client code (role table remains the source of truth, which is the secure pattern). The admin email gets `/admin` because it has the role.
-- No changes to `safeRedirect` or `routes.ts`.
+- No editing of existing SKUs from the UI (could be added later if needed).
+- No format change once assigned — re-numbering is intentionally avoided to keep printed/shared SKUs stable.
 
 ## Verification
-1. Sign in as `admin@itseraya.in` from `/login` (email + password and Google) → instant landing on `/admin`, no flash of `/`.
-2. Sign in as a non-admin user → lands on `/` (or the validated `?redirect=` target).
-3. Visit `/admin` while signed-out → redirected to `/login?redirect=/admin`; after admin sign-in, returned to `/admin`.
+- After migration: `SELECT sku, name, created_at FROM products ORDER BY sku` shows `ERY/26/001`…`ERY/26/012`.
+- Insert a new product → next SKU = `ERY/26/013`.
+- A test insert with a future `created_at` in Jan 2027 (manual SQL) → restarts at `ERY/27/001`.

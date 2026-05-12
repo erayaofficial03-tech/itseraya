@@ -87,6 +87,7 @@ export type Database = {
           is_visible: boolean
           name: string
           original_price: number
+          sku: string
           tags: string[]
         }
         Insert: {
@@ -99,6 +100,7 @@ export type Database = {
           is_visible?: boolean
           name: string
           original_price?: number
+          sku?: string
           tags?: string[]
         }
         Update: {
@@ -111,6 +113,7 @@ export type Database = {
           is_visible?: boolean
           name?: string
           original_price?: number
+          sku?: string
           tags?: string[]
         }
         Relationships: [
@@ -228,6 +231,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      next_product_sku: { Args: { _for?: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"

@@ -80,7 +80,7 @@ const AdminLayout = () => {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 bg-background border-b border-border flex items-center gap-3 h-14 px-4">
+        <header className="md:hidden sticky top-0 z-30 bg-background border-b border-border grid grid-cols-[auto_1fr_auto] items-center h-14 px-4">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Menu">
@@ -91,8 +91,13 @@ const AdminLayout = () => {
               <SidebarBody onNavigate={() => setMobileOpen(false)} onSignOut={signOut} />
             </SheetContent>
           </Sheet>
-          <img src={erayaLogo} alt="Eraya" className="h-7 w-auto" />
-          <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground ml-auto">
+          <div className="flex flex-col items-center justify-center gap-1">
+            <img src={erayaLogo} alt="Eraya" className="h-7 w-auto" />
+            <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-muted-foreground leading-none">
+              Admin
+            </span>
+          </div>
+          <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground justify-self-end">
             {currentLabel}
           </span>
         </header>

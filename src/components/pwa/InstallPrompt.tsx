@@ -12,6 +12,7 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISS_KEY = "eraya:a2hs-dismissed-at";
 const IOS_DISMISS_KEY = "eraya:a2hs-ios-dismissed-at";
 const PRODUCT_VISITED_KEY = "eraya:a2hs-product-visited";
+const REJECT_KEY = "eraya:a2hs-rejected-at";
 const DISMISS_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
 const REJECT_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 30; // 30 days (after rejecting native prompt)
 const MIN_TIME_ON_SITE_MS = 30_000; // 30 seconds

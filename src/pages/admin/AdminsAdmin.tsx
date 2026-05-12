@@ -13,6 +13,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Search, Ban, ShieldCheck, Trash2 } from "lucide-react";
 import { format } from "date-fns";
@@ -41,6 +42,10 @@ const UsersAdmin = () => {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"all" | "managers" | "customers" | "blocked">("all");
   const [confirmDelete, setConfirmDelete] = useState<UserRow | null>(null);
+  const PAGE_SIZE = 20;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  // Reset paging when filters change
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [search, tab]);
 
   const load = async () => {
     setLoading(true);
@@ -148,63 +153,88 @@ const UsersAdmin = () => {
           </div>
 
           {loading ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">Loading users…</p>
+            <ul className="divide-y divide-border rounded-md border border-border">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <li key={i} className="flex items-center gap-3 p-4">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-1/3" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                  <Skeleton className="h-6 w-16 rounded-full hidden sm:block" />
+                  <Skeleton className="h-9 w-32 hidden md:block" />
+                </li>
+              ))}
+            </ul>
           ) : filtered.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12 text-center">
               Users appear here after their first Google login.
             </p>
           ) : (
-            <ul className="divide-y divide-border rounded-md border border-border">
-              {filtered.map((u) => {
-                const isSelf = currentUser?.id === u.id;
-                const isAdminRow = u.role === "admin";
-                return (
-                  <li key={u.id} className="grid grid-cols-1 lg:grid-cols-[1fr_auto_auto_auto_auto] gap-3 items-center p-4">
-                    <div className="flex items-center gap-3 min-w-0">
-                      {u.avatar_url ? (
-                        <img src={u.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover border" />
-                      ) : (
-                        <span className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
-                          {(u.full_name ?? u.email).charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                      <div className="min-w-0">
-                        <p className="font-medium text-sm truncate">{u.full_name || u.email.split("@")[0]}</p>
-                        <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+            <>
+              <p className="text-xs text-muted-foreground">
+                Showing {Math.min(visibleCount, filtered.length)} of {filtered.length}
+              </p>
+              <ul className="divide-y divide-border rounded-md border border-border">
+                {filtered.slice(0, visibleCount).map((u) => {
+                  const isSelf = currentUser?.id === u.id;
+                  const isAdminRow = u.role === "admin";
+                  return (
+                    <li key={u.id} className="grid grid-cols-1 lg:grid-cols-[1fr_auto_auto_auto_auto] gap-3 items-center p-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {u.avatar_url ? (
+                          <img src={u.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover border" />
+                        ) : (
+                          <span className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                            {(u.full_name ?? u.email).charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate">{u.full_name || u.email.split("@")[0]}</p>
+                          <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                        </div>
                       </div>
-                    </div>
 
-                    <Badge variant="outline" className={ROLE_BADGE[u.role]}>{u.role}</Badge>
-                    <Badge variant="outline" className={u.is_blocked ? "bg-red-100 text-red-700 border-red-300" : "bg-green-100 text-green-700 border-green-300"}>
-                      {u.is_blocked ? "Blocked" : "Active"}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">{format(new Date(u.created_at), "dd MMM yyyy")}</span>
+                      <Badge variant="outline" className={ROLE_BADGE[u.role]}>{u.role}</Badge>
+                      <Badge variant="outline" className={u.is_blocked ? "bg-red-100 text-red-700 border-red-300" : "bg-green-100 text-green-700 border-green-300"}>
+                        {u.is_blocked ? "Blocked" : "Active"}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">{format(new Date(u.created_at), "dd MMM yyyy")}</span>
 
-                    <div className="flex items-center gap-2 justify-end">
-                      {isSelf || isAdminRow ? (
-                        <span className="text-xs text-muted-foreground italic pr-2">{isSelf ? "You" : "Reserved"}</span>
-                      ) : (
-                        <>
-                          <Select value={u.role} onValueChange={(v) => updateRole(u, v as AppRole)}>
-                            <SelectTrigger className="h-9 w-32"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="manager">manager</SelectItem>
-                              <SelectItem value="customer">customer</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
-                            {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
-                          </Button>
-                          <Button size="icon" variant="outline" onClick={() => setConfirmDelete(u)} title="Delete">
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+                      <div className="flex items-center gap-2 justify-end">
+                        {isSelf || isAdminRow ? (
+                          <span className="text-xs text-muted-foreground italic pr-2">{isSelf ? "You" : "Reserved"}</span>
+                        ) : (
+                          <>
+                            <Select value={u.role} onValueChange={(v) => updateRole(u, v as AppRole)}>
+                              <SelectTrigger className="h-9 w-32"><SelectValue /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="manager">manager</SelectItem>
+                                <SelectItem value="customer">customer</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
+                              {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
+                            </Button>
+                            <Button size="icon" variant="outline" onClick={() => setConfirmDelete(u)} title="Delete">
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+              {visibleCount < filtered.length && (
+                <div className="flex justify-center pt-2">
+                  <Button variant="outline" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                    Load more ({filtered.length - visibleCount} remaining)
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

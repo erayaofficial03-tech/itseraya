@@ -101,60 +101,151 @@ const InstallPrompt = () => {
   if (!visible && !iosVisible) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="Install Eraya app"
-      className="fixed inset-x-3 bottom-3 z-[60] sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm animate-in slide-in-from-bottom-4 fade-in duration-300"
-    >
-      <div
-        className="rounded-2xl border border-gold/40 bg-background/95 backdrop-blur shadow-[0_10px_30px_-10px_hsl(var(--gold)/0.45)] p-4 flex items-start gap-3"
-        style={{
-          backgroundImage:
-            "linear-gradient(135deg, hsl(var(--ivory)) 0%, hsl(var(--background)) 60%)",
-        }}
-      >
-        <span
-          className="shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-charcoal"
-          style={{ background: "var(--gradient-gold, linear-gradient(135deg, #E0C36B, #C9A84C))" }}
-          aria-hidden="true"
+    <>
+      {visible && (
+        <div
+          role="dialog"
+          aria-label="Install Eraya app"
+          className="fixed inset-x-3 bottom-3 z-[60] sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm animate-in slide-in-from-bottom-4 fade-in duration-300"
         >
-          <Download className="h-5 w-5" />
-        </span>
-
-        <div className="flex-1 min-w-0">
-          <p className="font-serif text-base text-foreground leading-tight">Add Eraya to your Home Screen</p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Faster access, offline browsing, and an app-like experience.
-          </p>
-          <div className="mt-3 flex items-center gap-2">
-            <button
-              type="button"
-              onClick={install}
-              className="text-sm font-medium px-4 py-2 rounded-full text-charcoal transition-opacity hover:opacity-90"
+          <div
+            className="rounded-2xl border border-gold/40 bg-background/95 backdrop-blur shadow-[0_10px_30px_-10px_hsl(var(--gold)/0.45)] p-4 flex items-start gap-3"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, hsl(var(--ivory)) 0%, hsl(var(--background)) 60%)",
+            }}
+          >
+            <span
+              className="shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-charcoal"
               style={{ background: "var(--gradient-gold, linear-gradient(135deg, #E0C36B, #C9A84C))" }}
+              aria-hidden="true"
             >
-              Install
-            </button>
+              <Download className="h-5 w-5" />
+            </span>
+
+            <div className="flex-1 min-w-0">
+              <p className="font-serif text-base text-foreground leading-tight">Add Eraya to your Home Screen</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Faster access, offline browsing, and an app-like experience.
+              </p>
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={install}
+                  className="text-sm font-medium px-4 py-2 rounded-full text-charcoal transition-opacity hover:opacity-90"
+                  style={{ background: "var(--gradient-gold, linear-gradient(135deg, #E0C36B, #C9A84C))" }}
+                >
+                  Install
+                </button>
+                <button
+                  type="button"
+                  onClick={dismiss}
+                  className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground px-2 py-2"
+                >
+                  Not now
+                </button>
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={dismiss}
-              className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground px-2 py-2"
+              aria-label="Dismiss"
+              className="shrink-0 -mt-1 -mr-1 h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted"
             >
-              Not now
+              <X className="h-4 w-4" />
             </button>
           </div>
         </div>
+      )}
 
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Dismiss"
-          className="shrink-0 -mt-1 -mr-1 h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted"
+      {iosVisible && (
+        <div
+          role="dialog"
+          aria-label="Add Eraya to Home Screen on iPhone"
+          className="fixed inset-x-3 bottom-3 z-[60] sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm animate-in slide-in-from-bottom-4 fade-in duration-300"
         >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
+          <div
+            className="rounded-2xl border border-gold/40 bg-background/95 backdrop-blur shadow-[0_10px_30px_-10px_hsl(var(--gold)/0.45)] p-4"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, hsl(var(--ivory)) 0%, hsl(var(--background)) 60%)",
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <span
+                className="shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-charcoal"
+                style={{ background: "var(--gradient-gold, linear-gradient(135deg, #E0C36B, #C9A84C))" }}
+                aria-hidden="true"
+              >
+                <Download className="h-5 w-5" />
+              </span>
+
+              <div className="flex-1 min-w-0">
+                <p className="font-serif text-base text-foreground leading-tight">
+                  Install Eraya on your iPhone
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add it to your Home Screen for an app-like experience.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={dismissIos}
+                aria-label="Dismiss"
+                className="shrink-0 -mt-1 -mr-1 h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <ol className="mt-4 space-y-2 text-sm text-foreground">
+              <li className="flex items-center gap-2">
+                <span className="shrink-0 h-6 w-6 rounded-full bg-gold/15 text-charcoal text-xs font-semibold flex items-center justify-center">
+                  1
+                </span>
+                <span className="flex items-center gap-1.5">
+                  Tap the
+                  <Share className="h-4 w-4 text-gold" aria-label="Share" />
+                  Share button in Safari
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="shrink-0 h-6 w-6 rounded-full bg-gold/15 text-charcoal text-xs font-semibold flex items-center justify-center">
+                  2
+                </span>
+                <span className="flex items-center gap-1.5">
+                  Choose
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border border-gold/40 text-xs">
+                    <Plus className="h-3 w-3" /> Add to Home Screen
+                  </span>
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="shrink-0 h-6 w-6 rounded-full bg-gold/15 text-charcoal text-xs font-semibold flex items-center justify-center">
+                  3
+                </span>
+                <span>Tap <span className="font-medium">Add</span> to finish</span>
+              </li>
+            </ol>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                onClick={dismissIos}
+                className="text-xs font-medium tracking-wide text-muted-foreground hover:text-foreground px-2 py-2"
+              >
+                Got it
+              </button>
+            </div>
+
+            {/* Pointer to Safari share button (bottom toolbar on iPhone) */}
+            <div className="pointer-events-none absolute -bottom-2 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 bg-background border-r border-b border-gold/40" />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

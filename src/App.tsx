@@ -29,6 +29,7 @@ const CategoriesAdmin = lazy(() => import("./pages/admin/CategoriesAdmin"));
 const BannerAdmin = lazy(() => import("./pages/admin/BannerAdmin"));
 const SettingsAdmin = lazy(() => import("./pages/admin/SettingsAdmin"));
 const AdminsAdmin = lazy(() => import("./pages/admin/AdminsAdmin"));
+const EnquiriesAdmin = lazy(() => import("./pages/admin/EnquiriesAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,42 +51,46 @@ const Admin = ({ children }: { children: React.ReactNode }) => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <InstallPrompt />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            {/* Public storefront */}
-            <Route path={ROUTES.home} element={<Public><Index /></Public>} />
-            <Route path={ROUTES.category} element={<Public><Category /></Public>} />
-            <Route path={ROUTES.product} element={<Public><ProductDetail /></Public>} />
-            <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
-            <Route path={ROUTES.about} element={<Public><About /></Public>} />
-            <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
+      <BrandProvider>
+        <SeoHead />
+        <Toaster />
+        <Sonner />
+        <InstallPrompt />
+        <BrowserRouter>
+          <ScrollToTop />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Public storefront */}
+              <Route path={ROUTES.home} element={<Public><Index /></Public>} />
+              <Route path={ROUTES.category} element={<Public><Category /></Public>} />
+              <Route path={ROUTES.product} element={<Public><ProductDetail /></Public>} />
+              <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
+              <Route path={ROUTES.about} element={<Public><About /></Public>} />
+              <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
 
-            {/* OAuth callback */}
-            <Route path={ROUTES.authCallback} element={<AuthCallback />} />
+              {/* OAuth callback */}
+              <Route path={ROUTES.authCallback} element={<AuthCallback />} />
 
-            {/* Admin */}
-            <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
-            <Route
-              path={ROUTES.admin}
-              element={<Admin><AdminLayout /></Admin>}
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="products" element={<ProductsAdmin />} />
-              <Route path="categories" element={<CategoriesAdmin />} />
-              <Route path="banner" element={<BannerAdmin />} />
-              <Route path="settings" element={<SettingsAdmin />} />
-              <Route path="admins" element={<AdminsAdmin />} />
-            </Route>
+              {/* Admin */}
+              <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
+              <Route
+                path={ROUTES.admin}
+                element={<Admin><AdminLayout /></Admin>}
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="products" element={<ProductsAdmin />} />
+                <Route path="categories" element={<CategoriesAdmin />} />
+                <Route path="banner" element={<BannerAdmin />} />
+                <Route path="settings" element={<SettingsAdmin />} />
+                <Route path="admins" element={<AdminsAdmin />} />
+                <Route path="enquiries" element={<EnquiriesAdmin />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </BrandProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

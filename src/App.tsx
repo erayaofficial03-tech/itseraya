@@ -1,32 +1,48 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
-import Index from "./pages/Index";
-import Category from "./pages/Category";
-import ProductDetail from "./pages/ProductDetail";
-import Catalogue from "./pages/Catalogue";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Account from "./pages/Account";
-import RequireAuth from "./components/auth/RequireAuth";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminLayout from "./pages/admin/AdminLayout";
-import Dashboard from "./pages/admin/Dashboard";
-import ProductsAdmin from "./pages/admin/ProductsAdmin";
-import CategoriesAdmin from "./pages/admin/CategoriesAdmin";
-import BannerAdmin from "./pages/admin/BannerAdmin";
-import SettingsAdmin from "./pages/admin/SettingsAdmin";
-import AdminsAdmin from "./pages/admin/AdminsAdmin";
+import RoleGuard from "./components/auth/RoleGuard";
+import { PageLoader } from "./components/ui/skeletons";
 import { ROUTES } from "./lib/routes";
 
-const queryClient = new QueryClient();
+// Lazy-loaded pages
+const Index = lazy(() => import("./pages/Index"));
+const Category = lazy(() => import("./pages/Category"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Catalogue = lazy(() => import("./pages/Catalogue"));
+const About = lazy(() => import("./pages/About"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const ProductsAdmin = lazy(() => import("./pages/admin/ProductsAdmin"));
+const CategoriesAdmin = lazy(() => import("./pages/admin/CategoriesAdmin"));
+const BannerAdmin = lazy(() => import("./pages/admin/BannerAdmin"));
+const SettingsAdmin = lazy(() => import("./pages/admin/SettingsAdmin"));
+const AdminsAdmin = lazy(() => import("./pages/admin/AdminsAdmin"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 min default
+      gcTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const Public = ({ children }: { children: React.ReactNode }) => (
+  <RoleGuard require="public">{children}</RoleGuard>
+);
+const Admin = ({ children }: { children: React.ReactNode }) => (
+  <RoleGuard require="admin">{children}</RoleGuard>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -35,28 +51,36 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path={ROUTES.home} element={<Index />} />
-          <Route path={ROUTES.category} element={<Category />} />
-          <Route path={ROUTES.product} element={<ProductDetail />} />
-          <Route path={ROUTES.catalogue} element={<Catalogue />} />
-          <Route path={ROUTES.login} element={<Login />} />
-          <Route path={ROUTES.signup} element={<Signup />} />
-          <Route path={ROUTES.forgotPassword} element={<ForgotPassword />} />
-          <Route path={ROUTES.resetPassword} element={<ResetPassword />} />
-          <Route path={ROUTES.account} element={<RequireAuth><Account /></RequireAuth>} />
-          <Route path={ROUTES.about} element={<About />} />
-          <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
-          <Route path={ROUTES.admin} element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<ProductsAdmin />} />
-            <Route path="categories" element={<CategoriesAdmin />} />
-            <Route path="banner" element={<BannerAdmin />} />
-            <Route path="settings" element={<SettingsAdmin />} />
-            <Route path="admins" element={<AdminsAdmin />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {/* Public storefront */}
+            <Route path={ROUTES.home} element={<Public><Index /></Public>} />
+            <Route path={ROUTES.category} element={<Public><Category /></Public>} />
+            <Route path={ROUTES.product} element={<Public><ProductDetail /></Public>} />
+            <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
+            <Route path={ROUTES.about} element={<Public><About /></Public>} />
+            <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
+
+            {/* OAuth callback */}
+            <Route path={ROUTES.authCallback} element={<AuthCallback />} />
+
+            {/* Admin */}
+            <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
+            <Route
+              path={ROUTES.admin}
+              element={<Admin><AdminLayout /></Admin>}
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="products" element={<ProductsAdmin />} />
+              <Route path="categories" element={<CategoriesAdmin />} />
+              <Route path="banner" element={<BannerAdmin />} />
+              <Route path="settings" element={<SettingsAdmin />} />
+              <Route path="admins" element={<AdminsAdmin />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

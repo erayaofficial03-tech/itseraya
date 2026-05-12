@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import StatusBar from "@/components/header/StatusBar";
 
 const Header = () => {
   const { data: settings } = useSettings();
@@ -67,7 +68,7 @@ const Header = () => {
   return (
     <>
       <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
-        <div className="grid grid-cols-3 items-center h-16 px-4 sm:px-6 max-w-7xl mx-auto">
+        <StatusBar />
           {/* Left: mobile menu + desktop nav */}
           <div className="flex items-center justify-start">
             <button className="lg:hidden p-2 -ml-2" onClick={() => setOpen(!open)} aria-label="Menu">

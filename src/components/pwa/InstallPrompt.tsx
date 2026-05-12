@@ -34,6 +34,7 @@ const isIosSafari = () => {
 
 const InstallPrompt = () => {
   const location = useLocation();
+  const { data: settings } = useSettings();
   const [evt, setEvt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   const [iosVisible, setIosVisible] = useState(false);

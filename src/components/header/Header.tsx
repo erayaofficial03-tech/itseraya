@@ -150,12 +150,13 @@ const Header = () => {
             </Sheet>
 
             <nav className="hidden lg:flex space-x-7">
+              <NavLink to="/" className={navLinkClass}>{s(settings, "nav_home_label")}</NavLink>
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
-                  Shop
+                  {s(settings, "nav_catalogue_label")}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem onClick={() => navigate("/catalogue")}>All jewellery</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/catalogue")}>{s(settings, "nav_catalogue_label")}</DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {visibleCategories.map((c) => (
                     <DropdownMenuItem

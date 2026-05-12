@@ -155,7 +155,11 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/catalogue")}>All jewellery</DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {visibleCategories.map((c) => (
-                    <DropdownMenuItem key={c.id} onClick={() => navigate(`/category/${c.slug}`)}>
+                    <DropdownMenuItem
+                      key={c.id}
+                      onMouseEnter={() => prefetchCategory(qc, c.slug)}
+                      onClick={() => navigate(`/category/${c.slug}`)}
+                    >
                       {c.name}
                     </DropdownMenuItem>
                   ))}

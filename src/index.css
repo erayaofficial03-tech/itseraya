@@ -94,4 +94,24 @@
   .bg-blush {
     background-color: hsl(var(--blush));
   }
+
+  /* Horizontal "peek" scroller.
+     Set --peek (visible item count, can be fractional like 4.5)
+     and --peek-gap (gap between items) on the parent. */
+  .peek-row {
+    --peek: 4.5;
+    --peek-gap: 0.75rem;
+    display: flex;
+    gap: var(--peek-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .peek-row::-webkit-scrollbar { display: none; }
+  .peek-row > * {
+    flex: 0 0
+      calc((100% - (var(--peek-gap) * (var(--peek) - 1))) / var(--peek));
+    scroll-snap-align: start;
+  }
 }

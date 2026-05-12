@@ -141,5 +141,5 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
   }
 
-  doc.save("Eraya-Catalogue.pdf");
+  doc.save(`${s(settings, "pdf_store_name")}-Catalogue.pdf`);
 };

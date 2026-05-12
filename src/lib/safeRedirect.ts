@@ -37,7 +37,7 @@ export function safeRedirect(raw: string | null | undefined, fallback = "/"): st
     return fallback;
   }
 
-  const ok = ALLOWED_PREFIXES.some((p) =>
+  const ok = ALLOWED_REDIRECT_PREFIXES.some((p) =>
     p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(p + "/"),
   );
   if (!ok) return fallback;

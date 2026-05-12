@@ -146,41 +146,6 @@ const Header = () => {
                   </button>
                 </div>
 
-                {/* Auth footer */}
-                <div className="border-t border-border px-6 py-4 bg-muted/30">
-                  {user ? (
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1"
-                          onClick={() => { closeMenu(); navigate("/account"); }}
-                        >
-                          <User className="h-4 w-4 mr-1.5" /> Account
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="flex-1"
-                          onClick={async () => { closeMenu(); await supabase.auth.signOut(); navigate("/"); }}
-                        >
-                          <LogOut className="h-4 w-4 mr-1.5" /> Sign out
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <Button asChild variant="outline" size="sm" className="flex-1" onClick={closeMenu}>
-                        <Link to="/login">Sign in</Link>
-                      </Button>
-                      <Button asChild size="sm" className="flex-1" onClick={closeMenu}>
-                        <Link to="/signup">Sign up</Link>
-                      </Button>
-                    </div>
-                  )}
-                </div>
               </SheetContent>
             </Sheet>
 

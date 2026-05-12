@@ -10,32 +10,37 @@ const Loader = () => (
 );
 
 /**
- * RoleGuard — strict role-based routing.
- *  - require="admin": only admins may view; non-admins redirect to "/".
- *  - require="public": only non-admins may view; admins redirect to "/admin".
+ * RoleGuard
+ *  - require="admin": admin OR manager may view; non-staff redirect to "/".
+ *  - require="adminOnly": only admin may view (managers redirected to /admin).
+ *  - require="public": only non-staff may view; staff redirect to "/admin".
  */
 export const RoleGuard = ({
   require,
   children,
 }: {
-  require: "admin" | "public";
+  require: "admin" | "adminOnly" | "public";
   children: React.ReactNode;
 }) => {
-  const { user, isAdmin, loading, roleChecked } = useAuth();
+  const { user, isAdmin, isStaff, loading, roleChecked } = useAuth();
   const location = useLocation();
 
   if (loading || (user && !roleChecked)) return <Loader />;
 
   if (require === "admin") {
-    if (!user) {
-      return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-    }
-    if (!isAdmin) return <Navigate to="/" replace />;
+    if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    if (!isStaff) return <Navigate to="/" replace />;
+    return <>{children}</>;
+  }
+
+  if (require === "adminOnly") {
+    if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    if (!isAdmin) return <Navigate to="/admin" replace />;
     return <>{children}</>;
   }
 
   // public
-  if (user && isAdmin) return <Navigate to="/admin" replace />;
+  if (user && isStaff) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 

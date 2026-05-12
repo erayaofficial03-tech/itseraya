@@ -114,6 +114,7 @@ export const useProduct = (id?: string) =>
 export const useSocialLinks = () =>
   useQuery({
     queryKey: ["social_links"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("social_links")
@@ -121,6 +122,40 @@ export const useSocialLinks = () =>
         .order("display_order");
       if (error) throw error;
       return data as SocialLink[];
+    },
+  });
+
+/**
+ * Prefetch helpers — call on hover/focus to warm the cache.
+ */
+import type { QueryClient } from "@tanstack/react-query";
+
+export const prefetchCategory = (qc: QueryClient, slug: string) =>
+  qc.prefetchQuery({
+    queryKey: ["category-products", slug],
+    staleTime: FIVE_MIN,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*, product_images(*), categories(name, slug)")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as Product[];
+    },
+  });
+
+export const prefetchProduct = (qc: QueryClient, id: string) =>
+  qc.prefetchQuery({
+    queryKey: ["product", id],
+    staleTime: FIVE_MIN,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*, product_images(*), categories(name, slug)")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data as Product;
     },
   });
 

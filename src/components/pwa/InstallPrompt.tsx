@@ -119,7 +119,8 @@ const InstallPrompt = () => {
       await evt.prompt();
       const choice = await evt.userChoice;
       if (choice.outcome === "dismissed") {
-        localStorage.setItem(DISMISS_KEY, String(Date.now()));
+        // User saw the native browser prompt and rejected it — back off for 30 days
+        localStorage.setItem(REJECT_KEY, String(Date.now()));
       }
     } finally {
       setVisible(false);

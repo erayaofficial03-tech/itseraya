@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, matchPath } from "react-router-dom";
 import { Download, Plus, Share, X } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
+import { useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];

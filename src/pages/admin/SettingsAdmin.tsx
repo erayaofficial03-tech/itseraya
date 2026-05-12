@@ -21,6 +21,7 @@ const SettingsAdmin = () => {
 
   const [form, setForm] = useState({
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
+    usp_interval_ms: 3500, usp_fade_speed_ms: 300,
   });
   const [busy, setBusy] = useState(false);
 
@@ -31,6 +32,8 @@ const SettingsAdmin = () => {
         tagline: settings.tagline,
         logo_url: settings.logo_url || "",
         whatsapp_number: settings.whatsapp_number || "",
+        usp_interval_ms: settings.usp_interval_ms,
+        usp_fade_speed_ms: settings.usp_fade_speed_ms,
       });
     }
   }, [settings]);
@@ -43,7 +46,12 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const { error } = await supabase.from("settings").update({
-      ...form, whatsapp_number: cleanWa || null,
+      store_name: form.store_name,
+      tagline: form.tagline,
+      logo_url: form.logo_url || null,
+      whatsapp_number: cleanWa || null,
+      usp_interval_ms: form.usp_interval_ms,
+      usp_fade_speed_ms: form.usp_fade_speed_ms,
     }).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
@@ -118,6 +126,30 @@ const SettingsAdmin = () => {
             <p className="text-xs text-muted-foreground mt-1">
               Used by the "I Love It" enquiry button. Digits only, including country code.
             </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>USP rotation interval (ms)</Label>
+              <Input
+                type="number"
+                min={1000}
+                max={20000}
+                value={form.usp_interval_ms}
+                onChange={(e) => setForm({ ...form, usp_interval_ms: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground mt-1">Time between message changes.</p>
+            </div>
+            <div>
+              <Label>Fade speed (ms)</Label>
+              <Input
+                type="number"
+                min={100}
+                max={2000}
+                value={form.usp_fade_speed_ms}
+                onChange={(e) => setForm({ ...form, usp_fade_speed_ms: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground mt-1">Animation duration for each fade-in.</p>
+            </div>
           </div>
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save settings"}

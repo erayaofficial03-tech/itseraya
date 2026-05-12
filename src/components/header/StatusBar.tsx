@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSettings } from "@/lib/queries";
 
 const usps = [
   "Handcrafted with love",
@@ -8,12 +9,16 @@ const usps = [
 ];
 
 const StatusBar = () => {
+  const { data: settings } = useSettings();
   const [i, setI] = useState(0);
 
+  const interval = settings?.usp_interval_ms ?? 3500;
+  const fadeSpeed = settings?.usp_fade_speed_ms ?? 300;
+
   useEffect(() => {
-    const t = setInterval(() => setI((n) => (n + 1) % usps.length), 3500);
+    const t = setInterval(() => setI((n) => (n + 1) % usps.length), interval);
     return () => clearInterval(t);
-  }, []);
+  }, [interval]);
 
   return (
     <div className="w-full bg-charcoal text-ivory">
@@ -21,6 +26,7 @@ const StatusBar = () => {
         <p
           key={i}
           className="text-[11px] sm:text-xs font-light tracking-[0.2em] uppercase animate-fade-in"
+          style={{ animationDuration: `${fadeSpeed}ms` }}
         >
           {usps[i]}
         </p>

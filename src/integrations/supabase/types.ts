@@ -134,6 +134,8 @@ export type Database = {
           store_name: string
           tagline: string
           updated_at: string
+          usp_fade_speed_ms: number
+          usp_interval_ms: number
           whatsapp_number: string | null
         }
         Insert: {
@@ -146,6 +148,8 @@ export type Database = {
           store_name?: string
           tagline?: string
           updated_at?: string
+          usp_fade_speed_ms?: number
+          usp_interval_ms?: number
           whatsapp_number?: string | null
         }
         Update: {
@@ -158,6 +162,8 @@ export type Database = {
           store_name?: string
           tagline?: string
           updated_at?: string
+          usp_fade_speed_ms?: number
+          usp_interval_ms?: number
           whatsapp_number?: string | null
         }
         Relationships: []

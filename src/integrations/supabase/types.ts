@@ -100,7 +100,7 @@ export type Database = {
           is_visible?: boolean
           name: string
           original_price?: number
-          sku: string
+          sku?: string
           tags?: string[]
         }
         Update: {

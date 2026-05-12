@@ -51,7 +51,7 @@ const AdminLogin = () => {
           </button>
 
           <p className="mt-5 text-xs text-muted-foreground">
-            Restricted to authorised admin only
+            Admin and manager access only
           </p>
         </div>
       </div>

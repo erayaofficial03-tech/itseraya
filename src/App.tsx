@@ -23,6 +23,7 @@ import ProductsAdmin from "./pages/admin/ProductsAdmin";
 import CategoriesAdmin from "./pages/admin/CategoriesAdmin";
 import BannerAdmin from "./pages/admin/BannerAdmin";
 import SettingsAdmin from "./pages/admin/SettingsAdmin";
+import AdminsAdmin from "./pages/admin/AdminsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="categories" element={<CategoriesAdmin />} />
             <Route path="banner" element={<BannerAdmin />} />
             <Route path="settings" element={<SettingsAdmin />} />
+            <Route path="admins" element={<AdminsAdmin />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { safeRedirect } from "@/lib/safeRedirect";
 import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAdmin, loading } = useAuth();
-  const redirectTo = new URLSearchParams(location.search).get("redirect") || "/";
+  const redirectTo = safeRedirect(new URLSearchParams(location.search).get("redirect"), "/");
 
   useEffect(() => {
     if (loading || !user) return;

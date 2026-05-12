@@ -1,43 +1,32 @@
 ## Goal
+When a user signs in with admin credentials (via `/login`, Google, or any auth flow), automatically route them to `/admin` instead of the storefront home.
 
-Replace Lovable's hosted Google consent screen with one served by Google itself, branded as **Eraya**. After this, the sign-in popup will show your Eraya logo, app name, and domain — no "Lovable" wordmark, no template name.
+## Current behavior
+- `src/pages/Login.tsx` redirects signed-in users to `redirectTo` (defaults to `/`) — admins land on the storefront.
+- `src/pages/admin/AdminLogin.tsx` already redirects admins to `/admin` (works only if they used that page).
+- `useAuth()` exposes `isAdmin` (checked against `user_roles` table).
 
-## What changes
+## Change
+Update `src/pages/Login.tsx` so the post-login redirect chooses the destination based on role:
 
-Nothing in the app's source code changes. Google sign-in already works through `lovable.auth.signInWithOAuth("google", …)`; we're only swapping the **OAuth credentials** the broker uses behind it.
+```ts
+useEffect(() => {
+  if (loading || !user) return;
+  if (isAdmin) navigate("/admin", { replace: true });
+  else navigate(redirectTo, { replace: true });
+}, [user, isAdmin, loading, navigate, redirectTo]);
+```
 
-## Steps you'll do in Google Cloud Console
+- Pull `isAdmin` and `loading` from `useAuth()` (already provided).
+- Wait for `loading` to finish so we don't redirect to `/` before the role check resolves.
+- An explicit `?redirect=` query param still wins for non-admins; admins always go to `/admin`.
 
-1. Go to https://console.cloud.google.com/ → create (or pick) a project named **Eraya**.
-2. **APIs & Services → OAuth consent screen**
-   - User type: **External**
-   - App name: **Eraya**
-   - User support email: your address
-   - App logo: upload the Eraya logo
-   - Authorized domains: `lovable.app` and your custom domain if you have one (e.g. `itseraya.in`)
-   - Scopes: `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile`
-   - Publish the app (Testing → In production) so any Google user can sign in
-3. **APIs & Services → Credentials → Create credentials → OAuth client ID**
-   - Application type: **Web application**
-   - Name: **Eraya Web**
-   - Authorized redirect URI: paste the **callback URL** shown in Lovable Cloud → Auth Settings → Google (I'll point you to it in step 4 below)
-4. Copy the generated **Client ID** and **Client Secret**.
-
-## Steps I'll guide you through in Lovable Cloud
-
-5. Open **Cloud → Users → Auth Settings → Sign In Methods → Google**.
-6. Copy the **callback URL** shown there → paste it back into the Google credential from step 3.
-7. Toggle "Use my own credentials", paste **Client ID** and **Client Secret**, save.
+## Out of scope (keep as-is)
+- `AdminLogin.tsx` already handles its own redirect.
+- Account dropdown / header behavior unchanged.
+- No DB / role schema changes.
 
 ## Verification
-
-8. From an incognito window, click **Sign in with Google** on the site. The consent screen should now show:
-   - Your Eraya logo
-   - "Sign in to continue to **Eraya**"
-   - The Google chrome (no "Lovable" wordmark, no "Remix of Ecommerce Store Website Template")
-
-## Notes
-
-- No code changes, no migration, no downtime — existing accounts keep working.
-- If you later add a custom domain, just add it to "Authorized domains" in the consent screen config.
-- The internal Lovable project name stays as-is per your choice; it's only visible to you in the editor.
+- Sign in with `admin@itseraya.in` on `/login` → lands on `/admin`.
+- Sign in with a normal user → lands on `/` (or `?redirect=` target).
+- Google sign-in for an admin → also lands on `/admin` once the session resolves.

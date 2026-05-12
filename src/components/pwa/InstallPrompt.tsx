@@ -12,7 +12,9 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISS_KEY = "eraya:a2hs-dismissed-at";
 const IOS_DISMISS_KEY = "eraya:a2hs-ios-dismissed-at";
 const PRODUCT_VISITED_KEY = "eraya:a2hs-product-visited";
+const REJECT_KEY = "eraya:a2hs-rejected-at";
 const DISMISS_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
+const REJECT_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 30; // 30 days (after rejecting native prompt)
 const MIN_TIME_ON_SITE_MS = 30_000; // 30 seconds
 const IOS_FIRST_VISIT_DELAY_MS = 4000;
 
@@ -72,6 +74,7 @@ const InstallPrompt = () => {
       setIosVisible(false);
       setEvt(null);
       localStorage.removeItem(DISMISS_KEY);
+      localStorage.removeItem(REJECT_KEY);
       localStorage.removeItem(IOS_DISMISS_KEY);
     };
 
@@ -90,7 +93,10 @@ const InstallPrompt = () => {
     const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
     const dismissedRecently =
       dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS;
-    if (evt && !dismissedRecently) setVisible(true);
+    const rejectedAt = Number(localStorage.getItem(REJECT_KEY) || 0);
+    const rejectedRecently =
+      rejectedAt && Date.now() - rejectedAt < REJECT_COOLDOWN_MS;
+    if (evt && !dismissedRecently && !rejectedRecently) setVisible(true);
 
     if (isIos) {
       const iosDismissedAt = Number(localStorage.getItem(IOS_DISMISS_KEY) || 0);
@@ -114,7 +120,8 @@ const InstallPrompt = () => {
       await evt.prompt();
       const choice = await evt.userChoice;
       if (choice.outcome === "dismissed") {
-        localStorage.setItem(DISMISS_KEY, String(Date.now()));
+        // User saw the native browser prompt and rejected it — back off for 30 days
+        localStorage.setItem(REJECT_KEY, String(Date.now()));
       }
     } finally {
       setVisible(false);

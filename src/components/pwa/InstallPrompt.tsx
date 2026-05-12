@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, X } from "lucide-react";
+import { Download, Plus, Share, X } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -8,40 +8,69 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const DISMISS_KEY = "eraya:a2hs-dismissed-at";
+const IOS_DISMISS_KEY = "eraya:a2hs-ios-dismissed-at";
 const DISMISS_COOLDOWN_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
+const IOS_FIRST_VISIT_DELAY_MS = 4000;
+
+const isIosSafari = () => {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent;
+  // iPhone/iPad/iPod, plus iPad on iOS 13+ which reports Macintosh + touch
+  const iOS = /iPad|iPhone|iPod/.test(ua) ||
+    (/Macintosh/.test(ua) && (navigator as any).maxTouchPoints > 1);
+  if (!iOS) return false;
+  // Real Safari (exclude Chrome/Firefox/Edge on iOS which still use WebKit)
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(ua);
+  return isSafari;
+};
 
 const InstallPrompt = () => {
   const [evt, setEvt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
+  const [iosVisible, setIosVisible] = useState(false);
 
   useEffect(() => {
     // Already installed?
     const isStandalone =
       window.matchMedia?.("(display-mode: standalone)").matches ||
-      // iOS
       (navigator as any).standalone === true;
     if (isStandalone) return;
 
-    // Recently dismissed?
     const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
-    if (dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS) return;
+    const dismissedRecently =
+      dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS;
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
       setEvt(e as BeforeInstallPromptEvent);
-      setVisible(true);
+      if (!dismissedRecently) setVisible(true);
     };
     const onInstalled = () => {
       setVisible(false);
+      setIosVisible(false);
       setEvt(null);
       localStorage.removeItem(DISMISS_KEY);
+      localStorage.removeItem(IOS_DISMISS_KEY);
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
+
+    // iOS Safari fallback — beforeinstallprompt never fires there
+    let iosTimer: ReturnType<typeof setTimeout> | undefined;
+    if (isIosSafari()) {
+      const iosDismissedAt = Number(localStorage.getItem(IOS_DISMISS_KEY) || 0);
+      const iosDismissedRecently =
+        iosDismissedAt && Date.now() - iosDismissedAt < DISMISS_COOLDOWN_MS;
+      if (!iosDismissedRecently) {
+        iosTimer = setTimeout(() => setIosVisible(true), IOS_FIRST_VISIT_DELAY_MS);
+      }
+    }
+
     return () => {
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
+      if (iosTimer) clearTimeout(iosTimer);
     };
   }, []);
 

@@ -51,16 +51,11 @@ const SidebarBody = ({ onNavigate, onSignOut }: { onNavigate?: () => void; onSig
 );
 
 const AdminLayout = () => {
-  const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
-  if (!user) return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
-  if (!isAdmin) return <Navigate to="/login" replace />;
-
-  const signOut = async () => { await supabase.auth.signOut(); navigate("/login"); };
+  const signOut = async () => { await supabase.auth.signOut(); navigate("/admin/login", { replace: true }); };
   const currentLabel = items.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (

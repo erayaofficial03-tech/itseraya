@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
@@ -22,6 +23,10 @@ const SettingsAdmin = () => {
   const [form, setForm] = useState({
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
+    whatsapp_message_template: "",
+    store_address: "", store_email: "", store_phone: "", store_city: "",
+    pwa_name: "", pwa_short_name: "", pwa_description: "",
+    pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
   });
   const [busy, setBusy] = useState(false);
 
@@ -34,6 +39,16 @@ const SettingsAdmin = () => {
         whatsapp_number: settings.whatsapp_number || "",
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
+        whatsapp_message_template: (settings as any).whatsapp_message_template || "",
+        store_address: (settings as any).store_address || "",
+        store_email: (settings as any).store_email || "",
+        store_phone: (settings as any).store_phone || "",
+        store_city: (settings as any).store_city || "",
+        pwa_name: (settings as any).pwa_name || "",
+        pwa_short_name: (settings as any).pwa_short_name || "",
+        pwa_description: (settings as any).pwa_description || "",
+        pwa_theme_color: (settings as any).pwa_theme_color || "#C9A84C",
+        pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
       });
     }
   }, [settings]);
@@ -46,12 +61,9 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const { error } = await supabase.from("settings").update({
-      store_name: form.store_name,
-      tagline: form.tagline,
-      logo_url: form.logo_url || null,
+      ...form,
       whatsapp_number: cleanWa || null,
-      usp_interval_ms: form.usp_interval_ms,
-      usp_fade_speed_ms: form.usp_fade_speed_ms,
+      logo_url: form.logo_url || null,
     }).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
@@ -189,6 +201,45 @@ const SettingsAdmin = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader><CardTitle>WhatsApp message template</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <Textarea rows={6} value={form.whatsapp_message_template} onChange={(e) => setForm({ ...form, whatsapp_message_template: e.target.value })} />
+          <p className="text-xs text-muted-foreground">Available variables: <code>{"{product_name}"}</code>, <code>{"{price}"}</code>, <code>{"{url}"}</code></p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Store info</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <div><Label>Address</Label><Input value={form.store_address} onChange={(e) => setForm({ ...form, store_address: e.target.value })} /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><Label>Email</Label><Input value={form.store_email} onChange={(e) => setForm({ ...form, store_email: e.target.value })} /></div>
+            <div><Label>Phone</Label><Input value={form.store_phone} onChange={(e) => setForm({ ...form, store_phone: e.target.value })} /></div>
+          </div>
+          <div><Label>City</Label><Input value={form.store_city} onChange={(e) => setForm({ ...form, store_city: e.target.value })} /></div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>PWA settings</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div><Label>App name</Label><Input value={form.pwa_name} onChange={(e) => setForm({ ...form, pwa_name: e.target.value })} /></div>
+            <div><Label>Short name</Label><Input value={form.pwa_short_name} onChange={(e) => setForm({ ...form, pwa_short_name: e.target.value })} /></div>
+          </div>
+          <div><Label>Description</Label><Textarea value={form.pwa_description} onChange={(e) => setForm({ ...form, pwa_description: e.target.value })} /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><Label>Theme color</Label><Input type="color" value={form.pwa_theme_color} onChange={(e) => setForm({ ...form, pwa_theme_color: e.target.value })} /></div>
+            <div><Label>Background color</Label><Input type="color" value={form.pwa_background_color} onChange={(e) => setForm({ ...form, pwa_background_color: e.target.value })} /></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
+        {busy ? "Saving…" : "Save all settings"}
+      </Button>
     </div>
   );
 };

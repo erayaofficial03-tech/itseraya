@@ -30,6 +30,10 @@ const BannerAdmin = lazy(() => import("./pages/admin/BannerAdmin"));
 const SettingsAdmin = lazy(() => import("./pages/admin/SettingsAdmin"));
 const AdminsAdmin = lazy(() => import("./pages/admin/AdminsAdmin"));
 const EnquiriesAdmin = lazy(() => import("./pages/admin/EnquiriesAdmin"));
+const AnnouncementAdmin = lazy(() => import("./pages/admin/AnnouncementAdmin"));
+const BrandAdmin = lazy(() => import("./pages/admin/BrandAdmin"));
+const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
+const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +50,9 @@ const Public = ({ children }: { children: React.ReactNode }) => (
 );
 const Admin = ({ children }: { children: React.ReactNode }) => (
   <RoleGuard require="admin">{children}</RoleGuard>
+);
+const AdminOnly = ({ children }: { children: React.ReactNode }) => (
+  <RoleGuard require="adminOnly">{children}</RoleGuard>
 );
 
 const App = () => (
@@ -81,8 +88,13 @@ const App = () => (
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="banner" element={<BannerAdmin />} />
-                <Route path="settings" element={<SettingsAdmin />} />
-                <Route path="admins" element={<AdminsAdmin />} />
+                <Route path="announcement" element={<AnnouncementAdmin />} />
+                <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
+                <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
+                <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
+                <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />
+                <Route path="admins" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
+                <Route path="users" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="enquiries" element={<EnquiriesAdmin />} />
               </Route>
 

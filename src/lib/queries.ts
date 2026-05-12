@@ -180,6 +180,7 @@ export const useCategories = () =>
 export const useProducts = () =>
   useQuery({
     queryKey: ["products"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")

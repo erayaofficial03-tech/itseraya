@@ -169,7 +169,7 @@ const InstallPrompt = () => {
             </span>
 
             <div className="flex-1 min-w-0">
-              <p className="font-serif text-base text-foreground leading-tight">Add Eraya to your Home Screen</p>
+              <p className="font-serif text-base text-foreground leading-tight">{promoText}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 Faster access, offline browsing, and an app-like experience.
               </p>

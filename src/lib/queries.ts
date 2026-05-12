@@ -23,6 +23,7 @@ export type Product = {
   is_featured: boolean;
   is_visible: boolean;
   created_at: string;
+  sku: string;
   product_images?: ProductImage[];
   categories?: { name: string; slug: string } | null;
 };

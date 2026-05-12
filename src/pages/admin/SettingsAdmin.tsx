@@ -21,6 +21,7 @@ const SettingsAdmin = () => {
 
   const [form, setForm] = useState({
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
+    usp_interval_ms: 3500, usp_fade_speed_ms: 300,
   });
   const [busy, setBusy] = useState(false);
 

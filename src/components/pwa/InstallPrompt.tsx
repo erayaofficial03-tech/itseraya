@@ -164,6 +164,9 @@ const InstallPrompt = () => {
               <p className="text-xs text-muted-foreground mt-1">
                 Faster access, offline browsing, and an app-like experience.
               </p>
+              <p className="text-[11px] text-muted-foreground/80 mt-1 italic">
+                Changed your mind later? You can install anytime from your browser menu.
+              </p>
               <div className="mt-3 flex items-center gap-2">
                 <button
                   type="button"

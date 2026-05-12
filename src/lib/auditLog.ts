@@ -21,7 +21,7 @@ export async function logAudit(params: {
       action: params.action,
       target_id: params.target_id ?? null,
       target_email: params.target_email ?? null,
-      details: params.details ?? {},
+      details: (params.details ?? {}) as any,
     });
   } catch (err) {
     // non-fatal

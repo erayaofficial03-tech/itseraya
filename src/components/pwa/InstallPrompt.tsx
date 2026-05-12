@@ -92,7 +92,10 @@ const InstallPrompt = () => {
     const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
     const dismissedRecently =
       dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS;
-    if (evt && !dismissedRecently) setVisible(true);
+    const rejectedAt = Number(localStorage.getItem(REJECT_KEY) || 0);
+    const rejectedRecently =
+      rejectedAt && Date.now() - rejectedAt < REJECT_COOLDOWN_MS;
+    if (evt && !dismissedRecently && !rejectedRecently) setVisible(true);
 
     if (isIos) {
       const iosDismissedAt = Number(localStorage.getItem(IOS_DISMISS_KEY) || 0);

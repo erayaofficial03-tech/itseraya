@@ -32,6 +32,8 @@ const SettingsAdmin = () => {
         tagline: settings.tagline,
         logo_url: settings.logo_url || "",
         whatsapp_number: settings.whatsapp_number || "",
+        usp_interval_ms: settings.usp_interval_ms,
+        usp_fade_speed_ms: settings.usp_fade_speed_ms,
       });
     }
   }, [settings]);

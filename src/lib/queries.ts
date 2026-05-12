@@ -180,6 +180,7 @@ export const useCategories = () =>
 export const useProducts = () =>
   useQuery({
     queryKey: ["products"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
@@ -266,6 +267,16 @@ export const formatINR = (n: number) =>
 export const productImage = (p: Product) =>
   p.product_images?.[0]?.image_url ||
   "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80";
+
+/**
+ * Append width/quality params to Supabase Storage image URLs for cheaper
+ * downloads. No-op for non-Supabase URLs (e.g. Unsplash fallbacks).
+ */
+export const withImageParams = (url: string, width: number, quality = 80) => {
+  if (!url || !url.includes("/storage/v1/object/")) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}width=${width}&quality=${quality}`;
+};
 
 export const discountPct = (p: Product) =>
   p.discounted_price && p.original_price > p.discounted_price

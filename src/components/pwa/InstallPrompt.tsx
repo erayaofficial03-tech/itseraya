@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, matchPath } from "react-router-dom";
 import { Download, Plus, Share, X } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
+import { useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -32,6 +34,7 @@ const isIosSafari = () => {
 
 const InstallPrompt = () => {
   const location = useLocation();
+  const { data: settings } = useSettings();
   const [evt, setEvt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   const [iosVisible, setIosVisible] = useState(false);
@@ -134,7 +137,13 @@ const InstallPrompt = () => {
     localStorage.setItem(IOS_DISMISS_KEY, String(Date.now()));
   };
 
+  // Hide on admin pages and when admin disabled it from settings
+  if (location.pathname.startsWith("/admin")) return null;
+  if (!s(settings, "install_prompt_visible")) return null;
   if (!visible && !iosVisible) return null;
+
+  const promoText = s(settings, "install_prompt_text");
+  const installLabel = s(settings, "install_prompt_button_label");
 
   return (
     <>
@@ -160,7 +169,7 @@ const InstallPrompt = () => {
             </span>
 
             <div className="flex-1 min-w-0">
-              <p className="font-serif text-base text-foreground leading-tight">Add Eraya to your Home Screen</p>
+              <p className="font-serif text-base text-foreground leading-tight">{promoText}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 Faster access, offline browsing, and an app-like experience.
               </p>
@@ -174,7 +183,7 @@ const InstallPrompt = () => {
                   className="text-sm font-medium px-4 py-2 rounded-full text-charcoal transition-opacity hover:opacity-90"
                   style={{ background: "var(--gradient-gold, linear-gradient(135deg, #E0C36B, #C9A84C))" }}
                 >
-                  Install
+                  {installLabel}
                 </button>
                 <button
                   type="button"
@@ -222,7 +231,7 @@ const InstallPrompt = () => {
 
               <div className="flex-1 min-w-0">
                 <p className="font-serif text-base text-foreground leading-tight">
-                  Install Eraya on your iPhone
+                  {promoText}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Add it to your Home Screen for an app-like experience.

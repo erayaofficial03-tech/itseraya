@@ -2,12 +2,14 @@ import { useParams, Link } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
-import { useCategories, useProducts } from "@/lib/queries";
+import { useCategories, useProducts, useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 
 const Category = () => {
   const { category: slug } = useParams();
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
+  const { data: settings } = useSettings();
   const cat = categories.find((c) => c.slug === slug);
   const filtered = products.filter(
     (p) => p.is_visible && (cat ? p.category_id === cat.id : true),
@@ -21,12 +23,14 @@ const Category = () => {
           <h1 className="font-serif text-4xl md:text-5xl text-foreground">
             {cat?.name || "All Products"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-2">{filtered.length} pieces</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            {filtered.length} {s(settings, "category_pieces_label")}
+          </p>
         </div>
 
         {filtered.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-muted-foreground mb-4">No products in this category yet.</p>
+            <p className="text-muted-foreground mb-4">{s(settings, "category_empty_message")}</p>
             <Link to="/" className="text-gold underline">Back to home</Link>
           </div>
         ) : (

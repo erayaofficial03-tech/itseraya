@@ -3,6 +3,8 @@ import { useState, useMemo } from "react";
 import { Menu, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,6 +78,7 @@ const Header = () => {
 
   return (
     <>
+      <AnnouncementBar />
       <StatusBar />
       <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
         <div className="grid grid-cols-3 items-center h-14 sm:h-16 px-3 sm:px-6 max-w-7xl mx-auto gap-2">
@@ -113,7 +116,7 @@ const Header = () => {
                     Shop
                   </p>
                   <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
-                    All jewellery <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   {visibleCategories.map((c) => (
                     <Link
@@ -147,12 +150,13 @@ const Header = () => {
             </Sheet>
 
             <nav className="hidden lg:flex space-x-7">
+              <NavLink to="/" className={navLinkClass}>{s(settings, "nav_home_label")}</NavLink>
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
-                  Shop
+                  {s(settings, "nav_catalogue_label")}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem onClick={() => navigate("/catalogue")}>All jewellery</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/catalogue")}>{s(settings, "nav_catalogue_label")}</DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {visibleCategories.map((c) => (
                     <DropdownMenuItem
@@ -180,15 +184,17 @@ const Header = () => {
           {/* Right: action icons */}
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
             {/* Search hidden on mobile (lives inside drawer); shown sm+ */}
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Search"
-              onClick={() => setSearchOpen(true)}
-              className="hidden sm:inline-flex h-10 w-10"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
+            {s(settings, "nav_show_search") && (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Search"
+                onClick={() => setSearchOpen(true)}
+                className="hidden sm:inline-flex h-10 w-10"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
 
             {/* Public storefront — no sign-in required */}
 

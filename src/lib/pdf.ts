@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import type { Product, Settings } from "./queries";
 import { formatINR, productImage, discountPct } from "./queries";
+import { s } from "./settingsDefaults";
 
 const fetchImageAsDataURL = async (url: string): Promise<string | null> => {
   try {
@@ -17,28 +18,36 @@ const fetchImageAsDataURL = async (url: string): Promise<string | null> => {
   }
 };
 
+const hexToRgb = (hex: string): [number, number, number] => {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.trim());
+  if (!m) return [201, 168, 76];
+  return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
+};
+
 const drawHeader = (doc: jsPDF, settings: Settings | undefined) => {
+  const [r, g, b] = hexToRgb(s(settings, "pdf_primary_color"));
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.setTextColor(201, 168, 76); // gold
-  doc.text(settings?.store_name || "Eraya", 105, 18, { align: "center" });
+  doc.setTextColor(r, g, b);
+  doc.text(s(settings, "pdf_store_name"), 105, 18, { align: "center" });
   doc.setFontSize(9);
   doc.setFont("helvetica", "italic");
   doc.setTextColor(100);
-  doc.text(settings?.tagline || "Adorn Your Story", 105, 24, { align: "center" });
-  doc.setDrawColor(201, 168, 76);
+  doc.text(s(settings, "pdf_tagline"), 105, 24, { align: "center" });
+  doc.setDrawColor(r, g, b);
   doc.line(20, 28, 190, 28);
 };
 
 const drawFooter = (doc: jsPDF, settings: Settings | undefined) => {
-  const wa = settings?.whatsapp_number;
+  const wa = settings?.whatsapp_number || "";
   doc.setFontSize(8);
   doc.setTextColor(120);
-  const txt = wa ? `For enquiries, WhatsApp us at +${wa}` : "Adorn Your Story with Eraya";
+  const txt = s(settings, "pdf_footer_text").replace("{whatsapp}", wa);
   doc.text(txt, 105, 290, { align: "center" });
 };
 
 export const generateProductPdf = async (product: Product, settings: Settings | undefined) => {
+  const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   drawHeader(doc, settings);
 
@@ -57,7 +66,7 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   const price = product.discounted_price ?? product.original_price;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(14);
-  doc.setTextColor(201, 168, 76);
+  doc.setTextColor(pr, pg, pb);
   doc.text(formatINR(price), 105, 160, { align: "center" });
 
   if (product.discounted_price && product.original_price > product.discounted_price) {
@@ -78,6 +87,7 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
 };
 
 export const generateCatalogPdf = async (products: Product[], settings: Settings | undefined) => {
+  const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   drawHeader(doc, settings);
 
@@ -116,7 +126,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     doc.text(p.name, x, y + 58);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(201, 168, 76);
+    doc.setTextColor(pr, pg, pb);
     const price = p.discounted_price ?? p.original_price;
     doc.text(formatINR(price), x, y + 65);
     if (p.discounted_price && p.original_price > p.discounted_price) {
@@ -131,5 +141,5 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
   }
 
-  doc.save("Eraya-Catalogue.pdf");
+  doc.save(`${s(settings, "pdf_store_name")}-Catalogue.pdf`);
 };

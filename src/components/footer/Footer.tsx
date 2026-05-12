@@ -1,89 +1,68 @@
+import { Link } from "react-router-dom";
+import { Instagram, Facebook, Youtube, Twitter, MessageCircle, Link as LinkIcon } from "lucide-react";
+import erayaLogo from "@/assets/eraya-logo.png";
+import { useSettings, useSocialLinks } from "@/lib/queries";
+
+const platformIcon = (platform: string) => {
+  const p = platform.toLowerCase();
+  if (p.includes("instagram")) return Instagram;
+  if (p.includes("facebook")) return Facebook;
+  if (p.includes("youtube")) return Youtube;
+  if (p.includes("twitter") || p === "x") return Twitter;
+  if (p.includes("pinterest")) return LinkIcon;
+  return LinkIcon;
+};
+
 const Footer = () => {
+  const { data: settings } = useSettings();
+  const { data: socials = [] } = useSocialLinks();
+  const logo = settings?.logo_url || erayaLogo;
+  const wa = settings?.whatsapp_number?.replace(/\D/g, "");
+
   return (
-    <footer className="w-full bg-white text-black pt-8 pb-2 px-6 border-t border-[#e5e5e5] mt-48">
-      <div className="">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
-          {/* Brand - Left side */}
-          <div>
-            <img 
-              src="/Linea_Jewelry_Inc-2.svg" 
-              alt="Linea Jewelry Inc." 
-              className="mb-4 h-6 w-auto"
-            />
-            <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
-              Minimalist jewelry crafted for the modern individual
-            </p>
-            
-            {/* Contact Information */}
-            <div className="space-y-2 text-sm font-light text-black/70">
-              <div>
-                <p className="font-normal text-black mb-1">Visit Us</p>
-                <p>123 Madison Avenue</p>
-                <p>New York, NY 10016</p>
-              </div>
-              <div>
-                <p className="font-normal text-black mb-1 mt-3">Contact</p>
-                <p>+1 (212) 555-0123</p>
-                <p>hello@lineajewelry.com</p>
-              </div>
-            </div>
-          </div>
+    <footer className="w-full bg-background border-t border-border mt-24">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex flex-col items-center text-center gap-4">
+          <img src={logo} alt={settings?.store_name || "Eraya"} className="h-14 w-auto" />
+          <p className="font-serif italic text-lg text-gold">
+            {settings?.tagline || "Adorn Your Story"}
+          </p>
 
-          {/* Link lists - Right side */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Shop */}
-            <div>
-              <h4 className="text-sm font-normal mb-4">Shop</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">New In</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Rings</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Earrings</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Bracelets</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Necklaces</a></li>
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h4 className="text-sm font-normal mb-4">Support</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Size Guide</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Care Instructions</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Returns</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Shipping</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Contact</a></li>
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div>
-              <h4 className="text-sm font-normal mb-4">Connect</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Pinterest</a></li>
-                <li><a href="#" className="text-sm font-light text-black/70 hover:text-black transition-colors">Newsletter</a></li>
-              </ul>
-            </div>
+          <div className="flex items-center gap-3 mt-2">
+            {socials.filter((s) => s.is_visible).map((s) => {
+              const Icon = platformIcon(s.platform);
+              return (
+                <a
+                  key={s.id}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.platform}
+                  className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              );
+            })}
+            {wa && (
+              <a
+                href={`https://wa.me/${wa}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
+              >
+                <MessageCircle className="h-4 w-4" />
+              </a>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Bottom section - edge to edge separator */}
-      <div className="border-t border-[#e5e5e5] -mx-6 px-6 pt-2">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm font-light text-black mb-1 md:mb-0">
-            © 2024 Linea. All rights reserved. Template made by{" "}
-            <a href="https://www.liljeros.co" target="_blank" rel="noopener noreferrer" className="hover:text-black/70 transition-colors underline">
-              Rickard Liljeros
-            </a>
-          </p>
-          <div className="flex space-x-6">
-            <a href="/privacy-policy" className="text-sm font-light text-black hover:text-black/70 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="/terms-of-service" className="text-sm font-light text-black hover:text-black/70 transition-colors">
-              Terms of Service
-            </a>
+        <div className="border-t border-border mt-10 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground gap-2">
+          <p>© {new Date().getFullYear()} {settings?.store_name || "Eraya"}. All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link to="/catalogue" className="hover:text-gold">Catalogue</Link>
+            <Link to="/admin/login" className="hover:text-gold">Admin</Link>
           </div>
         </div>
       </div>

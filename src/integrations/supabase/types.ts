@@ -234,7 +234,7 @@ export type Database = {
       next_product_sku: { Args: { _for?: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "manager" | "customer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -362,7 +362,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "manager", "customer"],
     },
   },
 } as const

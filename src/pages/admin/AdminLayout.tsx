@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu, Shield } from "lucide-react";
+import { LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -12,7 +12,7 @@ const items = [
   { to: "/admin/categories", icon: FolderTree, label: "Categories" },
   { to: "/admin/banner", icon: Image, label: "Banner & Homepage" },
   { to: "/admin/settings", icon: SettingsIcon, label: "Profile & Settings" },
-  { to: "/admin/admins", icon: Shield, label: "Admins" },
+  { to: "/admin/admins", icon: Users, label: "Users" },
 ];
 
 const SidebarBody = ({ onNavigate, onSignOut }: { onNavigate?: () => void; onSignOut: () => void }) => (

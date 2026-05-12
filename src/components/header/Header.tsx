@@ -218,6 +218,7 @@ const Header = () => {
             {results.map((p) => (
               <button
                 key={p.id}
+                onMouseEnter={() => prefetchProduct(qc, p.id)}
                 onClick={() => { setSearchOpen(false); setQ(""); navigate(`/product/${p.id}`); }}
                 className="w-full text-left px-2 py-2 rounded hover:bg-muted text-sm"
               >

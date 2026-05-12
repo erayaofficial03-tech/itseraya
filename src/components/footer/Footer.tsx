@@ -62,7 +62,6 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} {settings?.store_name || "Eraya"}. All rights reserved.</p>
           <div className="flex gap-4">
             <Link to="/catalogue" className="hover:text-gold">Catalogue</Link>
-            <Link to="/admin/login" className="hover:text-gold">Admin</Link>
           </div>
         </div>
       </div>

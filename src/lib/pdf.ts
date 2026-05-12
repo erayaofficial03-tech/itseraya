@@ -87,6 +87,7 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
 };
 
 export const generateCatalogPdf = async (products: Product[], settings: Settings | undefined) => {
+  const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   drawHeader(doc, settings);
 

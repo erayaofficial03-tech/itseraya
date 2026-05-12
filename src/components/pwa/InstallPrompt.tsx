@@ -93,7 +93,12 @@ const InstallPrompt = () => {
     }
   };
 
-  if (!visible) return null;
+  const dismissIos = () => {
+    setIosVisible(false);
+    localStorage.setItem(IOS_DISMISS_KEY, String(Date.now()));
+  };
+
+  if (!visible && !iosVisible) return null;
 
   return (
     <div

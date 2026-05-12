@@ -74,7 +74,7 @@ const ProductDescription = ({ sku }: { sku?: string } = {}) => {
           <div className="pb-6 space-y-3">
             <div className="flex justify-between">
               <span className="text-sm font-light text-muted-foreground">SKU</span>
-              <span className="text-sm font-light text-foreground">LE-PTH-001</span>
+              <span className="text-sm font-light text-foreground">{sku || "—"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm font-light text-muted-foreground">Collection</span>

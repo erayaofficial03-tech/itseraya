@@ -1,22 +1,31 @@
 import { useState } from "react";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu, Users, Inbox } from "lucide-react";
+import {
+  LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
+  Users, Inbox, Megaphone, Palette, Type, Search,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/useAuth";
 import erayaLogo from "@/assets/eraya-logo.png";
 
-const items = [
-  { to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/admin/products", icon: Gem, label: "Products" },
-  { to: "/admin/categories", icon: FolderTree, label: "Categories" },
-  { to: "/admin/banner", icon: Image, label: "Banner & Homepage" },
-  { to: "/admin/enquiries", icon: Inbox, label: "Enquiries" },
-  { to: "/admin/settings", icon: SettingsIcon, label: "Profile & Settings" },
-  { to: "/admin/admins", icon: Users, label: "Users" },
+type ItemRole = "staff" | "admin";
+const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRole }[] = [
+  { to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard", role: "staff" },
+  { to: "/admin/products", icon: Gem, label: "Products", role: "staff" },
+  { to: "/admin/categories", icon: FolderTree, label: "Categories", role: "staff" },
+  { to: "/admin/announcement", icon: Megaphone, label: "Announcement", role: "staff" },
+  { to: "/admin/banner", icon: Image, label: "Homepage & Banner", role: "staff" },
+  { to: "/admin/brand", icon: Palette, label: "Brand & Colors", role: "admin" },
+  { to: "/admin/labels", icon: Type, label: "Labels & Text", role: "admin" },
+  { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },
+  { to: "/admin/enquiries", icon: Inbox, label: "Enquiries", role: "staff" },
+  { to: "/admin/users", icon: Users, label: "Users", role: "admin" },
+  { to: "/admin/settings", icon: SettingsIcon, label: "Store Settings", role: "admin" },
 ];
 
-const SidebarBody = ({ onNavigate, onSignOut }: { onNavigate?: () => void; onSignOut: () => void }) => (
+const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: typeof items; onNavigate?: () => void; onSignOut: () => void }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
       <img src={erayaLogo} alt="Eraya" className="h-10 w-auto" />
@@ -24,7 +33,7 @@ const SidebarBody = ({ onNavigate, onSignOut }: { onNavigate?: () => void; onSig
       <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
     </div>
     <nav className="flex-1 p-3 space-y-1 overflow-auto">
-      {items.map((item) => (
+      {visibleItems.map((item) => (
         <NavLink
           key={item.to}
           to={item.to}
@@ -53,20 +62,21 @@ const SidebarBody = ({ onNavigate, onSignOut }: { onNavigate?: () => void; onSig
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAdmin } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const visibleItems = items.filter((i) => (i.role === "admin" ? isAdmin : true));
+
   const signOut = async () => { await supabase.auth.signOut(); navigate("/admin/login", { replace: true }); };
-  const currentLabel = items.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
+  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (
     <div className="min-h-screen flex w-full bg-muted/30">
-      {/* Desktop sidebar */}
       <aside className="hidden md:flex md:w-64 lg:w-72 shrink-0 bg-background border-r border-border flex-col">
-        <SidebarBody onSignOut={signOut} />
+        <SidebarBody visibleItems={visibleItems} onSignOut={signOut} />
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile top bar */}
         <header className="md:hidden sticky top-0 z-30 bg-background border-b border-border grid grid-cols-[auto_1fr_auto] items-center h-14 px-4">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
@@ -75,7 +85,7 @@ const AdminLayout = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72">
-              <SidebarBody onNavigate={() => setMobileOpen(false)} onSignOut={signOut} />
+              <SidebarBody visibleItems={visibleItems} onNavigate={() => setMobileOpen(false)} onSignOut={signOut} />
             </SheetContent>
           </Sheet>
           <div className="flex flex-col items-center justify-center gap-1">
@@ -84,7 +94,7 @@ const AdminLayout = () => {
               Admin
             </span>
           </div>
-          <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground justify-self-end">
+          <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground justify-self-end truncate max-w-[40vw]">
             {currentLabel}
           </span>
         </header>

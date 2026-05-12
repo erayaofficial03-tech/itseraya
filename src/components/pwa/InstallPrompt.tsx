@@ -74,6 +74,7 @@ const InstallPrompt = () => {
       setIosVisible(false);
       setEvt(null);
       localStorage.removeItem(DISMISS_KEY);
+      localStorage.removeItem(REJECT_KEY);
       localStorage.removeItem(IOS_DISMISS_KEY);
     };
 

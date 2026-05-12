@@ -9,6 +9,7 @@ import Category from "./pages/Category";
 import ProductDetail from "./pages/ProductDetail";
 import Catalogue from "./pages/Catalogue";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/product/:productId" element={<ProductDetail />} />
           <Route path="/catalogue" element={<Catalogue />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>

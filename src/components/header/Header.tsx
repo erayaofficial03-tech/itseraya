@@ -5,6 +5,7 @@ import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

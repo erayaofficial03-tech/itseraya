@@ -3,6 +3,8 @@ import { useState, useMemo } from "react";
 import { Menu, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

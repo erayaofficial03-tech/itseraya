@@ -22,6 +22,10 @@ const SettingsAdmin = () => {
   const [form, setForm] = useState({
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
+    whatsapp_message_template: "",
+    store_address: "", store_email: "", store_phone: "", store_city: "",
+    pwa_name: "", pwa_short_name: "", pwa_description: "",
+    pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
   });
   const [busy, setBusy] = useState(false);
 
@@ -34,6 +38,16 @@ const SettingsAdmin = () => {
         whatsapp_number: settings.whatsapp_number || "",
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
+        whatsapp_message_template: (settings as any).whatsapp_message_template || "",
+        store_address: (settings as any).store_address || "",
+        store_email: (settings as any).store_email || "",
+        store_phone: (settings as any).store_phone || "",
+        store_city: (settings as any).store_city || "",
+        pwa_name: (settings as any).pwa_name || "",
+        pwa_short_name: (settings as any).pwa_short_name || "",
+        pwa_description: (settings as any).pwa_description || "",
+        pwa_theme_color: (settings as any).pwa_theme_color || "#C9A84C",
+        pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
       });
     }
   }, [settings]);
@@ -46,12 +60,9 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const { error } = await supabase.from("settings").update({
-      store_name: form.store_name,
-      tagline: form.tagline,
-      logo_url: form.logo_url || null,
+      ...form,
       whatsapp_number: cleanWa || null,
-      usp_interval_ms: form.usp_interval_ms,
-      usp_fade_speed_ms: form.usp_fade_speed_ms,
+      logo_url: form.logo_url || null,
     }).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);

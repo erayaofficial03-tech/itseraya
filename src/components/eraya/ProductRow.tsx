@@ -36,7 +36,7 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
             {products.map((p) => (
               <CarouselItem
                 key={p.id}
-                className="pl-4 lg:pl-5 md:basis-1/6 lg:basis-1/8"
+                className="pl-4 lg:pl-5 md:basis-1/6 lg:basis-[12.5%]"
               >
                 <ProductCard product={p} />
               </CarouselItem>

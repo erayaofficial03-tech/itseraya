@@ -16,11 +16,13 @@ const Login = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+  const redirectTo = new URLSearchParams(location.search).get("redirect") || "/";
 
   useEffect(() => {
-    if (user) navigate("/", { replace: true });
-  }, [user, navigate]);
+    if (user) navigate(redirectTo, { replace: true });
+  }, [user, navigate, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

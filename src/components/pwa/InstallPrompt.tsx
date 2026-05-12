@@ -231,7 +231,7 @@ const InstallPrompt = () => {
 
               <div className="flex-1 min-w-0">
                 <p className="font-serif text-base text-foreground leading-tight">
-                  Install Eraya on your iPhone
+                  {promoText}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Add it to your Home Screen for an app-like experience.

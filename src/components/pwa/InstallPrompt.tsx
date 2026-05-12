@@ -137,7 +137,13 @@ const InstallPrompt = () => {
     localStorage.setItem(IOS_DISMISS_KEY, String(Date.now()));
   };
 
+  // Hide on admin pages and when admin disabled it from settings
+  if (location.pathname.startsWith("/admin")) return null;
+  if (!s(settings, "install_prompt_visible")) return null;
   if (!visible && !iosVisible) return null;
+
+  const promoText = s(settings, "install_prompt_text");
+  const installLabel = s(settings, "install_prompt_button_label");
 
   return (
     <>

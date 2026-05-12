@@ -36,7 +36,6 @@ const AdminLayout = () => {
         <div className="p-6 border-b border-border flex items-center gap-3">
           <img src={erayaLogo} alt="Eraya" className="h-9 w-auto" />
           <div>
-            <p className="font-serif text-lg leading-none">Eraya</p>
             <p className="text-xs text-muted-foreground">Admin</p>
           </div>
         </div>

@@ -55,7 +55,7 @@ const Header = () => {
       isActive ? "text-gold" : "text-foreground hover:text-gold"
     }`;
 
-  const initials = user?.email?.[0]?.toUpperCase() || "U";
+  
 
   const openWhatsApp = () => {
     const wa = settings?.whatsapp_number?.replace(/\D/g, "");

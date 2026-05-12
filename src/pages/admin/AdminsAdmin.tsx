@@ -42,6 +42,10 @@ const UsersAdmin = () => {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"all" | "managers" | "customers" | "blocked">("all");
   const [confirmDelete, setConfirmDelete] = useState<UserRow | null>(null);
+  const PAGE_SIZE = 20;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  // Reset paging when filters change
+  useEffect(() => { setVisibleCount(PAGE_SIZE); }, [search, tab]);
 
   const load = async () => {
     setLoading(true);

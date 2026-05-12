@@ -10,6 +10,10 @@ const Hero = () => {
         <img
           src={settings?.hero_image_url || "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1600&q=80"}
           alt="Eraya jewellery collection"
+          width={1600}
+          height={700}
+          decoding="async"
+          fetchPriority="high"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-charcoal/60 via-charcoal/30 to-transparent" />

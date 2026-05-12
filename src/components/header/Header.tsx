@@ -184,15 +184,17 @@ const Header = () => {
           {/* Right: action icons */}
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
             {/* Search hidden on mobile (lives inside drawer); shown sm+ */}
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Search"
-              onClick={() => setSearchOpen(true)}
-              className="hidden sm:inline-flex h-10 w-10"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
+            {s(settings, "nav_show_search") && (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Search"
+                onClick={() => setSearchOpen(true)}
+                className="hidden sm:inline-flex h-10 w-10"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
 
             {/* Public storefront — no sign-in required */}
 

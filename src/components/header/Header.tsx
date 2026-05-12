@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, X, User, LogOut, Search, ShoppingBag, MessageCircle } from "lucide-react";
+import { Menu, User, LogOut, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,6 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { toast } from "sonner";
 import StatusBar from "@/components/header/StatusBar";
 
@@ -65,16 +72,117 @@ const Header = () => {
     toast.info("Use the I Love It button on any product to enquire on WhatsApp.");
   };
 
+  const closeMenu = () => setOpen(false);
+
+  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-foreground border-b border-border/60 active:bg-muted/40 -mx-6 px-6 transition-colors";
+
   return (
     <>
       <StatusBar />
       <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
-        <div className="grid grid-cols-3 items-center h-16 px-4 sm:px-6 max-w-7xl mx-auto">
-          {/* Left: mobile menu + desktop nav */}
-          <div className="flex items-center justify-start">
-            <button className="lg:hidden p-2 -ml-2" onClick={() => setOpen(!open)} aria-label="Menu">
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+        <div className="grid grid-cols-3 items-center h-14 sm:h-16 px-3 sm:px-6 max-w-7xl mx-auto gap-2">
+          {/* Left: hamburger (mobile) + desktop nav */}
+          <div className="flex items-center justify-start min-w-0">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden -ml-2 h-10 w-10"
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col">
+                <SheetHeader className="px-6 py-5 border-b border-border text-left">
+                  <SheetTitle className="font-serif text-xl">
+                    {settings?.store_name || "Eraya"}
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="flex-1 overflow-y-auto px-6 py-4">
+                  {/* Search inside drawer */}
+                  <button
+                    onClick={() => { closeMenu(); setSearchOpen(true); }}
+                    className="w-full flex items-center gap-2 mb-5 px-3 py-2.5 rounded-md bg-muted text-muted-foreground text-sm"
+                  >
+                    <Search className="h-4 w-4" />
+                    Search jewellery…
+                  </button>
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-1">
+                    Shop
+                  </p>
+                  <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
+                    All jewellery <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  {visibleCategories.map((c) => (
+                    <Link
+                      key={c.id}
+                      to={`/category/${c.slug}`}
+                      onClick={closeMenu}
+                      className={drawerLinkClass}
+                    >
+                      {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </Link>
+                  ))}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                    More
+                  </p>
+                  <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
+                    About <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  <button
+                    onClick={() => { openWhatsApp(); closeMenu(); }}
+                    className={`${drawerLinkClass} w-full text-left`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4" /> Support
+                    </span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </div>
+
+                {/* Auth footer */}
+                <div className="border-t border-border px-6 py-4 bg-muted/30">
+                  {user ? (
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => { closeMenu(); navigate("/account"); }}
+                        >
+                          <User className="h-4 w-4 mr-1.5" /> Account
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex-1"
+                          onClick={async () => { closeMenu(); await supabase.auth.signOut(); navigate("/"); }}
+                        >
+                          <LogOut className="h-4 w-4 mr-1.5" /> Sign out
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button asChild variant="outline" size="sm" className="flex-1" onClick={closeMenu}>
+                        <Link to="/login">Sign in</Link>
+                      </Button>
+                      <Button asChild size="sm" className="flex-1" onClick={closeMenu}>
+                        <Link to="/signup">Sign up</Link>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+
             <nav className="hidden lg:flex space-x-7">
               <DropdownMenu>
                 <DropdownMenuTrigger className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
@@ -98,20 +206,27 @@ const Header = () => {
           </div>
 
           {/* Center: logo */}
-          <Link to="/" className="flex justify-center">
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-9 sm:h-10 w-auto" />
+          <Link to="/" className="flex justify-center min-w-0">
+            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 sm:h-10 w-auto max-w-full" />
           </Link>
 
           {/* Right: action icons */}
-          <div className="flex items-center justify-end gap-1">
-            <Button variant="ghost" size="icon" aria-label="Search" onClick={() => setSearchOpen(true)}>
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+            {/* Search hidden on mobile (lives inside drawer); shown sm+ */}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+              className="hidden sm:inline-flex h-10 w-10"
+            >
               <Search className="h-5 w-5" />
             </Button>
 
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full" aria-label="Account">
+                  <Button variant="ghost" size="icon" className="rounded-full h-10 w-10" aria-label="Account">
                     <span className="h-7 w-7 rounded-full bg-gold/20 text-charcoal text-xs font-semibold flex items-center justify-center">
                       {initials}
                     </span>
@@ -129,40 +244,16 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button asChild variant="ghost" size="icon" aria-label="Sign in">
+              <Button asChild variant="ghost" size="icon" aria-label="Sign in" className="h-10 w-10">
                 <Link to="/login"><User className="h-5 w-5" /></Link>
               </Button>
             )}
 
-            <Button variant="ghost" size="icon" aria-label="Cart" onClick={handleCart}>
+            <Button variant="ghost" size="icon" aria-label="Cart" onClick={handleCart} className="h-10 w-10 -mr-1 sm:mr-0">
               <ShoppingBag className="h-5 w-5" />
             </Button>
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {open && (
-          <div className="lg:hidden border-t border-border bg-background">
-            <div className="px-6 py-4 space-y-2 text-sm">
-              <p className="text-xs font-semibold tracking-[0.25em] uppercase text-muted-foreground pt-2">Shop</p>
-              <Link to="/catalogue" onClick={() => setOpen(false)} className="block py-1">All jewellery</Link>
-              {visibleCategories.map((c) => (
-                <Link key={c.id} to={`/category/${c.slug}`} onClick={() => setOpen(false)} className="block py-1">
-                  {c.name}
-                </Link>
-              ))}
-              <div className="border-t border-border pt-3 mt-3 space-y-2">
-                <button onClick={() => { openWhatsApp(); setOpen(false); }} className="flex items-center gap-2 py-1">
-                  <MessageCircle className="h-4 w-4" /> Support
-                </button>
-                <Link to="/about" onClick={() => setOpen(false)} className="block py-1">About</Link>
-                {!user && (
-                  <Link to="/login" onClick={() => setOpen(false)} className="block py-1 text-gold">Sign in</Link>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Search dialog */}

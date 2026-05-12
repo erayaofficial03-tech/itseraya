@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Share2, FileDown } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,7 +12,11 @@ import {
 } from "@/components/ui/breadcrumb";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
-import { useProduct, useProducts, useSettings, formatINR, productImage, discountPct } from "@/lib/queries";
+import {
+  useProduct, useProducts, useSettings,
+  formatINR, productImage, discountPct, withImageParams,
+} from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 import { generateProductPdf } from "@/lib/pdf";
 import { toast } from "sonner";
 

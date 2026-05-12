@@ -30,6 +30,10 @@ const BannerAdmin = lazy(() => import("./pages/admin/BannerAdmin"));
 const SettingsAdmin = lazy(() => import("./pages/admin/SettingsAdmin"));
 const AdminsAdmin = lazy(() => import("./pages/admin/AdminsAdmin"));
 const EnquiriesAdmin = lazy(() => import("./pages/admin/EnquiriesAdmin"));
+const AnnouncementAdmin = lazy(() => import("./pages/admin/AnnouncementAdmin"));
+const BrandAdmin = lazy(() => import("./pages/admin/BrandAdmin"));
+const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
+const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -33,7 +33,7 @@ const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
-  const { user } = useAuth();
+  const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

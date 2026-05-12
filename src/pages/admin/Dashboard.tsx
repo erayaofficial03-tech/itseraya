@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gem, FolderTree, MessageCircle } from "lucide-react";
+import { Gem, FolderTree, MessageCircle, Users as UsersIcon } from "lucide-react";
 import { useProducts, useCategories } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
   <Card>
@@ -14,9 +18,28 @@ const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: s
   </Card>
 );
 
+type RecentUser = { id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string };
+
 const Dashboard = () => {
+  const { isAdmin, isManager } = useAuth();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
+  const [userCount, setUserCount] = useState<number | string>("—");
+  const [enquiryCount, setEnquiryCount] = useState<number | string>("—");
+  const [recent, setRecent] = useState<RecentUser[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const [{ count: uc }, { count: ec }, { data: r }] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("enquiries").select("id", { count: "exact", head: true }),
+        supabase.from("profiles").select("id, email, full_name, avatar_url, created_at").order("created_at", { ascending: false }).limit(5),
+      ]);
+      setUserCount(uc ?? 0);
+      setEnquiryCount(ec ?? 0);
+      setRecent(r ?? []);
+    })();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -24,17 +47,50 @@ const Dashboard = () => {
         <h1 className="font-serif text-3xl">Dashboard</h1>
         <p className="text-sm text-muted-foreground">Welcome back to Eraya admin.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Stat icon={Gem} label="Total Products" value={products.length} />
+
+      {isAdmin && (
+        <div className="rounded-lg p-4 border border-gold/40" style={{ background: "hsl(var(--gold) / 0.15)" }}>
+          <p className="text-sm font-medium text-charcoal">You are logged in as Super Admin</p>
+        </div>
+      )}
+      {!isAdmin && isManager && (
+        <div className="rounded-lg p-4 border border-blue-300 bg-blue-50">
+          <p className="text-sm font-medium text-blue-800">You are logged in as Manager</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Stat icon={Gem} label="Products" value={products.length} />
         <Stat icon={FolderTree} label="Categories" value={categories.length} />
-        <Stat icon={MessageCircle} label="Enquiries" value="—" />
+        <Stat icon={MessageCircle} label="Enquiries" value={enquiryCount} />
+        <Stat icon={UsersIcon} label="Total Users" value={userCount} />
       </div>
+
       <Card>
-        <CardHeader><CardTitle className="text-base">Quick tips</CardTitle></CardHeader>
-        <CardContent className="text-sm text-muted-foreground space-y-2">
-          <p>• Set your WhatsApp number in <strong>Profile & Settings</strong> so the "I Love It" button can send enquiries.</p>
-          <p>• Add real product photos in <strong>Products</strong>. The seeded items use placeholder images.</p>
-          <p>• Update your homepage hero in <strong>Banner & Homepage</strong>.</p>
+        <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>
+        <CardContent>
+          {recent.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No users yet.</p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {recent.map((u) => (
+                <li key={u.id} className="flex items-center gap-3 py-3">
+                  {u.avatar_url ? (
+                    <img src={u.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover border" />
+                  ) : (
+                    <span className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
+                      {(u.full_name ?? u.email).charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">{u.full_name || u.email.split("@")[0]}</p>
+                    <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground shrink-0">{format(new Date(u.created_at), "dd MMM, HH:mm")}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
     </div>

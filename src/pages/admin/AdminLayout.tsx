@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
   Users, Inbox, Megaphone, Palette, Type, Search,
@@ -7,6 +8,10 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/useAuth";
 import erayaLogo from "@/assets/eraya-logo.png";
 
@@ -52,9 +57,23 @@ const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: ty
       ))}
     </nav>
     <div className="p-3 border-t border-border">
-      <Button variant="ghost" className="w-full justify-start gap-2" onClick={onSignOut}>
-        <LogOut className="h-4 w-4" /> Sign out
-      </Button>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" className="w-full justify-start gap-2">
+            <LogOut className="h-4 w-4" /> Sign out
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out of Eraya Admin?</AlertDialogTitle>
+            <AlertDialogDescription>You'll need to sign in again to access the admin panel.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onSignOut}>Sign Out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   </div>
 );
@@ -67,7 +86,12 @@ const AdminLayout = () => {
 
   const visibleItems = items.filter((i) => (i.role === "admin" ? isAdmin : true));
 
-  const signOut = async () => { await supabase.auth.signOut(); navigate("/admin/login", { replace: true }); };
+  const qc = useQueryClient();
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    qc.clear();
+    navigate("/admin/login", { replace: true });
+  };
   const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (

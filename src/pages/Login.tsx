@@ -18,14 +18,13 @@ const Login = () => {
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, roleChecked } = useAuth();
   const redirectTo = safeRedirect(new URLSearchParams(location.search).get("redirect"), "/");
 
   useEffect(() => {
-    if (loading || !user) return;
-    if (isAdmin) navigate("/admin", { replace: true });
-    else navigate(redirectTo, { replace: true });
-  }, [user, isAdmin, loading, navigate, redirectTo]);
+    if (loading || !user || !roleChecked) return;
+    navigate(isAdmin ? "/admin" : redirectTo, { replace: true });
+  }, [user, isAdmin, roleChecked, loading, navigate, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -55,9 +55,9 @@ const App = () => (
         <SeoHead />
         <Toaster />
         <Sonner />
-        <InstallPrompt />
         <BrowserRouter>
           <ScrollToTop />
+          <InstallPrompt />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public storefront */}

@@ -9,12 +9,12 @@ const CategoryRow = () => {
   return (
     <section className="w-full px-6 mb-16">
       <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">Shop by Category</h2>
-      <div className="flex md:grid gap-4 md:grid-cols-3 lg:grid-cols-6 overflow-x-auto md:overflow-visible pb-2 -mx-6 px-6 md:mx-0 md:px-0 snap-x">
+      <div className="flex md:grid gap-2 md:gap-3 md:grid-cols-6 lg:grid-cols-8 overflow-x-auto md:overflow-visible pb-2 -mx-6 px-6 md:mx-0 md:px-0 snap-x">
         {visible.map((c) => (
           <Link
             key={c.id}
             to={`/category/${c.slug}`}
-            className="flex-shrink-0 w-40 md:w-auto snap-start group"
+            className="flex-shrink-0 w-[22vw] max-w-[110px] md:w-auto md:max-w-none snap-start group"
           >
             <div className="aspect-square overflow-hidden rounded-full bg-muted/30 mb-2 border-2 border-transparent group-hover:border-gold transition-all">
               <img

@@ -58,6 +58,11 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead
+        title={product.name}
+        description={product.description || undefined}
+        ogImage={images[0]}
+      />
       <Header />
       <main className="pt-6 max-w-7xl mx-auto">
         <div className="px-6 mb-6">
@@ -83,7 +88,13 @@ const ProductDetail = () => {
         <section className="px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
             <div className="aspect-square overflow-hidden rounded-lg bg-muted/30 mb-3">
-              <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
+              <img
+                src={withImageParams(images[activeImg], 900, 85)}
+                alt={product.name}
+                loading="eager"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
             </div>
             {images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto">
@@ -95,7 +106,13 @@ const ProductDetail = () => {
                       i === activeImg ? "border-gold" : "border-transparent"
                     }`}
                   >
-                    <img src={url} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={withImageParams(url, 200, 70)}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -128,7 +145,7 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {product.tags.length > 0 && (
+            {s(settings, "product_tag_visible") && product.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {product.tags.map((t) => (
                   <Badge key={t} variant="outline" className="capitalize">{t}</Badge>
@@ -138,7 +155,7 @@ const ProductDetail = () => {
 
             {product.description && (
               <div className="border-t border-border pt-6">
-                <h3 className="font-serif text-lg mb-2">About this piece</h3>
+                <h3 className="font-serif text-lg mb-2">{s(settings, "product_description_label")}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
               </div>
             )}
@@ -147,10 +164,10 @@ const ProductDetail = () => {
               <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" onClick={handleShare} className="h-11">
-                  <Share2 /> Share
+                  <Share2 /> {s(settings, "product_share_button_label")}
                 </Button>
                 <Button variant="outline" onClick={() => generateProductPdf(product, settings)} className="h-11">
-                  <FileDown /> Save as PDF
+                  <FileDown /> {s(settings, "product_pdf_button_label")}
                 </Button>
               </div>
             </div>
@@ -159,7 +176,7 @@ const ProductDetail = () => {
 
         {related.length > 0 && (
           <div className="mt-20">
-            <ProductRow title="You might also like" products={related} />
+            <ProductRow title={s(settings, "product_related_title")} products={related} />
           </div>
         )}
       </main>

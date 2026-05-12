@@ -53,9 +53,9 @@ const AdminLogin = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <img src={erayaLogo} alt="Eraya" className="h-14 mx-auto mb-2" />
-          <CardTitle className="font-serif text-2xl">Eraya Admin</CardTitle>
+          <CardTitle className="font-serif text-2xl">Admin</CardTitle>
           <p className="text-sm text-muted-foreground">
-            {mode === "signin" ? "Sign in to manage your store" : "Create your admin account"}
+            {mode === "signin" ? "Sign in to manage your store" : "Create your account"}
           </p>
         </CardHeader>
         <CardContent>
@@ -83,9 +83,6 @@ const AdminLogin = () => {
               <button type="button" onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-gold underline">
                 {mode === "signin" ? "Create account" : "Sign in"}
               </button>
-            </p>
-            <p className="text-[11px] text-center text-muted-foreground pt-2">
-              Admin privileges are auto-granted to <strong>admin@itseraya.in</strong>.
             </p>
           </form>
         </CardContent>

@@ -104,7 +104,10 @@ const ProductDetail = () => {
                   {product.categories.name}
                 </p>
               )}
-              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-3">{product.name}</h1>
+              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-2">{product.name}</h1>
+              <p className="text-[11px] font-mono tracking-[0.2em] text-muted-foreground mb-3">
+                SKU · {product.sku}
+              </p>
               <div className="flex items-baseline gap-3">
                 <span className="text-2xl font-semibold text-gold">{formatINR(price)}</span>
                 {product.discounted_price && product.original_price > product.discounted_price && (

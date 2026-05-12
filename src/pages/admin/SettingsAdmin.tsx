@@ -127,6 +127,30 @@ const SettingsAdmin = () => {
               Used by the "I Love It" enquiry button. Digits only, including country code.
             </p>
           </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>USP rotation interval (ms)</Label>
+              <Input
+                type="number"
+                min={1000}
+                max={20000}
+                value={form.usp_interval_ms}
+                onChange={(e) => setForm({ ...form, usp_interval_ms: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground mt-1">Time between message changes.</p>
+            </div>
+            <div>
+              <Label>Fade speed (ms)</Label>
+              <Input
+                type="number"
+                min={100}
+                max={2000}
+                value={form.usp_fade_speed_ms}
+                onChange={(e) => setForm({ ...form, usp_fade_speed_ms: Number(e.target.value) })}
+              />
+              <p className="text-xs text-muted-foreground mt-1">Animation duration for each fade-in.</p>
+            </div>
+          </div>
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save settings"}
           </Button>

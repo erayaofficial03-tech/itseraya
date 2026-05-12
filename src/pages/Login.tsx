@@ -36,12 +36,12 @@ const Login = () => {
         });
         if (error) throw error;
         toast.success("Welcome to Eraya! You're signed in.");
-        navigate("/");
+        navigate(redirectTo, { replace: true });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Welcome back!");
-        navigate("/");
+        navigate(redirectTo, { replace: true });
       }
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
@@ -53,7 +53,7 @@ const Login = () => {
   const handleGoogle = async () => {
     setBusy(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}${redirectTo}`,
     });
     if (result.error) {
       toast.error(result.error.message || "Google sign-in failed");

@@ -1,77 +1,160 @@
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Header from "../components/header/Header";
-import Footer from "../components/footer/Footer";
-import ProductImageGallery from "../components/product/ProductImageGallery";
-import ProductInfo from "../components/product/ProductInfo";
-import ProductDescription from "../components/product/ProductDescription";
-import ProductCarousel from "../components/content/ProductCarousel";
-import { 
-  Breadcrumb, 
-  BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbList, 
-  BreadcrumbPage, 
-  BreadcrumbSeparator 
+import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { Share2, FileDown } from "lucide-react";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
+  BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import LoveItButton from "@/components/eraya/LoveItButton";
+import ProductRow from "@/components/eraya/ProductRow";
+import { useProduct, useProducts, useSettings, formatINR, productImage, discountPct } from "@/lib/queries";
+import { generateProductPdf } from "@/lib/pdf";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const { data: product, isLoading } = useProduct(productId);
+  const { data: settings } = useSettings();
+  const { data: allProducts = [] } = useProducts();
+  const [activeImg, setActiveImg] = useState(0);
+
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  if (!product) return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <p>Product not found.</p>
+      <Link to="/" className="text-gold underline">Back home</Link>
+    </div>
+  );
+
+  const images = product.product_images?.length
+    ? product.product_images.map((i) => i.image_url)
+    : [productImage(product)];
+  const price = product.discounted_price ?? product.original_price;
+  const pct = discountPct(product);
+  const related = allProducts
+    .filter((p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id)
+    .slice(0, 8);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.name, text: `Check out ${product.name} from Eraya`, url });
+      } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast("Link copied to clipboard!");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
-      <main className="pt-6">
-        <section className="w-full px-6">
-          {/* Breadcrumb - Show above image on smaller screens */}
-          <div className="lg:hidden mb-6">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/">Home</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/category/earrings">Earrings</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Pantheon</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+      <main className="pt-6 max-w-7xl mx-auto">
+        <div className="px-6 mb-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem><BreadcrumbLink asChild><Link to="/">Home</Link></BreadcrumbLink></BreadcrumbItem>
+              <BreadcrumbSeparator />
+              {product.categories && (
+                <>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to={`/category/${product.categories.slug}`}>{product.categories.name}</Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                </>
+              )}
+              <BreadcrumbItem><BreadcrumbPage>{product.name}</BreadcrumbPage></BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+
+        <section className="px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div>
+            <div className="aspect-square overflow-hidden rounded-lg bg-muted/30 mb-3">
+              <img src={images[activeImg]} alt={product.name} className="w-full h-full object-cover" />
+            </div>
+            {images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto">
+                {images.map((url, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImg(i)}
+                    className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden border-2 ${
+                      i === activeImg ? "border-gold" : "border-transparent"
+                    }`}
+                  >
+                    <img src={url} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-            <ProductImageGallery />
-            
-            <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
-              <ProductInfo />
-              <ProductDescription />
+
+          <div className="space-y-6 lg:sticky lg:top-24 lg:h-fit">
+            <div>
+              {product.categories?.name && (
+                <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                  {product.categories.name}
+                </p>
+              )}
+              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-3">{product.name}</h1>
+              <div className="flex items-baseline gap-3">
+                <span className="text-2xl font-semibold text-gold">{formatINR(price)}</span>
+                {product.discounted_price && product.original_price > product.discounted_price && (
+                  <>
+                    <span className="text-base text-muted-foreground line-through">
+                      {formatINR(product.original_price)}
+                    </span>
+                    <Badge style={{ background: "hsl(var(--gold))", color: "hsl(var(--charcoal))" }}>
+                      {pct}% OFF
+                    </Badge>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {product.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {product.tags.map((t) => (
+                  <Badge key={t} variant="outline" className="capitalize">{t}</Badge>
+                ))}
+              </div>
+            )}
+
+            {product.description && (
+              <div className="border-t border-border pt-6">
+                <h3 className="font-serif text-lg mb-2">About this piece</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-3 pt-4">
+              <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" onClick={handleShare} className="h-11">
+                  <Share2 /> Share
+                </Button>
+                <Button variant="outline" onClick={() => generateProductPdf(product, settings)} className="h-11">
+                  <FileDown /> Save as PDF
+                </Button>
+              </div>
             </div>
           </div>
         </section>
-        
-        <section className="w-full mt-16 lg:mt-24">
-          <div className="mb-4 px-6">
-            <h2 className="text-sm font-light text-foreground">You might also like</h2>
+
+        {related.length > 0 && (
+          <div className="mt-20">
+            <ProductRow title="You might also like" products={related} />
           </div>
-          <ProductCarousel />
-        </section>
-        
-        <section className="w-full">
-          <div className="mb-4 px-6">
-            <h2 className="text-sm font-light text-foreground">Our other Earrings</h2>
-          </div>
-          <ProductCarousel />
-        </section>
+        )}
       </main>
-      
       <Footer />
     </div>
   );

@@ -37,6 +37,8 @@ export type Settings = {
   hero_headline: string | null;
   hero_subtext: string | null;
   hero_cta_label: string | null;
+  usp_interval_ms: number;
+  usp_fade_speed_ms: number;
 };
 
 export type SocialLink = {

@@ -239,7 +239,12 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/account")}>
                     <User className="h-4 w-4 mr-2" /> My account
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); navigate("/"); }}>
+                  <DropdownMenuItem onClick={async () => {
+                    const { error } = await supabase.auth.signOut();
+                    if (error) { toast.error(error.message); return; }
+                    toast.success("Signed out");
+                    navigate("/", { replace: true });
+                  }}>
                     <LogOut className="h-4 w-4 mr-2" /> Sign out
                   </DropdownMenuItem>
                 </DropdownMenuContent>

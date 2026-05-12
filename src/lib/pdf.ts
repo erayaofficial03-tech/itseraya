@@ -47,6 +47,7 @@ const drawFooter = (doc: jsPDF, settings: Settings | undefined) => {
 };
 
 export const generateProductPdf = async (product: Product, settings: Settings | undefined) => {
+  const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   drawHeader(doc, settings);
 

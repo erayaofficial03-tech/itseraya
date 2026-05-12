@@ -66,7 +66,7 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   const price = product.discounted_price ?? product.original_price;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(14);
-  doc.setTextColor(201, 168, 76);
+  doc.setTextColor(pr, pg, pb);
   doc.text(formatINR(price), 105, 160, { align: "center" });
 
   if (product.discounted_price && product.original_price > product.discounted_price) {

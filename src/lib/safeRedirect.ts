@@ -9,16 +9,7 @@
  *  - Falls back to "/" when invalid
  */
 
-const ALLOWED_PREFIXES = [
-  "/",
-  "/account",
-  "/admin",
-  "/about",
-  "/catalogue",
-  "/category/",
-  "/product/",
-  "/checkout",
-];
+import { ALLOWED_REDIRECT_PREFIXES } from "./routes";
 
 export function safeRedirect(raw: string | null | undefined, fallback = "/"): string {
   if (!raw || typeof raw !== "string") return fallback;
@@ -46,7 +37,7 @@ export function safeRedirect(raw: string | null | undefined, fallback = "/"): st
     return fallback;
   }
 
-  const ok = ALLOWED_PREFIXES.some((p) =>
+  const ok = ALLOWED_REDIRECT_PREFIXES.some((p) =>
     p.endsWith("/") ? pathname.startsWith(p) : pathname === p || pathname.startsWith(p + "/"),
   );
   if (!ok) return fallback;

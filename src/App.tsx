@@ -24,6 +24,7 @@ import CategoriesAdmin from "./pages/admin/CategoriesAdmin";
 import BannerAdmin from "./pages/admin/BannerAdmin";
 import SettingsAdmin from "./pages/admin/SettingsAdmin";
 import AdminsAdmin from "./pages/admin/AdminsAdmin";
+import { ROUTES } from "./lib/routes";
 
 const queryClient = new QueryClient();
 
@@ -35,18 +36,18 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/category/:category" element={<Category />} />
-          <Route path="/product/:productId" element={<ProductDetail />} />
-          <Route path="/catalogue" element={<Catalogue />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/account" element={<RequireAuth><Account /></RequireAuth>} />
-          <Route path="/about" element={<About />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path={ROUTES.home} element={<Index />} />
+          <Route path={ROUTES.category} element={<Category />} />
+          <Route path={ROUTES.product} element={<ProductDetail />} />
+          <Route path={ROUTES.catalogue} element={<Catalogue />} />
+          <Route path={ROUTES.login} element={<Login />} />
+          <Route path={ROUTES.signup} element={<Signup />} />
+          <Route path={ROUTES.forgotPassword} element={<ForgotPassword />} />
+          <Route path={ROUTES.resetPassword} element={<ResetPassword />} />
+          <Route path={ROUTES.account} element={<RequireAuth><Account /></RequireAuth>} />
+          <Route path={ROUTES.about} element={<About />} />
+          <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
+          <Route path={ROUTES.admin} element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<ProductsAdmin />} />
             <Route path="categories" element={<CategoriesAdmin />} />

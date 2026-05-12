@@ -33,9 +33,10 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen flex w-full bg-muted/30">
       <aside className="w-64 bg-background border-r border-border flex flex-col">
-        <div className="p-6 border-b border-border flex items-center justify-center gap-3">
-          <img src={erayaLogo} alt="Eraya" className="h-9 w-auto" />
-          <p className="text-xs text-muted-foreground">Admin</p>
+        <div className="px-6 py-7 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
+          <img src={erayaLogo} alt="Eraya" className="h-10 w-auto" />
+          <span className="h-px w-8 bg-gold/60" />
+          <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {items.map((item) => (

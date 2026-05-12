@@ -116,7 +116,7 @@ const Header = () => {
                     Shop
                   </p>
                   <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
-                    All jewellery <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   {visibleCategories.map((c) => (
                     <Link

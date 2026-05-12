@@ -120,6 +120,9 @@ const Header = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/account")}>
+                    <User className="h-4 w-4 mr-2" /> My account
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); navigate("/"); }}>
                     <LogOut className="h-4 w-4 mr-2" /> Sign out
                   </DropdownMenuItem>

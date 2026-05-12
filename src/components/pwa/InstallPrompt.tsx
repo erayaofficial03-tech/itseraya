@@ -29,25 +29,43 @@ const isIosSafari = () => {
 };
 
 const InstallPrompt = () => {
+  const location = useLocation();
   const [evt, setEvt] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   const [iosVisible, setIosVisible] = useState(false);
+  const [visitedProduct, setVisitedProduct] = useState<boolean>(
+    () => typeof window !== "undefined" && localStorage.getItem(PRODUCT_VISITED_KEY) === "1"
+  );
+  const [timeElapsed, setTimeElapsed] = useState(false);
+  const [isIos, setIsIos] = useState(false);
 
+  // Track product-page visits (persists across reloads)
   useEffect(() => {
-    // Already installed?
+    if (visitedProduct) return;
+    if (matchPath({ path: ROUTES.product, end: true }, location.pathname)) {
+      localStorage.setItem(PRODUCT_VISITED_KEY, "1");
+      setVisitedProduct(true);
+    }
+  }, [location.pathname, visitedProduct]);
+
+  // 30-second time-on-site gate
+  useEffect(() => {
+    const t = setTimeout(() => setTimeElapsed(true), MIN_TIME_ON_SITE_MS);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Capture install event + appinstalled, detect iOS Safari
+  useEffect(() => {
     const isStandalone =
       window.matchMedia?.("(display-mode: standalone)").matches ||
       (navigator as any).standalone === true;
     if (isStandalone) return;
 
-    const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
-    const dismissedRecently =
-      dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS;
+    setIsIos(isIosSafari());
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
       setEvt(e as BeforeInstallPromptEvent);
-      if (!dismissedRecently) setVisible(true);
     };
     const onInstalled = () => {
       setVisible(false);
@@ -59,24 +77,31 @@ const InstallPrompt = () => {
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
+  }, []);
 
-    // iOS Safari fallback — beforeinstallprompt never fires there
-    let iosTimer: ReturnType<typeof setTimeout> | undefined;
-    if (isIosSafari()) {
+  // Reveal prompts only after both gates are satisfied
+  useEffect(() => {
+    if (!visitedProduct || !timeElapsed) return;
+
+    const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
+    const dismissedRecently =
+      dismissedAt && Date.now() - dismissedAt < DISMISS_COOLDOWN_MS;
+    if (evt && !dismissedRecently) setVisible(true);
+
+    if (isIos) {
       const iosDismissedAt = Number(localStorage.getItem(IOS_DISMISS_KEY) || 0);
       const iosDismissedRecently =
         iosDismissedAt && Date.now() - iosDismissedAt < DISMISS_COOLDOWN_MS;
       if (!iosDismissedRecently) {
-        iosTimer = setTimeout(() => setIosVisible(true), IOS_FIRST_VISIT_DELAY_MS);
+        const t = setTimeout(() => setIosVisible(true), IOS_FIRST_VISIT_DELAY_MS);
+        return () => clearTimeout(t);
       }
     }
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-      window.removeEventListener("appinstalled", onInstalled);
-      if (iosTimer) clearTimeout(iosTimer);
-    };
-  }, []);
+  }, [visitedProduct, timeElapsed, evt, isIos]);
 
   const dismiss = () => {
     setVisible(false);

@@ -57,19 +57,10 @@ const AdminLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
-  if (!user) return <Navigate to="/admin/login" replace />;
-  if (!isAdmin)
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6 text-center">
-        <h1 className="font-serif text-2xl">Access denied</h1>
-        <p className="text-muted-foreground">This account doesn't have admin privileges.</p>
-        <Button onClick={async () => { await supabase.auth.signOut(); navigate("/admin/login"); }}>
-          Sign out
-        </Button>
-      </div>
-    );
+  if (!user) return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!isAdmin) return <Navigate to="/login" replace />;
 
-  const signOut = async () => { await supabase.auth.signOut(); navigate("/admin/login"); };
+  const signOut = async () => { await supabase.auth.signOut(); navigate("/login"); };
   const currentLabel = items.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (

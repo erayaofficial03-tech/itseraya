@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
-import { useCategories } from "@/lib/queries";
+import { useCategories, useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 
 const CategoryRow = () => {
   const { data: categories = [] } = useCategories();
+  const { data: settings } = useSettings();
   const visible = categories.filter((c) => c.is_visible);
+  if (!s(settings, "section_categories_visible")) return null;
   if (!visible.length) return null;
 
   return (
     <section className="w-full px-6 mb-16">
       <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-6">
-        Shop by Category
+        {s(settings, "section_categories_title")}
       </h2>
 
       {/* Mobile: 4.5-card horizontal peek scroller */}

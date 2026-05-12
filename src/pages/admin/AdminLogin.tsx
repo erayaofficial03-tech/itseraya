@@ -16,11 +16,12 @@ const AdminLogin = () => {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, roleChecked } = useAuth();
 
   useEffect(() => {
-    if (user && isAdmin) navigate("/admin", { replace: true });
-  }, [user, isAdmin, navigate]);
+    if (!user || !roleChecked) return;
+    if (isAdmin) navigate("/admin", { replace: true });
+  }, [user, isAdmin, roleChecked, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

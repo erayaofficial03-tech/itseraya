@@ -49,9 +49,12 @@ export type SocialLink = {
   display_order: number;
 };
 
+const FIVE_MIN = 5 * 60 * 1000;
+
 export const useSettings = () =>
   useQuery({
     queryKey: ["settings"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;
@@ -62,6 +65,7 @@ export const useSettings = () =>
 export const useCategories = () =>
   useQuery({
     queryKey: ["categories"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")

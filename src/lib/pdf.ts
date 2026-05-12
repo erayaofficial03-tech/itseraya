@@ -126,7 +126,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     doc.text(p.name, x, y + 58);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(201, 168, 76);
+    doc.setTextColor(pr, pg, pb);
     const price = p.discounted_price ?? p.original_price;
     doc.text(formatINR(price), x, y + 65);
     if (p.discounted_price && p.original_price > p.discounted_price) {

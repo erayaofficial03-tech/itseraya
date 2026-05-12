@@ -59,7 +59,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-10 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground gap-2">
-          <p>© {new Date().getFullYear()} {settings?.store_name || "Eraya"}. All rights reserved.</p>
+          <p>© 2026 Eraya. All rights reserved.</p>
           <div className="flex gap-4">
             <Link to="/catalogue" className="hover:text-gold">Catalogue</Link>
           </div>

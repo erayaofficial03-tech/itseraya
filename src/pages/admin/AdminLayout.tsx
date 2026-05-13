@@ -186,7 +186,7 @@ const AdminLayout = () => {
               Admin
             </span>
           </div>
-          <div />
+          <div className="w-10 h-10" aria-hidden />
         </header>
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">

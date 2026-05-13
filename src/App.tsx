@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import RoleGuard from "./components/auth/RoleGuard";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -130,7 +131,7 @@ const App = () => (
                 path={ROUTES.admin}
                 element={<Admin><AdminLayout /></Admin>}
               >
-                <Route index element={<Dashboard />} />
+                <Route index element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
                 <Route path="profile" element={<AdminProfile />} />
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />

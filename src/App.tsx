@@ -125,7 +125,7 @@ const App = () => (
 
               <Route path="*" element={<NotFound />} />
             </Routes>
-            </PageTransition>
+            
           </Suspense>
           <WhatsAppFloat />
           <BottomNav />

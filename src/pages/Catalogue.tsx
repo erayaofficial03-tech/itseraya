@@ -39,14 +39,40 @@ const Catalogue = () => {
     setWaBusy(true);
     const t = toast.loading("Generating catalogue PDF…");
     try {
-      await generateCatalogPdf(visible, settings);
+      const { blob, filename } = await generateCatalogPdf(visible, settings, true);
       const wa = settings?.whatsapp_number?.replace(/\D/g, "") || "";
       const url = typeof window !== "undefined" ? window.location.href : "";
       const storeName = s(settings, "store_name") || "Eraya";
-      const msg =
+      const file = new File([blob], filename, { type: "application/pdf" });
+      const text =
         `Hi! Here is the latest *${storeName}* catalogue.\n` +
-        `Browse the full collection: ${url}\n\n` +
-        `The catalogue PDF has been downloaded — please attach it from your files.`;
+        `Browse the full collection: ${url}`;
+
+      // Prefer Web Share API with file attachment (Android/iOS PWA)
+      // @ts-ignore - canShare typing
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: `${storeName} Catalogue`, text });
+          toast.success("Catalogue ready to share", { id: t });
+          return;
+        } catch (err: any) {
+          if (err?.name === "AbortError") {
+            toast.dismiss(t);
+            return;
+          }
+          // fall through to text-only flow
+        }
+      }
+
+      // Fallback: download the PDF and open WhatsApp text-only
+      const dlUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = dlUrl;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(dlUrl);
+      const msg =
+        `${text}\n\nThe catalogue PDF has been downloaded — please attach it from your files.`;
       const target = wa ? `https://wa.me/${wa}` : "https://wa.me/";
       window.open(`${target}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
       toast.success("PDF downloaded — open WhatsApp and attach the file to share it", { id: t });

@@ -258,7 +258,9 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   doc.save(`Eraya-${slugify(product.name)}.pdf`);
 };
 
-export const generateCatalogPdf = async (products: Product[], settings: Settings | undefined) => {
+export async function generateCatalogPdf(products: Product[], settings: Settings | undefined): Promise<void>;
+export async function generateCatalogPdf(products: Product[], settings: Settings | undefined, asBlob: true): Promise<{ blob: Blob; filename: string }>;
+export async function generateCatalogPdf(products: Product[], settings: Settings | undefined, asBlob = false): Promise<void | { blob: Blob; filename: string }> {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   pdfFont = (await ensureRupeeFont(doc)) ? "NotoSans" : "helvetica";
@@ -335,5 +337,11 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
   }
 
-  doc.save(`Eraya-Catalogue-${todayISO()}.pdf`);
+  const filename = `Eraya-Catalogue-${todayISO()}.pdf`;
+  if (asBlob) {
+    const blob = doc.output("blob");
+    return { blob, filename };
+  }
+  doc.save(filename);
+  return undefined;
 };

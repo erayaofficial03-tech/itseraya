@@ -29,6 +29,9 @@ const ShareMenu = ({
   imageSelector = "[data-product-image]",
 }: ShareMenuProps) => {
   const [open, setOpen] = useState(false);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [imgBusy, setImgBusy] = useState(false);
+  const busy = pdfBusy || imgBusy;
   const url = typeof window !== "undefined" ? window.location.href : "";
 
   const priceNum = product.discounted_price ?? product.original_price;

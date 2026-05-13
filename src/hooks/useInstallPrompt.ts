@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { logInstallEvent } from "@/lib/installAnalytics";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -44,6 +45,7 @@ export const useInstallPrompt = () => {
       setIsInstalled(true);
       setIsInstallable(false);
       setDeferredPrompt(null);
+      logInstallEvent("installed");
     };
     window.addEventListener("appinstalled", onInstalled);
 

@@ -128,8 +128,8 @@ const App = () => (
           </Suspense>
           <WhatsAppFloat />
           <BottomNav />
-        </BrowserRouter>
         </EnquiryCartProvider>
+        </BrowserRouter>
       </BrandProvider>
     </TooltipProvider>
   </QueryClientProvider>

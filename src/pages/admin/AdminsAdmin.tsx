@@ -76,19 +76,27 @@ const UsersAdmin = () => {
 
   useEffect(() => { load(); }, []);
 
+  const MASTER_EMAIL = "admin@itseraya.in";
+
   const updateRole = async (u: UserRow, next: AppRole) => {
     if (u.role === next) return;
-    if (u.role === "admin" || next === "admin") {
-      toast.error("The Admin role is reserved for admin@itseraya.in.");
+    if (u.email === MASTER_EMAIL) {
+      toast.error("The master admin role cannot be changed.");
       return;
     }
-    const { error: delErr } = await supabase.from("user_roles").delete().eq("user_id", u.id).neq("role", "admin");
+    const { error: delErr } = await supabase.from("user_roles").delete().eq("user_id", u.id);
     if (delErr) { toast.error(delErr.message); return; }
     const { error: insErr } = await supabase.from("user_roles").insert({ user_id: u.id, role: next });
-    if (insErr) { toast.error(insErr.message); return; }
+    if (insErr) {
+      toast.error(insErr.message);
+      // restore previous role to keep DB + UI consistent
+      await supabase.from("user_roles").insert({ user_id: u.id, role: u.role });
+      return;
+    }
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, role: next } : x)));
     toast.success(`${u.email} is now ${next}`);
   };
+
 
   const toggleBlock = async (u: UserRow) => {
     const next = !u.is_blocked;

@@ -75,8 +75,6 @@ const SettingsAdmin = () => {
     const { error } = await supabase.from("settings").update({
       ...form,
       whatsapp_number: cleanWa || null,
-      logo_url: form.logo_url || null,
-      app_icon_url: form.app_icon_url || null,
       about_image_url: form.about_image_url || null,
     } as any).eq("id", 1);
     setBusy(false);

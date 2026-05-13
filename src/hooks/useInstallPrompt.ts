@@ -11,13 +11,22 @@ export const useInstallPrompt = () => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
+  const [isIOSNonSafari, setIsIOSNonSafari] = useState(false);
 
   useEffect(() => {
+    const ua = navigator.userAgent;
     const ios =
-      /iphone|ipad|ipod/i.test(navigator.userAgent) &&
+      /iphone|ipad|ipod/i.test(ua) &&
       !(window.navigator as any).standalone;
     setIsIOS(ios);
     if (ios) setIsInstallable(true);
+
+    const safari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+    const iosChrome = /CriOS/i.test(ua);
+    const iosFirefox = /FxiOS/i.test(ua);
+    setIsSafari(safari);
+    setIsIOSNonSafari(ios && (iosChrome || iosFirefox || !safari));
 
     const standalone =
       window.matchMedia("(display-mode: standalone)").matches ||
@@ -57,5 +66,12 @@ export const useInstallPrompt = () => {
     return outcome;
   };
 
-  return { isInstallable, isIOS, isInstalled, triggerInstall };
+  return {
+    isInstallable,
+    isIOS,
+    isInstalled,
+    isSafari,
+    isIOSNonSafari,
+    triggerInstall,
+  };
 };

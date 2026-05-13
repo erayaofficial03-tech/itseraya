@@ -10,7 +10,7 @@ import RoleGuard from "./components/auth/RoleGuard";
 import InstallPrompt from "./components/pwa/InstallPrompt";
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
-import PageTransition from "./components/PageTransition";
+
 import BrandProvider from "./components/providers/BrandProvider";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
 import SeoHead from "./components/providers/SeoHead";

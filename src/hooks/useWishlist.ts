@@ -72,6 +72,8 @@ export const useToggleWishlist = () => {
   const { user } = useAuth();
   const qc = useQueryClient();
   const navigate = useNavigate();
+  const itemsKey = wishlistKey(user?.id);
+  const productsKey = ["wishlist-products", user?.id];
 
   return useMutation({
     mutationFn: async ({ productId, isSaved }: { productId: string; isSaved: boolean }) => {
@@ -91,18 +93,48 @@ export const useToggleWishlist = () => {
       if (error && !String(error.message).includes("duplicate")) throw error;
       return { added: true };
     },
-    onSuccess: (res) => {
-      qc.invalidateQueries({ queryKey: wishlistKey(user?.id) });
-      qc.invalidateQueries({ queryKey: ["wishlist-products", user?.id] });
-      toast.success(res.added ? "Added to wishlist" : "Removed from wishlist");
+    onMutate: async ({ productId, isSaved }) => {
+      if (!user) return;
+      await Promise.all([
+        qc.cancelQueries({ queryKey: itemsKey }),
+        qc.cancelQueries({ queryKey: productsKey }),
+      ]);
+      const prevItems = qc.getQueryData<WishlistItem[]>(itemsKey);
+      const prevProducts = qc.getQueryData<Product[]>(productsKey);
+
+      // Optimistically update items list
+      qc.setQueryData<WishlistItem[]>(itemsKey, (old = []) => {
+        if (isSaved) return old.filter((w) => w.product_id !== productId);
+        if (old.some((w) => w.product_id === productId)) return old;
+        return [
+          { id: `optimistic-${productId}`, product_id: productId, created_at: new Date().toISOString() },
+          ...old,
+        ];
+      });
+
+      // Optimistically remove from products list (we don't have full product on add)
+      if (isSaved && prevProducts) {
+        qc.setQueryData<Product[]>(productsKey, prevProducts.filter((p) => p.id !== productId));
+      }
+
+      return { prevItems, prevProducts };
     },
-    onError: (err: Error) => {
+    onError: (err: Error, _vars, ctx) => {
+      if (ctx?.prevItems !== undefined) qc.setQueryData(itemsKey, ctx.prevItems);
+      if (ctx?.prevProducts !== undefined) qc.setQueryData(productsKey, ctx.prevProducts);
       if (err.message === "not_signed_in") {
         toast.info("Sign in to save favourites.");
         navigate("/login");
         return;
       }
       toast.error(err.message);
+    },
+    onSuccess: (res) => {
+      toast.success(res.added ? "Added to wishlist" : "Removed from wishlist");
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: itemsKey });
+      qc.invalidateQueries({ queryKey: productsKey });
     },
   });
 };

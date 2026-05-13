@@ -46,7 +46,7 @@ const SidebarBody = ({
   profile,
   userEmail,
 }: {
-  visibleItems: typeof items;
+  visibleItems: NavItem[];
   onNavigate?: () => void;
   onSignOut: () => void;
   onSwitchToCustomer: () => void;
@@ -80,8 +80,8 @@ const SidebarBody = ({
     <nav className="flex-1 p-3 space-y-1 overflow-auto">
       {visibleItems.map((item) => (
         <NavLink
-          key={item.to}
-          to={item.to}
+          key={item.path}
+          to={item.path}
           end={item.end}
           onClick={onNavigate}
           className={({ isActive }) =>
@@ -128,10 +128,14 @@ const SidebarBody = ({
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin, profile, user, switchMode } = useAuth();
+  const { isAdmin, isManager, profile, user, switchMode } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const visibleItems = items.filter((i) => (i.role === "admin" ? isAdmin : true));
+  const visibleItems = navItems.filter((i) => {
+    if (isAdmin) return true;
+    if (isManager) return i.roles.includes("manager");
+    return false;
+  });
 
   const qc = useQueryClient();
   const signOut = async () => {

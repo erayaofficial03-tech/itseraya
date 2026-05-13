@@ -227,7 +227,7 @@ const UsersAdmin = () => {
                                 <SelectItem value="customer">customer</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
+                            <Button size="icon" variant="outline" onClick={() => setConfirmBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
                               {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
                             </Button>
                           </>

@@ -324,6 +324,30 @@ export type Database = {
         }
         Relationships: []
       }
+      install_events: {
+        Row: {
+          event_type: string
+          id: string
+          occurred_at: string
+          page_path: string | null
+          platform: string | null
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          occurred_at?: string
+          page_path?: string | null
+          platform?: string | null
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          occurred_at?: string
+          page_path?: string | null
+          platform?: string | null
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           created_at: string

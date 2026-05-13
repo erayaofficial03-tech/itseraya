@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
+import { logInstallEvent } from "@/lib/installAnalytics";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
@@ -98,12 +99,18 @@ const Header = () => {
   const closeMenu = () => setOpen(false);
 
   const handleInstall = async () => {
+    logInstallEvent("prompt_shown", isIOS ? "ios" : undefined);
     const result = await triggerInstall();
     if (result === "ios") {
+      logInstallEvent("ios_guide_opened", "ios");
       setShowIOSGuide(true);
     } else if (result === "accepted") {
+      logInstallEvent("accepted");
+      logInstallEvent("installed");
       toast.success("Eraya installed! Find it on your home screen 💛");
       closeMenu();
+    } else if (result === "dismissed") {
+      logInstallEvent("dismissed");
     } else if (result === "installed") {
       toast("Eraya is already installed on your device");
     }

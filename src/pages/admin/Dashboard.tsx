@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import {
   WhatsAppClicksWidget, TopProductsWidget, BannerPerformanceWidget,
-  EnquiryTrendWidget, ConversionFunnelWidget,
+  EnquiryTrendWidget, ConversionFunnelWidget, InstallEventsWidget,
 } from "./dashboard-widgets";
 
 const Stat = ({ icon: Icon, label, value, to }: { icon: any; label: string; value: string | number; to: string }) => (
@@ -105,6 +105,7 @@ const Dashboard = () => {
         <EnquiryTrendWidget />
         <ConversionFunnelWidget />
         <BannerPerformanceWidget />
+        <InstallEventsWidget />
       </div>
 
       {isAdmin && (

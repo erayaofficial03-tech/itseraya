@@ -143,6 +143,15 @@ const Header = () => {
                   <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
                     {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
+                  {shopShortcuts.map((sc) => {
+                    const Icon = sc.icon;
+                    return (
+                      <Link key={sc.label} to={sc.to} onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {sc.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    );
+                  })}
                   {visibleCategories.map((c) => (
                     <Link
                       key={c.id}
@@ -153,6 +162,24 @@ const Header = () => {
                       {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
                   ))}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                    Collections
+                  </p>
+                  {collections.map((col) => {
+                    const Icon = col.icon;
+                    return (
+                      <Link
+                        key={col.value}
+                        to={`/catalogue?collection=${col.value}`}
+                        onClick={closeMenu}
+                        className={drawerLinkClass}
+                      >
+                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {col.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    );
+                  })}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Account
@@ -204,6 +231,10 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     More
                   </p>
+                  <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
+                    <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     About <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>

@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
+import SeoHead from "@/components/providers/SeoHead";
 import { useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { ProductGridSkeleton } from "@/components/ui/skeletons";

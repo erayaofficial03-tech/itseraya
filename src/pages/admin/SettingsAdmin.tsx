@@ -21,7 +21,7 @@ const SettingsAdmin = () => {
   const qc = useQueryClient();
 
   const [form, setForm] = useState({
-    store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
+    whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
     usp_1: "", usp_2: "", usp_3: "",
     whatsapp_message_template: "",
@@ -30,7 +30,6 @@ const SettingsAdmin = () => {
     pwa_name: "", pwa_short_name: "", pwa_description: "",
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
     instagram_username: "", facebook_page_name: "",
-    app_icon_url: "",
     about_title: "", about_body: "", about_image_url: "",
     enquiry_mode: "cart" as "cart" | "direct",
   });
@@ -39,9 +38,6 @@ const SettingsAdmin = () => {
   useEffect(() => {
     if (settings) {
       setForm({
-        store_name: settings.store_name,
-        tagline: settings.tagline,
-        logo_url: settings.logo_url || "",
         whatsapp_number: settings.whatsapp_number || "",
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,

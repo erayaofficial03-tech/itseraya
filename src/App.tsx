@@ -71,12 +71,12 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrandProvider>
+        <BrowserRouter>
         <EnquiryCartProvider>
         <SeoHead />
         <Toaster />
         <Sonner />
         <WhatsAppFallbackDialog />
-        <BrowserRouter>
           <ScrollToTop />
           <InstallPrompt />
           <Suspense fallback={<PageLoader />}>

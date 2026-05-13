@@ -10,7 +10,7 @@ import RoleGuard from "./components/auth/RoleGuard";
 
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
-import ModeSwitcher from "./components/ModeSwitcher";
+
 
 import BrandProvider from "./components/providers/BrandProvider";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
@@ -148,7 +148,6 @@ const App = () => (
             
           </Suspense>
           <WhatsAppFloat />
-          <ModeSwitcher />
           <BottomNav />
         </EnquiryCartProvider>
         </BrowserRouter>

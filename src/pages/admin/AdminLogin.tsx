@@ -5,12 +5,25 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import erayaLogo from "@/assets/eraya-logo.png";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const AdminLogin = () => {
   const [busy, setBusy] = useState(false);
   const [emailBusy, setEmailBusy] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [touched, setTouched] = useState({ email: false, password: false });
   const navigate = useNavigate();
+
+  const emailError = touched.email && !email
+    ? "Email is required"
+    : touched.email && !emailRegex.test(email)
+    ? "Enter a valid email address"
+    : "";
+  const passwordError = touched.password && !password ? "Password is required" : "";
+  const isFormValid = emailRegex.test(email) && password.length > 0;
+
+  const blur = (field: "email" | "password") => setTouched((p) => ({ ...p, [field]: true }));
 
   const signIn = async () => {
     setBusy(true);
@@ -31,10 +44,8 @@ const AdminLogin = () => {
 
   const signInWithEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Enter email and password");
-      return;
-    }
+    setTouched({ email: true, password: true });
+    if (!isFormValid) return;
     setEmailBusy(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -51,8 +62,9 @@ const AdminLogin = () => {
   };
 
   const forgot = async () => {
-    if (!email) {
-      toast.info("Enter your email first.");
+    setTouched((p) => ({ ...p, email: true }));
+    if (!email || !emailRegex.test(email)) {
+      toast.info("Enter a valid email first.");
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -61,6 +73,11 @@ const AdminLogin = () => {
     if (error) toast.error(error.message);
     else toast.success("Password reset email sent.");
   };
+
+  const inputBase =
+    "mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/50 transition-colors";
+  const inputError = "border-red-400 focus:ring-red-300";
+  const inputNormal = "border-border";
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-ivory">
@@ -94,7 +111,7 @@ const AdminLogin = () => {
             <span className="flex-1 h-px bg-border" />
           </div>
 
-          <form onSubmit={signInWithEmail} className="mt-6 space-y-3 text-left">
+          <form onSubmit={signInWithEmail} className="mt-6 space-y-3 text-left" noValidate>
             <div>
               <label className="text-[11px] tracking-[0.25em] uppercase text-muted-foreground">Email</label>
               <input
@@ -102,9 +119,15 @@ const AdminLogin = () => {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => blur("email")}
                 disabled={emailBusy}
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/50"
+                className={`${inputBase} ${emailError ? inputError : inputNormal}`}
+                aria-invalid={!!emailError}
+                aria-describedby={emailError ? "email-err" : undefined}
               />
+              {emailError && (
+                <p id="email-err" className="mt-1 text-xs text-red-500">{emailError}</p>
+              )}
             </div>
             <div>
               <label className="text-[11px] tracking-[0.25em] uppercase text-muted-foreground">Password</label>
@@ -113,14 +136,20 @@ const AdminLogin = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => blur("password")}
                 disabled={emailBusy}
-                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/50"
+                className={`${inputBase} ${passwordError ? inputError : inputNormal}`}
+                aria-invalid={!!passwordError}
+                aria-describedby={passwordError ? "pw-err" : undefined}
               />
+              {passwordError && (
+                <p id="pw-err" className="mt-1 text-xs text-red-500">{passwordError}</p>
+              )}
             </div>
             <button
               type="submit"
-              disabled={emailBusy}
-              className="w-full inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-charcoal text-ivory hover:opacity-90 transition-opacity disabled:opacity-60"
+              disabled={emailBusy || !isFormValid}
+              className="w-full inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-charcoal text-ivory hover:opacity-90 transition-opacity disabled:opacity-40"
             >
               {emailBusy ? "Signing in…" : "Sign in with Email"}
             </button>
@@ -143,4 +172,3 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-

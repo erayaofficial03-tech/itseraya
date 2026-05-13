@@ -134,6 +134,46 @@ const Header = () => {
                   ))}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                    Account
+                  </p>
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-3 py-3 border-b border-border/60 -mx-6 px-6">
+                        <Avatar className="h-9 w-9 border border-gold">
+                          <AvatarImage src={profile?.avatar_url || undefined} />
+                          <AvatarFallback className="bg-charcoal text-ivory text-xs">
+                            {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{profile?.full_name || "Welcome"}</p>
+                          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                        </div>
+                      </div>
+                      <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> Profile</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> Wishlist</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <button
+                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                        className={`${drawerLinkClass} w-full text-left`}
+                      >
+                        <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Log out</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                    </>
+                  ) : (
+                    <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
+                      <span className="flex items-center gap-2"><LogIn className="h-4 w-4" /> Log in / Sign up</span>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </Link>
+                  )}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     More
                   </p>
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>

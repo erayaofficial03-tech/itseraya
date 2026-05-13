@@ -108,11 +108,12 @@ const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
             <div className="w-10 h-1 bg-[#EDE8E1] rounded-full mx-auto mb-6" />
 
             <button
+              type="button"
               onClick={onClose}
-              aria-label="Close"
-              className="absolute top-5 right-5 p-2 rounded-full bg-[#F5F0EA]"
+              aria-label="Close install guide"
+              className="absolute top-5 right-5 p-2 rounded-full bg-[#F5F0EA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]"
             >
-              <X className="w-4 h-4 text-[#9A8F85]" />
+              <X className="w-4 h-4 text-[#9A8F85]" aria-hidden="true" />
             </button>
 
             <div className="flex flex-col items-center mb-6">

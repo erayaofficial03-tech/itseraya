@@ -24,6 +24,7 @@ const SettingsAdmin = () => {
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
     whatsapp_message_template: "",
+    catalogue_whatsapp_message_template: "",
     store_address: "", store_email: "", store_phone: "", store_city: "",
     pwa_name: "", pwa_short_name: "", pwa_description: "",
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
@@ -42,6 +43,7 @@ const SettingsAdmin = () => {
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
         whatsapp_message_template: (settings as any).whatsapp_message_template || "",
+        catalogue_whatsapp_message_template: (settings as any).catalogue_whatsapp_message_template || "",
         store_address: (settings as any).store_address || "",
         store_email: (settings as any).store_email || "",
         store_phone: (settings as any).store_phone || "",
@@ -226,10 +228,18 @@ const SettingsAdmin = () => {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>WhatsApp message template</CardTitle></CardHeader>
-        <CardContent className="space-y-3">
-          <Textarea rows={6} value={form.whatsapp_message_template} onChange={(e) => setForm({ ...form, whatsapp_message_template: e.target.value })} />
-          <p className="text-xs text-muted-foreground">Available variables: <code>{"{product_name}"}</code>, <code>{"{price}"}</code>, <code>{"{url}"}</code></p>
+        <CardHeader><CardTitle>WhatsApp message templates</CardTitle></CardHeader>
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <Label>Product enquiry message</Label>
+            <Textarea rows={6} value={form.whatsapp_message_template} onChange={(e) => setForm({ ...form, whatsapp_message_template: e.target.value })} />
+            <p className="text-xs text-muted-foreground">Available variables: <code>{"{product_name}"}</code>, <code>{"{price}"}</code>, <code>{"{url}"}</code></p>
+          </div>
+          <div className="space-y-2">
+            <Label>Catalogue share message</Label>
+            <Textarea rows={6} value={form.catalogue_whatsapp_message_template} onChange={(e) => setForm({ ...form, catalogue_whatsapp_message_template: e.target.value })} />
+            <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available variables: <code>{"{store_name}"}</code>, <code>{"{url}"}</code>, <code>{"{tagline}"}</code>, <code>{"{whatsapp}"}</code></p>
+          </div>
         </CardContent>
       </Card>
 

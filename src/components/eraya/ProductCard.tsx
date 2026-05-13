@@ -95,17 +95,17 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
             </button>
           )}
         </div>
-        <div className="px-3 pt-2 pb-3 flex flex-col flex-1">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground min-h-[14px]">
+        <div className="px-2 md:px-3 pt-1.5 pb-2 md:pb-3 flex flex-col flex-1">
+          <p className="text-[8px] md:text-[10px] uppercase tracking-wider md:tracking-widest text-muted-foreground truncate min-h-[12px] md:min-h-[14px]">
             {product.categories?.name || "\u00A0"}
           </p>
-          <h3 className="text-[13px] font-semibold text-foreground line-clamp-2 mt-0.5 min-h-[34px] group-hover:text-gold transition-colors">
+          <h3 className="font-serif text-[11px] md:text-[13px] font-medium md:font-semibold leading-snug text-foreground line-clamp-2 mt-0.5 min-h-[28px] md:min-h-[34px] group-hover:text-gold transition-colors">
             {product.name}
           </h3>
-          <div className="flex items-baseline gap-2 mt-auto pt-1">
-            <span className="text-[14px] font-semibold text-gold">{formatINR(price)}</span>
+          <div className="flex items-baseline flex-wrap gap-x-1.5 gap-y-0 mt-auto pt-1 min-w-0">
+            <span className="text-[12px] md:text-[14px] font-semibold text-gold whitespace-nowrap">{formatINR(price)}</span>
             {product.discounted_price && product.original_price > product.discounted_price && (
-              <span className="text-[12px] text-muted-foreground line-through">
+              <span className="text-[10px] md:text-[12px] text-muted-foreground line-through whitespace-nowrap">
                 {formatINR(product.original_price)}
               </span>
             )}

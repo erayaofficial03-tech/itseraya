@@ -127,7 +127,7 @@ const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col bg-[hsl(var(--background))]">
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--background))]">
                 <SheetHeader className="px-6 py-5 border-b border-border items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
@@ -189,12 +189,6 @@ const Header = () => {
                             {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                          <button
-                            onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                            className="text-xs text-red-600 hover:text-red-700 mt-0.5"
-                          >
-                            Sign out
-                          </button>
                         </div>
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
@@ -209,15 +203,6 @@ const Header = () => {
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
-                      {isStaff && (
-                        <button
-                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
-                          className={`${drawerLinkClass} w-full text-left`}
-                        >
-                          <span className="flex items-center gap-2 text-gold"><Cog className="h-4 w-4" /> Switch to Admin Mode</span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                        </button>
-                      )}
                     </>
                   ) : (
                     <>

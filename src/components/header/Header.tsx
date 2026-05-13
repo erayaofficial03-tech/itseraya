@@ -311,7 +311,7 @@ const Header = () => {
 
       {/* Search dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle className="font-serif">Search Eraya</DialogTitle>
           </DialogHeader>

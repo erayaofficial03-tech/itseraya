@@ -30,11 +30,11 @@ const Footer = () => {
   );
 
   return (
-    <footer className="w-full bg-background border-t border-border mt-24">
+    <footer className="hidden md:block w-full bg-background border-t border-border mt-24">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col items-center text-center gap-4">
           {showLogo && (
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-14 w-auto object-contain" />
+            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 w-auto object-contain" />
           )}
           <p className="font-serif italic text-lg text-gold">{s(settings, "tagline")}</p>
 

@@ -83,6 +83,12 @@ const App = () => (
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
 
+              {/* Customer auth */}
+              <Route path="/login" element={<Public><Login /></Public>} />
+              <Route path="/profile" element={<Public><Profile /></Public>} />
+              <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
               {/* OAuth callback */}
               <Route path={ROUTES.authCallback} element={<AuthCallback />} />
 

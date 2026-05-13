@@ -27,19 +27,37 @@ const Dashboard = () => {
   const [userCount, setUserCount] = useState<number | string>("—");
   const [enquiryCount, setEnquiryCount] = useState<number | string>("—");
   const [recent, setRecent] = useState<RecentUser[]>([]);
+  const [pipeline, setPipeline] = useState<Record<string, number>>({});
 
   useEffect(() => {
     (async () => {
-      const [{ count: uc }, { count: ec }, { data: r }] = await Promise.all([
+      const [{ count: uc }, { count: ec }, { data: r }, { data: pipe }] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("enquiries").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id, email, full_name, avatar_url, created_at").order("created_at", { ascending: false }).limit(5),
+        supabase.from("enquiries").select("status").limit(2000),
       ]);
       setUserCount(uc ?? 0);
       setEnquiryCount(ec ?? 0);
       setRecent(r ?? []);
+      const tally: Record<string, number> = {};
+      (pipe || []).forEach((e: { status: string | null }) => {
+        const k = e.status || "open";
+        tally[k] = (tally[k] || 0) + 1;
+      });
+      setPipeline(tally);
     })();
   }, []);
+
+  const PIPELINE_STAGES: { key: string; label: string; color: string }[] = [
+    { key: "open", label: "Open", color: "bg-blue-500" },
+    { key: "contacted", label: "Contacted", color: "bg-amber-500" },
+    { key: "interested", label: "Interested", color: "bg-purple-500" },
+    { key: "negotiation", label: "Negotiation", color: "bg-indigo-500" },
+    { key: "followup_pending", label: "Follow-up", color: "bg-orange-500" },
+    { key: "closed_won", label: "Won", color: "bg-emerald-500" },
+    { key: "closed_lost", label: "Lost", color: "bg-rose-500" },
+  ];
 
   return (
     <div className="space-y-6">
@@ -66,6 +84,22 @@ const Dashboard = () => {
         <Stat icon={UsersIcon} label="Total Users" value={userCount} />
       </div>
 
+      <Card>
+        <CardHeader><CardTitle className="text-base">Enquiry Pipeline</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+            {PIPELINE_STAGES.map((stage) => (
+              <div key={stage.key} className="rounded-lg border border-border p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`h-2 w-2 rounded-full ${stage.color}`} />
+                  <span className="text-xs text-muted-foreground">{stage.label}</span>
+                </div>
+                <p className="text-2xl font-serif">{pipeline[stage.key] ?? 0}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>
         <CardContent>

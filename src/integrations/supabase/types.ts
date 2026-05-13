@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          bg_color: string | null
+          created_at: string
+          cta_text: string | null
+          cta_url: string | null
+          display_order: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          is_marquee: boolean
+          message: string
+          starts_at: string | null
+          text_color: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          bg_color?: string | null
+          created_at?: string
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_marquee?: boolean
+          message: string
+          starts_at?: string | null
+          text_color?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bg_color?: string | null
+          created_at?: string
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          is_marquee?: boolean
+          message?: string
+          starts_at?: string | null
+          text_color?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -46,31 +97,49 @@ export type Database = {
       }
       enquiries: {
         Row: {
+          admin_notes: string | null
           created_at: string
           customer_email: string | null
           customer_name: string | null
+          enquiry_ref: string | null
+          follow_up_at: string | null
+          followed_up_at: string | null
           id: string
+          priority: string | null
           product_id: string | null
           product_name: string
           product_price: number | null
+          status: string | null
         }
         Insert: {
+          admin_notes?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
+          enquiry_ref?: string | null
+          follow_up_at?: string | null
+          followed_up_at?: string | null
           id?: string
+          priority?: string | null
           product_id?: string | null
           product_name: string
           product_price?: number | null
+          status?: string | null
         }
         Update: {
+          admin_notes?: string | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string | null
+          enquiry_ref?: string | null
+          follow_up_at?: string | null
+          followed_up_at?: string | null
           id?: string
+          priority?: string | null
           product_id?: string | null
           product_name?: string
           product_price?: number | null
+          status?: string | null
         }
         Relationships: [
           {
@@ -81,6 +150,99 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      enquiry_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string | null
+          product_image: string | null
+          product_name: string
+          product_price: number | null
+          quantity: number
+          selected_colour: string | null
+          selected_size: string | null
+          session_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          product_image?: string | null
+          product_name: string
+          product_price?: number | null
+          quantity?: number
+          selected_colour?: string | null
+          selected_size?: string | null
+          session_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          product_image?: string | null
+          product_name?: string
+          product_price?: number | null
+          quantity?: number
+          selected_colour?: string | null
+          selected_size?: string | null
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiry_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enquiry_items_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "enquiry_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      enquiry_sessions: {
+        Row: {
+          created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          enquiry_ref: string | null
+          id: string
+          notes: string | null
+          session_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          enquiry_ref?: string | null
+          id?: string
+          notes?: string | null
+          session_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          enquiry_ref?: string | null
+          id?: string
+          notes?: string | null
+          session_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       product_images: {
         Row: {
@@ -117,6 +279,7 @@ export type Database = {
       products: {
         Row: {
           category_id: string | null
+          colours: string[]
           created_at: string
           description: string | null
           discounted_price: number | null
@@ -125,11 +288,13 @@ export type Database = {
           is_visible: boolean
           name: string
           original_price: number
+          sizes: string[]
           sku: string
           tags: string[]
         }
         Insert: {
           category_id?: string | null
+          colours?: string[]
           created_at?: string
           description?: string | null
           discounted_price?: number | null
@@ -138,11 +303,13 @@ export type Database = {
           is_visible?: boolean
           name: string
           original_price?: number
+          sizes?: string[]
           sku?: string
           tags?: string[]
         }
         Update: {
           category_id?: string | null
+          colours?: string[]
           created_at?: string
           description?: string | null
           discounted_price?: number | null
@@ -151,6 +318,7 @@ export type Database = {
           is_visible?: boolean
           name?: string
           original_price?: number
+          sizes?: string[]
           sku?: string
           tags?: string[]
         }
@@ -213,6 +381,7 @@ export type Database = {
           color_primary: string | null
           color_text: string | null
           enquiry_button_color: string | null
+          enquiry_mode: string
           facebook_connected_at: string | null
           facebook_page_name: string | null
           favicon_url: string | null
@@ -300,6 +469,7 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           enquiry_button_color?: string | null
+          enquiry_mode?: string
           facebook_connected_at?: string | null
           facebook_page_name?: string | null
           favicon_url?: string | null
@@ -387,6 +557,7 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           enquiry_button_color?: string | null
+          enquiry_mode?: string
           facebook_connected_at?: string | null
           facebook_page_name?: string | null
           favicon_url?: string | null

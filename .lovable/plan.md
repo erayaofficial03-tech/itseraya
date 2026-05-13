@@ -1,90 +1,81 @@
+# ERAYA Phase 1 Improvements
 
-# Eraya Redesign — Ivory · Black · Gold + Customer Accounts + Bottom Nav
+A large, multi-area enhancement. Here's the proposed plan, grouped by feature. Approve to proceed.
 
-## 1. Theme: Ivory + Black + Gold
+## 1. Database (single migration)
 
-Update `src/index.css` semantic tokens (HSL only):
+**New tables**
+- `enquiry_sessions` (session_id, customer_email/name, status, enquiry_ref UNIQUE, notes, timestamps) + RLS public-all
+- `enquiry_items` (session_id FK CASCADE, product_id FK SET NULL, name, price, size, colour, qty) + RLS public-all
+- `announcements` (title, message, cta_text/url, colors, is_active, display_order, starts_at, expires_at, is_marquee) + public read; admin manage via `has_role('admin')`
 
-- `--background` → ivory `36 33% 97%` (keep)
-- `--foreground` → near-black `0 0% 8%`
-- `--primary` → gold `43 55% 52%`, `--primary-foreground` `0 0% 8%`
-- `--secondary` / dark surface → `0 0% 8%` with ivory text (used for nav, bottom bar, dark cards)
-- `--accent` → gold; remove blush (`--blush`) usage from layout
-- `--card` stays white; add a `--surface-dark` token (`0 0% 8%`) and `--surface-dark-foreground` (`36 33% 97%`) for the bottom nav, hero pill, and "dark card" treatments
-- `--border` → softer `0 0% 88%`
-- Shadow: `--shadow-elegant` tuned to charcoal, `--shadow-gold` for CTAs
-- Update `tailwind.config.ts` to expose `surface-dark`, `surface-dark-foreground`
+**Schema additions**
+- `enquiries`: add `status`, `enquiry_ref`, `admin_notes`, `priority`, `followed_up_at`
+- `settings`: add `enquiry_mode text default 'cart'`
+- `products`: add optional `sizes text[]`, `colours text[]` for variant selector (nullable, safe default `{}`)
 
-Sweep components for hardcoded colors (`bg-blush`, `text-black`, `bg-white/90` in Header) and replace with tokens.
+Indexes: `enquiry_sessions(enquiry_ref)`, `enquiry_items(session_id)`, `announcements(is_active, display_order)`.
 
-`CategoryRow` and `ProductRow` layout/columns stay exactly as-is — only colors/typography refresh through tokens.
+**Seed**: migrate current single-row `settings.announcement_*` into `announcements` table on first load (one-time insert if table empty and announcement_visible=true).
 
-## 2. Customer accounts
+## 2. Enquiry Cart (customer)
 
-Auth backend already exists (`profiles`, `user_roles` with `customer` default, `handle_new_user` trigger). No schema change needed.
+- `src/hooks/useEnquiryCart.ts` — localStorage `eraya_enquiry_cart`, functions: add/remove/update qty/clear/getCount, plus a tiny pub-sub so header badge updates.
+- `src/lib/enquiryRef.ts` — `ENQ-XXXX` generator (4–5 char base36, collision retry against DB).
+- `src/components/EnquiryCartDrawer.tsx` — right-side `Sheet`; list items (image, name, variant, qty, remove), customer note textarea, "Send WhatsApp Enquiry" button. On submit:
+  1. Insert `enquiry_sessions` row (with ref) + `enquiry_items` rows
+  2. Also insert one summary row in legacy `enquiries` (back-compat)
+  3. Build WhatsApp message → open `wa.me`
+  4. Clear cart, toast success, link to `/track?ref=…`
+- Header: add cart icon next to wishlist with gold badge.
+- `ProductCard` "+" button → "Add to Enquiry" (opens variant mini-sheet if product has sizes/colours, else direct add + toast).
+- `ProductDetail` "I Love It" → adds to enquiry cart and opens drawer.
+- Respect `settings.enquiry_mode`: when `direct`, keep current single-product WhatsApp flow.
 
-New code:
+## 3. Announcement Bar v2
 
-- `src/hooks/useAuth.ts` — wraps `supabase.auth` with `onAuthStateChange` listener (set up before `getSession`), exposes `{ user, profile, loading, signOut }`.
-- `src/pages/Login.tsx` (route `/login`) — email/password sign-in + sign-up tabs, plus "Continue with Google" via `lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin })`. Uses `emailRedirectTo: window.location.origin` on sign-up.
-- `src/pages/Profile.tsx` (route `/profile`, public route but redirects to `/login` if no session) — shows avatar, name, email; lets the user update `full_name`/`avatar_url` on `profiles`; has Sign Out button.
-- `src/pages/ResetPassword.tsx` (route `/reset-password`) — handles `type=recovery` hash, calls `supabase.auth.updateUser({ password })`.
-- Wire all three into `src/App.tsx` (lazy + `Public` wrapper).
+- `useAnnouncements()` query: active + within schedule + ordered.
+- Rewrite `AnnouncementBar.tsx`: rotate every 4s with fade (framer-motion), marquee mode when flagged, per-id dismissal in sessionStorage, hide when all dismissed.
+- Falls back to legacy `settings.announcement_*` if table empty.
 
-`supabase--configure_social_auth` enables Google. Email/password stays enabled. No auto-confirm.
+## 4. Admin: Announcements
 
-## 3. Side menu (drawer in `Header.tsx`)
+- Install `@dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities`.
+- Expand `AnnouncementAdmin.tsx`: list with drag-reorder (updates `display_order`), inline add/edit dialog with all fields (title, message, CTA, colors, schedule, marquee, active toggle), delete.
 
-Restructure the existing `Sheet` into three sections:
+## 5. Admin: Enquiries
 
-1. Search trigger (unchanged)
-2. **Shop** — Catalogue + visible categories (unchanged)
-3. **Account** (new)
-   - Signed out: `Log in` → `/login`
-   - Signed in: avatar + name header, `Profile` → `/profile`, `Log out` (calls `signOut()` then closes drawer)
-4. **More** — About + Support (unchanged)
+- Extend `EnquiriesAdmin.tsx`:
+  - Status dropdown (Open / Contacted / Interested / Negotiation / Closed Won / Closed Lost / Follow-up Pending) with color-coded badges
+  - Admin notes textarea, priority toggle, follow-up date picker
+  - Filter tabs (All / Open / Follow-up / Closed Won / Closed Lost)
+  - "WhatsApp reply" quick button (uses customer phone if present, else copies)
+  - Show enquiry session items when `enquiry_ref` matches a session
+- Dashboard widget: "Enquiry Pipeline" — counts by status.
 
-The drawer stays at `lg:hidden` for mobile/tablet. On desktop (`lg+`) the same Account block appears as a small avatar/login button in the right-icons cluster (replaces nothing existing — added next to Search/Cart).
+## 6. Navigation additions (non-destructive)
 
-## 4. Mobile bottom navigation
+Add structured sections to existing side menu (`Navigation.tsx`) without redesign:
+- SHOP: Catalogue, New Arrivals, Bestsellers, On Sale, + DB categories
+- COLLECTIONS: Bridal, Daily Wear, Office Wear, Party Wear (link to `/catalogue?collection=…`)
+- ACCOUNT: existing
+- MORE: Track Enquiry (`/track`), About, Support
 
-New `src/components/header/BottomNav.tsx`:
+New/Bestsellers/Sale/Collections route to existing `/catalogue` with query filters; minimal Catalogue.tsx update to read these.
 
-- Fixed `bottom-0 inset-x-0 lg:hidden`, `bg-surface-dark text-surface-dark-foreground`, rounded-t-2xl, gold active indicator
-- 4 items: **Home** (`/`), **Catalogue** (`/catalogue`), **Wishlist** (`/wishlist` — new placeholder page), **WhatsApp** (calls `openWhatsApp`)
-- Uses `NavLink` with active styling; safe-area inset padding (`pb-[env(safe-area-inset-bottom)]`)
-- Mounted once in `src/App.tsx` (inside `BrowserRouter`, after `<Routes>`), hidden on admin routes via `useLocation`
+## 7. Public `/track` page
 
-Add `pb-20 lg:pb-0` to public page wrappers (Index, Category, Catalogue, ProductDetail, About, Profile, Login) so content clears the bar.
+- `src/pages/TrackEnquiry.tsx` — input for ENQ code, fetches session + items by `enquiry_ref`, shows status badge, products list, submitted date, "Continue on WhatsApp" button. Pre-fills from `?ref=` query.
+- Route added in `App.tsx`.
 
-### Wishlist (placeholder)
+## Out of scope (untouched)
 
-`src/pages/Wishlist.tsx` — simple "Coming soon — your saved pieces will live here" screen using existing typography. No backend yet. Route added in `App.tsx`.
+Admin UI styling system, ProductDetail layout, Wishlist, PDF generation, auth flow, existing Supabase tables' structure (only additive columns).
 
-## 5. Files touched
+## Technical notes
 
-```
-src/index.css                            (tokens)
-tailwind.config.ts                       (surface-dark)
-src/components/header/Header.tsx         (drawer Account section, color sweep)
-src/components/header/BottomNav.tsx      (new)
-src/components/eraya/Hero.tsx            (color sweep only)
-src/components/eraya/CategoryRow.tsx     (color sweep only — layout untouched)
-src/components/eraya/ProductRow.tsx      (color sweep only — layout untouched)
-src/components/footer/Footer.tsx         (color sweep)
-src/hooks/useAuth.ts                     (new)
-src/pages/Login.tsx                      (new)
-src/pages/Profile.tsx                    (new)
-src/pages/ResetPassword.tsx              (new)
-src/pages/Wishlist.tsx                   (new placeholder)
-src/App.tsx                              (routes + BottomNav mount)
-src/lib/routes.ts                        (login/profile/wishlist/reset routes)
-```
+- All new RLS uses `true` for public read/write per spec on enquiry tables (so unauthenticated customers can submit). Note: this allows public read of all enquiry sessions — acceptable per spec but flagged.
+- Variant selector only appears when product has non-empty `sizes`/`colours` arrays; until admin populates them, behaves as direct add.
+- Migration is additive only; no destructive changes to existing tables.
 
-## Out of scope (call out before building)
-
-- No real wishlist persistence — just the placeholder page.
-- No checkout/order changes.
-- Admin panel theme stays as-is.
-
-Reply **approve** to build, or tell me what to adjust.
+Approve and I'll start with the migration, then ship features in the order above.

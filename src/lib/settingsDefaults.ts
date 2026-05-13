@@ -86,6 +86,8 @@ export const SETTINGS_DEFAULTS = {
   admin_panel_title: "Eraya Admin",
   admin_welcome_message: "Welcome back to Eraya admin.",
   admin_brand_color: "#C9A84C",
+
+  enquiry_mode: "cart" as "cart" | "direct",
 } as const;
 
 type Defaults = typeof SETTINGS_DEFAULTS;

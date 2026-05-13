@@ -12,6 +12,9 @@ import {
 } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsAppEnquiry } from "@/lib/whatsapp";
+import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { toast } from "sonner";
 
 interface Props {
   product: Product;
@@ -22,10 +25,31 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
   const { data: settings } = useSettings();
   const { data: wishlist = [] } = useWishlist();
   const toggle = useToggleWishlist();
+  const { addToCart } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const isSaved = wishlist.some((w) => w.product_id === product.id);
   const pct = discountPct(product);
   const price = product.discounted_price ?? product.original_price;
-  const enquiryLabel = s(settings, "product_enquiry_button_label");
+  const enquiryMode = (settings?.enquiry_mode || "cart") as "cart" | "direct";
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (enquiryMode === "direct") {
+      openWhatsAppEnquiry(product, settings);
+      return;
+    }
+    addToCart({
+      product_id: product.id,
+      product_name: product.name,
+      product_image: productImage(product),
+      price,
+      quantity: 1,
+    });
+    toast.success("Added to enquiry", {
+      action: { label: "View", onClick: () => openCart() },
+    });
+  };
 
   return (
     <Link to={`/product/${product.id}`} className="block group">
@@ -62,13 +86,9 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
           </button>
           {showWhatsAppIcon && (
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openWhatsAppEnquiry(product, settings);
-              }}
-              aria-label="Quick Enquire"
-              title="Quick Enquire"
+              onClick={handleAdd}
+              aria-label="Add to enquiry"
+              title="Add to enquiry"
               className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-gold text-white flex items-center justify-center text-lg font-bold shadow-md hover:scale-110 transition-transform"
             >
               <Plus className="h-4 w-4" strokeWidth={3} />

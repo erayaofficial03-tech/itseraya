@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
@@ -10,15 +11,39 @@ const Catalogue = () => {
   const { data: products = [] } = useProducts();
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
+  const [params] = useSearchParams();
+  const filterParam = params.get("filter"); // new | bestsellers | sale
+  const collectionParam = params.get("collection"); // bridal | daily | office | party
   const visible = products.filter((p) => p.is_visible);
   const visibleCategories = categories.filter((c) => c.is_visible);
-  const heading = s(settings, "catalogue_heading");
+  const heading =
+    collectionParam === "bridal" ? "Bridal Collection"
+    : collectionParam === "daily" ? "Daily Wear"
+    : collectionParam === "office" ? "Office Wear"
+    : collectionParam === "party" ? "Party Wear"
+    : filterParam === "new" ? "New Arrivals"
+    : filterParam === "bestsellers" ? "Bestsellers"
+    : filterParam === "sale" ? "On Sale"
+    : s(settings, "catalogue_heading");
 
   const [activeCat, setActiveCat] = useState<string>("all");
   const filtered = useMemo(() => {
-    if (activeCat === "all") return visible;
-    return visible.filter((p) => p.category_id === activeCat);
-  }, [visible, activeCat]);
+    let list = visible;
+    if (filterParam === "new") {
+      list = [...list].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at)).slice(0, 60);
+    } else if (filterParam === "sale") {
+      list = list.filter((p) => p.discounted_price && p.discounted_price < p.original_price);
+    } else if (filterParam === "bestsellers") {
+      list = list.filter((p) => p.is_featured);
+    }
+    if (collectionParam) {
+      list = list.filter((p) =>
+        (p.tags || []).some((t) => t.toLowerCase().includes(collectionParam))
+      );
+    }
+    if (activeCat !== "all") list = list.filter((p) => p.category_id === activeCat);
+    return list;
+  }, [visible, activeCat, filterParam, collectionParam]);
 
   return (
     <div className="min-h-screen bg-background">

@@ -20,12 +20,29 @@ export type Product = {
   original_price: number;
   discounted_price: number | null;
   tags: string[];
+  sizes?: string[] | null;
+  colours?: string[] | null;
   is_featured: boolean;
   is_visible: boolean;
   created_at: string;
   sku: string;
   product_images?: ProductImage[];
   categories?: { name: string; slug: string } | null;
+};
+
+export type Announcement = {
+  id: string;
+  title: string | null;
+  message: string;
+  cta_text: string | null;
+  cta_url: string | null;
+  bg_color: string | null;
+  text_color: string | null;
+  is_active: boolean;
+  display_order: number;
+  starts_at: string | null;
+  expires_at: string | null;
+  is_marquee: boolean;
 };
 
 export type Settings = {
@@ -137,6 +154,9 @@ export type Settings = {
   admin_welcome_message: string | null;
   admin_brand_color: string | null;
 
+  // Enquiry mode: 'cart' (multi-product) or 'direct' (single product WhatsApp)
+  enquiry_mode: string | null;
+
   // USP carousel (legacy, kept)
   usp_interval_ms: number;
   usp_fade_speed_ms: number;
@@ -210,6 +230,26 @@ export const useProduct = (id?: string) =>
         ...p,
         product_images: (p.product_images || []).sort((a, b) => a.sort_order - b.sort_order),
       };
+    },
+  });
+
+export const useAnnouncements = () =>
+  useQuery({
+    queryKey: ["announcements"],
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("announcements")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      if (error) throw error;
+      const now = Date.now();
+      return (data as Announcement[]).filter((a) => {
+        if (a.starts_at && new Date(a.starts_at).getTime() > now) return false;
+        if (a.expires_at && new Date(a.expires_at).getTime() < now) return false;
+        return true;
+      });
     },
   });
 

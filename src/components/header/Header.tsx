@@ -1,9 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Briefcase, Sun, MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
@@ -43,6 +45,8 @@ const Header = () => {
   const { user, profile, isStaff, signOut } = useAuth();
   const { data: wishlistItems = [] } = useWishlist();
   const wishlistCount = wishlistItems.length;
+  const { count: cartCount } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -51,6 +55,19 @@ const Header = () => {
   const logo = settings?.logo_url || erayaLogo;
 
   const visibleCategories = categories.filter((c) => c.is_visible);
+
+  const collections = [
+    { label: "Bridal Collection", value: "bridal", icon: Crown },
+    { label: "Daily Wear", value: "daily", icon: Sun },
+    { label: "Office Wear", value: "office", icon: Briefcase },
+    { label: "Party Wear", value: "party", icon: Sparkles },
+  ];
+
+  const shopShortcuts = [
+    { label: "New Arrivals", to: "/catalogue?filter=new", icon: Sparkles },
+    { label: "Bestsellers", to: "/catalogue?filter=bestsellers", icon: Crown },
+    { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
+  ];
 
   const results = useMemo(() => {
     if (!q.trim()) return [];
@@ -126,6 +143,15 @@ const Header = () => {
                   <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
                     {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
+                  {shopShortcuts.map((sc) => {
+                    const Icon = sc.icon;
+                    return (
+                      <Link key={sc.label} to={sc.to} onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {sc.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    );
+                  })}
                   {visibleCategories.map((c) => (
                     <Link
                       key={c.id}
@@ -136,6 +162,24 @@ const Header = () => {
                       {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
                   ))}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                    Collections
+                  </p>
+                  {collections.map((col) => {
+                    const Icon = col.icon;
+                    return (
+                      <Link
+                        key={col.value}
+                        to={`/catalogue?collection=${col.value}`}
+                        onClick={closeMenu}
+                        className={drawerLinkClass}
+                      >
+                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {col.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    );
+                  })}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Account
@@ -187,6 +231,10 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     More
                   </p>
+                  <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
+                    <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     About <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
@@ -297,12 +345,27 @@ const Header = () => {
               size="icon"
               aria-label="Wishlist"
               onClick={() => navigate("/wishlist")}
-              className="relative h-10 w-10 -mr-1 sm:mr-0"
+              className="relative h-10 w-10"
             >
               <Heart className="h-5 w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
                   {wishlistCount > 9 ? "9+" : wishlistCount}
+                </span>
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Enquiry cart"
+              onClick={openCart}
+              className="relative h-10 w-10 -mr-1 sm:mr-0"
+            >
+              <ShoppingBag className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
+                  {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}
             </Button>

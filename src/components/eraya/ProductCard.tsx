@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Heart } from "lucide-react";
+import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   type Product,

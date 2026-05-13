@@ -39,7 +39,9 @@ const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, isStaff, signOut } = useAuth();
+  const { data: wishlistItems = [] } = useWishlist();
+  const wishlistCount = wishlistItems.length;
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);

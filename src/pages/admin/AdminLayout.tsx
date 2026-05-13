@@ -93,7 +93,7 @@ const AdminLayout = () => {
   const signOut = async () => {
     await supabase.auth.signOut();
     qc.clear();
-    navigate("/admin/login", { replace: true });
+    navigate("/login", { replace: true });
   };
   const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 

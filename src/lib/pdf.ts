@@ -56,7 +56,7 @@ const ensureRupeeFont = async (doc: jsPDF): Promise<boolean> => {
 };
 
 /** Active font family for the current generation pass. */
-let pdfFont: "NotoSans" | "helvetica" = "helvetica";
+let pdfFont: string = "helvetica";
 
 const setFont = (doc: jsPDF, weight: "normal" | "bold") => {
   doc.setFont(pdfFont, weight);

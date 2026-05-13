@@ -64,13 +64,14 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
             <button
               onClick={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 openWhatsAppEnquiry(product, settings);
               }}
-              aria-label={enquiryLabel}
-              title={enquiryLabel}
-              className="absolute bottom-2 right-2 p-2 rounded-full bg-white/90 backdrop-blur shadow hover:bg-white text-gold"
+              aria-label="Quick Enquire"
+              title="Quick Enquire"
+              className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-gold text-white flex items-center justify-center text-lg font-bold shadow-md hover:scale-110 transition-transform"
             >
-              <MessageCircle className="h-4 w-4" />
+              <Plus className="h-4 w-4" strokeWidth={3} />
             </button>
           )}
         </div>

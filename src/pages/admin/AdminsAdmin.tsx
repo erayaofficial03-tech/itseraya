@@ -156,7 +156,7 @@ const UsersAdmin = () => {
             </ul>
           ) : filtered.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12 text-center">
-              Users appear here after their first Google login.
+              Users appear here after they sign up with email or Google.
             </p>
           ) : (
             <>

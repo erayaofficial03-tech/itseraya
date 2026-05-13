@@ -53,8 +53,6 @@ const SettingsAdmin = () => {
         pwa_description: (settings as any).pwa_description || "",
         pwa_theme_color: (settings as any).pwa_theme_color || "#C9A84C",
         pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
-        instagram_username: (settings as any).instagram_username || "",
-        facebook_page_name: (settings as any).facebook_page_name || "",
         about_title: (settings as any).about_title || "",
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",

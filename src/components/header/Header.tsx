@@ -113,7 +113,7 @@ const Header = () => {
       <AnnouncementBar />
       <StatusBar />
       <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
-        <div className="grid grid-cols-3 items-center h-14 sm:h-16 px-3 sm:px-6 max-w-7xl mx-auto gap-2">
+        <div className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-3 items-center h-14 sm:h-16 px-2 sm:px-4 lg:px-6 max-w-7xl mx-auto gap-1 sm:gap-2">
           {/* Left: hamburger (mobile) + desktop nav */}
           <div className="flex items-center justify-start min-w-0">
             <Sheet open={open} onOpenChange={setOpen}>
@@ -328,12 +328,12 @@ const Header = () => {
           </div>
 
           {/* Center: logo */}
-          <Link to="/" className="flex justify-center min-w-0 items-center">
+          <Link to="/" className="flex justify-center min-w-0 items-center px-1">
             <img
               src={logo}
               alt={settings?.store_name || "Eraya"}
               draggable={false}
-              className="brand-logo h-9 sm:h-10 w-auto object-contain max-w-[160px]"
+              className="brand-logo h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[140px] lg:max-w-[180px]"
               onError={(e) => {
                 const img = e.currentTarget;
                 img.style.display = "none";
@@ -341,23 +341,22 @@ const Header = () => {
                 next?.removeAttribute("hidden");
               }}
             />
-            <span hidden className="font-serif text-xl text-gold">
+            <span hidden className="font-serif text-lg sm:text-xl text-gold truncate">
               {settings?.store_name || "Eraya"}
             </span>
           </Link>
 
           {/* Right: action icons */}
-          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
-            {/* Search hidden on mobile (lives in bottom nav); shown sm+ */}
+          <div className="flex items-center justify-end gap-0 sm:gap-0.5 lg:gap-1">
             {s(settings, "nav_show_search") && (
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Search"
                 onClick={() => setSearchOpen(true)}
-                className="h-10 w-10"
+                className="h-9 w-9 sm:h-10 sm:w-10"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>
             )}
 
@@ -368,9 +367,9 @@ const Header = () => {
                 size="icon"
                 aria-label="Profile"
                 onClick={() => navigate("/profile")}
-                className="h-10 w-10"
+                className="h-9 w-9 sm:h-10 sm:w-10"
               >
-                <Avatar className="h-7 w-7 border border-gold">
+                <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border border-gold">
                   <AvatarImage src={profile?.avatar_url || undefined} />
                   <AvatarFallback className="bg-charcoal text-ivory text-[10px]">
                     {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
@@ -383,9 +382,9 @@ const Header = () => {
                 size="icon"
                 aria-label="Log in"
                 onClick={() => navigate("/login")}
-                className="h-10 w-10"
+                className="h-9 w-9 sm:h-10 sm:w-10"
               >
-                <User className="h-5 w-5" />
+                <User className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>
             )}
 
@@ -394,9 +393,9 @@ const Header = () => {
               size="icon"
               aria-label="Wishlist"
               onClick={() => navigate("/wishlist")}
-              className="relative h-10 w-10"
+              className="relative h-9 w-9 sm:h-10 sm:w-10"
             >
-              <Heart className="h-5 w-5" />
+              <Heart className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               {wishlistCount > 0 && (
                 <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
                   {wishlistCount > 9 ? "9+" : wishlistCount}
@@ -409,9 +408,9 @@ const Header = () => {
               size="icon"
               aria-label="Enquiry cart"
               onClick={openCart}
-              className="relative h-10 w-10 -mr-1 sm:mr-0"
+              className="relative h-9 w-9 sm:h-10 sm:w-10 -mr-1 sm:mr-0"
             >
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               {cartCount > 0 && (
                 <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
                   {cartCount > 9 ? "9+" : cartCount}

@@ -24,34 +24,54 @@ const AccessDenied = ({ message }: { message: string }) => (
  * RoleGuard
  *  - require="admin": admin OR manager may view; non-staff redirect to "/".
  *  - require="adminOnly": only admin may view (managers redirected to /admin).
- *  - require="public": only non-staff may view; staff redirect to "/admin".
+ *  - require="public": anyone — but staff in admin-mode are redirected to /admin.
+ *  - require="authed": any signed-in user.
  */
 export const RoleGuard = ({
   require,
   children,
 }: {
-  require: "admin" | "adminOnly" | "public";
+  require: "admin" | "adminOnly" | "public" | "authed";
   children: React.ReactNode;
 }) => {
-  const { user, isAdmin, isStaff, loading, roleChecked } = useAuth();
+  const { user, profile, isAdmin, isStaff, currentMode, loading, roleChecked } = useAuth();
   const location = useLocation();
 
   if (loading || (user && !roleChecked)) return <Loader />;
 
+  // Universal: signed-in users with incomplete profiles must finish onboarding.
+  if (
+    user &&
+    profile &&
+    !profile.profile_complete &&
+    location.pathname !== "/complete-profile" &&
+    location.pathname !== "/auth/callback"
+  ) {
+    return <Navigate to="/complete-profile" replace />;
+  }
+
+  if (require === "authed") {
+    if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <>{children}</>;
+  }
+
   if (require === "admin") {
-    if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-    if (!isStaff) return <AccessDenied message="You do not have permission to access the admin panel. Admin or manager privileges are required." />;
+    if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    if (!isStaff)
+      return (
+        <AccessDenied message="You do not have permission to access the admin panel. Admin or manager privileges are required." />
+      );
     return <>{children}</>;
   }
 
   if (require === "adminOnly") {
-    if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
     if (!isAdmin) return <AccessDenied message="This area is restricted to administrators only." />;
     return <>{children}</>;
   }
 
-  // public
-  if (user && isStaff) return <Navigate to="/admin" replace />;
+  // public — staff browsing in admin mode get redirected to /admin
+  if (user && isStaff && currentMode === "admin") return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 

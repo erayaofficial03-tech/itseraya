@@ -113,13 +113,13 @@ const drawHeader = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       doc.addImage(logo, "PNG", x, 8, w, h);
     } catch {
       // fallback if image format not detected
-      doc.setFont("helvetica", "bold");
+      setFont(doc, "bold");
       doc.setFontSize(22);
       doc.setTextColor(r, g, b);
       doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
     }
   } else {
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(22);
     doc.setTextColor(r, g, b);
     doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
@@ -140,7 +140,7 @@ const drawFooter = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       try {
         doc.addImage(logo, "PNG", 20, y, w, h);
       } catch {}
-      doc.setFont("helvetica", "normal");
+      setFont(doc, "normal");
       doc.setFontSize(9);
       doc.setTextColor(120);
       doc.text(`+${wa}`, 190, y + h - 1.5, { align: "right" });
@@ -151,7 +151,7 @@ const drawFooter = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       } catch {}
     }
   } else if (wa) {
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(`+${wa}`, 105, 286, { align: "center" });
@@ -215,21 +215,21 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   }
 
   // Name
-  doc.setFont("helvetica", "bold");
+  setFont(doc, "bold");
   doc.setFontSize(16);
   doc.setTextColor(44, 44, 44);
   doc.text(product.name, 105, 144, { align: "center" });
 
   // Price (gold)
   const price = product.discounted_price ?? product.original_price;
-  doc.setFont("helvetica", "bold");
+  setFont(doc, "bold");
   doc.setFontSize(13);
   doc.setTextColor(pr, pg, pb);
   doc.text(formatPdfPrice(price), 105, 152, { align: "center" });
 
   // Discount line
   if (product.discounted_price && product.original_price > product.discounted_price) {
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(9);
     doc.setTextColor(150);
     doc.text(
@@ -242,11 +242,11 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
 
   // About this piece
   if (product.description) {
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(10);
     doc.setTextColor(44, 44, 44);
     doc.text(s(settings, "product_description_label") || "About this piece", 30, 170);
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(10);
     doc.setTextColor(90);
     const lines = doc.splitTextToSize(product.description, 150);
@@ -296,7 +296,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
 
     // Name
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(10);
     doc.setTextColor(44);
     const nameLines = doc.splitTextToSize(p.name, cardW);
@@ -304,7 +304,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
 
     // Price (gold)
     const price = p.discounted_price ?? p.original_price;
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(9);
     doc.setTextColor(pr, pg, pb);
     const priceText = formatPdfPrice(price);
@@ -312,7 +312,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
 
     // Strike-through original price if discounted
     if (p.discounted_price && p.original_price > p.discounted_price) {
-      doc.setFont("helvetica", "normal");
+      setFont(doc, "normal");
       doc.setFontSize(8);
       doc.setTextColor(150);
       const orig = formatPdfPrice(p.original_price);

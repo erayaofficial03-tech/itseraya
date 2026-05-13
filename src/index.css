@@ -159,12 +159,12 @@
        then close + soft ambient floor shadow for depth.
        saturate/contrast push the gold toward a richer metallic. */
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 90% 96% / 0.95))   /* top bevel highlight */
-      drop-shadow(0 0.5px 0 hsl(38 70% 22% / 0.55))    /* bottom bevel emboss */
-      drop-shadow(1px 0 0 hsl(38 55% 25% / 0.18))      /* right separation */
-      drop-shadow(-1px 0 0 hsl(38 55% 25% / 0.18))     /* left separation */
-      saturate(1.18)
-      contrast(1.08);
+      drop-shadow(0 -0.6px 0 hsl(45 95% 97% / 1))      /* top bevel highlight */
+      drop-shadow(0 0.6px 0 hsl(38 75% 18% / 0.7))     /* bottom bevel emboss */
+      drop-shadow(0.7px 0 0 hsl(38 60% 22% / 0.28))    /* right separation */
+      drop-shadow(-0.7px 0 0 hsl(38 60% 22% / 0.28))   /* left separation */
+      saturate(1.22)
+      contrast(1.1);
   }
   /* Hover/active polish — only fires when the logo sits inside an
      interactive ancestor (link or button), so static splash/loader

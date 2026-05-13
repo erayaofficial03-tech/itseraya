@@ -34,6 +34,7 @@ const Catalogue = () => {
     : s(settings, "catalogue_heading");
 
   const [activeCat, setActiveCat] = useState<string>("all");
+  const [view, setView] = useViewMode();
   const filtered = useMemo(() => {
     let list = visible;
     if (filterParam === "new") {

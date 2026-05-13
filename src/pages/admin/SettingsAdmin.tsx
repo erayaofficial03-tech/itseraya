@@ -69,11 +69,18 @@ const SettingsAdmin = () => {
 
   const save = async () => {
     setBusy(true);
-    const cleanWa = form.whatsapp_number.replace(/\D/g, "");
-    if (cleanWa && (cleanWa.length < 10 || cleanWa.length > 15)) {
-      toast.error("WhatsApp number must be 10–15 digits including country code.");
+    // Strip everything, drop leading 91 if user pasted with country code, then re-prefix.
+    let local = form.whatsapp_number.replace(/\D/g, "");
+    if (local.startsWith("91") && local.length > 10) local = local.slice(2);
+    if (local && local.length !== 10) {
+      toast.error("Enter a valid 10-digit Indian WhatsApp number.");
       setBusy(false); return;
     }
+    if (local && !/^[6-9]\d{9}$/.test(local)) {
+      toast.error("Indian mobile numbers must start with 6, 7, 8 or 9.");
+      setBusy(false); return;
+    }
+    const cleanWa = local ? `91${local}` : "";
     const { error } = await supabase.from("settings").update({
       ...form,
       whatsapp_number: cleanWa || null,

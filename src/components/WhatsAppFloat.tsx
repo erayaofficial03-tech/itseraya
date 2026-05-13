@@ -25,6 +25,9 @@ const WhatsAppFloat = () => {
   }, []);
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
+  const wa = settings?.whatsapp_number?.replace(/\D/g, "");
+  if (!wa) return null;
+  if ((settings as any)?.whatsapp_float_visible === false) return null;
 
   const handleClick = () => {
     localStorage.setItem(STORAGE_KEY, "1");

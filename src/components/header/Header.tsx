@@ -321,15 +321,21 @@ const Header = () => {
                   {s(settings, "nav_catalogue_label")}
                 </DropdownMenuItem>
                 {visibleCategories.length > 0 && <DropdownMenuSeparator />}
-                {visibleCategories.slice(0, 6).map((c) => (
-                  <DropdownMenuItem
-                    key={c.id}
-                    onMouseEnter={() => prefetchCategory(qc, c.slug)}
-                    onClick={() => navigate(`/category/${c.slug}`)}
-                  >
-                    {c.name}
-                  </DropdownMenuItem>
-                ))}
+                {visibleCategories.slice(0, 6).map((c) => {
+                  const prefetch = () => prefetchCategory(qc, c.slug);
+                  return (
+                    <DropdownMenuItem
+                      key={c.id}
+                      onMouseEnter={prefetch}
+                      onPointerEnter={prefetch}
+                      onTouchStart={prefetch}
+                      onFocus={prefetch}
+                      onClick={() => navigate(`/category/${c.slug}`)}
+                    >
+                      {c.name}
+                    </DropdownMenuItem>
+                  );
+                })}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleWhatsAppClick}>
                   <MessageCircle className="h-4 w-4 mr-2 text-gold" />

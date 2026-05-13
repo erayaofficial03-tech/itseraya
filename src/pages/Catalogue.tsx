@@ -4,6 +4,8 @@ import { Share2, MessageCircle } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
+import ProductListItem from "@/components/eraya/ProductListItem";
+import ViewToggle, { useViewMode } from "@/components/eraya/ViewToggle";
 import SeoHead from "@/components/providers/SeoHead";
 import { Button } from "@/components/ui/button";
 import { useProducts, useSettings, useCategories } from "@/lib/queries";

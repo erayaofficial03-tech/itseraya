@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import { Home, LayoutGrid, Search, User, X } from "lucide-react";
-import { useProducts, productImage, withImageParams, formatINR } from "@/lib/queries";
+import { AnimatePresence, motion } from "framer-motion";
+import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 
 const itemBase =
@@ -12,6 +13,7 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: products = [] } = useProducts();
+  const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState("");
 

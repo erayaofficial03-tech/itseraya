@@ -174,7 +174,9 @@ const UsersAdmin = () => {
               <ul className="divide-y divide-border rounded-md border border-border">
                 {filtered.slice(0, visibleCount).map((u) => {
                   const isSelf = currentUser?.id === u.id;
-                  const isAdminRow = u.role === "admin";
+                  const isMaster = u.email === MASTER_EMAIL;
+                  const extraAdminTaken = users.some((x) => x.role === "admin" && x.email !== MASTER_EMAIL && x.id !== u.id);
+                  const managerTaken = users.some((x) => x.role === "manager" && x.id !== u.id);
                   return (
                     <li key={u.id} className="grid grid-cols-1 lg:grid-cols-[1fr_auto_auto_auto_auto] gap-3 items-center p-4">
                       <div className="flex items-center gap-3 min-w-0">
@@ -186,7 +188,10 @@ const UsersAdmin = () => {
                           </span>
                         )}
                         <div className="min-w-0">
-                          <p className="font-medium text-sm truncate">{u.full_name || u.email.split("@")[0]}</p>
+                          <p className="font-medium text-sm truncate flex items-center gap-2">
+                            {u.full_name || u.email.split("@")[0]}
+                            {isMaster && <Badge variant="outline" className="bg-gold/20 text-charcoal border-gold/40">Master</Badge>}
+                          </p>
                           <p className="text-xs text-muted-foreground truncate">{u.email}</p>
                         </div>
                       </div>
@@ -198,14 +203,21 @@ const UsersAdmin = () => {
                       <span className="text-xs text-muted-foreground">{format(new Date(u.created_at), "dd MMM yyyy")}</span>
 
                       <div className="flex items-center gap-2 justify-end">
-                        {isSelf || isAdminRow ? (
-                          <span className="text-xs text-muted-foreground italic pr-2">{isSelf ? "You" : "Reserved"}</span>
+                        {isMaster ? (
+                          <span className="text-xs text-muted-foreground italic pr-2">Permanent</span>
+                        ) : isSelf ? (
+                          <span className="text-xs text-muted-foreground italic pr-2">You</span>
                         ) : (
                           <>
                             <Select value={u.role} onValueChange={(v) => updateRole(u, v as AppRole)}>
                               <SelectTrigger className="h-9 w-32"><SelectValue /></SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="manager">manager</SelectItem>
+                                <SelectItem value="admin" disabled={extraAdminTaken && u.role !== "admin"}>
+                                  admin{extraAdminTaken && u.role !== "admin" ? " (slot taken)" : ""}
+                                </SelectItem>
+                                <SelectItem value="manager" disabled={managerTaken && u.role !== "manager"}>
+                                  manager{managerTaken && u.role !== "manager" ? " (slot taken)" : ""}
+                                </SelectItem>
                                 <SelectItem value="customer">customer</SelectItem>
                               </SelectContent>
                             </Select>

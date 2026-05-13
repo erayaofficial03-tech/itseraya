@@ -27,6 +27,12 @@ const ProductDetail = () => {
   const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
 
+  useEffect(() => {
+    if (product?.id) {
+      void supabase.from("product_views").insert({ product_id: product.id });
+    }
+  }, [product?.id]);
+
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   if (!product) return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">

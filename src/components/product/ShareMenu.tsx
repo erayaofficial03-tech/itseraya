@@ -138,30 +138,38 @@ const ShareMenu = ({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={(v) => !busy && setOpen(v)}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={className}>
-          <Share2 /> {buttonLabel}
+        <Button variant="outline" className={className} disabled={busy} aria-busy={busy}>
+          {busy ? <Loader2 className="animate-spin" /> : <Share2 />}
+          {busy ? (imgBusy ? "Preparing image…" : "Generating PDF…") : buttonLabel}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-60 p-1">
         <button
           onClick={shareWhatsApp}
-          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
+          disabled={busy}
+          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
           <MessageCircle className="h-4 w-4 text-gold" /> Share on WhatsApp
         </button>
         <button
           onClick={shareImage}
-          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
+          disabled={busy}
+          aria-busy={imgBusy}
+          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
-          <ImageIcon className="h-4 w-4 text-gold" /> Share Image on WhatsApp
+          {imgBusy ? <Loader2 className="h-4 w-4 text-gold animate-spin" /> : <ImageIcon className="h-4 w-4 text-gold" />}
+          {imgBusy ? "Preparing image…" : "Share Image on WhatsApp"}
         </button>
         <button
           onClick={sharePdf}
-          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
+          disabled={busy}
+          aria-busy={pdfBusy}
+          className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
-          <FileDown className="h-4 w-4 text-gold" /> Share as PDF
+          {pdfBusy ? <Loader2 className="h-4 w-4 text-gold animate-spin" /> : <FileDown className="h-4 w-4 text-gold" />}
+          {pdfBusy ? "Generating PDF…" : "Share as PDF"}
         </button>
         <button
           onClick={copyLink}

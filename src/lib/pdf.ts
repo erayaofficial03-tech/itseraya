@@ -1,7 +1,25 @@
 import jsPDF from "jspdf";
 import type { Product, Settings } from "./queries";
-import { formatINR, productImage, discountPct } from "./queries";
+import { productImage, discountPct } from "./queries";
 import { s } from "./settingsDefaults";
+
+/**
+ * jsPDF's bundled Helvetica font cannot render the ₹ glyph — it shows as a
+ * tofu/blank character. We use the universally understood "Rs." prefix
+ * inside PDFs only. The website continues to use ₹ via formatINR().
+ */
+const formatPdfPrice = (amount: number): string => {
+  const formatted = Math.round(amount).toLocaleString("en-IN");
+  return `Rs. ${formatted}`;
+};
+
+const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 const fetchImageAsDataURL = async (url: string): Promise<string | null> => {
   try {
@@ -24,116 +42,235 @@ const hexToRgb = (hex: string): [number, number, number] => {
   return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
 };
 
-const drawHeader = (doc: jsPDF, settings: Settings | undefined) => {
-  const [r, g, b] = hexToRgb(s(settings, "pdf_primary_color"));
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.setTextColor(r, g, b);
-  doc.text(s(settings, "pdf_store_name"), 105, 18, { align: "center" });
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "italic");
-  doc.setTextColor(100);
-  doc.text(s(settings, "pdf_tagline"), 105, 24, { align: "center" });
-  doc.setDrawColor(r, g, b);
-  doc.line(20, 28, 190, 28);
+const getLogo = async (settings: Settings | undefined): Promise<string | null> => {
+  const url = settings?.logo_url || "/eraya-logo.png";
+  return fetchImageAsDataURL(url);
 };
 
-const drawFooter = (doc: jsPDF, settings: Settings | undefined) => {
-  const wa = settings?.whatsapp_number || "";
-  doc.setFontSize(8);
-  doc.setTextColor(120);
-  const txt = s(settings, "pdf_footer_text").replace("{whatsapp}", wa);
-  doc.text(txt, 105, 290, { align: "center" });
+const drawHeader = (doc: jsPDF, settings: Settings | undefined, logo: string | null) => {
+  const [r, g, b] = hexToRgb(s(settings, "pdf_primary_color"));
+  if (logo) {
+    // Centered, max 20mm tall, proportional width capped at 80mm
+    const h = 20;
+    const w = Math.min(80, h * 3); // assume ~3:1 logo
+    const x = (210 - w) / 2;
+    try {
+      doc.addImage(logo, "PNG", x, 8, w, h);
+    } catch {
+      // fallback if image format not detected
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(r, g, b);
+      doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
+    }
+  } else {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.setTextColor(r, g, b);
+    doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
+  }
+  // Gold divider
+  doc.setDrawColor(r, g, b);
+  doc.setLineWidth(0.4);
+  doc.line(20, 32, 190, 32);
+};
+
+const drawFooter = (doc: jsPDF, settings: Settings | undefined, logo: string | null) => {
+  const wa = settings?.whatsapp_number?.replace(/\D/g, "") || "";
+  const y = 280;
+  if (logo) {
+    const h = 8;
+    const w = h * 3;
+    if (wa) {
+      try {
+        doc.addImage(logo, "PNG", 20, y, w, h);
+      } catch {}
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text(`+${wa}`, 190, y + h - 1.5, { align: "right" });
+    } else {
+      const x = (210 - w) / 2;
+      try {
+        doc.addImage(logo, "PNG", x, y, w, h);
+      } catch {}
+    }
+  } else if (wa) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(`+${wa}`, 105, 286, { align: "center" });
+  }
+};
+
+const drawWatermark = (
+  doc: jsPDF,
+  logo: string | null,
+  imgX: number,
+  imgY: number,
+  imgW: number,
+  imgH: number,
+  scale = 0.4,
+) => {
+  if (!logo) return;
+  const w = imgW * scale;
+  const h = w / 3;
+  const x = imgX + (imgW - w) / 2;
+  const y = imgY + (imgH - h) / 2;
+  // Try GState opacity; fall back to bottom-right corner mark
+  try {
+    // @ts-ignore - GState is jsPDF runtime API
+    const GState = (doc as any).GState;
+    if (GState) {
+      // @ts-ignore
+      doc.setGState(new GState({ opacity: 0.28 }));
+      doc.addImage(logo, "PNG", x, y, w, h);
+      // @ts-ignore
+      doc.setGState(new GState({ opacity: 1 }));
+      return;
+    }
+  } catch {
+    /* fall through */
+  }
+  // Fallback: small mark in bottom-right at 30%
+  const fw = imgW * 0.3;
+  const fh = fw / 3;
+  try {
+    doc.addImage(logo, "PNG", imgX + imgW - fw - 2, imgY + imgH - fh - 2, fw, fh);
+  } catch {}
 };
 
 export const generateProductPdf = async (product: Product, settings: Settings | undefined) => {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
-  drawHeader(doc, settings);
+  const logo = await getLogo(settings);
 
-  const img = await fetchImageAsDataURL(productImage(product));
-  if (img) {
+  drawHeader(doc, settings, logo);
+
+  // Product image at y=36, 100x100, centered
+  const imgX = 55, imgY = 36, imgW = 100, imgH = 100;
+  const productImg = await fetchImageAsDataURL(productImage(product));
+  if (productImg) {
     try {
-      doc.addImage(img, "JPEG", 55, 35, 100, 100);
-    } catch {}
+      doc.addImage(productImg, "JPEG", imgX, imgY, imgW, imgH);
+    } catch {
+      try { doc.addImage(productImg, "PNG", imgX, imgY, imgW, imgH); } catch {}
+    }
+    drawWatermark(doc, logo, imgX, imgY, imgW, imgH, 0.4);
   }
 
+  // Name
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.setTextColor(44, 44, 44);
-  doc.text(product.name, 105, 150, { align: "center" });
+  doc.text(product.name, 105, 144, { align: "center" });
 
+  // Price (gold)
   const price = product.discounted_price ?? product.original_price;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
   doc.setTextColor(pr, pg, pb);
-  doc.text(formatINR(price), 105, 160, { align: "center" });
+  doc.text(formatPdfPrice(price), 105, 152, { align: "center" });
 
+  // Discount line
   if (product.discounted_price && product.original_price > product.discounted_price) {
-    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
     doc.setTextColor(150);
-    doc.text(`MRP ${formatINR(product.original_price)}  •  ${discountPct(product)}% OFF`, 105, 167, { align: "center" });
+    doc.text(
+      `MRP ${formatPdfPrice(product.original_price)}  •  ${discountPct(product)}% OFF`,
+      105,
+      159,
+      { align: "center" },
+    );
   }
 
+  // About this piece
   if (product.description) {
-    doc.setFontSize(11);
-    doc.setTextColor(60);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(44, 44, 44);
+    doc.text(s(settings, "product_description_label") || "About this piece", 30, 170);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(90);
     const lines = doc.splitTextToSize(product.description, 150);
-    doc.text(lines, 30, 180);
+    doc.text(lines, 30, 177);
   }
 
-  drawFooter(doc, settings);
-  doc.save(`${product.name.replace(/\s+/g, "-")}.pdf`);
+  drawFooter(doc, settings, logo);
+  doc.save(`Eraya-${slugify(product.name)}.pdf`);
 };
 
 export const generateCatalogPdf = async (products: Product[], settings: Settings | undefined) => {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
-  drawHeader(doc, settings);
+  const logo = await getLogo(settings);
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.setTextColor(44, 44, 44);
-  doc.text("Product Catalogue", 105, 40, { align: "center" });
-  drawFooter(doc, settings);
+  drawHeader(doc, settings, logo);
+  drawFooter(doc, settings, logo);
 
-  // Cards: 2 columns x 3 rows per page = 6 per page
   const cardW = 80;
-  const cardH = 75;
-  const startY = 50;
+  const cardImgH = 55;
+  const cardH = 80;
+  const startY = 42;
+  const gapX = 10;
+  const gapY = 8;
   let col = 0;
   let row = 0;
 
   for (const p of products) {
     if (row >= 3) {
       doc.addPage();
-      drawHeader(doc, settings);
-      drawFooter(doc, settings);
+      drawHeader(doc, settings, logo);
+      drawFooter(doc, settings, logo);
       row = 0;
       col = 0;
     }
-    const x = 20 + col * (cardW + 10);
-    const y = startY + row * (cardH + 5);
+    const x = 20 + col * (cardW + gapX);
+    const y = startY + row * (cardH + gapY);
+
     const img = await fetchImageAsDataURL(productImage(p));
     if (img) {
       try {
-        doc.addImage(img, "JPEG", x, y, cardW, 50);
-      } catch {}
+        doc.addImage(img, "JPEG", x, y, cardW, cardImgH);
+      } catch {
+        try { doc.addImage(img, "PNG", x, y, cardW, cardImgH); } catch {}
+      }
+      drawWatermark(doc, logo, x, y, cardW, cardImgH, 0.5);
     }
+
+    // Name
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.setTextColor(44);
-    doc.text(p.name, x, y + 58);
-    doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(pr, pg, pb);
+    doc.setTextColor(44);
+    const nameLines = doc.splitTextToSize(p.name, cardW);
+    doc.text(nameLines.slice(0, 1), x, y + cardImgH + 6);
+
+    // Price (gold)
     const price = p.discounted_price ?? p.original_price;
-    doc.text(formatINR(price), x, y + 65);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(pr, pg, pb);
+    const priceText = formatPdfPrice(price);
+    doc.text(priceText, x, y + cardImgH + 13);
+
+    // Strike-through original price if discounted
     if (p.discounted_price && p.original_price > p.discounted_price) {
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(150);
-      doc.text(`MRP ${formatINR(p.original_price)}`, x + 25, y + 65);
+      const orig = formatPdfPrice(p.original_price);
+      const priceWidth = doc.getTextWidth(priceText);
+      const origX = x + priceWidth + 4;
+      const origY = y + cardImgH + 13;
+      doc.text(orig, origX, origY);
+      const origWidth = doc.getTextWidth(orig);
+      doc.setDrawColor(150);
+      doc.setLineWidth(0.3);
+      doc.line(origX, origY - 1.2, origX + origWidth, origY - 1.2);
     }
+
     col++;
     if (col >= 2) {
       col = 0;
@@ -141,5 +278,5 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
   }
 
-  doc.save(`${s(settings, "pdf_store_name")}-Catalogue.pdf`);
+  doc.save(`Eraya-Catalogue-${todayISO()}.pdf`);
 };

@@ -98,10 +98,10 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center px-6 bg-ivory">
       <div className="w-full max-w-md text-center">
         <Link
-          to="/"
+          to="/admin"
           className="inline-flex items-center gap-1.5 text-xs tracking-wider uppercase text-muted-foreground hover:text-gold transition-colors mb-6"
         >
-          <ArrowLeft className="h-3.5 w-3.5" /> Back to Home
+          <ArrowLeft className="h-3.5 w-3.5" /> Back to Dashboard
         </Link>
         <img src={erayaLogo} alt="Eraya" className="h-16 w-auto mx-auto object-contain" />
         <p className="mt-3 font-serif text-2xl text-charcoal">Adorn Your Story</p>

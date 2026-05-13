@@ -30,6 +30,8 @@ const SettingsAdmin = () => {
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
     instagram_username: "", facebook_page_name: "",
     app_icon_url: "",
+    about_title: "", about_body: "", about_image_url: "",
+    enquiry_mode: "cart" as "cart" | "direct",
   });
   const [busy, setBusy] = useState(false);
 

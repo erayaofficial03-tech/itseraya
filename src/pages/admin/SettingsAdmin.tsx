@@ -23,8 +23,6 @@ const SettingsAdmin = () => {
   const [form, setForm] = useState({
     whatsapp_number: "",
     whatsapp_float_visible: true,
-    usp_interval_ms: 3500, usp_fade_speed_ms: 300,
-    usp_1: "", usp_2: "", usp_3: "",
     whatsapp_message_template: "",
     catalogue_whatsapp_message_template: "",
     store_address: "", store_email: "", store_phone: "", store_city: "",
@@ -44,11 +42,6 @@ const SettingsAdmin = () => {
           return d.startsWith("91") ? d.slice(2) : d;
         })(),
         whatsapp_float_visible: (settings as any).whatsapp_float_visible !== false,
-        usp_interval_ms: settings.usp_interval_ms,
-        usp_fade_speed_ms: settings.usp_fade_speed_ms,
-        usp_1: (settings as any).usp_1 || "",
-        usp_2: (settings as any).usp_2 || "",
-        usp_3: (settings as any).usp_3 || "",
         whatsapp_message_template: (settings as any).whatsapp_message_template || "",
         catalogue_whatsapp_message_template: (settings as any).catalogue_whatsapp_message_template || "",
         store_address: (settings as any).store_address || "",

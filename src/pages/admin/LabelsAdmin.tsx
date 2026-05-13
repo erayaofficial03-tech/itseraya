@@ -18,7 +18,7 @@ const TEXT_KEYS = [
   "category_empty_message", "category_pieces_label",
   "footer_tagline", "footer_copyright", "footer_whatsapp_label",
   "pdf_store_name", "pdf_tagline", "pdf_footer_text",
-  "install_prompt_text", "install_prompt_button_label",
+  
   "admin_panel_title", "admin_welcome_message",
 ] as const;
 
@@ -26,7 +26,6 @@ const BOOL_KEYS = [
   "nav_show_search",
   "product_tag_visible",
   "footer_show_logo", "footer_show_social", "footer_show_whatsapp",
-  "install_prompt_visible",
 ] as const;
 
 type FormState = Record<string, string | boolean>;
@@ -135,15 +134,6 @@ const LabelsAdmin = () => {
             {text("pdf_store_name", "PDF store name")}
             {text("pdf_tagline", "PDF tagline")}
             {text("pdf_footer_text", "PDF footer text", true, "Use {whatsapp} for WhatsApp number")}
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="install" className="border rounded-lg px-4 bg-card">
-          <AccordionTrigger>Install prompt</AccordionTrigger>
-          <AccordionContent className="space-y-3">
-            {text("install_prompt_text", "Prompt text")}
-            {text("install_prompt_button_label", "Button label")}
-            {toggle("install_prompt_visible", "Show prompt")}
           </AccordionContent>
         </AccordionItem>
 

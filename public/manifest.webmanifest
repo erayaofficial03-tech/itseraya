@@ -1,17 +1,19 @@
 {
   "name": "Eraya — Adorn Your Story",
   "short_name": "Eraya",
-  "description": "Handcrafted artificial jewellery for women.",
+  "description": "Artificial jewellery for women — shop, enquire, and save your favourites",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1a1a1a",
+  "background_color": "#FAF8F5",
   "theme_color": "#C9A84C",
   "icons": [
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "en-IN"
 }

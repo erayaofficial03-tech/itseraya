@@ -1,6 +1,8 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Briefcase, Sun, MapPin } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Briefcase, Sun, MapPin, Download } from "lucide-react";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
+import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -51,6 +53,8 @@ const Header = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const { isIOS, isInstalled, triggerInstall } = useInstallPrompt();
   const [q, setQ] = useState("");
   const logo = settings?.logo_url || erayaLogo;
 
@@ -96,6 +100,18 @@ const Header = () => {
 
 
   const closeMenu = () => setOpen(false);
+
+  const handleInstall = async () => {
+    const result = await triggerInstall();
+    if (result === "ios") {
+      setShowIOSGuide(true);
+    } else if (result === "accepted") {
+      toast.success("Eraya installed! Find it on your home screen 💛");
+      closeMenu();
+    } else if (result === "installed") {
+      toast("Eraya is already installed on your device");
+    }
+  };
 
   const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-foreground border-b border-border/60 active:bg-muted/40 -mx-6 px-6 transition-colors";
 
@@ -231,6 +247,20 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Info
                   </p>
+                  {!isInstalled && (
+                    <button
+                      onClick={handleInstall}
+                      className={`${drawerLinkClass} w-full text-left`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <Download className="h-4 w-4 text-gold" />
+                        Install Eraya App
+                      </span>
+                      <span className="text-[10px] font-semibold tracking-wider uppercase text-gold">
+                        {isIOS ? "iOS" : "Android"}
+                      </span>
+                    </button>
+                  )}
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     About Eraya <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
@@ -260,6 +290,7 @@ const Header = () => {
 
               </SheetContent>
             </Sheet>
+            <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
 
             <nav className="hidden lg:flex space-x-7">
               <NavLink to="/" className={navLinkClass}>{s(settings, "nav_home_label")}</NavLink>

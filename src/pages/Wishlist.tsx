@@ -28,6 +28,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SeoHead title={`My Wishlist — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-4 md:px-6 py-6 pb-24 md:pb-16 max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-3 mb-6">

@@ -19,6 +19,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead title={`${s(settings, "store_name")} — ${s(settings, "tagline")}`} />
       <Header />
       <main className="pt-4 md:pt-6 pb-20 md:pb-0">
         <HeroSlider />

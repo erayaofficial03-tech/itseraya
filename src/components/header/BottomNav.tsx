@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
-import { Home, LayoutGrid, Search, User, X } from "lucide-react";
+import { Home, LayoutGrid, Search, Heart, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
-import { useAuth } from "@/hooks/useAuth";
+
 
 const itemBase =
   "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium tracking-wide transition-colors";
@@ -11,7 +11,6 @@ const itemBase =
 const BottomNav = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -53,10 +52,6 @@ const BottomNav = () => {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `${itemBase} ${isActive ? "text-gold" : "text-muted-foreground hover:text-foreground"}`;
 
-  const handleProfile = () => {
-    navigate(user ? "/profile" : "/login");
-  };
-
   return (
     <>
       <nav
@@ -83,13 +78,10 @@ const BottomNav = () => {
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
-          <button
-            onClick={handleProfile}
-            className={`${itemBase} ${pathname === "/profile" || pathname === "/login" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            <User className="h-5 w-5" />
-            <span>Profile</span>
-          </button>
+          <NavLink to="/wishlist" className={linkClass} aria-label="Wishlist">
+            <Heart className="h-5 w-5" />
+            <span>Wishlist</span>
+          </NavLink>
         </div>
       </nav>
 

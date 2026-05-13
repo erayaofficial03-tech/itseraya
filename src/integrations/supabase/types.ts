@@ -892,6 +892,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      lookup_enquiry_by_ref: {
+        Args: { _ref: string }
+        Returns: {
+          created_at: string
+          customer_name: string
+          enquiry_ref: string
+          id: string
+          items: Json
+          notes: string
+          status: string
+        }[]
+      }
       next_product_sku: { Args: { _for?: string }; Returns: string }
     }
     Enums: {

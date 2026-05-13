@@ -68,22 +68,18 @@ const TrackEnquiry = () => {
     setSession(null);
     setItems([]);
     try {
-      const { data: s, error: sErr } = await supabase
-        .from("enquiry_sessions")
-        .select("id, enquiry_ref, status, customer_name, notes, created_at")
-        .eq("enquiry_ref", ref.trim().toUpperCase())
-        .maybeSingle();
-      if (sErr) throw sErr;
-      if (!s) {
+      const { data, error } = await supabase.rpc("lookup_enquiry_by_ref", {
+        _ref: ref.trim().toUpperCase(),
+      });
+      if (error) throw error;
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
         setLoading(false);
         return;
       }
-      setSession(s as SessionRow);
-      const { data: its } = await supabase
-        .from("enquiry_items")
-        .select("id, product_name, product_price, product_image, selected_size, selected_colour, quantity")
-        .eq("session_id", s.id);
-      setItems((its || []) as ItemRow[]);
+      const { items: rowItems, ...sessionFields } = row as unknown as SessionRow & { items: ItemRow[] };
+      setSession(sessionFields as SessionRow);
+      setItems((rowItems || []) as ItemRow[]);
     } catch (e) {
       console.error(e);
       toast.error("Could not load enquiry.");

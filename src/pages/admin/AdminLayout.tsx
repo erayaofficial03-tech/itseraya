@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
-  Users, Inbox, Megaphone, Palette, Type, Search, ScrollText,
+  Users, Inbox, Megaphone, Palette, Type, Search, UserRound,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/useAuth";
-import erayaLogo from "@/assets/eraya-logo.png";
+import BrandLogo from "@/components/BrandLogo";
 
 type ItemRole = "staff" | "admin";
 const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRole }[] = [
@@ -26,15 +26,15 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
   { to: "/admin/labels", icon: Type, label: "Labels & Text", role: "admin" },
   { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },
   { to: "/admin/enquiries", icon: Inbox, label: "Enquiries", role: "staff" },
+  { to: "/admin/customers", icon: UserRound, label: "Customers", role: "staff" },
   { to: "/admin/users", icon: Users, label: "Users", role: "admin" },
-  { to: "/admin/audit", icon: ScrollText, label: "Audit Log", role: "staff" },
   { to: "/admin/settings", icon: SettingsIcon, label: "Store Settings", role: "admin" },
 ];
 
 const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: typeof items; onNavigate?: () => void; onSignOut: () => void }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
-      <img src={erayaLogo} alt="Eraya" className="h-10 w-auto" />
+      <BrandLogo className="h-10 w-auto" />
       <span className="h-px w-8 bg-gold/60" />
       <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
     </div>
@@ -114,7 +114,7 @@ const AdminLayout = () => {
             </SheetContent>
           </Sheet>
           <div className="flex flex-col items-center justify-center gap-1">
-            <img src={erayaLogo} alt="Eraya" className="h-7 w-auto" />
+            <BrandLogo className="h-7 w-auto" />
             <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-muted-foreground leading-none">
               Admin
             </span>

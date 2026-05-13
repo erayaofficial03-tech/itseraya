@@ -89,7 +89,7 @@ export const openWhatsAppEnquiry = (
   void logEnquiry(product);
 
   if (!number) {
-    toast("Enquiry setup coming soon!");
+    toast("WhatsApp enquiry coming soon!");
     return;
   }
   const price = product.discounted_price ?? product.original_price;

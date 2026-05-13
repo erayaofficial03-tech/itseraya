@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import { Home, LayoutGrid, Search, User, X } from "lucide-react";
-import { useProducts, productImage, withImageParams, formatINR } from "@/lib/queries";
+import { AnimatePresence, motion } from "framer-motion";
+import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 
 const itemBase =
@@ -12,6 +13,7 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: products = [] } = useProducts();
+  const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState("");
 
@@ -19,17 +21,29 @@ const BottomNav = () => {
     const term = q.trim().toLowerCase();
     if (!term) return [];
     return products
-      .filter(
-        (p) =>
+      .filter((p) => {
+        const tagsStr = (p.tags || []).join(" ").toLowerCase();
+        return (
           p.name.toLowerCase().includes(term) ||
           (p.description ?? "").toLowerCase().includes(term) ||
-          (p.categories?.name ?? "").toLowerCase().includes(term),
-      )
+          (p.categories?.name ?? "").toLowerCase().includes(term) ||
+          tagsStr.includes(term)
+        );
+      })
       .slice(0, 30);
   }, [q, products]);
 
+  // Close on Escape
   useEffect(() => {
-    if (!searchOpen) setQ("");
+    if (!searchOpen) {
+      setQ("");
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen]);
 
   if (pathname.startsWith("/admin")) return null;
@@ -64,14 +78,14 @@ const BottomNav = () => {
           </NavLink>
           <button
             onClick={() => setSearchOpen(true)}
-            className={`${itemBase} text-muted-foreground hover:text-foreground`}
+            className={`${itemBase} ${searchOpen ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
           >
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
           <button
             onClick={handleProfile}
-            className={`${itemBase} ${pathname === "/profile" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
+            className={`${itemBase} ${pathname === "/profile" || pathname === "/login" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
           >
             <User className="h-5 w-5" />
             <span>Profile</span>
@@ -80,8 +94,15 @@ const BottomNav = () => {
       </nav>
 
       {/* Search overlay */}
+      <AnimatePresence>
       {searchOpen && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-white animate-in slide-in-from-bottom duration-200 flex flex-col">
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="md:hidden fixed inset-0 z-[60] bg-white flex flex-col"
+        >
           <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: "#EDE8E1" }}>
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />
             <input
@@ -143,13 +164,29 @@ const BottomNav = () => {
               );
             })}
             {!q.trim() && (
-              <p className="px-6 py-12 text-center text-sm text-muted-foreground">
-                Search by name, description, or category.
-              </p>
+              <div className="px-6 py-8">
+                <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
+                  Popular categories
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {categories.filter((c) => c.is_visible).slice(0, 8).map((c) => (
+                    <Link
+                      key={c.id}
+                      to={`/category/${c.slug}`}
+                      onClick={() => setSearchOpen(false)}
+                      className="px-3 py-1.5 rounded-full border text-xs hover:bg-muted/40"
+                      style={{ borderColor: "#EDE8E1" }}
+                    >
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 };

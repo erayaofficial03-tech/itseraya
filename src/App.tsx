@@ -9,6 +9,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import RoleGuard from "./components/auth/RoleGuard";
 import InstallPrompt from "./components/pwa/InstallPrompt";
 import BottomNav from "./components/header/BottomNav";
+import WhatsAppFloat from "./components/WhatsAppFloat";
+import PageTransition from "./components/PageTransition";
 import BrandProvider from "./components/providers/BrandProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";
@@ -74,6 +76,7 @@ const App = () => (
           <ScrollToTop />
           <InstallPrompt />
           <Suspense fallback={<PageLoader />}>
+            <PageTransition>
             <Routes>
               {/* Public storefront */}
               <Route path={ROUTES.home} element={<Public><Index /></Public>} />
@@ -115,7 +118,9 @@ const App = () => (
 
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </PageTransition>
           </Suspense>
+          <WhatsAppFloat />
           <BottomNav />
         </BrowserRouter>
       </BrandProvider>

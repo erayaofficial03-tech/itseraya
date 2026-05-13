@@ -90,23 +90,36 @@ const Profile = () => {
             </summary>
             <div className="px-4 pb-3 divide-y" style={{ borderColor: "#EDE8E1" }}>
               {enquiries.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-3">No enquiries yet.</p>
+                <p className="text-xs text-muted-foreground py-3">
+                  No enquiries yet. Tap 💛 I Love It on any product to enquire.
+                </p>
               ) : (
-                enquiries.map((e) => (
-                  <div key={e.id} className="py-2 flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm truncate">{e.product_name}</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {new Date(e.created_at).toLocaleDateString()}
-                      </p>
+                <>
+                  {enquiries.slice(0, 10).map((e) => (
+                    <div key={e.id} className="py-2 flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm truncate">{e.product_name}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {new Date(e.created_at).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                      {e.product_price != null && (
+                        <span className="text-xs font-semibold text-gold shrink-0">
+                          {formatINR(Number(e.product_price))}
+                        </span>
+                      )}
                     </div>
-                    {e.product_price != null && (
-                      <span className="text-xs font-semibold text-gold shrink-0">
-                        {formatINR(Number(e.product_price))}
-                      </span>
-                    )}
-                  </div>
-                ))
+                  ))}
+                  {enquiries.length > 10 && (
+                    <p className="text-xs text-gold py-2 text-center">
+                      View all ({enquiries.length})
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </details>

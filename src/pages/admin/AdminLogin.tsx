@@ -50,6 +50,18 @@ const AdminLogin = () => {
     }
   };
 
+  const forgot = async () => {
+    if (!email) {
+      toast.info("Enter your email first.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) toast.error(error.message);
+    else toast.success("Password reset email sent.");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-ivory">
       <div className="w-full max-w-md text-center">
@@ -111,6 +123,13 @@ const AdminLogin = () => {
               className="w-full inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-charcoal text-ivory hover:opacity-90 transition-opacity disabled:opacity-60"
             >
               {emailBusy ? "Signing in…" : "Sign in with Email"}
+            </button>
+            <button
+              type="button"
+              onClick={forgot}
+              className="text-xs text-muted-foreground hover:text-gold underline w-full text-center"
+            >
+              Forgot password?
             </button>
           </form>
 

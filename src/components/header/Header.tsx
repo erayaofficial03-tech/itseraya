@@ -290,6 +290,7 @@ const Header = () => {
 
               </SheetContent>
             </Sheet>
+            <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
 
             <nav className="hidden lg:flex space-x-7">
               <NavLink to="/" className={navLinkClass}>{s(settings, "nav_home_label")}</NavLink>

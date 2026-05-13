@@ -59,13 +59,13 @@ const Header = () => {
 
   
 
-  const openWhatsApp = () => {
+  const handleWhatsAppClick = () => {
     const wa = settings?.whatsapp_number?.replace(/\D/g, "");
     if (!wa) {
       toast.info("WhatsApp number not set yet — check back soon.");
       return;
     }
-    window.open(`https://wa.me/${wa}?text=${encodeURIComponent("Hi Eraya! I'd love some help.")}`, "_blank");
+    openWhatsApp(wa, "Hi Eraya! I'd love some help.");
   };
 
   const handleCart = () => {

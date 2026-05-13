@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { generateCatalogPdf } from "@/lib/pdf";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const Catalogue = () => {
   const { data: products = [] } = useProducts();
@@ -74,8 +75,7 @@ const Catalogue = () => {
       a.download = filename;
       a.click();
       URL.revokeObjectURL(dlUrl);
-      const target = wa ? `https://wa.me/${wa}` : "https://wa.me/";
-      window.open(`${target}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+      openWhatsApp(wa, message);
       toast.success("PDF downloaded — open WhatsApp and attach the file to share it", { id: t });
     } catch (e: any) {
       toast.error(e?.message ?? "Couldn't create catalogue", { id: t });

@@ -1,11 +1,22 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import erayaLogo from "@/assets/eraya-logo.png";
+import { ShieldX } from "lucide-react";
 
 const Loader = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-ivory gap-4">
     <img src={erayaLogo} alt="Eraya" className="h-12 w-auto" />
     <span className="h-6 w-6 rounded-full border-2 border-gold border-t-transparent animate-spin" />
+  </div>
+);
+
+const AccessDenied = ({ message }: { message: string }) => (
+  <div className="min-h-screen flex flex-col items-center justify-center bg-ivory gap-4 px-6">
+    <img src={erayaLogo} alt="Eraya" className="h-12 w-auto" />
+    <ShieldX className="h-10 w-10 text-red-500 mt-4" />
+    <h1 className="font-serif text-xl text-charcoal text-center">Access Denied</h1>
+    <p className="text-sm text-muted-foreground text-center max-w-xs">{message}</p>
+    <a href="/" className="mt-4 text-sm text-gold hover:underline">← Back to home</a>
   </div>
 );
 
@@ -29,13 +40,13 @@ export const RoleGuard = ({
 
   if (require === "admin") {
     if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-    if (!isStaff) return <Navigate to="/" replace />;
+    if (!isStaff) return <AccessDenied message="You do not have permission to access the admin panel. Admin or manager privileges are required." />;
     return <>{children}</>;
   }
 
   if (require === "adminOnly") {
     if (!user) return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-    if (!isAdmin) return <Navigate to="/admin" replace />;
+    if (!isAdmin) return <AccessDenied message="This area is restricted to administrators only." />;
     return <>{children}</>;
   }
 

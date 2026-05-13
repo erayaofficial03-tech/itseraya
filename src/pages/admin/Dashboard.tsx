@@ -76,10 +76,10 @@ const Dashboard = () => {
 
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Stat icon={Gem} label="Products" value={products.length} />
-        <Stat icon={FolderTree} label="Categories" value={categories.length} />
-        <Stat icon={MessageCircle} label="Enquiries" value={enquiryCount} />
-        <Stat icon={UsersIcon} label="Total Users" value={userCount} />
+        <Stat icon={Gem} label="Products" value={products.length} to="/admin/products" />
+        <Stat icon={FolderTree} label="Categories" value={categories.length} to="/admin/categories" />
+        <Stat icon={MessageCircle} label="Enquiries" value={enquiryCount} to="/admin/enquiries" />
+        <Stat icon={UsersIcon} label="Total Users" value={userCount} to="/admin/users" />
       </div>
 
       <Card>

@@ -101,6 +101,18 @@ const Header = () => {
 
   const closeMenu = () => setOpen(false);
 
+  const handleInstall = async () => {
+    const result = await triggerInstall();
+    if (result === "ios") {
+      setShowIOSGuide(true);
+    } else if (result === "accepted") {
+      toast.success("Eraya installed! Find it on your home screen 💛");
+      closeMenu();
+    } else if (result === "installed") {
+      toast("Eraya is already installed on your device");
+    }
+  };
+
   const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-foreground border-b border-border/60 active:bg-muted/40 -mx-6 px-6 transition-colors";
 
   return (

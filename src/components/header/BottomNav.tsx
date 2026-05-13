@@ -78,14 +78,14 @@ const BottomNav = () => {
           </NavLink>
           <button
             onClick={() => setSearchOpen(true)}
-            className={`${itemBase} text-muted-foreground hover:text-foreground`}
+            className={`${itemBase} ${searchOpen ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
           >
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
           <button
             onClick={handleProfile}
-            className={`${itemBase} ${pathname === "/profile" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
+            className={`${itemBase} ${pathname === "/profile" || pathname === "/login" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
           >
             <User className="h-5 w-5" />
             <span>Profile</span>
@@ -94,8 +94,15 @@ const BottomNav = () => {
       </nav>
 
       {/* Search overlay */}
+      <AnimatePresence>
       {searchOpen && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-white animate-in slide-in-from-bottom duration-200 flex flex-col">
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="md:hidden fixed inset-0 z-[60] bg-white flex flex-col"
+        >
           <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: "#EDE8E1" }}>
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />
             <input

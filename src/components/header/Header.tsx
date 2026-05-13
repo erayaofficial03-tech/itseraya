@@ -75,9 +75,7 @@ const Header = () => {
     openWhatsApp(wa, "Hi Eraya! I'd love some help.");
   };
 
-  const handleCart = () => {
-    toast.info("Use the I Love It button on any product to enquire on WhatsApp.");
-  };
+
 
   const closeMenu = () => setOpen(false);
 

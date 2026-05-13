@@ -83,13 +83,10 @@ const BottomNav = () => {
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
-          <button
-            onClick={handleProfile}
-            className={`${itemBase} ${pathname === "/profile" || pathname === "/login" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            <User className="h-5 w-5" />
-            <span>Profile</span>
-          </button>
+          <NavLink to="/wishlist" className={linkClass} aria-label="Wishlist">
+            <Heart className="h-5 w-5" />
+            <span>Wishlist</span>
+          </NavLink>
         </div>
       </nav>
 

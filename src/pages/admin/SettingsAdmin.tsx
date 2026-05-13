@@ -39,7 +39,10 @@ const SettingsAdmin = () => {
   useEffect(() => {
     if (settings) {
       setForm({
-        whatsapp_number: settings.whatsapp_number || "",
+        whatsapp_number: (() => {
+          const d = (settings.whatsapp_number || "").replace(/\D/g, "");
+          return d.startsWith("91") ? d.slice(2) : d;
+        })(),
         whatsapp_float_visible: (settings as any).whatsapp_float_visible !== false,
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,

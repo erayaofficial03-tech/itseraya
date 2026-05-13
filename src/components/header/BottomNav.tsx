@@ -21,17 +21,29 @@ const BottomNav = () => {
     const term = q.trim().toLowerCase();
     if (!term) return [];
     return products
-      .filter(
-        (p) =>
+      .filter((p) => {
+        const tagsStr = (p.tags || []).join(" ").toLowerCase();
+        return (
           p.name.toLowerCase().includes(term) ||
           (p.description ?? "").toLowerCase().includes(term) ||
-          (p.categories?.name ?? "").toLowerCase().includes(term),
-      )
+          (p.categories?.name ?? "").toLowerCase().includes(term) ||
+          tagsStr.includes(term)
+        );
+      })
       .slice(0, 30);
   }, [q, products]);
 
+  // Close on Escape
   useEffect(() => {
-    if (!searchOpen) setQ("");
+    if (!searchOpen) {
+      setQ("");
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen]);
 
   if (pathname.startsWith("/admin")) return null;

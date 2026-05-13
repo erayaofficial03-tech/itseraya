@@ -114,11 +114,6 @@ export type Settings = {
   footer_links_visible: boolean | null;
 
   // Announcement bar
-  announcement_visible: boolean | null;
-  announcement_text: string | null;
-  announcement_bg_color: string | null;
-  announcement_text_color: string | null;
-  announcement_dismissible: boolean | null;
 
   // PDF
   pdf_store_name: string | null;

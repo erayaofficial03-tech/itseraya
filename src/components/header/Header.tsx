@@ -373,14 +373,9 @@ const Header = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button
-                type="button"
-                onClick={handleWhatsAppClick}
-                aria-label="Contact support on WhatsApp"
-                className={`text-sm font-medium tracking-wide hover:text-gold transition-colors px-1 py-1 ${focusRing}`}
-              >
+              <NavLink to="/contact" className={navLinkClass} aria-label="Support – contact us">
                 Support
-              </button>
+              </NavLink>
               <NavLink to="/about" className={navLinkClass} aria-label="About Eraya – our story">
                 About
               </NavLink>

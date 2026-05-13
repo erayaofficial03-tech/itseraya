@@ -14,39 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      audit_logs: {
-        Row: {
-          action: string
-          actor_email: string | null
-          actor_id: string | null
-          created_at: string
-          details: Json
-          id: string
-          target_email: string | null
-          target_id: string | null
-        }
-        Insert: {
-          action: string
-          actor_email?: string | null
-          actor_id?: string | null
-          created_at?: string
-          details?: Json
-          id?: string
-          target_email?: string | null
-          target_id?: string | null
-        }
-        Update: {
-          action?: string
-          actor_email?: string | null
-          actor_id?: string | null
-          created_at?: string
-          details?: Json
-          id?: string
-          target_email?: string | null
-          target_id?: string | null
-        }
-        Relationships: []
-      }
       categories: {
         Row: {
           created_at: string
@@ -244,6 +211,8 @@ export type Database = {
           color_primary: string | null
           color_text: string | null
           enquiry_button_color: string | null
+          facebook_connected_at: string | null
+          facebook_page_name: string | null
           favicon_url: string | null
           footer_copyright: string | null
           footer_links_visible: boolean | null
@@ -259,6 +228,8 @@ export type Database = {
           hero_overlay_opacity: number | null
           hero_subtext: string | null
           id: number
+          instagram_connected_at: string | null
+          instagram_username: string | null
           install_prompt_button_label: string | null
           install_prompt_text: string | null
           install_prompt_visible: boolean | null
@@ -325,6 +296,8 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           enquiry_button_color?: string | null
+          facebook_connected_at?: string | null
+          facebook_page_name?: string | null
           favicon_url?: string | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
@@ -340,6 +313,8 @@ export type Database = {
           hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
+          instagram_connected_at?: string | null
+          instagram_username?: string | null
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null
@@ -406,6 +381,8 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           enquiry_button_color?: string | null
+          facebook_connected_at?: string | null
+          facebook_page_name?: string | null
           favicon_url?: string | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
@@ -421,6 +398,8 @@ export type Database = {
           hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
+          instagram_connected_at?: string | null
+          instagram_username?: string | null
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null

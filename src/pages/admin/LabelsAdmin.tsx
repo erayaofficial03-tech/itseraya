@@ -16,9 +16,8 @@ const TEXT_KEYS = [
   "product_description_label", "product_related_title",
   "catalogue_heading", "catalogue_subtext", "catalogue_download_label",
   "category_empty_message", "category_pieces_label",
-  "footer_tagline", "footer_copyright", "footer_whatsapp_label",
-  "pdf_store_name", "pdf_tagline", "pdf_footer_text",
-  
+  "footer_copyright", "footer_whatsapp_label",
+  "pdf_footer_text",
   "admin_panel_title", "admin_welcome_message",
 ] as const;
 

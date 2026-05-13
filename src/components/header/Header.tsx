@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -302,6 +302,45 @@ const Header = () => {
               </SheetContent>
             </Sheet>
             <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
+
+            {/* Mobile/tablet primary dropdown — quick access to Shop, Support, About */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Quick navigation: Shop, Support, About"
+                  className={`lg:hidden inline-flex items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
+                >
+                  Menu
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem onClick={() => navigate("/catalogue")}>
+                  <Sparkles className="h-4 w-4 mr-2 text-gold" />
+                  {s(settings, "nav_catalogue_label")}
+                </DropdownMenuItem>
+                {visibleCategories.length > 0 && <DropdownMenuSeparator />}
+                {visibleCategories.slice(0, 6).map((c) => (
+                  <DropdownMenuItem
+                    key={c.id}
+                    onMouseEnter={() => prefetchCategory(qc, c.slug)}
+                    onClick={() => navigate(`/category/${c.slug}`)}
+                  >
+                    {c.name}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleWhatsAppClick}>
+                  <MessageCircle className="h-4 w-4 mr-2 text-gold" />
+                  Support
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/about")}>
+                  <Shield className="h-4 w-4 mr-2 text-gold" />
+                  About
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <nav className="hidden lg:flex space-x-7" aria-label="Primary">
               <NavLink to="/" className={navLinkClass} aria-label={`${s(settings, "nav_home_label")} – go to home page`}>

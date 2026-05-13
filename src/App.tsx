@@ -95,6 +95,9 @@ const App = () => (
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
               <Route path="/track" element={<Public><TrackEnquiry /></Public>} />
+              <Route path="/return-policy" element={<Public><ReturnPolicy /></Public>} />
+              <Route path="/shipping-policy" element={<Public><ShippingPolicy /></Public>} />
+              <Route path="/cancellation-policy" element={<Public><CancellationPolicy /></Public>} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Public><Login /></Public>} />

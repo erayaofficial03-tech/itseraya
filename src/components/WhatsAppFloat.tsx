@@ -25,8 +25,9 @@ const WhatsAppFloat = () => {
   }, []);
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
-  const wa = settings?.whatsapp_number?.replace(/\D/g, "");
-  if (!wa) return null;
+  const wa = settings?.whatsapp_number?.replace(/\D/g, "") ?? "";
+  // Must be valid Indian number: 91 + 10 digits starting with 6-9.
+  if (!/^91[6-9]\d{9}$/.test(wa)) return null;
   if ((settings as any)?.whatsapp_float_visible === false) return null;
 
   const handleClick = () => {

@@ -52,7 +52,7 @@ const Catalogue = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SeoHead title={heading} description={s(settings, "catalogue_subtext")} />
+      <SeoHead title={`${heading} — ${s(settings, "store_name")}`} description={s(settings, "catalogue_subtext")} />
       <Header />
       <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-24 md:pb-16">
         <div className="text-center mb-6 md:mb-8">

@@ -5,6 +5,9 @@ import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
+import { useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isStaff, loading } = useAuth();
+  const { data: settings } = useSettings();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -79,6 +83,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SeoHead title={`Sign In — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-6 py-8 pb-24 lg:pb-10 max-w-md mx-auto w-full">
         <div className="text-center mb-6">

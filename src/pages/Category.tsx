@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
 import ProductCard from "@/components/eraya/ProductCard";
 import { useCategories, useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
@@ -17,6 +18,7 @@ const Category = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead title={`${cat?.name || "All Products"} — ${s(settings, "store_name")}`} />
       <Header />
       <main className="pt-6 max-w-7xl mx-auto px-6">
         <div className="text-center mb-10">

@@ -63,7 +63,7 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <SeoHead
-        title={product.name}
+        title={`${product.name} — ${s(settings, "store_name")}`}
         description={product.description || undefined}
         ogImage={images[0]}
       />

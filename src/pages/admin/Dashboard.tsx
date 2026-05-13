@@ -37,9 +37,9 @@ const Dashboard = () => {
     (async () => {
       const [{ count: uc }, { count: ec }, { data: r }, { data: pipe }] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
-        supabase.from("enquiries").select("id", { count: "exact", head: true }),
+        supabase.from("enquiry_sessions").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id, email, full_name, avatar_url, created_at").order("created_at", { ascending: false }).limit(5),
-        supabase.from("enquiries").select("status").limit(2000),
+        supabase.from("enquiry_sessions").select("status").limit(2000),
       ]);
       setUserCount(uc ?? 0);
       setEnquiryCount(ec ?? 0);

@@ -2,9 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Heart, Loader2, ArrowLeft } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlistProducts } from "@/hooks/useWishlist";
+import { useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 import ProductCard from "@/components/eraya/ProductCard";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { lovable } from "@/integrations/lovable/index";
@@ -13,6 +16,7 @@ import { toast } from "sonner";
 const Wishlist = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: products = [], isLoading } = useWishlistProducts();
+  const { data: settings } = useSettings();
   const navigate = useNavigate();
 
   const google = async () => {
@@ -24,6 +28,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SeoHead title={`My Wishlist — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-4 md:px-6 py-6 pb-24 md:pb-16 max-w-6xl mx-auto w-full">
         <div className="flex items-center gap-3 mb-6">

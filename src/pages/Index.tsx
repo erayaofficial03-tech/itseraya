@@ -3,6 +3,7 @@ import Footer from "@/components/footer/Footer";
 import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
+import SeoHead from "@/components/providers/SeoHead";
 import { useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { ProductGridSkeleton } from "@/components/ui/skeletons";
@@ -18,6 +19,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead title={`${s(settings, "store_name")} — ${s(settings, "tagline")}`} />
       <Header />
       <main className="pt-4 md:pt-6 pb-20 md:pb-0">
         <HeroSlider />

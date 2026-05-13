@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -9,10 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { Loader2, LogOut, Heart, MessageCircle, Shield, ChevronRight } from "lucide-react";
-import { formatINR } from "@/lib/queries";
+import { formatINR, useSettings } from "@/lib/queries";
+import { s } from "@/lib/settingsDefaults";
 
 const Profile = () => {
   const { user, profile, isStaff, loading, signOut } = useAuth();
+  const { data: settings } = useSettings();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +61,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SeoHead title={`My Profile — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6">
         {/* Profile card */}

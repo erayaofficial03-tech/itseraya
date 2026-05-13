@@ -51,6 +51,21 @@ const ProductCard = ({ product, showWhatsAppIcon }: Props) => {
                 {pct}% OFF
               </span>
             )}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggle.mutate({ productId: product.id, isSaved });
+              }}
+              aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+              title={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+              disabled={toggle.isPending}
+              className="absolute top-2 right-2 p-2 rounded-full bg-white/90 backdrop-blur shadow hover:bg-white transition-transform hover:scale-110 disabled:opacity-60"
+            >
+              <Heart
+                className={`h-4 w-4 transition-colors ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`}
+              />
+            </button>
             {showWhatsAppIcon && (
               <button
                 onClick={(e) => {

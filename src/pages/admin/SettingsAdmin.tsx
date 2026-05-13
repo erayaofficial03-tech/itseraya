@@ -120,46 +120,8 @@ const SettingsAdmin = () => {
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Store identity</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Contact &amp; messaging</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Store name</Label>
-              <Input value={form.store_name} onChange={(e) => setForm({ ...form, store_name: e.target.value })} />
-            </div>
-            <div>
-              <Label>Tagline</Label>
-              <Input value={form.tagline} onChange={(e) => setForm({ ...form, tagline: e.target.value })} />
-            </div>
-          </div>
-          <div>
-            <Label>Logo</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Upload your gold transparent logo (used on website, PDF, watermarks).
-            </p>
-            <Input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0];
-              if (f) {
-                const url = await uploadImage(f, "branding");
-                setForm({ ...form, logo_url: url });
-              }
-            }} />
-            {form.logo_url && <img src={form.logo_url} className="mt-2 h-16" />}
-          </div>
-          <div>
-            <Label>App icon (home screen)</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Upload your dark-background logo (used only for the app home screen icon).
-            </p>
-            <Input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0];
-              if (f) {
-                const url = await uploadImage(f, "branding");
-                setForm({ ...form, app_icon_url: url });
-              }
-            }} />
-            {form.app_icon_url && <img src={form.app_icon_url} className="mt-2 h-16 rounded" />}
-          </div>
           <div>
             <Label>WhatsApp number</Label>
             <Input

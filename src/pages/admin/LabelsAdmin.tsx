@@ -16,9 +16,8 @@ const TEXT_KEYS = [
   "product_description_label", "product_related_title",
   "catalogue_heading", "catalogue_subtext", "catalogue_download_label",
   "category_empty_message", "category_pieces_label",
-  "footer_tagline", "footer_copyright", "footer_whatsapp_label",
-  "pdf_store_name", "pdf_tagline", "pdf_footer_text",
-  
+  "footer_copyright", "footer_whatsapp_label",
+  "pdf_footer_text",
   "admin_panel_title", "admin_welcome_message",
 ] as const;
 
@@ -119,7 +118,6 @@ const LabelsAdmin = () => {
         <AccordionItem value="footer" className="border rounded-lg px-4 bg-card">
           <AccordionTrigger>Footer</AccordionTrigger>
           <AccordionContent className="space-y-3">
-            {text("footer_tagline", "Footer tagline")}
             {text("footer_copyright", "Copyright text", false, "Use {year} for current year")}
             {text("footer_whatsapp_label", "WhatsApp label")}
             {toggle("footer_show_logo", "Show logo")}
@@ -131,8 +129,6 @@ const LabelsAdmin = () => {
         <AccordionItem value="pdf" className="border rounded-lg px-4 bg-card">
           <AccordionTrigger>PDF labels</AccordionTrigger>
           <AccordionContent className="space-y-3">
-            {text("pdf_store_name", "PDF store name")}
-            {text("pdf_tagline", "PDF tagline")}
             {text("pdf_footer_text", "PDF footer text", true, "Use {whatsapp} for WhatsApp number")}
           </AccordionContent>
         </AccordionItem>

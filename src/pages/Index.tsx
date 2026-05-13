@@ -59,20 +59,6 @@ const Index = () => {
                 viewAllHref="/catalogue?filter=featured"
               />
             )}
-            {s(settings, "section_sale_visible") && (
-              <ProductRow
-                title={s(settings, "section_sale_title")}
-                products={onSale}
-                viewAllHref="/catalogue"
-              />
-            )}
-            {s(settings, "section_featured_visible") && (
-              <ProductRow
-                title={s(settings, "section_featured_title")}
-                products={featured}
-                viewAllHref="/catalogue"
-              />
-            )}
           </>
         )}
       </main>

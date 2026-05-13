@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Outlet, NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
-  Users, Inbox, Megaphone, Palette, Type, Search, UserRound, Images, FileText, Eye,
+  LayoutDashboard, Diamond, Tag, Megaphone, Image, Star, Monitor, Palette, Type,
+  Search, FileText, MessageSquare, Users, UserCog, Settings as SettingsIcon,
+  LogOut, Menu, Eye,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,23 +17,26 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import BrandLogo from "@/components/BrandLogo";
 
-type ItemRole = "staff" | "admin";
-const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRole }[] = [
-  { to: "/admin", end: true, icon: LayoutDashboard, label: "Dashboard", role: "staff" },
-  { to: "/admin/products", icon: Gem, label: "Products", role: "staff" },
-  { to: "/admin/categories", icon: FolderTree, label: "Categories", role: "staff" },
-  { to: "/admin/announcement", icon: Megaphone, label: "Announcement", role: "staff" },
-  { to: "/admin/banner", icon: Image, label: "Homepage & Banner", role: "staff" },
-  { to: "/admin/banners", icon: Images, label: "Banners", role: "staff" },
-  { to: "/admin/brand", icon: Palette, label: "Brand & Colors", role: "admin" },
-  { to: "/admin/labels", icon: Type, label: "Labels & Text", role: "admin" },
-  { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },
-  { to: "/admin/policies", icon: FileText, label: "Policies", role: "admin" },
-  { to: "/admin/enquiries", icon: Inbox, label: "Enquiries", role: "staff" },
-  { to: "/admin/customers", icon: UserRound, label: "Customers", role: "staff" },
-  { to: "/admin/users", icon: Users, label: "Users", role: "admin" },
-  { to: "/admin/settings", icon: SettingsIcon, label: "Store Settings", role: "admin" },
+type NavRole = "admin" | "manager";
+const navItems: { label: string; path: string; end?: boolean; icon: any; roles: NavRole[] }[] = [
+  { label: "Dashboard",         path: "/admin",              end: true, icon: LayoutDashboard, roles: ["admin","manager"] },
+  { label: "Products",          path: "/admin/products",     icon: Diamond,         roles: ["admin","manager"] },
+  { label: "Categories",        path: "/admin/categories",   icon: Tag,             roles: ["admin","manager"] },
+  { label: "Announcements",     path: "/admin/announcement", icon: Megaphone,       roles: ["admin","manager"] },
+  { label: "Banners",           path: "/admin/banners",      icon: Image,           roles: ["admin","manager"] },
+  { label: "USPs & Reviews",    path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },
+  { label: "Homepage & Banner", path: "/admin/banner",       icon: Monitor,         roles: ["admin","manager"] },
+  { label: "Brand & Colors",    path: "/admin/brand",        icon: Palette,         roles: ["admin"] },
+  { label: "Labels & Text",     path: "/admin/labels",       icon: Type,            roles: ["admin"] },
+  { label: "SEO & Meta",        path: "/admin/seo",          icon: Search,          roles: ["admin"] },
+  { label: "Policies",          path: "/admin/policies",     icon: FileText,        roles: ["admin"] },
+  { label: "Enquiries",         path: "/admin/enquiries",    icon: MessageSquare,   roles: ["admin","manager"] },
+  { label: "Customers",         path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },
+  { label: "Users",             path: "/admin/users",        icon: UserCog,         roles: ["admin"] },
+  { label: "Store Settings",    path: "/admin/settings",     icon: SettingsIcon,    roles: ["admin"] },
 ];
+
+type NavItem = typeof navItems[number];
 
 const SidebarBody = ({
   visibleItems,
@@ -42,7 +46,7 @@ const SidebarBody = ({
   profile,
   userEmail,
 }: {
-  visibleItems: typeof items;
+  visibleItems: NavItem[];
   onNavigate?: () => void;
   onSignOut: () => void;
   onSwitchToCustomer: () => void;
@@ -76,8 +80,8 @@ const SidebarBody = ({
     <nav className="flex-1 p-3 space-y-1 overflow-auto">
       {visibleItems.map((item) => (
         <NavLink
-          key={item.to}
-          to={item.to}
+          key={item.path}
+          to={item.path}
           end={item.end}
           onClick={onNavigate}
           className={({ isActive }) =>
@@ -124,10 +128,14 @@ const SidebarBody = ({
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin, profile, user, switchMode } = useAuth();
+  const { isAdmin, isManager, profile, user, switchMode } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const visibleItems = items.filter((i) => (i.role === "admin" ? isAdmin : true));
+  const visibleItems = navItems.filter((i) => {
+    if (isAdmin) return true;
+    if (isManager) return i.roles.includes("manager");
+    return false;
+  });
 
   const qc = useQueryClient();
   const signOut = async () => {
@@ -139,7 +147,7 @@ const AdminLayout = () => {
     await switchMode("customer");
     navigate("/", { replace: true });
   };
-  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
+  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.path : location.pathname.startsWith(i.path)))?.label || "Admin";
 
   return (
     <div className="min-h-screen flex w-full bg-muted/30">

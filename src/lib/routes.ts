@@ -8,19 +8,17 @@ export const ROUTES = {
   product: "/product/:productId",
   catalogue: "/catalogue",
   about: "/about",
-  checkout: "/checkout",
   login: "/login",
   profile: "/profile",
   wishlist: "/wishlist",
   resetPassword: "/reset-password",
   authCallback: "/auth/callback",
-  adminLogin: "/admin/login",
   admin: "/admin",
   adminProducts: "/admin/products",
   adminCategories: "/admin/categories",
   adminBanner: "/admin/banner",
   adminSettings: "/admin/settings",
-  adminAdmins: "/admin/admins",
+  adminUsers: "/admin/users",
 } as const;
 
 /** Routes safe to redirect to after sign-in. */
@@ -30,13 +28,12 @@ const REDIRECT_SAFE_KEYS: Array<keyof typeof ROUTES> = [
   "product",
   "catalogue",
   "about",
-  "checkout",
   "admin",
   "adminProducts",
   "adminCategories",
   "adminBanner",
   "adminSettings",
-  "adminAdmins",
+  "adminUsers",
 ];
 
 export const ALLOWED_REDIRECT_PREFIXES: string[] = REDIRECT_SAFE_KEYS.map((k) => {

@@ -21,7 +21,7 @@ const SettingsAdmin = () => {
   const qc = useQueryClient();
 
   const [form, setForm] = useState({
-    store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
+    whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
     usp_1: "", usp_2: "", usp_3: "",
     whatsapp_message_template: "",
@@ -30,7 +30,6 @@ const SettingsAdmin = () => {
     pwa_name: "", pwa_short_name: "", pwa_description: "",
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
     instagram_username: "", facebook_page_name: "",
-    app_icon_url: "",
     about_title: "", about_body: "", about_image_url: "",
     enquiry_mode: "cart" as "cart" | "direct",
   });
@@ -39,9 +38,6 @@ const SettingsAdmin = () => {
   useEffect(() => {
     if (settings) {
       setForm({
-        store_name: settings.store_name,
-        tagline: settings.tagline,
-        logo_url: settings.logo_url || "",
         whatsapp_number: settings.whatsapp_number || "",
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
@@ -61,7 +57,6 @@ const SettingsAdmin = () => {
         pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
         instagram_username: (settings as any).instagram_username || "",
         facebook_page_name: (settings as any).facebook_page_name || "",
-        app_icon_url: (settings as any).app_icon_url || "",
         about_title: (settings as any).about_title || "",
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",
@@ -80,8 +75,6 @@ const SettingsAdmin = () => {
     const { error } = await supabase.from("settings").update({
       ...form,
       whatsapp_number: cleanWa || null,
-      logo_url: form.logo_url || null,
-      app_icon_url: form.app_icon_url || null,
       about_image_url: form.about_image_url || null,
     } as any).eq("id", 1);
     setBusy(false);
@@ -124,46 +117,8 @@ const SettingsAdmin = () => {
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Store identity</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Contact &amp; messaging</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Store name</Label>
-              <Input value={form.store_name} onChange={(e) => setForm({ ...form, store_name: e.target.value })} />
-            </div>
-            <div>
-              <Label>Tagline</Label>
-              <Input value={form.tagline} onChange={(e) => setForm({ ...form, tagline: e.target.value })} />
-            </div>
-          </div>
-          <div>
-            <Label>Logo</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Upload your gold transparent logo (used on website, PDF, watermarks).
-            </p>
-            <Input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0];
-              if (f) {
-                const url = await uploadImage(f, "branding");
-                setForm({ ...form, logo_url: url });
-              }
-            }} />
-            {form.logo_url && <img src={form.logo_url} className="mt-2 h-16" />}
-          </div>
-          <div>
-            <Label>App icon (home screen)</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Upload your dark-background logo (used only for the app home screen icon).
-            </p>
-            <Input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0];
-              if (f) {
-                const url = await uploadImage(f, "branding");
-                setForm({ ...form, app_icon_url: url });
-              }
-            }} />
-            {form.app_icon_url && <img src={form.app_icon_url} className="mt-2 h-16 rounded" />}
-          </div>
           <div>
             <Label>WhatsApp number</Label>
             <Input
@@ -270,7 +225,7 @@ const SettingsAdmin = () => {
           <div className="space-y-2">
             <Label>Catalogue share message</Label>
             <Textarea rows={6} value={form.catalogue_whatsapp_message_template} onChange={(e) => setForm({ ...form, catalogue_whatsapp_message_template: e.target.value })} />
-            <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available variables: <code>{"{store_name}"}</code>, <code>{"{url}"}</code>, <code>{"{tagline}"}</code>, <code>{"{whatsapp}"}</code></p>
+            <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available placeholders: store name, tagline, URL, WhatsApp number.</p>
           </div>
         </CardContent>
       </Card>

@@ -72,7 +72,6 @@ const Footer = () => {
               <ul className="space-y-2 text-sm">
                 <li><Link to="/?filter=new" className="hover:text-gold">New Arrivals</Link></li>
                 <li><Link to="/catalogue" className="hover:text-gold">Catalogue</Link></li>
-                <li><Link to="/search" className="hover:text-gold">Search</Link></li>
                 <li><Link to="/about" className="hover:text-gold">About</Link></li>
                 <li><Link to="/track" className="hover:text-gold">Track Enquiry</Link></li>
               </ul>
@@ -100,6 +99,8 @@ const Footer = () => {
               <li><Link to="/return-policy" className="hover:text-gold">Return Policy</Link></li>
               <li><Link to="/shipping-policy" className="hover:text-gold">Shipping Policy</Link></li>
               <li><Link to="/cancellation-policy" className="hover:text-gold">Cancellation Policy</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-gold">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-gold">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

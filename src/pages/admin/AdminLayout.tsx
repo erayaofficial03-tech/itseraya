@@ -34,7 +34,7 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
 const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: typeof items; onNavigate?: () => void; onSignOut: () => void }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
-      <BrandLogo className="h-10 w-auto" />
+      <BrandLogo className="h-10 w-auto" onDark />
       <span className="h-px w-8 bg-gold/60" />
       <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
     </div>

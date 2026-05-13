@@ -21,6 +21,9 @@ interface Props {
 
 const ProductCard = ({ product, showWhatsAppIcon }: Props) => {
   const { data: settings } = useSettings();
+  const { data: wishlist = [] } = useWishlist();
+  const toggle = useToggleWishlist();
+  const isSaved = wishlist.some((w) => w.product_id === product.id);
   const pct = discountPct(product);
   const price = product.discounted_price ?? product.original_price;
   const enquiryColor = s(settings, "enquiry_button_color");

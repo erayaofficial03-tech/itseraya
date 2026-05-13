@@ -151,12 +151,12 @@ const UsersAdmin = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or email" className="pl-9" />
             </div>
-            <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
-              <TabsList>
-                <TabsTrigger value="all" className="gap-2">All <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.all}</span></TabsTrigger>
-                <TabsTrigger value="managers" className="gap-2">Managers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.managers}</span></TabsTrigger>
-                <TabsTrigger value="customers" className="gap-2">Customers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.customers}</span></TabsTrigger>
-                <TabsTrigger value="blocked" className="gap-2">Blocked <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${counts.blocked > 0 ? "bg-red-100 text-red-700" : "bg-muted text-muted-foreground"}`}>{counts.blocked}</span></TabsTrigger>
+            <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="w-full sm:w-auto">
+              <TabsList className="w-full sm:w-auto overflow-x-auto justify-start no-scrollbar">
+                <TabsTrigger value="all" className="gap-2 shrink-0">All <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.all}</span></TabsTrigger>
+                <TabsTrigger value="managers" className="gap-2 shrink-0">Managers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.managers}</span></TabsTrigger>
+                <TabsTrigger value="customers" className="gap-2 shrink-0">Customers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.customers}</span></TabsTrigger>
+                <TabsTrigger value="blocked" className="gap-2 shrink-0">Blocked <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${counts.blocked > 0 ? "bg-red-100 text-red-700" : "bg-muted text-muted-foreground"}`}>{counts.blocked}</span></TabsTrigger>
               </TabsList>
             </Tabs>
           </div>

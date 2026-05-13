@@ -168,13 +168,13 @@ const EnquiriesAdmin = () => {
         </Badge>
       </div>
 
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="open">Open</TabsTrigger>
-          <TabsTrigger value="followup">Follow-up</TabsTrigger>
-          <TabsTrigger value="won">Closed Won</TabsTrigger>
-          <TabsTrigger value="lost">Closed Lost</TabsTrigger>
+      <Tabs value={tab} onValueChange={setTab} className="w-full">
+        <TabsList className="w-full sm:w-auto overflow-x-auto justify-start no-scrollbar">
+          <TabsTrigger value="all" className="shrink-0">All</TabsTrigger>
+          <TabsTrigger value="open" className="shrink-0">Open</TabsTrigger>
+          <TabsTrigger value="followup" className="shrink-0">Follow-up</TabsTrigger>
+          <TabsTrigger value="won" className="shrink-0">Closed Won</TabsTrigger>
+          <TabsTrigger value="lost" className="shrink-0">Closed Lost</TabsTrigger>
         </TabsList>
       </Tabs>
 

@@ -156,9 +156,6 @@ const Login = () => {
           </TabsContent>
         </Tabs>
 
-        <p className="text-[11px] text-muted-foreground text-center mt-6 px-4">
-          Your account is used only to save favourites and enquiry history.
-        </p>
         <p className="text-xs text-muted-foreground text-center mt-3">
           <Link to="/" className="hover:text-gold">← Back to store</Link>
         </p>

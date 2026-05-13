@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import { FileDown } from "lucide-react";
+import { FileDown, Heart } from "lucide-react";
+import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";

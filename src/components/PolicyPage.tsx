@@ -14,7 +14,7 @@ interface Props {
 
 const PolicyPage = ({ title, body, lastUpdated }: Props) => {
   const { data: settings } = useSettings();
-  const sx = (settings as Record<string, string | undefined> | undefined) ?? {};
+  const sx = (settings as unknown as Record<string, string | undefined>) ?? {};
   const logo = settings?.logo_url || erayaLogo;
 
   const fontFamily = sx.policy_font_family || "Inter";

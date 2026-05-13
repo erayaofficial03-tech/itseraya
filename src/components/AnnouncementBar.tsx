@@ -19,8 +19,6 @@ const AnnouncementBar = () => {
   if (dismissed) return null;
 
   const text = s(settings, "announcement_text");
-  const bg = s(settings, "announcement_bg_color");
-  const fg = s(settings, "announcement_text_color");
   const dismissible = s(settings, "announcement_dismissible");
 
   const onDismiss = () => {
@@ -32,8 +30,7 @@ const AnnouncementBar = () => {
     <div
       role="region"
       aria-label="Announcement"
-      className="w-full text-center text-xs sm:text-sm font-medium px-3 py-2 relative"
-      style={{ backgroundColor: bg, color: fg }}
+      className="w-full text-center text-xs sm:text-sm font-medium px-3 py-1.5 relative bg-charcoal text-gold"
     >
       <span className="px-6">{text}</span>
       {dismissible && (
@@ -41,8 +38,7 @@ const AnnouncementBar = () => {
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss announcement"
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-black/10 transition-colors"
-          style={{ color: fg }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors text-gold"
         >
           <X className="h-3.5 w-3.5" />
         </button>

@@ -123,19 +123,19 @@ const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
               />
               {isIOSNonSafari ? (
                 <>
-                  <h2 className="font-serif text-xl text-[#2C2C2C] text-center">
+                  <h2 id={titleId} className="font-serif text-xl text-[#2C2C2C] text-center">
                     Open in Safari First
                   </h2>
-                  <p className="text-sm text-[#9A8F85] text-center mt-1">
+                  <p id={descId} className="text-sm text-[#9A8F85] text-center mt-1">
                     iPhone can only install apps from Safari
                   </p>
                 </>
               ) : (
                 <>
-                  <h2 className="font-serif text-xl text-[#2C2C2C] text-center">
+                  <h2 id={titleId} className="font-serif text-xl text-[#2C2C2C] text-center">
                     Add Eraya to Your Home Screen
                   </h2>
-                  <p className="text-sm text-[#9A8F85] text-center mt-1">
+                  <p id={descId} className="text-sm text-[#9A8F85] text-center mt-1">
                     Follow these 3 simple steps in Safari
                   </p>
                 </>

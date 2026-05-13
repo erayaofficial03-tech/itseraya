@@ -48,9 +48,23 @@ const AdminLogin = () => {
     if (!isFormValid) return;
     setEmailBusy(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        toast.error(error.message);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error || !data.user) {
+        toast.error(error?.message || "Sign-in failed");
+        setEmailBusy(false);
+        return;
+      }
+      // Post-login role check
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id);
+      const hasStaffRole = (roles || []).some(
+        (r) => r.role === "admin" || r.role === "manager"
+      );
+      if (!hasStaffRole) {
+        await supabase.auth.signOut();
+        toast.error("Access denied. Admin or manager privileges required.");
         setEmailBusy(false);
         return;
       }

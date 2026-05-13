@@ -80,7 +80,7 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
             }}
             aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
             disabled={toggle.isPending}
-            className="absolute top-2 right-2 p-1.5 rounded-full bg-white/90 backdrop-blur shadow hover:bg-white transition-transform hover:scale-110 disabled:opacity-60"
+            className="absolute top-1.5 right-1.5 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur shadow flex items-center justify-center hover:bg-white transition-transform active:scale-95 disabled:opacity-60"
           >
             <Heart className={`h-4 w-4 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
           </button>
@@ -89,9 +89,9 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
               onClick={handleAdd}
               aria-label="Add to enquiry"
               title="Add to enquiry"
-              className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-gold text-white flex items-center justify-center text-lg font-bold shadow-md hover:scale-110 transition-transform"
+              className="absolute bottom-1.5 right-1.5 h-11 w-11 md:h-9 md:w-9 rounded-full bg-gold text-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
             >
-              <Plus className="h-4 w-4" strokeWidth={3} />
+              <Plus className="h-5 w-5 md:h-4 md:w-4" strokeWidth={3} />
             </button>
           )}
         </div>

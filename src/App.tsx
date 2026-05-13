@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import RoleGuard from "./components/auth/RoleGuard";
 import InstallPrompt from "./components/pwa/InstallPrompt";
+import BottomNav from "./components/header/BottomNav";
 import BrandProvider from "./components/providers/BrandProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";

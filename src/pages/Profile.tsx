@@ -61,6 +61,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SeoHead title={`My Profile — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6">
         {/* Profile card */}

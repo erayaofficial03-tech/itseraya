@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Heart } from "lucide-react";
 import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import Header from "@/components/header/Header";

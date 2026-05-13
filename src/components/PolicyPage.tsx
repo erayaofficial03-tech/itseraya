@@ -14,13 +14,14 @@ interface Props {
 
 const PolicyPage = ({ title, body, lastUpdated }: Props) => {
   const { data: settings } = useSettings();
+  const sx = (settings as Record<string, string | undefined> | undefined) ?? {};
   const logo = settings?.logo_url || erayaLogo;
 
-  const fontFamily = settings?.policy_font_family || "Inter";
-  const fontSize = `${settings?.policy_font_size || "16"}px`;
-  const textColor = settings?.policy_text_color || "#2C2C2C";
-  const headingColor = settings?.policy_heading_color || "#C9A84C";
-  const bgColor = settings?.policy_bg_color || "#FAF8F5";
+  const fontFamily = sx.policy_font_family || "Inter";
+  const fontSize = `${sx.policy_font_size || "16"}px`;
+  const textColor = sx.policy_text_color || "#2C2C2C";
+  const headingColor = sx.policy_heading_color || "#C9A84C";
+  const bgColor = sx.policy_bg_color || "#FAF8F5";
   const storeName = s(settings, "store_name");
   const tagline = s(settings, "tagline");
 

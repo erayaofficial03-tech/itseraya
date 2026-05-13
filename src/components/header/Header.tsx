@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -127,7 +127,7 @@ const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col bg-[hsl(var(--background))]">
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--background))]">
                 <SheetHeader className="px-6 py-5 border-b border-border items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
@@ -189,12 +189,6 @@ const Header = () => {
                             {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                          <button
-                            onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                            className="text-xs text-red-600 hover:text-red-700 mt-0.5"
-                          >
-                            Sign out
-                          </button>
                         </div>
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
@@ -209,15 +203,6 @@ const Header = () => {
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
-                      {isStaff && (
-                        <button
-                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
-                          className={`${drawerLinkClass} w-full text-left`}
-                        >
-                          <span className="flex items-center gap-2 text-gold"><Cog className="h-4 w-4" /> Switch to Admin Mode</span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                        </button>
-                      )}
                     </>
                   ) : (
                     <>
@@ -284,13 +269,31 @@ const Header = () => {
                   </button>
                 </div>
 
-                <div className="border-t border-border px-6 py-4 text-center">
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
-                    {settings?.store_name || "Eraya"}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground/80 mt-1">
-                    © {new Date().getFullYear()} All rights reserved
-                  </p>
+                <div className="shrink-0 border-t border-border p-3 space-y-1 bg-[hsl(var(--background))]">
+                  {isStaff && (
+                    <button
+                      onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium border border-gold/40 text-charcoal hover:bg-gold/10 transition-colors"
+                    >
+                      <Cog className="h-4 w-4" /> Switch to Admin Mode
+                    </button>
+                  )}
+                  {user && (
+                    <button
+                      onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" /> Sign out
+                    </button>
+                  )}
+                  <div className="px-3 py-2 text-center">
+                    <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
+                      {settings?.store_name || "Eraya"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground/80 mt-1">
+                      © {new Date().getFullYear()} All rights reserved
+                    </p>
+                  </div>
                 </div>
 
               </SheetContent>

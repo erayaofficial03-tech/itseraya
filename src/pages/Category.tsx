@@ -18,6 +18,7 @@ const Category = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SeoHead title={`${cat?.name || "All Products"} — ${s(settings, "store_name")}`} />
       <Header />
       <main className="pt-6 max-w-7xl mx-auto px-6">
         <div className="text-center mb-10">

@@ -10,7 +10,7 @@ import RoleGuard from "./components/auth/RoleGuard";
 import InstallPrompt from "./components/pwa/InstallPrompt";
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
-import PageTransition from "./components/PageTransition";
+
 import BrandProvider from "./components/providers/BrandProvider";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
 import SeoHead from "./components/providers/SeoHead";
@@ -50,8 +50,9 @@ const CustomersAdmin = lazy(() => import("./pages/admin/CustomersAdmin"));
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 min default
-      gcTime: 30 * 60 * 1000,
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 2,
       refetchOnWindowFocus: false,
     },
   },
@@ -80,7 +81,7 @@ const App = () => (
           <ScrollToTop />
           <InstallPrompt />
           <Suspense fallback={<PageLoader />}>
-            <PageTransition>
+            
             <Routes>
               {/* Public storefront */}
               <Route path={ROUTES.home} element={<Public><Index /></Public>} />
@@ -124,7 +125,7 @@ const App = () => (
 
               <Route path="*" element={<NotFound />} />
             </Routes>
-            </PageTransition>
+            
           </Suspense>
           <WhatsAppFloat />
           <BottomNav />

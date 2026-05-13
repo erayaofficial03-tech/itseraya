@@ -83,7 +83,7 @@ const App = () => (
         <Sonner />
         <WhatsAppFallbackDialog />
           <ScrollToTop />
-          <InstallPrompt />
+          
           <Suspense fallback={<PageLoader />}>
             
             <Routes>

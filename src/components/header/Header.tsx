@@ -4,6 +4,7 @@ import { Menu, Search, ShoppingBag, MessageCircle, ChevronRight } from "lucide-r
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import { openWhatsApp } from "@/lib/whatsapp";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -136,7 +137,7 @@ const Header = () => {
                     About <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   <button
-                    onClick={() => { openWhatsApp(); closeMenu(); }}
+                    onClick={() => { handleWhatsAppClick(); closeMenu(); }}
                     className={`${drawerLinkClass} w-full text-left`}
                   >
                     <span className="flex items-center gap-2">
@@ -169,7 +170,7 @@ const Header = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={openWhatsApp} className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
+              <button onClick={handleWhatsAppClick} className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
                 Support
               </button>
               <NavLink to="/about" className={navLinkClass}>About</NavLink>

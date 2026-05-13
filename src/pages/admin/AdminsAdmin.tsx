@@ -10,6 +10,10 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Search, Ban, ShieldCheck } from "lucide-react";
 import { format } from "date-fns";
@@ -38,6 +42,7 @@ const UsersAdmin = () => {
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"all" | "managers" | "customers" | "blocked">("all");
   
+  const [confirmBlock, setConfirmBlock] = useState<UserRow | null>(null);
   const PAGE_SIZE = 20;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   // Reset paging when filters change
@@ -101,9 +106,10 @@ const UsersAdmin = () => {
   const toggleBlock = async (u: UserRow) => {
     const next = !u.is_blocked;
     const { error } = await supabase.from("profiles").update({ is_blocked: next }).eq("id", u.id);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(error.message); setConfirmBlock(null); return; }
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, is_blocked: next } : x)));
     toast.success(next ? "User blocked" : "User unblocked");
+    setConfirmBlock(null);
   };
 
 
@@ -221,7 +227,7 @@ const UsersAdmin = () => {
                                 <SelectItem value="customer">customer</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
+                            <Button size="icon" variant="outline" onClick={() => setConfirmBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
                               {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
                             </Button>
                           </>
@@ -242,6 +248,27 @@ const UsersAdmin = () => {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!confirmBlock} onOpenChange={(o) => !o && setConfirmBlock(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmBlock?.is_blocked ? "Unblock this user?" : "Block this user?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmBlock?.is_blocked
+                ? <>This will restore access for <strong>{confirmBlock?.email}</strong>.</>
+                : <>This will prevent <strong>{confirmBlock?.email}</strong> from using their account until you unblock them.</>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => confirmBlock && toggleBlock(confirmBlock)}>
+              {confirmBlock?.is_blocked ? "Unblock" : "Block"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

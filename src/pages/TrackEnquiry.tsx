@@ -147,12 +147,22 @@ const TrackEnquiry = () => {
         {!loading && searched && !session && (
           <Card className="p-8 text-center">
             <Package className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="text-sm text-muted-foreground">
-              No enquiry found for <span className="font-mono">{code}</span>.
+            <p className="font-medium text-foreground">Enquiry not found</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Double-check your <span className="font-mono">{code}</span> code or contact us on WhatsApp.
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Double-check the code or contact us on WhatsApp.
-            </p>
+            {settings?.whatsapp_number && (
+              <Button
+                onClick={() => {
+                  const num = settings.whatsapp_number!.replace(/\D/g, "");
+                  openWhatsApp(num, `Hi Eraya! I can't find my enquiry ${code}. Can you help?`);
+                }}
+                className="mt-5 bg-green-600 hover:bg-green-700 text-white"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                WhatsApp us
+              </Button>
+            )}
           </Card>
         )}
 

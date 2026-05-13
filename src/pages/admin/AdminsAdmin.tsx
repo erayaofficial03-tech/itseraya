@@ -106,9 +106,10 @@ const UsersAdmin = () => {
   const toggleBlock = async (u: UserRow) => {
     const next = !u.is_blocked;
     const { error } = await supabase.from("profiles").update({ is_blocked: next }).eq("id", u.id);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(error.message); setConfirmBlock(null); return; }
     setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, is_blocked: next } : x)));
     toast.success(next ? "User blocked" : "User unblocked");
+    setConfirmBlock(null);
   };
 
 

@@ -17,6 +17,7 @@ const BrandAdmin = () => {
   const [form, setForm] = useState({
     logo_url: "",
     favicon_url: "",
+    app_icon_url: "",
     store_name: "",
     tagline: "",
     color_primary: "#C9A84C",
@@ -30,7 +31,8 @@ const BrandAdmin = () => {
     if (!settings) return;
     setForm({
       logo_url: settings.logo_url || "",
-      favicon_url: settings.favicon_url || "",
+      favicon_url: (settings as any).favicon_url || "",
+      app_icon_url: (settings as any).app_icon_url || "",
       store_name: settings.store_name || "",
       tagline: settings.tagline || "",
       color_primary: settings.color_primary || "#C9A84C",
@@ -64,7 +66,7 @@ const BrandAdmin = () => {
     qc.invalidateQueries({ queryKey: ["settings"] });
   };
 
-  const upload = async (file: File, key: "logo_url" | "favicon_url") => {
+  const upload = async (file: File, key: "logo_url" | "favicon_url" | "app_icon_url") => {
     const url = await uploadImage(file, "branding");
     setForm((f) => ({ ...f, [key]: url }));
   };
@@ -88,6 +90,12 @@ const BrandAdmin = () => {
             <Label>Favicon</Label>
             <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], "favicon_url")} />
             {form.favicon_url && <img src={form.favicon_url} className="mt-2 h-8 w-8" alt="Favicon preview" />}
+          </div>
+          <div>
+            <Label>App icon (home screen)</Label>
+            <p className="text-xs text-muted-foreground mb-2">Used as the PWA / home-screen icon (dark-background variant works best).</p>
+            <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], "app_icon_url")} />
+            {form.app_icon_url && <img src={form.app_icon_url} className="mt-2 h-12 w-12 rounded" alt="App icon preview" />}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

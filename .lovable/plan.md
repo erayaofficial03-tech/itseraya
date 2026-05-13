@@ -1,38 +1,30 @@
-# Remove Duplicate Settings Across Admin
+## Goal
 
-After scanning every admin page, three real duplicates remain. The visible "Announcements" duplicate you spotted is the **legacy single‑announcement fields baked into the `settings` row** that the announcement bar still falls back to when the managed `announcements` table is empty.
+Confirm the admin user-management workflow at **/admin/users** matches the requested behaviour: admins can **block/unblock**, **change role** (Manager ↔ Customer), and new signups always start as **Customer**. Replace the Delete control with the Block + role-change pair you described.
 
-## Duplicates found
+## Current state (already in place)
 
-### 1. Announcements (the one you flagged)
-- Source of truth: `/admin/announcement` (table `announcements`, multi‑item, scheduling, marquee).
-- Hidden duplicate: 5 legacy columns on `settings` — `announcement_visible`, `announcement_text`, `announcement_bg_color`, `announcement_text_color`, `announcement_dismissible`. Used as a fallback inside `src/components/AnnouncementBar.tsx`. They aren't shown in any admin form anymore but they still drive content if the admin table is empty, so editing one place doesn't reflect the other.
+- **/admin/users** (`src/pages/admin/AdminsAdmin.tsx`, admin-only route) lists every profile with avatar, role badge, Active/Blocked badge, search, tabs (All / Managers / Customers / Blocked) and pagination.
+- **Block / Unblock** — `toggleBlock()` flips `profiles.is_blocked` (Ban / ShieldCheck icon).
+- **Role change** — Select dropdown calls `updateRole()` to rewrite `user_roles` for the user.
+- **New signups → customer** — DB trigger `handle_new_user` already inserts role `'customer'` for any email other than the two reserved ones (`admin@itseraya.in` → admin, `erayaofficial03@gmail.com` → manager).
+- **Admin reserved** — DB trigger `enforce_single_admin` plus the in-code guard restrict the admin role to `admin@itseraya.in`.
 
-### 2. Social presence (inside Settings → Profile & Settings)
-- "Social links" card → `social_links` table (platform + URL, supports many).
-- "Social connections" card → `settings.instagram_username` + `settings.facebook_page_name` (just handles, no URL, no toggle, "live posting coming soon" — never wired up).
-- Both express the same intent. Keep `social_links` (richer), drop the handles card and the two columns.
+## Changes to make
 
-### 3. Confusing twin admin pages (not data duplicates, naming duplicates)
-- `Banners` → `/admin/banners` → hero slider images (`banners` table).
-- `Homepage & Banner` → `/admin/banner` → homepage section titles + visibility (Categories, New Arrivals, etc.).
-The word "Banner" in the second label is misleading. Rename it to **Homepage Sections**.
+Per your answers (keep single admin; replace Delete with Block + role-change):
 
-## Changes
+1. **`src/pages/admin/AdminsAdmin.tsx`** — UI cleanup only:
+   - Remove the **Delete** button, the `confirmDelete` state, the `deleteUser()` function, the `AlertDialog` block, and the now-unused `Trash2` / AlertDialog imports.
+   - Keep the row actions as: **Role Select (manager / customer)** + **Block / Unblock** button.
+   - Tighten the helper copy under the page title to: *"New signups join as Customer. Promote to Manager or block accounts here. The Admin role is reserved for `admin@itseraya.in`."*
+   - Tweak the empty-state line to mention email/password signups too (not just Google).
 
-### Frontend
-- `src/components/AnnouncementBar.tsx` — remove the legacy fallback block; render only from the `useAnnouncements()` query.
-- `src/pages/admin/SettingsAdmin.tsx` — delete the "Social connections" card; remove `instagram_username` / `facebook_page_name` from `useState`, `useEffect`, and the `update` payload.
-- `src/lib/queries.ts` + `src/lib/settingsDefaults.ts` — drop the 5 announcement_* and 2 social handle keys from the `Settings` type and defaults.
-- `src/pages/admin/AdminLayout.tsx` — relabel "Homepage & Banner" → "Homepage Sections" (route `/admin/banner` unchanged for back‑compat).
+2. **No database migration needed** — the existing `handle_new_user`, `enforce_single_admin`, and `is_blocked` column already enforce the rules.
 
-### Database (migration)
-Drop now‑unused columns from `settings`:
-- `announcement_visible`, `announcement_text`, `announcement_bg_color`, `announcement_text_color`, `announcement_dismissible`
-- `instagram_username`, `instagram_connected_at`, `facebook_page_name`, `facebook_connected_at`
-
-No data preservation needed — the managed `announcements` table and `social_links` table already cover both use cases.
+3. **No auth-flow change needed** — the block flag is honoured wherever you gate logged-in features against `profiles.is_blocked`. (If you'd like, a follow-up task can add a sign-in-time check that signs blocked users out with a toast — flag this if you want it included.)
 
 ## Out of scope
-- BannerAdmin vs BannersAdmin code stays as‑is; only the sidebar label changes.
-- All other admin pages were checked (Brand, USPs, SEO, Policies, Categories, Products, Banners, Customers, Enquiries, Labels, Admins, Profile) — no field overlaps with Settings.
+
+- Hard-deleting `auth.users` entries (you opted for Block instead).
+- Allowing multiple admins (you chose to keep the single-admin rule).

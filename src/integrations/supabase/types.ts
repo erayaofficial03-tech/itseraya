@@ -583,6 +583,7 @@ export type Database = {
           usp_3: string | null
           usp_fade_speed_ms: number
           usp_interval_ms: number
+          whatsapp_float_visible: boolean
           whatsapp_message_template: string | null
           whatsapp_number: string | null
         }
@@ -688,6 +689,7 @@ export type Database = {
           usp_3?: string | null
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
+          whatsapp_float_visible?: boolean
           whatsapp_message_template?: string | null
           whatsapp_number?: string | null
         }
@@ -793,6 +795,7 @@ export type Database = {
           usp_3?: string | null
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
+          whatsapp_float_visible?: boolean
           whatsapp_message_template?: string | null
           whatsapp_number?: string | null
         }

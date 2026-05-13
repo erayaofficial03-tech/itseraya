@@ -1,0 +1,1 @@
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS whatsapp_float_visible boolean NOT NULL DEFAULT true;

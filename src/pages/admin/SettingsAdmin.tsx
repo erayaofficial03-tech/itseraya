@@ -305,6 +305,72 @@ const SettingsAdmin = () => {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader><CardTitle>About page</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <div>
+            <Label>About title</Label>
+            <Input value={form.about_title} onChange={(e) => setForm({ ...form, about_title: e.target.value })} placeholder="Our Story" />
+          </div>
+          <div>
+            <Label>About story</Label>
+            <Textarea rows={6} value={form.about_body} onChange={(e) => setForm({ ...form, about_body: e.target.value })} placeholder="Tell your brand story…" />
+            <p className="text-xs text-muted-foreground mt-1">Line breaks are preserved.</p>
+          </div>
+          <div>
+            <Label>About hero image</Label>
+            <Input type="file" accept="image/*" onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (f) {
+                const url = await uploadImage(f, "branding");
+                setForm({ ...form, about_image_url: url });
+              }
+            }} />
+            {form.about_image_url && <img src={form.about_image_url} className="mt-2 w-full max-w-md aspect-[16/7] object-cover rounded" />}
+            <p className="text-xs text-muted-foreground mt-1">Optional — leave empty for a warm gradient fallback.</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Enquiry Mode</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-xs text-muted-foreground">
+            Cart mode lets customers add multiple items before enquiring on WhatsApp.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, enquiry_mode: "cart" })}
+              className={`text-left rounded-lg border p-4 transition-colors ${
+                form.enquiry_mode === "cart"
+                  ? "border-gold bg-gold/5"
+                  : "border-border hover:border-gold/60"
+              }`}
+            >
+              <p className="font-medium text-sm">Enquiry Cart</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                "I Love It" adds to cart. Customer sends all items together.
+              </p>
+            </button>
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, enquiry_mode: "direct" })}
+              className={`text-left rounded-lg border p-4 transition-colors ${
+                form.enquiry_mode === "direct"
+                  ? "border-gold bg-gold/5"
+                  : "border-border hover:border-gold/60"
+              }`}
+            >
+              <p className="font-medium text-sm">Direct WhatsApp</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                "I Love It" opens WhatsApp directly with the product.
+              </p>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
         {busy ? "Saving…" : "Save all settings"}
       </Button>

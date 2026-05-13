@@ -333,7 +333,8 @@ const Header = () => {
             <img
               src={logo}
               alt={settings?.store_name || "Eraya"}
-              className="h-9 sm:h-10 w-auto object-contain max-w-[160px]"
+              draggable={false}
+              className="brand-logo h-9 sm:h-10 w-auto object-contain max-w-[160px]"
               onError={(e) => {
                 const img = e.currentTarget;
                 img.style.display = "none";

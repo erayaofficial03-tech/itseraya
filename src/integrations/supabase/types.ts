@@ -441,27 +441,42 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          city: string | null
           created_at: string
+          current_mode: string
           email: string
           full_name: string | null
           id: string
           is_blocked: boolean
+          phone: string | null
+          profile_complete: boolean
+          state: string | null
         }
         Insert: {
           avatar_url?: string | null
+          city?: string | null
           created_at?: string
+          current_mode?: string
           email: string
           full_name?: string | null
           id: string
           is_blocked?: boolean
+          phone?: string | null
+          profile_complete?: boolean
+          state?: string | null
         }
         Update: {
           avatar_url?: string | null
+          city?: string | null
           created_at?: string
+          current_mode?: string
           email?: string
           full_name?: string | null
           id?: string
           is_blocked?: boolean
+          phone?: string | null
+          profile_complete?: boolean
+          state?: string | null
         }
         Relationships: []
       }

@@ -52,10 +52,6 @@ const BottomNav = () => {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `${itemBase} ${isActive ? "text-gold" : "text-muted-foreground hover:text-foreground"}`;
 
-  const handleProfile = () => {
-    navigate(user ? "/profile" : "/login");
-  };
-
   return (
     <>
       <nav

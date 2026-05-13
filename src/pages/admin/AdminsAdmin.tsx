@@ -123,6 +123,14 @@ const UsersAdmin = () => {
     return list;
   }, [users, search, tab]);
 
+  const counts = useMemo(() => ({
+    all: users.length,
+    managers: users.filter((u) => u.role === "manager").length,
+    customers: users.filter((u) => u.role === "customer").length,
+    blocked: users.filter((u) => u.is_blocked).length,
+  }), [users]);
+
+
   return (
     <div className="space-y-6 max-w-6xl">
       <div>
@@ -145,10 +153,10 @@ const UsersAdmin = () => {
             </div>
             <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
               <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="managers">Managers</TabsTrigger>
-                <TabsTrigger value="customers">Customers</TabsTrigger>
-                <TabsTrigger value="blocked">Blocked</TabsTrigger>
+                <TabsTrigger value="all" className="gap-2">All <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.all}</span></TabsTrigger>
+                <TabsTrigger value="managers" className="gap-2">Managers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.managers}</span></TabsTrigger>
+                <TabsTrigger value="customers" className="gap-2">Customers <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">{counts.customers}</span></TabsTrigger>
+                <TabsTrigger value="blocked" className="gap-2">Blocked <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${counts.blocked > 0 ? "bg-red-100 text-red-700" : "bg-muted text-muted-foreground"}`}>{counts.blocked}</span></TabsTrigger>
               </TabsList>
             </Tabs>
           </div>

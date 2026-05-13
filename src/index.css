@@ -129,4 +129,10 @@
       calc((100% - (var(--peek-gap) * (var(--peek) - 1))) / var(--peek));
     scroll-snap-align: start;
   }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 }

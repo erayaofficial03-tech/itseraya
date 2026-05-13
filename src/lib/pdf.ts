@@ -4,14 +4,69 @@ import { productImage, discountPct } from "./queries";
 import { s } from "./settingsDefaults";
 
 /**
- * jsPDF's bundled Helvetica font cannot render the ₹ glyph — it shows as a
- * tofu/blank character. We use the universally understood "Rs." prefix
- * inside PDFs only. The website continues to use ₹ via formatINR().
+ * jsPDF's default Helvetica cannot render ₹ (U+20B9). We lazy-load Noto Sans
+ * (Regular + Bold) TTFs once per session, base64 them, register via VFS, and
+ * switch the active font to "NotoSans". On any failure we transparently fall
+ * back to helvetica + the "Rs." prefix so PDFs always render.
  */
+const NOTO_REGULAR_URL =
+  "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts/hinted/ttf/NotoSans/NotoSans-Regular.ttf";
+const NOTO_BOLD_URL =
+  "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts/hinted/ttf/NotoSans/NotoSans-Bold.ttf";
+
+let fontCache: { regular: string; bold: string } | null = null;
+let fontLoadFailed = false;
+
+const fetchFontBase64 = async (url: string): Promise<string> => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`font fetch ${res.status}`);
+  const buf = await res.arrayBuffer();
+  let binary = "";
+  const bytes = new Uint8Array(buf);
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunk)));
+  }
+  return btoa(binary);
+};
+
+/**
+ * Registers Noto Sans on the given doc. Returns true if available, false if
+ * we should fall back to helvetica + Rs. prefix.
+ */
+const ensureRupeeFont = async (doc: jsPDF): Promise<boolean> => {
+  if (fontLoadFailed) return false;
+  try {
+    if (!fontCache) {
+      const [regular, bold] = await Promise.all([
+        fetchFontBase64(NOTO_REGULAR_URL),
+        fetchFontBase64(NOTO_BOLD_URL),
+      ]);
+      fontCache = { regular, bold };
+    }
+    doc.addFileToVFS("NotoSans-Regular.ttf", fontCache.regular);
+    doc.addFont("NotoSans-Regular.ttf", "NotoSans", "normal");
+    doc.addFileToVFS("NotoSans-Bold.ttf", fontCache.bold);
+    doc.addFont("NotoSans-Bold.ttf", "NotoSans", "bold");
+    return true;
+  } catch {
+    fontLoadFailed = true;
+    return false;
+  }
+};
+
+/** Active font family for the current generation pass. */
+let pdfFont: string = "helvetica";
+
+const setFont = (doc: jsPDF, weight: "normal" | "bold") => {
+  doc.setFont(pdfFont, weight);
+};
+
 const formatPdfPrice = (amount: number): string => {
   const formatted = Math.round(amount).toLocaleString("en-IN");
-  return `Rs. ${formatted}`;
+  return pdfFont === "NotoSans" ? `₹${formatted}` : `Rs. ${formatted}`;
 };
+
 
 const slugify = (str: string) =>
   str
@@ -58,13 +113,13 @@ const drawHeader = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       doc.addImage(logo, "PNG", x, 8, w, h);
     } catch {
       // fallback if image format not detected
-      doc.setFont("helvetica", "bold");
+      setFont(doc, "bold");
       doc.setFontSize(22);
       doc.setTextColor(r, g, b);
       doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
     }
   } else {
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(22);
     doc.setTextColor(r, g, b);
     doc.text(s(settings, "pdf_store_name"), 105, 20, { align: "center" });
@@ -85,7 +140,7 @@ const drawFooter = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       try {
         doc.addImage(logo, "PNG", 20, y, w, h);
       } catch {}
-      doc.setFont("helvetica", "normal");
+      setFont(doc, "normal");
       doc.setFontSize(9);
       doc.setTextColor(120);
       doc.text(`+${wa}`, 190, y + h - 1.5, { align: "right" });
@@ -96,7 +151,7 @@ const drawFooter = (doc: jsPDF, settings: Settings | undefined, logo: string | n
       } catch {}
     }
   } else if (wa) {
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text(`+${wa}`, 105, 286, { align: "center" });
@@ -143,6 +198,7 @@ const drawWatermark = (
 export const generateProductPdf = async (product: Product, settings: Settings | undefined) => {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
+  pdfFont = (await ensureRupeeFont(doc)) ? "NotoSans" : "helvetica";
   const logo = await getLogo(settings);
 
   drawHeader(doc, settings, logo);
@@ -160,21 +216,21 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   }
 
   // Name
-  doc.setFont("helvetica", "bold");
+  setFont(doc, "bold");
   doc.setFontSize(16);
   doc.setTextColor(44, 44, 44);
   doc.text(product.name, 105, 144, { align: "center" });
 
   // Price (gold)
   const price = product.discounted_price ?? product.original_price;
-  doc.setFont("helvetica", "bold");
+  setFont(doc, "bold");
   doc.setFontSize(13);
   doc.setTextColor(pr, pg, pb);
   doc.text(formatPdfPrice(price), 105, 152, { align: "center" });
 
   // Discount line
   if (product.discounted_price && product.original_price > product.discounted_price) {
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(9);
     doc.setTextColor(150);
     doc.text(
@@ -187,11 +243,11 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
 
   // About this piece
   if (product.description) {
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(10);
     doc.setTextColor(44, 44, 44);
     doc.text(s(settings, "product_description_label") || "About this piece", 30, 170);
-    doc.setFont("helvetica", "normal");
+    setFont(doc, "normal");
     doc.setFontSize(10);
     doc.setTextColor(90);
     const lines = doc.splitTextToSize(product.description, 150);
@@ -205,6 +261,7 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
 export const generateCatalogPdf = async (products: Product[], settings: Settings | undefined) => {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
+  pdfFont = (await ensureRupeeFont(doc)) ? "NotoSans" : "helvetica";
   const logo = await getLogo(settings);
 
   drawHeader(doc, settings, logo);
@@ -241,7 +298,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
     }
 
     // Name
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(10);
     doc.setTextColor(44);
     const nameLines = doc.splitTextToSize(p.name, cardW);
@@ -249,7 +306,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
 
     // Price (gold)
     const price = p.discounted_price ?? p.original_price;
-    doc.setFont("helvetica", "bold");
+    setFont(doc, "bold");
     doc.setFontSize(9);
     doc.setTextColor(pr, pg, pb);
     const priceText = formatPdfPrice(price);
@@ -257,7 +314,7 @@ export const generateCatalogPdf = async (products: Product[], settings: Settings
 
     // Strike-through original price if discounted
     if (p.discounted_price && p.original_price > p.discounted_price) {
-      doc.setFont("helvetica", "normal");
+      setFont(doc, "normal");
       doc.setFontSize(8);
       doc.setTextColor(150);
       const orig = formatPdfPrice(p.original_price);

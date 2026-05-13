@@ -563,6 +563,9 @@ export type Database = {
           store_phone: string | null
           tagline: string
           updated_at: string
+          usp_1: string | null
+          usp_2: string | null
+          usp_3: string | null
           usp_fade_speed_ms: number
           usp_interval_ms: number
           whatsapp_message_template: string | null
@@ -665,6 +668,9 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
+          usp_1?: string | null
+          usp_2?: string | null
+          usp_3?: string | null
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
           whatsapp_message_template?: string | null
@@ -767,6 +773,9 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
+          usp_1?: string | null
+          usp_2?: string | null
+          usp_3?: string | null
           usp_fade_speed_ms?: number
           usp_interval_ms?: number
           whatsapp_message_template?: string | null

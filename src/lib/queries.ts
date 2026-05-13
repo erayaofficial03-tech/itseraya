@@ -15,6 +15,7 @@ export type ProductImage = { id: string; image_url: string; sort_order: number }
 export type Product = {
   id: string;
   name: string;
+  slug: string | null;
   category_id: string | null;
   description: string | null;
   original_price: number;
@@ -220,6 +221,27 @@ export const useProduct = (id?: string) =>
         .eq("id", id!)
         .single();
       if (error) throw error;
+      const p = data as Product;
+      return {
+        ...p,
+        product_images: (p.product_images || []).sort((a, b) => a.sort_order - b.sort_order),
+      };
+    },
+  });
+
+export const useProductBySlug = (slug?: string) =>
+  useQuery({
+    queryKey: ["product-slug", slug],
+    enabled: !!slug,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*, product_images(*), categories(name, slug)")
+        .eq("slug", slug!)
+        .eq("is_visible", true)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
       const p = data as Product;
       return {
         ...p,

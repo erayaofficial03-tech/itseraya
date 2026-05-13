@@ -12,9 +12,9 @@ interface Props {
 const ProductRow = ({ title, products, viewAllHref }: Props) => {
   if (!products.length) return null;
   return (
-    <section className="w-full mb-16 px-6">
-      <div className="flex justify-between items-end mb-6">
-        <h2 className="font-serif text-2xl md:text-3xl text-foreground">{title}</h2>
+    <section className="w-full mb-10 md:mb-16 px-4 md:px-6">
+      <div className="flex justify-between items-end mb-4 md:mb-6">
+        <h2 className="font-serif text-[22px] md:text-3xl text-foreground">{title}</h2>
         {viewAllHref && (
           <Link to={viewAllHref} className="text-sm text-gold hover:underline">
             View all →
@@ -22,10 +22,19 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
         )}
       </div>
 
-      {/* Mobile: fixed 3-column compact grid */}
-      <div className="grid grid-cols-3 gap-x-2 gap-y-6 md:hidden">
+      {/* Mobile: horizontal scroll of fixed-width cards */}
+      <div
+        className="md:hidden flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-4 px-4"
+        style={{ scrollSnapType: "x mandatory" }}
+      >
         {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
+          <div
+            key={p.id}
+            className="flex-shrink-0 w-[160px]"
+            style={{ scrollSnapAlign: "start" }}
+          >
+            <ProductCard product={p} />
+          </div>
         ))}
       </div>
 
@@ -36,7 +45,7 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
             {products.map((p) => (
               <CarouselItem
                 key={p.id}
-                className="pl-4 lg:pl-5 md:basis-1/6 lg:basis-[12.5%]"
+                className="pl-4 lg:pl-5 md:basis-1/4 lg:basis-1/6"
               >
                 <ProductCard product={p} />
               </CarouselItem>

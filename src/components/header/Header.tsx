@@ -99,10 +99,12 @@ const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col">
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col bg-[hsl(var(--background))]">
                 <SheetHeader className="px-6 py-5 border-b border-border text-left">
-                  <SheetTitle className="font-serif text-xl">
-                    {settings?.store_name || "Eraya"}
+                  <SheetTitle asChild>
+                    <Link to="/" onClick={closeMenu} className="inline-flex">
+                      <img src={logo} alt={settings?.store_name || "Eraya"} className="h-12 w-auto object-contain" />
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
 

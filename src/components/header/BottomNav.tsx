@@ -5,13 +5,12 @@ import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
 
 const itemBase =
-  "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium tracking-wide transition-colors";
+  "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[9px] font-medium tracking-wide transition-colors";
 
 const BottomNav = () => {
   const { data: settings } = useSettings();
   const { pathname } = useLocation();
 
-  // Hide on admin routes
   if (pathname.startsWith("/admin")) return null;
   if (pathname.startsWith("/auth/")) return null;
   if (pathname.startsWith("/reset-password")) return null;
@@ -26,15 +25,18 @@ const BottomNav = () => {
   };
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `${itemBase} ${isActive ? "text-gold" : "text-surface-dark-foreground/70 hover:text-surface-dark-foreground"}`;
+    `${itemBase} ${isActive ? "text-gold" : "text-muted-foreground hover:text-foreground"}`;
 
   return (
     <nav
       aria-label="Bottom navigation"
-      className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-dark text-surface-dark-foreground border-t border-white/5 rounded-t-2xl shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.4)]"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t"
+      style={{
+        paddingBottom: "env(safe-area-inset-bottom)",
+        borderTopColor: "#EDE8E1",
+      }}
     >
-      <div className="flex items-stretch h-16 max-w-md mx-auto px-2">
+      <div className="flex items-stretch h-16">
         <NavLink to="/" end className={linkClass}>
           <Home className="h-5 w-5" />
           <span>Home</span>
@@ -47,7 +49,7 @@ const BottomNav = () => {
           <Heart className="h-5 w-5" />
           <span>Wishlist</span>
         </NavLink>
-        <button onClick={handleWa} className={`${itemBase} text-surface-dark-foreground/70 hover:text-surface-dark-foreground`}>
+        <button onClick={handleWa} className={`${itemBase} text-muted-foreground hover:text-foreground`}>
           <MessageCircle className="h-5 w-5" />
           <span>WhatsApp</span>
         </button>

@@ -1,96 +1,36 @@
-## Goal
+## 1. Defensive role-banner guard
 
-Bring the storefront closer to the SPIRIT reference: a clean minimal product card, a List/Grid view toggle on listing pages, and the missing supporting pages (Search, FAQ, Care Guide, Contact).
+There are no role banners left in the admin UI today (already removed from `Dashboard.tsx`), but to make sure none can ever render again without a real role match, add a small wrapper component and use it everywhere a role-gated message would appear.
 
----
+- Create `src/components/admin/RoleBanner.tsx`:
+  - Props: `role: "admin" | "manager"`, `children`.
+  - Internally calls `useAuth()` and renders `null` unless `(role === "admin" && isAdmin) || (role === "manager" && isManager && !isAdmin)`.
+  - Also returns `null` while `loading` is true so a banner never flashes before the role resolves.
+- Export it for future use; no banners are added back right now. This guarantees any future "You are logged in as …" message is gated by the actual auth state, not just a local prop.
 
-## 1. Product Card — restyle to match reference
+## 2. Mobile admin header — true logo centering
 
-`src/components/eraya/ProductCard.tsx` (replace markup, keep all logic — wishlist, enquiry, links):
+In `src/pages/admin/AdminLayout.tsx` the mobile header uses `grid-cols-[auto_1fr_auto]` with a 40 px menu button on the left and an empty `<div />` on the right. The empty div has no width, so the centered column is pushed right.
 
-- Square image (already), white background, no border (reference is borderless). Heart icon top-right (kept), remove gold "+" button on the card — enquiry add stays accessible from product page (reference cards are CTA-free in grid).
-- Below image, left-aligned:
-  - Brand/category: `text-[10px] tracking-[0.2em] uppercase text-muted-foreground` — small caps "TIFFANY AND CO." style.
-  - Product name: `font-serif text-[13px] md:text-[14px] text-foreground leading-tight line-clamp-2` (lowercase as authored — no transform).
-  - Price row: gold price first `text-gold text-[13px] font-medium`, strikethrough original after with `text-muted-foreground text-[11px] line-through`. Use `flex items-baseline gap-2 flex-wrap` so they never overlap.
-- Discount badge stays top-left but smaller and lighter weight.
-- Remove min-heights that caused overlap; rely on `mt-auto` + `gap` only.
+- Give the right placeholder a fixed size matching the menu button (`<div className="w-10 h-10" />` or `aria-hidden`).
+- Result: the `BrandLogo` + "ADMIN" caption sit perfectly centered between the two equal-width side slots on every viewport.
 
-## 2. List view variant
+## 3. Remove duplicated settings from Store Settings
 
-New file `src/components/eraya/ProductListItem.tsx` — horizontal row:
+`UspsAdmin` (`/admin/usps`, "USPs & Reviews") already owns:
+- `usp_1`, `usp_2`, `usp_3`
+- `usp_interval_ms`, `usp_fade_speed_ms`
 
-```text
-[ 96x96 image ]  BRAND (tiny caps)
-                 Product name (serif)
-                 ★ 4.8 Ratings  (only if reviews exist; otherwise omit)
-                 ₹price   ₹original̶
-                                              ♡ (top-right of row)
-```
+`SettingsAdmin` (`/admin/settings`) currently re-renders the same five fields (lines 177–221). Remove that block and the matching state/save keys from `SettingsAdmin` so each setting has exactly one place to live:
 
-Full row is a `<Link>` to product. Heart toggles wishlist. No inline enquiry CTA (per user choice "Simpler row").
+- Delete the `grid grid-cols-2 gap-4` block with USP interval / fade speed inputs.
+- Delete the `space-y-3 rounded-md border border-border p-4` block with the three USP inputs.
+- Remove `usp_interval_ms`, `usp_fade_speed_ms`, `usp_1`, `usp_2`, `usp_3` from the initial `useState` object, the `useEffect` hydration block, and the `update({ ...form })` payload (rely on `UspsAdmin` to write them).
+- Leave a single short note under the WhatsApp section pointing admins to **USPs & Reviews** for the rotating top-bar messages.
 
-## 3. View toggle on listing pages
+No DB schema changes — the columns stay; only the duplicated UI is removed.
 
-Add a small reusable control `src/components/eraya/ViewToggle.tsx` with two icon buttons (Grid3x3 / List from lucide). State stored in `localStorage` key `eraya:view-mode` so it persists across pages, default `grid`.
-
-Wire into:
-
-- `src/pages/Catalogue.tsx` — place toggle in the filter pills row (right-aligned). When `list`, render a `flex flex-col divide-y divide-border` of `ProductListItem`. When `grid`, keep existing grid.
-- `src/pages/Category.tsx` — same toggle right of the title; same conditional render.
-
-Mobile keeps 3-col grid by default; switching to list shows the row layout (matches reference image 2 middle frame).
-
-## 4. New pages
-
-All public, lazy-loaded in `App.tsx`, linked from Footer (desktop) and mobile menu INFO section in `Header.tsx`.
-
-### a) `/search` — `src/pages/Search.tsx`
-- Header + search input (large, underlined, like reference image 1 left).
-- "Recent search" chips from `localStorage` (key `eraya:recent-search`, max 6, dismissible).
-- "Popular search terms" — pulled from `settings.popular_search_terms` (new optional text column, falls back to a default list: Necklace, Earrings, Rings, Bracelets, Anklets, Sets).
-- Live filter against `useProducts()`; results render as `ProductListItem` rows.
-
-### b) `/faq` — `src/pages/Faq.tsx`
-- Uses `Accordion` from `src/components/ui/accordion.tsx`.
-- Default questions hard-coded for jewellery store: shipping time, returns, ring sizing, gold purity, care, warranty, payment, customisation, bulk/wedding orders. (Editable later via admin if needed; not in this pass.)
-
-### c) `/care` — `src/pages/CareGuide.tsx`
-- `PolicyPage`-style layout with sections: Daily wear tips, Cleaning gold/silver/diamond, Storage, What to avoid (perfume, chlorine), When to bring it in for service.
-
-### d) `/contact` — `src/pages/Contact.tsx`
-- Three contact tiles: WhatsApp (`settings.whatsapp_number`), Email (`settings.contact_email`), Phone (if set), plus address from `settings.store_address`.
-- Simple form (name, email, message) that opens prefilled WhatsApp on submit (no backend writes — keeps "do not touch" rule).
-
-### e) Routing & navigation
-- Add 4 lazy imports + 4 `<Route>` entries in `App.tsx`.
-- Footer "Shop" column gets `Search`; new "Help" column gets FAQ, Care Guide, Contact.
-- Mobile menu INFO section (`Header.tsx`): add Search, FAQ, Care Guide, Contact above existing Track Order.
-
-## 5. No DB / no backend changes
-
-- Reuses existing `settings` columns; no migration required.
-- Wishlist, enquiry cart, PDF, product detail untouched.
-- Admin UI untouched.
-
----
-
-## Files
-
-**Created**
-- `src/components/eraya/ProductListItem.tsx`
-- `src/components/eraya/ViewToggle.tsx`
-- `src/pages/Search.tsx`
-- `src/pages/Faq.tsx`
-- `src/pages/CareGuide.tsx`
-- `src/pages/Contact.tsx`
-
-**Edited**
-- `src/components/eraya/ProductCard.tsx` (restyle)
-- `src/pages/Catalogue.tsx` (toggle + list render)
-- `src/pages/Category.tsx` (toggle + list render)
-- `src/App.tsx` (4 new routes)
-- `src/components/footer/Footer.tsx` (new Help column + Search link)
-- `src/components/header/Header.tsx` (mobile INFO links)
-
-No database migration. No changes to admin, auth, enquiry cart, wishlist logic, PDF, or product detail page.
+## Files touched
+- `src/components/admin/RoleBanner.tsx` (new)
+- `src/pages/admin/AdminLayout.tsx` (mobile header right slot width)
+- `src/pages/admin/SettingsAdmin.tsx` (drop USP duplicates from form/state/save)

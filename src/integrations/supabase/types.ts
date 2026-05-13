@@ -521,6 +521,17 @@ export type Database = {
           pdf_primary_color: string | null
           pdf_store_name: string | null
           pdf_tagline: string | null
+          policy_bg_color: string | null
+          policy_cancellation_body: string | null
+          policy_cancellation_title: string | null
+          policy_font_family: string | null
+          policy_font_size: string | null
+          policy_heading_color: string | null
+          policy_return_body: string | null
+          policy_return_title: string | null
+          policy_shipping_body: string | null
+          policy_shipping_title: string | null
+          policy_text_color: string | null
           product_description_label: string | null
           product_enquiry_button_label: string | null
           product_pdf_button_label: string | null
@@ -612,6 +623,17 @@ export type Database = {
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
           pdf_tagline?: string | null
+          policy_bg_color?: string | null
+          policy_cancellation_body?: string | null
+          policy_cancellation_title?: string | null
+          policy_font_family?: string | null
+          policy_font_size?: string | null
+          policy_heading_color?: string | null
+          policy_return_body?: string | null
+          policy_return_title?: string | null
+          policy_shipping_body?: string | null
+          policy_shipping_title?: string | null
+          policy_text_color?: string | null
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
           product_pdf_button_label?: string | null
@@ -703,6 +725,17 @@ export type Database = {
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
           pdf_tagline?: string | null
+          policy_bg_color?: string | null
+          policy_cancellation_body?: string | null
+          policy_cancellation_title?: string | null
+          policy_font_family?: string | null
+          policy_font_size?: string | null
+          policy_heading_color?: string | null
+          policy_return_body?: string | null
+          policy_return_title?: string | null
+          policy_shipping_body?: string | null
+          policy_shipping_title?: string | null
+          policy_text_color?: string | null
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
           product_pdf_button_label?: string | null

@@ -31,6 +31,9 @@ const Profile = lazy(() => import("./pages/Profile"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
 const TrackEnquiry = lazy(() => import("./pages/TrackEnquiry"));
+const ReturnPolicy = lazy(() => import("./pages/ReturnPolicy"));
+const ShippingPolicy = lazy(() => import("./pages/ShippingPolicy"));
+const CancellationPolicy = lazy(() => import("./pages/CancellationPolicy"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -46,6 +49,7 @@ const BrandAdmin = lazy(() => import("./pages/admin/BrandAdmin"));
 const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
 const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
 const CustomersAdmin = lazy(() => import("./pages/admin/CustomersAdmin"));
+const PoliciesAdmin = lazy(() => import("./pages/admin/PoliciesAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -91,6 +95,9 @@ const App = () => (
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
               <Route path="/track" element={<Public><TrackEnquiry /></Public>} />
+              <Route path="/return-policy" element={<Public><ReturnPolicy /></Public>} />
+              <Route path="/shipping-policy" element={<Public><ShippingPolicy /></Public>} />
+              <Route path="/cancellation-policy" element={<Public><CancellationPolicy /></Public>} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Public><Login /></Public>} />
@@ -116,6 +123,7 @@ const App = () => (
                 <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
                 <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
+                <Route path="policies" element={<AdminOnly><PoliciesAdmin /></AdminOnly>} />
                 <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />
                 <Route path="admins" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="users" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />

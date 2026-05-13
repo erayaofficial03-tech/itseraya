@@ -32,50 +32,79 @@ const Footer = () => {
   return (
     <footer className="hidden md:block w-full bg-background border-t border-border mt-24">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex flex-col items-center text-center gap-4">
-          {showLogo && (
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 w-auto object-contain" />
-          )}
-          <p className="font-serif italic text-lg text-gold">{s(settings, "tagline")}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {/* Col 1 — Brand */}
+          <div className="flex flex-col items-start gap-3">
+            {showLogo && (
+              <img src={logo} alt={settings?.store_name || "Eraya"} className="h-9 w-auto object-contain" />
+            )}
+            <p className="font-serif italic text-gold">{s(settings, "tagline")}</p>
+            {(showSocial || showWhatsApp) && (
+              <div className="flex items-center gap-2 mt-2">
+                {showSocial &&
+                  socials
+                    .filter((l) => l.is_visible)
+                    .map((l) => {
+                      const Icon = platformIcon(l.platform);
+                      return (
+                        <a
+                          key={l.id}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={l.platform}
+                          className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
+                        >
+                          <Icon className="h-4 w-4" />
+                        </a>
+                      );
+                    })}
+              </div>
+            )}
+          </div>
 
-          {(showSocial || showWhatsApp) && (
-            <div className="flex items-center gap-3 mt-2">
-              {showSocial &&
-                socials
-                  .filter((l) => l.is_visible)
-                  .map((l) => {
-                    const Icon = platformIcon(l.platform);
-                    return (
-                      <a
-                        key={l.id}
-                        href={l.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={l.platform}
-                        className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
-                      >
-                        <Icon className="h-4 w-4" />
-                      </a>
-                    );
-                  })}
-              {showWhatsApp && wa && (
-                <a
-                  href={`https://wa.me/${wa}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={whatsappLabel}
-                  title={whatsappLabel}
-                  className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                </a>
-              )}
+          {/* Col 2 — Shop */}
+          {linksVisible && (
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
+                Shop
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/?filter=new" className="hover:text-gold">New Arrivals</Link></li>
+                <li><Link to="/catalogue" className="hover:text-gold">Catalogue</Link></li>
+                <li><Link to="/about" className="hover:text-gold">About</Link></li>
+                <li><Link to="/track" className="hover:text-gold">Track Enquiry</Link></li>
+              </ul>
             </div>
           )}
+
+          {/* Col 3 — Policies */}
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
+              Policies
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/return-policy" className="hover:text-gold">Return Policy</Link></li>
+              <li><Link to="/shipping-policy" className="hover:text-gold">Shipping Policy</Link></li>
+              <li><Link to="/cancellation-policy" className="hover:text-gold">Cancellation Policy</Link></li>
+            </ul>
+          </div>
         </div>
 
-        <div className="border-t border-border mt-10 pt-6 text-center text-xs text-muted-foreground">
+        <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>{copyright}</p>
+          {showWhatsApp && wa && (
+            <a
+              href={`https://wa.me/${wa}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={whatsappLabel}
+              title={whatsappLabel}
+              className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+            </a>
+          )}
         </div>
       </div>
     </footer>

@@ -229,14 +229,23 @@ const Header = () => {
                   )}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
-                    More
+                    Info
                   </p>
+                  <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
+                    About Eraya <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
                   <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
                     <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
-                  <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
-                    About <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  <Link to="/return-policy" onClick={closeMenu} className={drawerLinkClass}>
+                    Return Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  <Link to="/shipping-policy" onClick={closeMenu} className={drawerLinkClass}>
+                    Shipping Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  <Link to="/cancellation-policy" onClick={closeMenu} className={drawerLinkClass}>
+                    Cancellation Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   <button
                     onClick={() => { handleWhatsAppClick(); closeMenu(); }}

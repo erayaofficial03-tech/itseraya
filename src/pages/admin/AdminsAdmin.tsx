@@ -9,13 +9,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { Search, Ban, ShieldCheck, Trash2 } from "lucide-react";
+import { Search, Ban, ShieldCheck } from "lucide-react";
 import { format } from "date-fns";
 
 type AppRole = "admin" | "manager" | "customer";
@@ -41,7 +37,7 @@ const UsersAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"all" | "managers" | "customers" | "blocked">("all");
-  const [confirmDelete, setConfirmDelete] = useState<UserRow | null>(null);
+  
   const PAGE_SIZE = 20;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   // Reset paging when filters change
@@ -102,15 +98,6 @@ const UsersAdmin = () => {
     toast.success(next ? "User blocked" : "User unblocked");
   };
 
-  const deleteUser = async (u: UserRow) => {
-    const { error: rErr } = await supabase.from("user_roles").delete().eq("user_id", u.id);
-    if (rErr) { toast.error(rErr.message); return; }
-    const { error: pErr } = await supabase.from("profiles").delete().eq("id", u.id);
-    if (pErr) { toast.error(pErr.message); return; }
-    setUsers((prev) => prev.filter((x) => x.id !== u.id));
-    toast.success("User removed");
-    setConfirmDelete(null);
-  };
 
   const filtered = useMemo(() => {
     let list = users;
@@ -127,7 +114,7 @@ const UsersAdmin = () => {
       <div>
         <h1 className="font-serif text-3xl">Users</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Pre-assigned managers: <span className="font-medium">erayaofficial03@gmail.com</span>. Admin: <span className="font-medium">admin@itseraya.in</span>.
+          New signups join as Customer. Promote to Manager or block accounts here. The Admin role is reserved for <span className="font-medium">admin@itseraya.in</span>.
         </p>
       </div>
 
@@ -169,7 +156,7 @@ const UsersAdmin = () => {
             </ul>
           ) : filtered.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12 text-center">
-              Users appear here after their first Google login.
+              Users appear here after they sign up with email or Google.
             </p>
           ) : (
             <>
@@ -217,9 +204,6 @@ const UsersAdmin = () => {
                             <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
                               {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
                             </Button>
-                            <Button size="icon" variant="outline" onClick={() => setConfirmDelete(u)} title="Delete">
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
                           </>
                         )}
                       </div>
@@ -238,21 +222,6 @@ const UsersAdmin = () => {
           )}
         </CardContent>
       </Card>
-
-      <AlertDialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete this user?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes <strong>{confirmDelete?.email}</strong> from profiles and roles. They can sign in again with Google to recreate their account.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => confirmDelete && deleteUser(confirmDelete)}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };

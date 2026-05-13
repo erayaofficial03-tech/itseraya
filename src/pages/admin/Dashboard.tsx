@@ -71,16 +71,6 @@ const Dashboard = () => {
         <p className="text-sm text-muted-foreground">Welcome Back {displayName}</p>
       </div>
 
-      {isAdmin && (
-        <div className="rounded-lg p-4 border border-gold/40" style={{ background: "hsl(var(--gold) / 0.15)" }}>
-          <p className="text-sm font-medium text-charcoal">You are logged in as Super Admin</p>
-        </div>
-      )}
-      {!isAdmin && isManager && (
-        <div className="rounded-lg p-4 border border-blue-300 bg-blue-50">
-          <p className="text-sm font-medium text-blue-800">You are logged in as Manager</p>
-        </div>
-      )}
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Stat icon={Gem} label="Products" value={products.length} />

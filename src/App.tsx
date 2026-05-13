@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import WhatsAppFallbackDialog from "@/components/WhatsAppFallbackDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -63,6 +64,7 @@ const App = () => (
         <SeoHead />
         <Toaster />
         <Sonner />
+        <WhatsAppFallbackDialog />
         <BrowserRouter>
           <ScrollToTop />
           <InstallPrompt />

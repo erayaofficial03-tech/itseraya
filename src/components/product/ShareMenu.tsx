@@ -11,6 +11,7 @@ import html2canvas from "html2canvas";
 import type { Product, Settings } from "@/lib/queries";
 import { productImage } from "@/lib/queries";
 import { generateProductPdf } from "@/lib/pdf";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 interface ShareMenuProps {
   product: Product;
@@ -50,8 +51,7 @@ const ShareMenu = ({
 
   const shareWhatsApp = () => {
     const text = `Hi! I'm interested in *${product.name}*\nPrice: ${priceText}\n\n${url}`;
-    const target = waNum ? `https://wa.me/${waNum}` : "https://wa.me/";
-    window.open(`${target}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+    openWhatsApp(waNum, text);
     setOpen(false);
   };
 
@@ -62,8 +62,7 @@ const ShareMenu = ({
     try {
       await generateProductPdf(product, settings);
       const msg = `Hi! I'm interested in *${product.name}*\nPrice: ${priceText}\n\nPlease find the product details attached.\n\n${url}`;
-      const target = waNum ? `https://wa.me/${waNum}` : "https://wa.me/";
-      window.open(`${target}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+      openWhatsApp(waNum, msg);
       toast.success("PDF downloaded — open WhatsApp and attach the file to share it", { id: t });
     } catch (e: any) {
       toast.error(e?.message ?? "Couldn't create PDF", { id: t });
@@ -109,8 +108,7 @@ const ShareMenu = ({
       a.download = file.name;
       a.click();
       URL.revokeObjectURL(dlUrl);
-      const target = waNum ? `https://wa.me/${waNum}` : "https://wa.me/";
-      window.open(`${target}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+      openWhatsApp(waNum, text);
       toast.info("Image downloaded — attach it in WhatsApp to share", { id: t });
     } catch {
       toast.error("Open the product image and use your phone's share button to send it on WhatsApp", { id: t });

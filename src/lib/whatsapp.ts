@@ -31,6 +31,56 @@ const logEnquiry = async (product: Product) => {
   }
 };
 
+export interface WhatsAppBlockedDetail {
+  url: string;
+  message: string;
+  number: string;
+}
+
+export const WHATSAPP_BLOCKED_EVENT = "whatsapp:blocked";
+
+/**
+ * Build a wa.me link for a given (digits-only) number and message.
+ * Number is optional — falls back to the generic share link.
+ */
+export const buildWhatsAppUrl = (number: string | null | undefined, message: string): string => {
+  const cleaned = (number ?? "").replace(/\D/g, "");
+  const target = cleaned ? `https://wa.me/${cleaned}` : "https://wa.me/";
+  return `${target}?text=${encodeURIComponent(message)}`;
+};
+
+/**
+ * Open WhatsApp with a prefilled message. If the browser blocks the popup
+ * (returns null) or closes it immediately, dispatches a global
+ * `whatsapp:blocked` event so a fallback dialog can render the link and
+ * message text for the user to copy/open manually.
+ *
+ * Returns true if the popup opened, false otherwise.
+ */
+export const openWhatsApp = (
+  number: string | null | undefined,
+  message: string,
+): boolean => {
+  const url = buildWhatsAppUrl(number, message);
+  let win: Window | null = null;
+  try {
+    win = window.open(url, "_blank", "noopener");
+  } catch {
+    win = null;
+  }
+  const blocked = !win || win.closed || typeof win.closed === "undefined";
+  if (blocked) {
+    const detail: WhatsAppBlockedDetail = {
+      url,
+      message,
+      number: (number ?? "").replace(/\D/g, ""),
+    };
+    window.dispatchEvent(new CustomEvent(WHATSAPP_BLOCKED_EVENT, { detail }));
+    return false;
+  }
+  return true;
+};
+
 export const openWhatsAppEnquiry = (
   product: Product,
   settings: Settings | undefined,
@@ -50,8 +100,5 @@ export const openWhatsAppEnquiry = (
     price: formatINR(price),
     url,
   });
-  window.open(
-    `https://wa.me/${number}?text=${encodeURIComponent(msg)}`,
-    "_blank",
-  );
+  openWhatsApp(number, msg);
 };

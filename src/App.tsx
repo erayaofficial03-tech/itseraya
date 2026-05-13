@@ -123,6 +123,7 @@ const App = () => (
                 <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
                 <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
+                <Route path="policies" element={<AdminOnly><PoliciesAdmin /></AdminOnly>} />
                 <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />
                 <Route path="admins" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="users" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />

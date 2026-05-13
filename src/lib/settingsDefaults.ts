@@ -44,6 +44,8 @@ export const SETTINGS_DEFAULTS = {
 
   whatsapp_message_template:
     "Hi Eraya! I love this product and would like to know more 😍\n\n*{product_name}*\nPrice: {price}\n\nProduct Link: {url}",
+  catalogue_whatsapp_message_template:
+    "Hi! Here is the latest *{store_name}* catalogue ✨\n\nBrowse the full collection: {url}\n\nThe catalogue PDF has been downloaded — please attach it from your files.",
   enquiry_button_color: "#C9A84C",
 
   footer_tagline: "Adorn Your Story",

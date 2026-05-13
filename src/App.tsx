@@ -22,6 +22,8 @@ import { ROUTES } from "./lib/routes";
 const Index = lazy(() => import("./pages/Index"));
 const Category = lazy(() => import("./pages/Category"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const ProductRedirect = lazy(() => import("./pages/ProductRedirect"));
+const CategoryRedirect = lazy(() => import("./pages/CategoryRedirect"));
 const Catalogue = lazy(() => import("./pages/Catalogue"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -98,6 +100,9 @@ const App = () => (
               <Route path={ROUTES.home} element={<Public><Index /></Public>} />
               <Route path={ROUTES.category} element={<Public><Category /></Public>} />
               <Route path={ROUTES.product} element={<Public><ProductDetail /></Public>} />
+              {/* Legacy URL redirects (preserve old links/bookmarks) */}
+              <Route path="/product/:productId" element={<ProductRedirect />} />
+              <Route path="/category/:category" element={<CategoryRedirect />} />
               <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path="/track" element={<Public><TrackEnquiry /></Public>} />

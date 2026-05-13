@@ -309,7 +309,7 @@ const Header = () => {
                 <button
                   type="button"
                   aria-label="Quick navigation: Shop, Support, About"
-                  className={`lg:hidden inline-flex items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
+                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
                 >
                   Menu
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />

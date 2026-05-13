@@ -30,6 +30,8 @@ const SettingsAdmin = () => {
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
     instagram_username: "", facebook_page_name: "",
     app_icon_url: "",
+    about_title: "", about_body: "", about_image_url: "",
+    enquiry_mode: "cart" as "cart" | "direct",
   });
   const [busy, setBusy] = useState(false);
 
@@ -56,6 +58,10 @@ const SettingsAdmin = () => {
         instagram_username: (settings as any).instagram_username || "",
         facebook_page_name: (settings as any).facebook_page_name || "",
         app_icon_url: (settings as any).app_icon_url || "",
+        about_title: (settings as any).about_title || "",
+        about_body: (settings as any).about_body || "",
+        about_image_url: (settings as any).about_image_url || "",
+        enquiry_mode: ((settings as any).enquiry_mode || "cart") as "cart" | "direct",
       });
     }
   }, [settings]);
@@ -72,7 +78,8 @@ const SettingsAdmin = () => {
       whatsapp_number: cleanWa || null,
       logo_url: form.logo_url || null,
       app_icon_url: form.app_icon_url || null,
-    }).eq("id", 1);
+      about_image_url: form.about_image_url || null,
+    } as any).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
     else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
@@ -295,6 +302,72 @@ const SettingsAdmin = () => {
                 onChange={(e) => setForm({ ...form, facebook_page_name: e.target.value })}
               />
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>About page</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <div>
+            <Label>About title</Label>
+            <Input value={form.about_title} onChange={(e) => setForm({ ...form, about_title: e.target.value })} placeholder="Our Story" />
+          </div>
+          <div>
+            <Label>About story</Label>
+            <Textarea rows={6} value={form.about_body} onChange={(e) => setForm({ ...form, about_body: e.target.value })} placeholder="Tell your brand story…" />
+            <p className="text-xs text-muted-foreground mt-1">Line breaks are preserved.</p>
+          </div>
+          <div>
+            <Label>About hero image</Label>
+            <Input type="file" accept="image/*" onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (f) {
+                const url = await uploadImage(f, "branding");
+                setForm({ ...form, about_image_url: url });
+              }
+            }} />
+            {form.about_image_url && <img src={form.about_image_url} className="mt-2 w-full max-w-md aspect-[16/7] object-cover rounded" />}
+            <p className="text-xs text-muted-foreground mt-1">Optional — leave empty for a warm gradient fallback.</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Enquiry Mode</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-xs text-muted-foreground">
+            Cart mode lets customers add multiple items before enquiring on WhatsApp.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, enquiry_mode: "cart" })}
+              className={`text-left rounded-lg border p-4 transition-colors ${
+                form.enquiry_mode === "cart"
+                  ? "border-gold bg-gold/5"
+                  : "border-border hover:border-gold/60"
+              }`}
+            >
+              <p className="font-medium text-sm">Enquiry Cart</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                "I Love It" adds to cart. Customer sends all items together.
+              </p>
+            </button>
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, enquiry_mode: "direct" })}
+              className={`text-left rounded-lg border p-4 transition-colors ${
+                form.enquiry_mode === "direct"
+                  ? "border-gold bg-gold/5"
+                  : "border-border hover:border-gold/60"
+              }`}
+            >
+              <p className="font-medium text-sm">Direct WhatsApp</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                "I Love It" opens WhatsApp directly with the product.
+              </p>
+            </button>
           </div>
         </CardContent>
       </Card>

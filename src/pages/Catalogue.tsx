@@ -1,11 +1,16 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Share2, MessageCircle } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
 import SeoHead from "@/components/providers/SeoHead";
+import { Button } from "@/components/ui/button";
 import { useProducts, useSettings, useCategories } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import { openWhatsApp } from "@/lib/whatsapp";
+import erayaLogo from "@/assets/eraya-logo.png";
+import { toast } from "sonner";
 
 const Catalogue = () => {
   const { data: products = [] } = useProducts();
@@ -57,6 +62,36 @@ const Catalogue = () => {
           </p>
         </div>
 
+        {/* Share Collection */}
+        <div className="mb-6 flex justify-center">
+          <Button
+            variant="outline"
+            className="w-full md:w-auto border-gold text-gold hover:bg-gold/10"
+            onClick={async () => {
+              const url = window.location.href;
+              const shareData = { title: `${settings?.store_name || "Eraya"} Collection`, url };
+              try {
+                if (navigator.share) {
+                  await navigator.share(shareData);
+                  return;
+                }
+              } catch {
+                /* user cancelled — silent */
+                return;
+              }
+              try {
+                await navigator.clipboard.writeText(url);
+                toast.success("Link copied!");
+              } catch {
+                toast.error("Could not copy link.");
+              }
+            }}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Collection
+          </Button>
+        </div>
+
         {/* Category filter pills */}
         <div className="flex overflow-x-auto gap-2 pb-3 mb-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible md:justify-center">
           <button
@@ -84,9 +119,34 @@ const Catalogue = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-          {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
-        </div>
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 max-w-sm mx-auto">
+            <img src={erayaLogo} alt="Eraya" className="h-10 mx-auto mb-5 object-contain opacity-90" />
+            <p className="font-medium text-foreground mb-2">Our collection is coming soon</p>
+            <p className="text-sm text-muted-foreground mb-6">
+              Check back shortly for new arrivals.
+            </p>
+            {settings?.whatsapp_number && (
+              <Button
+                variant="outline"
+                className="border-green-600 text-green-700 hover:bg-green-50"
+                onClick={() =>
+                  openWhatsApp(
+                    settings.whatsapp_number!.replace(/\D/g, ""),
+                    "Hi Eraya! When will the new collection drop?",
+                  )
+                }
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                WhatsApp us
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+            {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
+          </div>
+        )}
       </main>
       <Footer />
     </div>

@@ -88,6 +88,11 @@ export const SETTINGS_DEFAULTS = {
   admin_brand_color: "#C9A84C",
 
   enquiry_mode: "cart" as "cart" | "direct",
+
+  about_title: "Our Story",
+  about_body:
+    "Eraya was born from a love of beautiful, wearable jewellery crafted for every woman.",
+  about_image_url: "",
 } as const;
 
 type Defaults = typeof SETTINGS_DEFAULTS;

@@ -65,6 +65,86 @@ export type Database = {
         }
         Relationships: []
       }
+      banner_clicks: {
+        Row: {
+          banner_id: string | null
+          clicked_at: string | null
+          id: string
+          page_path: string | null
+        }
+        Insert: {
+          banner_id?: string | null
+          clicked_at?: string | null
+          id?: string
+          page_path?: string | null
+        }
+        Update: {
+          banner_id?: string | null
+          clicked_at?: string | null
+          id?: string
+          page_path?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "banner_clicks_banner_id_fkey"
+            columns: ["banner_id"]
+            isOneToOne: false
+            referencedRelation: "banners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      banners: {
+        Row: {
+          created_at: string | null
+          cta_text: string | null
+          cta_url: string | null
+          display_order: number | null
+          expires_at: string | null
+          id: string
+          image_mobile_url: string | null
+          image_url: string | null
+          is_active: boolean | null
+          overlay_opacity: number | null
+          starts_at: string | null
+          subtitle: string | null
+          text_color: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number | null
+          expires_at?: string | null
+          id?: string
+          image_mobile_url?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          overlay_opacity?: number | null
+          starts_at?: string | null
+          subtitle?: string | null
+          text_color?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number | null
+          expires_at?: string | null
+          id?: string
+          image_mobile_url?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          overlay_opacity?: number | null
+          starts_at?: string | null
+          subtitle?: string | null
+          text_color?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -269,6 +349,32 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_views: {
+        Row: {
+          id: string
+          product_id: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          id?: string
+          product_id?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          id?: string
+          product_id?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_views_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
@@ -673,6 +779,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      whatsapp_clicks: {
+        Row: {
+          clicked_at: string | null
+          id: string
+          product_id: string | null
+          source: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          id?: string
+          product_id?: string | null
+          source?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          id?: string
+          product_id?: string | null
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_clicks_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wishlist_items: {
         Row: {

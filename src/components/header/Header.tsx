@@ -101,9 +101,9 @@ const Header = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col bg-[hsl(var(--background))]">
-                <SheetHeader className="px-6 py-5 border-b border-border text-left">
+                <SheetHeader className="px-6 py-5 border-b border-border items-center">
                   <SheetTitle asChild>
-                    <Link to="/" onClick={closeMenu} className="inline-flex">
+                    <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
                       <img src={logo} alt={settings?.store_name || "Eraya"} className="h-12 w-auto object-contain" />
                     </Link>
                   </SheetTitle>
@@ -311,7 +311,7 @@ const Header = () => {
 
       {/* Search dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle className="font-serif">Search Eraya</DialogTitle>
           </DialogHeader>

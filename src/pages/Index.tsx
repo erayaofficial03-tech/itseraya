@@ -19,7 +19,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-6">
+      <main className="pt-4 md:pt-6 pb-20 md:pb-0">
         <Hero />
         <CategoryRow />
         {isLoading ? (

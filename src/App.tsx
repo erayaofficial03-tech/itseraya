@@ -131,7 +131,7 @@ const App = () => (
                 path={ROUTES.admin}
                 element={<Admin><AdminLayout /></Admin>}
               >
-                <Route index element={<Dashboard />} />
+                <Route index element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
                 <Route path="profile" element={<AdminProfile />} />
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />

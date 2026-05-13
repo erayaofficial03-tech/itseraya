@@ -23,7 +23,7 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
       </div>
 
       {/* Mobile: 3-column grid */}
-      <div className="md:hidden grid grid-cols-3 gap-2">
+      <div className="md:hidden grid grid-cols-3 gap-3">
         {products.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

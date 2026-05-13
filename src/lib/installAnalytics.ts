@@ -6,7 +6,8 @@ export type InstallEventType =
   | "copy_link"
   | "accepted"
   | "dismissed"
-  | "installed";
+  | "installed"
+  | "unavailable";
 
 export type InstallPlatform = "ios" | "android" | "desktop" | "other";
 

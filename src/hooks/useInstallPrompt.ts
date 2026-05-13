@@ -56,11 +56,11 @@ export const useInstallPrompt = () => {
   }, []);
 
   const triggerInstall = async (): Promise<
-    "accepted" | "dismissed" | "ios" | "installed"
+    "accepted" | "dismissed" | "ios" | "installed" | "unavailable"
   > => {
     if (isInstalled) return "installed";
     if (isIOS) return "ios";
-    if (!deferredPrompt) return "dismissed";
+    if (!deferredPrompt) return "unavailable";
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     setDeferredPrompt(null);

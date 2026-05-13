@@ -37,6 +37,7 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const ProductsAdmin = lazy(() => import("./pages/admin/ProductsAdmin"));
 const CategoriesAdmin = lazy(() => import("./pages/admin/CategoriesAdmin"));
 const BannerAdmin = lazy(() => import("./pages/admin/BannerAdmin"));
+const BannersAdmin = lazy(() => import("./pages/admin/BannersAdmin"));
 const SettingsAdmin = lazy(() => import("./pages/admin/SettingsAdmin"));
 const AdminsAdmin = lazy(() => import("./pages/admin/AdminsAdmin"));
 const EnquiriesAdmin = lazy(() => import("./pages/admin/EnquiriesAdmin"));

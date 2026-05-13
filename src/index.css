@@ -6,43 +6,43 @@
 
 @layer base {
   :root {
-    /* Ivory background, charcoal text */
+    /* Ivory background, near-black text */
     --background: 36 33% 97%;
-    --foreground: 0 0% 17%;
+    --foreground: 0 0% 8%;
 
-    /* Status bar (unused but kept for compat) */
-    --status-bar: 0 0% 17%;
+    /* Status bar */
+    --status-bar: 0 0% 8%;
     --status-bar-foreground: 36 33% 97%;
 
     /* Navigation */
     --nav-background: 36 33% 97%;
-    --nav-foreground: 0 0% 17%;
-    --nav-hover: 43 47% 54%;
+    --nav-foreground: 0 0% 8%;
+    --nav-hover: 43 55% 52%;
 
     /* Primary = Gold */
-    --primary: 43 47% 54%;
-    --primary-foreground: 0 0% 17%;
-    --primary-hover: 43 47% 48%;
+    --primary: 43 55% 52%;
+    --primary-foreground: 0 0% 8%;
+    --primary-hover: 43 55% 46%;
 
-    /* Secondary = Blush pink */
-    --secondary: 345 60% 86%;
-    --secondary-foreground: 0 0% 17%;
+    /* Secondary = Black surface */
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 36 33% 97%;
 
     --muted: 36 25% 92%;
-    --muted-foreground: 0 0% 40%;
+    --muted-foreground: 0 0% 38%;
 
-    --accent: 43 47% 54%;
-    --accent-foreground: 0 0% 17%;
+    --accent: 43 55% 52%;
+    --accent-foreground: 0 0% 8%;
 
-    --border: 36 20% 85%;
-    --input: 36 20% 85%;
-    --ring: 43 47% 54%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 43 55% 52%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 17%;
+    --card-foreground: 0 0% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 17%;
+    --popover-foreground: 0 0% 8%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
@@ -50,21 +50,24 @@
     --radius: 0.5rem;
 
     /* Eraya custom tokens */
-    --gold: 43 47% 54%;
-    --blush: 345 60% 86%;
+    --gold: 43 55% 52%;
+    --gold-soft: 43 65% 72%;
     --ivory: 36 33% 97%;
-    --charcoal: 0 0% 17%;
-    --gradient-gold: linear-gradient(135deg, hsl(43 47% 54%) 0%, hsl(43 60% 70%) 100%);
-    --shadow-elegant: 0 10px 30px -10px hsl(43 47% 54% / 0.25);
+    --charcoal: 0 0% 8%;
+    --surface-dark: 0 0% 8%;
+    --surface-dark-foreground: 36 33% 97%;
+    --gradient-gold: linear-gradient(135deg, hsl(43 55% 52%) 0%, hsl(43 65% 72%) 100%);
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 8% / 0.25);
+    --shadow-gold: 0 10px 30px -10px hsl(43 55% 52% / 0.45);
 
     --sidebar-background: 36 33% 97%;
-    --sidebar-foreground: 0 0% 17%;
-    --sidebar-primary: 43 47% 54%;
-    --sidebar-primary-foreground: 0 0% 17%;
+    --sidebar-foreground: 0 0% 8%;
+    --sidebar-primary: 43 55% 52%;
+    --sidebar-primary-foreground: 0 0% 8%;
     --sidebar-accent: 36 25% 92%;
-    --sidebar-accent-foreground: 0 0% 17%;
-    --sidebar-border: 36 20% 85%;
-    --sidebar-ring: 43 47% 54%;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 43 55% 52%;
   }
 }
 

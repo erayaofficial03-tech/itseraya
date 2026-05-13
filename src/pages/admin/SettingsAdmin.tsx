@@ -28,7 +28,7 @@ const SettingsAdmin = () => {
     store_address: "", store_email: "", store_phone: "", store_city: "",
     pwa_name: "", pwa_short_name: "", pwa_description: "",
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
-    instagram_username: "", facebook_page_name: "",
+    
     about_title: "", about_body: "", about_image_url: "",
     enquiry_mode: "cart" as "cart" | "direct",
   });
@@ -53,8 +53,6 @@ const SettingsAdmin = () => {
         pwa_description: (settings as any).pwa_description || "",
         pwa_theme_color: (settings as any).pwa_theme_color || "#C9A84C",
         pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
-        instagram_username: (settings as any).instagram_username || "",
-        facebook_page_name: (settings as any).facebook_page_name || "",
         about_title: (settings as any).about_title || "",
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",
@@ -249,35 +247,6 @@ const SettingsAdmin = () => {
           <div className="grid grid-cols-2 gap-3">
             <div><Label>Theme color</Label><Input type="color" value={form.pwa_theme_color} onChange={(e) => setForm({ ...form, pwa_theme_color: e.target.value })} /></div>
             <div><Label>Background color</Label><Input type="color" value={form.pwa_background_color} onChange={(e) => setForm({ ...form, pwa_background_color: e.target.value })} /></div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Social connections</CardTitle>
-          <p className="text-xs text-muted-foreground">
-            Save the handles of accounts you want to feature. Live posting/import via Meta is coming soon.
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <Label>Instagram username</Label>
-              <Input
-                placeholder="@erayajewellery"
-                value={form.instagram_username}
-                onChange={(e) => setForm({ ...form, instagram_username: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>Facebook page name</Label>
-              <Input
-                placeholder="Eraya Jewellery"
-                value={form.facebook_page_name}
-                onChange={(e) => setForm({ ...form, facebook_page_name: e.target.value })}
-              />
-            </div>
           </div>
         </CardContent>
       </Card>

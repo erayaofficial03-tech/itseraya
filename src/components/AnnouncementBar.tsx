@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { useAnnouncements, useSettings, type Announcement } from "@/lib/queries";
-import { s } from "@/lib/settingsDefaults";
+import { useAnnouncements } from "@/lib/queries";
 
 const STORAGE_KEY = "eraya:announcement-dismissed-v2";
 
@@ -17,35 +16,12 @@ const readDismissed = (): string[] => {
 
 const AnnouncementBar = () => {
   const { data: announcements = [], isLoading } = useAnnouncements();
-  const { data: settings } = useSettings();
   const [dismissed, setDismissed] = useState<string[]>(() => readDismissed());
   const [index, setIndex] = useState(0);
 
-  // Fallback: legacy single announcement from settings if table is empty
-  const legacy: Announcement | null = useMemo(() => {
-    if (announcements.length > 0) return null;
-    if (!s(settings, "announcement_visible")) return null;
-    const text = s(settings, "announcement_text");
-    if (!text) return null;
-    return {
-      id: `legacy:${text}`,
-      title: null,
-      message: text,
-      cta_text: null,
-      cta_url: null,
-      bg_color: settings?.announcement_bg_color || "#1C1C1C",
-      text_color: settings?.announcement_text_color || "#C9A84C",
-      is_active: true,
-      display_order: 0,
-      starts_at: null,
-      expires_at: null,
-      is_marquee: false,
-    };
-  }, [announcements.length, settings]);
-
   const visible = useMemo(
-    () => (announcements.length ? announcements : legacy ? [legacy] : []).filter((a) => !dismissed.includes(a.id)),
-    [announcements, legacy, dismissed],
+    () => announcements.filter((a) => !dismissed.includes(a.id)),
+    [announcements, dismissed],
   );
 
   useEffect(() => {
@@ -64,7 +40,8 @@ const AnnouncementBar = () => {
   if (visible.length === 0) return null;
 
   const current = visible[index] ?? visible[0];
-  const dismissible = announcements.length === 0 ? !!s(settings, "announcement_dismissible") : true;
+  const dismissible = true;
+
 
   const dismiss = () => {
     const next = [...dismissed, current.id];

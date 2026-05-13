@@ -205,6 +205,10 @@ const Header = () => {
                         <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
+                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
                       {isStaff && (
                         <Link to="/admin" onClick={closeMenu} className={drawerLinkClass}>
                           <span className="flex items-center gap-2 text-gold"><Shield className="h-4 w-4" /> Admin Panel</span>
@@ -213,10 +217,16 @@ const Header = () => {
                       )}
                     </>
                   ) : (
-                    <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
-                      <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </Link>
+                    <>
+                      <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    </>
                   )}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
@@ -239,18 +249,11 @@ const Header = () => {
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     About Eraya <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
-                  <Link to="/contact" onClick={closeMenu} className={drawerLinkClass}>
-                    Contact Us <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
                   <Link to="/faq" onClick={closeMenu} className={drawerLinkClass}>
                     FAQ <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   <Link to="/care" onClick={closeMenu} className={drawerLinkClass}>
                     Jewellery Care <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                    <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
                   <Link to="/return-policy" onClick={closeMenu} className={drawerLinkClass}>
                     Return Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -276,6 +279,15 @@ const Header = () => {
                     </span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </button>
+                </div>
+
+                <div className="border-t border-border px-6 py-4 text-center">
+                  <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
+                    {settings?.store_name || "Eraya"}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/80 mt-1">
+                    © {new Date().getFullYear()} All rights reserved
+                  </p>
                 </div>
 
               </SheetContent>

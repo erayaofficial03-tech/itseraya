@@ -3,6 +3,7 @@ import { X, Plus } from "lucide-react";
 import { toast } from "sonner";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
+import { logInstallEvent } from "@/lib/installAnalytics";
 
 interface IOSInstallGuideProps {
   open: boolean;

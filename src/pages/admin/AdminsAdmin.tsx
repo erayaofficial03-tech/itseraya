@@ -98,15 +98,6 @@ const UsersAdmin = () => {
     toast.success(next ? "User blocked" : "User unblocked");
   };
 
-  const deleteUser = async (u: UserRow) => {
-    const { error: rErr } = await supabase.from("user_roles").delete().eq("user_id", u.id);
-    if (rErr) { toast.error(rErr.message); return; }
-    const { error: pErr } = await supabase.from("profiles").delete().eq("id", u.id);
-    if (pErr) { toast.error(pErr.message); return; }
-    setUsers((prev) => prev.filter((x) => x.id !== u.id));
-    toast.success("User removed");
-    setConfirmDelete(null);
-  };
 
   const filtered = useMemo(() => {
     let list = users;

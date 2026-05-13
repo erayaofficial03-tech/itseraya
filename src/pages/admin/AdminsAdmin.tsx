@@ -123,6 +123,14 @@ const UsersAdmin = () => {
     return list;
   }, [users, search, tab]);
 
+  const counts = useMemo(() => ({
+    all: users.length,
+    managers: users.filter((u) => u.role === "manager").length,
+    customers: users.filter((u) => u.role === "customer").length,
+    blocked: users.filter((u) => u.is_blocked).length,
+  }), [users]);
+
+
   return (
     <div className="space-y-6 max-w-6xl">
       <div>

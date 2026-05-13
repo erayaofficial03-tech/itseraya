@@ -95,16 +95,14 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
             </button>
           )}
         </div>
-        <div className="px-3 pt-2 pb-3">
-          {product.categories?.name && (
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              {product.categories.name}
-            </p>
-          )}
-          <h3 className="text-[13px] font-semibold text-foreground line-clamp-2 mt-0.5 group-hover:text-gold transition-colors">
+        <div className="px-3 pt-2 pb-3 flex flex-col flex-1">
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground min-h-[14px]">
+            {product.categories?.name || "\u00A0"}
+          </p>
+          <h3 className="text-[13px] font-semibold text-foreground line-clamp-2 mt-0.5 min-h-[34px] group-hover:text-gold transition-colors">
             {product.name}
           </h3>
-          <div className="flex items-baseline gap-2 mt-1">
+          <div className="flex items-baseline gap-2 mt-auto pt-1">
             <span className="text-[14px] font-semibold text-gold">{formatINR(price)}</span>
             {product.discounted_price && product.original_price > product.discounted_price && (
               <span className="text-[12px] text-muted-foreground line-through">

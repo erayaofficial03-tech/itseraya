@@ -36,7 +36,7 @@ const Footer = () => {
           {/* Col 1 — Brand */}
           <div className="flex flex-col items-start gap-3">
             {showLogo && (
-              <img src={logo} alt={settings?.store_name || "Eraya"} className="h-9 w-auto object-contain" />
+              <img src={logo} alt={settings?.store_name || "Eraya"} draggable={false} className="brand-logo h-9 w-auto object-contain" />
             )}
             <p className="font-serif italic text-gold">{s(settings, "tagline")}</p>
             {(showSocial || showWhatsApp) && (

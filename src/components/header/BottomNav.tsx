@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
 import { Home, LayoutGrid, Search, Heart, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
-import { useAuth } from "@/hooks/useAuth";
+
 
 const itemBase =
   "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium tracking-wide transition-colors";

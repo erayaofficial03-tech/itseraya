@@ -133,30 +133,47 @@ const SettingsAdmin = () => {
         <CardContent className="space-y-4">
           <div>
             <Label>WhatsApp number</Label>
-            <Input
-              placeholder="919XXXXXXXXX (with country code, no +)"
-              value={form.whatsapp_number}
-              onChange={(e) => setForm({ ...form, whatsapp_number: e.target.value })}
-            />
+            <div className="flex">
+              <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-sm text-muted-foreground select-none">
+                +91
+              </span>
+              <Input
+                className="rounded-l-none"
+                inputMode="numeric"
+                maxLength={10}
+                placeholder="10-digit mobile number"
+                value={form.whatsapp_number.replace(/\D/g, "").slice(0, 10)}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setForm({ ...form, whatsapp_number: digits });
+                }}
+              />
+            </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Used by the "I Love It" enquiry button. Digits only, including country code.
+              India (+91) is fixed. Enter the 10-digit mobile number starting with 6–9.
             </p>
           </div>
-          <div className="flex items-center justify-between rounded-md border border-border p-3">
-            <div>
-              <Label className="text-sm">Show floating WhatsApp chat button</Label>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {form.whatsapp_number.replace(/\D/g, "")
-                  ? "Appears on every customer page (bottom-right)."
-                  : "Hidden automatically until a WhatsApp number is saved."}
-              </p>
-            </div>
-            <Switch
-              checked={form.whatsapp_float_visible && !!form.whatsapp_number.replace(/\D/g, "")}
-              disabled={!form.whatsapp_number.replace(/\D/g, "")}
-              onCheckedChange={(v) => setForm({ ...form, whatsapp_float_visible: v })}
-            />
-          </div>
+          {(() => {
+            const d = form.whatsapp_number.replace(/\D/g, "").slice(0, 10);
+            const valid = /^[6-9]\d{9}$/.test(d);
+            return (
+              <div className="flex items-center justify-between rounded-md border border-border p-3">
+                <div>
+                  <Label className="text-sm">Show floating WhatsApp chat button</Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {valid
+                      ? "Appears on every customer page (bottom-right)."
+                      : "Hidden until a valid 10-digit WhatsApp number is saved."}
+                  </p>
+                </div>
+                <Switch
+                  checked={form.whatsapp_float_visible && valid}
+                  disabled={!valid}
+                  onCheckedChange={(v) => setForm({ ...form, whatsapp_float_visible: v })}
+                />
+              </div>
+            );
+          })()}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>USP rotation interval (ms)</Label>

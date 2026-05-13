@@ -19,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isStaff, loading } = useAuth();
+  const { data: settings } = useSettings();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");

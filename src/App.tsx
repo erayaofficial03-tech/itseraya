@@ -49,6 +49,7 @@ const BrandAdmin = lazy(() => import("./pages/admin/BrandAdmin"));
 const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
 const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
 const CustomersAdmin = lazy(() => import("./pages/admin/CustomersAdmin"));
+const PoliciesAdmin = lazy(() => import("./pages/admin/PoliciesAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

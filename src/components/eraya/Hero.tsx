@@ -10,8 +10,11 @@ const Hero = () => {
   const { data: settings } = useSettings();
   const overlay = Math.max(0, Math.min(100, s(settings, "hero_overlay_opacity"))) / 100;
   return (
-    <section className="relative w-full px-6 mb-16">
-      <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: "16 / 7" }}>
+    <section className="relative w-full px-4 md:px-6 mb-10 md:mb-16">
+      <div
+        className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl"
+        style={{ aspectRatio: "16 / 7", minHeight: "45vh" }}
+      >
         <img
           src={settings?.hero_image_url || HERO_FALLBACK}
           alt={s(settings, "hero_headline")}
@@ -25,17 +28,17 @@ const Hero = () => {
           className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/60 to-transparent"
           style={{ opacity: overlay }}
         />
-        <div className="relative z-10 h-full flex flex-col justify-center max-w-2xl px-8 md:px-16 text-white">
-          <h1 className="font-serif text-4xl md:text-6xl font-semibold mb-4 drop-shadow">
+        <div className="relative z-10 h-full flex flex-col justify-center max-w-2xl px-6 md:px-12 text-white">
+          <h1 className="font-serif text-[28px] md:text-6xl font-semibold mb-3 md:mb-4 drop-shadow">
             {s(settings, "hero_headline")}
           </h1>
-          <p className="text-base md:text-lg mb-6 max-w-lg opacity-95">
+          <p className="text-sm md:text-lg mb-5 md:mb-6 max-w-lg opacity-95">
             {s(settings, "hero_subtext")}
           </p>
           <Button
             asChild
             size="lg"
-            className="w-fit text-charcoal"
+            className="w-fit rounded-full text-charcoal"
             style={{ background: "var(--gradient-gold)" }}
           >
             <Link to={s(settings, "hero_cta_url")}>{s(settings, "hero_cta_label")}</Link>

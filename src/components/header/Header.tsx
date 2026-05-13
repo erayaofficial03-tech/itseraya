@@ -167,7 +167,7 @@ const Header = () => {
                   {visibleCategories.map((c) => (
                     <Link
                       key={c.id}
-                      to={`/category/${c.slug}`}
+                      to={`/collection/${c.slug}`}
                       onClick={closeMenu}
                       className={drawerLinkClass}
                     >
@@ -330,7 +330,7 @@ const Header = () => {
                       onPointerEnter={prefetch}
                       onTouchStart={prefetch}
                       onFocus={prefetch}
-                      onClick={() => navigate(`/category/${c.slug}`)}
+                      onClick={() => navigate(`/collection/${c.slug}`)}
                     >
                       {c.name}
                     </DropdownMenuItem>
@@ -366,7 +366,7 @@ const Header = () => {
                     <DropdownMenuItem
                       key={c.id}
                       onMouseEnter={() => prefetchCategory(qc, c.slug)}
-                      onClick={() => navigate(`/category/${c.slug}`)}
+                      onClick={() => navigate(`/collection/${c.slug}`)}
                     >
                       {c.name}
                     </DropdownMenuItem>
@@ -484,7 +484,7 @@ const Header = () => {
               <button
                 key={p.id}
                 onMouseEnter={() => prefetchProduct(qc, p.id)}
-                onClick={() => { setSearchOpen(false); setQ(""); navigate(`/product/${p.id}`); }}
+                onClick={() => { setSearchOpen(false); setQ(""); navigate(`/jewellery/${p.slug ?? p.id}`); }}
                 className="w-full text-left px-2 py-2 rounded hover:bg-muted text-sm"
               >
                 {p.name}

@@ -23,7 +23,7 @@ const CategoryRow = () => {
         {visible.map((c, idx) => (
           <Link
             key={c.id}
-            to={`/category/${c.slug}`}
+            to={`/collection/${c.slug}`}
             className={`flex-shrink-0 flex flex-col items-center gap-2 w-20 group ${idx === visible.length - 1 ? "mr-4" : ""}`}
             style={{ scrollSnapAlign: "start" }}
           >
@@ -45,7 +45,7 @@ const CategoryRow = () => {
       {/* Tablet & desktop grid */}
       <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-7 gap-4 lg:gap-5">
         {visible.map((c) => (
-          <Link key={c.id} to={`/category/${c.slug}`} className="group">
+          <Link key={c.id} to={`/collection/${c.slug}`} className="group">
             <div className="aspect-square overflow-hidden rounded-full bg-muted/30 mb-2 border-2 border-transparent group-hover:border-gold transition-all">
               <img
                 src={c.image_url || ""}

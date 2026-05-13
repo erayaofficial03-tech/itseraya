@@ -198,7 +198,7 @@ const ProductGrid = () => {
     <section className="w-full px-6 mb-16">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
           {products.map((product) => (
-            <Link key={product.id} to={`/product/${product.id}`}>
+            <Link key={product.id} to={`/jewellery/${product.slug ?? product.id}`}>
               <Card 
                 className="border-none shadow-none bg-transparent group cursor-pointer"
               >

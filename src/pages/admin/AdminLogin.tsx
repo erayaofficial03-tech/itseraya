@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import erayaLogo from "@/assets/eraya-logo.png";
 
 const AdminLogin = () => {
   const [busy, setBusy] = useState(false);
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const signIn = async () => {
     setBusy(true);
@@ -17,10 +23,30 @@ const AdminLogin = () => {
         toast.error(result.error.message || "Google sign-in failed");
         setBusy(false);
       }
-      // If redirected, browser navigates away.
     } catch (err: any) {
       toast.error(err?.message || "Something went wrong");
       setBusy(false);
+    }
+  };
+
+  const signInWithEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error("Enter email and password");
+      return;
+    }
+    setEmailBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        toast.error(error.message);
+        setEmailBusy(false);
+        return;
+      }
+      navigate("/admin", { replace: true });
+    } catch (err: any) {
+      toast.error(err?.message || "Sign-in failed");
+      setEmailBusy(false);
     }
   };
 
@@ -50,6 +76,44 @@ const AdminLogin = () => {
             <span>{busy ? "Redirecting…" : "Continue with Google"}</span>
           </button>
 
+          <div className="mt-6 flex items-center gap-3 text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
+            <span className="flex-1 h-px bg-border" />
+            or
+            <span className="flex-1 h-px bg-border" />
+          </div>
+
+          <form onSubmit={signInWithEmail} className="mt-6 space-y-3 text-left">
+            <div>
+              <label className="text-[11px] tracking-[0.25em] uppercase text-muted-foreground">Email</label>
+              <input
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={emailBusy}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/50"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] tracking-[0.25em] uppercase text-muted-foreground">Password</label>
+              <input
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={emailBusy}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-charcoal focus:outline-none focus:ring-2 focus:ring-gold/50"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={emailBusy}
+              className="w-full inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-charcoal text-ivory hover:opacity-90 transition-opacity disabled:opacity-60"
+            >
+              {emailBusy ? "Signing in…" : "Sign in with Email"}
+            </button>
+          </form>
+
           <p className="mt-5 text-xs text-muted-foreground">
             Admin and manager access only
           </p>
@@ -60,3 +124,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

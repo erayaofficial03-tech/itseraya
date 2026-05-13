@@ -39,11 +39,11 @@ const Catalogue = () => {
     setWaBusy(true);
     const t = toast.loading("Generating catalogue PDF…");
     try {
-      const { blob, filename } = await generateCatalogPdf(visible, settings, true);
+      // Generate the PDF in-memory; only download as a fallback below.
+      const { blob, file, filename } = await generateCatalogPdf(visible, settings, false);
       const wa = settings?.whatsapp_number?.replace(/\D/g, "") || "";
       const url = typeof window !== "undefined" ? window.location.href : "";
       const storeName = s(settings, "store_name") || "Eraya";
-      const file = new File([blob], filename, { type: "application/pdf" });
       const template = s(settings, "catalogue_whatsapp_message_template");
       const message = template
         .replace(/\{store_name\}/g, storeName)

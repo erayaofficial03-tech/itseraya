@@ -163,9 +163,6 @@
       drop-shadow(0 0.5px 0 hsl(38 70% 22% / 0.55))    /* bottom bevel emboss */
       drop-shadow(1px 0 0 hsl(38 55% 25% / 0.18))      /* right separation */
       drop-shadow(-1px 0 0 hsl(38 55% 25% / 0.18))     /* left separation */
-      drop-shadow(0 1px 1.5px hsl(38 55% 18% / 0.32))  /* close ambient */
-      drop-shadow(0 4px 10px hsl(38 50% 14% / 0.22))   /* mid floor shadow */
-      drop-shadow(0 10px 24px hsl(38 50% 14% / 0.14))  /* soft outer halo */
       saturate(1.18)
       contrast(1.08);
   }

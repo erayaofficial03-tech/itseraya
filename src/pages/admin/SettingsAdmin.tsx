@@ -58,6 +58,10 @@ const SettingsAdmin = () => {
         instagram_username: (settings as any).instagram_username || "",
         facebook_page_name: (settings as any).facebook_page_name || "",
         app_icon_url: (settings as any).app_icon_url || "",
+        about_title: (settings as any).about_title || "",
+        about_body: (settings as any).about_body || "",
+        about_image_url: (settings as any).about_image_url || "",
+        enquiry_mode: ((settings as any).enquiry_mode || "cart") as "cart" | "direct",
       });
     }
   }, [settings]);

@@ -258,9 +258,25 @@ export const generateProductPdf = async (product: Product, settings: Settings | 
   doc.save(`Eraya-${slugify(product.name)}.pdf`);
 };
 
-export async function generateCatalogPdf(products: Product[], settings: Settings | undefined): Promise<void>;
-export async function generateCatalogPdf(products: Product[], settings: Settings | undefined, asBlob: true): Promise<{ blob: Blob; filename: string }>;
-export async function generateCatalogPdf(products: Product[], settings: Settings | undefined, asBlob = false): Promise<void | { blob: Blob; filename: string }> {
+export interface CataloguePdfResult {
+  blob: Blob;
+  file: File;
+  filename: string;
+}
+
+/**
+ * Generates the catalogue PDF and always returns the result as a Blob + File
+ * + filename so callers can attach the exact bytes (e.g. via the Web Share
+ * API) without round-tripping through the user's file system.
+ *
+ * @param download If true (default), also triggers a browser download.
+ *                 Pass false when you only want the in-memory file.
+ */
+export async function generateCatalogPdf(
+  products: Product[],
+  settings: Settings | undefined,
+  download = true,
+): Promise<CataloguePdfResult> {
   const [pr, pg, pb] = hexToRgb(s(settings, "pdf_primary_color"));
   const doc = new jsPDF();
   pdfFont = (await ensureRupeeFont(doc)) ? "NotoSans" : "helvetica";
@@ -338,10 +354,8 @@ export async function generateCatalogPdf(products: Product[], settings: Settings
   }
 
   const filename = `Eraya-Catalogue-${todayISO()}.pdf`;
-  if (asBlob) {
-    const blob = doc.output("blob");
-    return { blob, filename };
-  }
-  doc.save(filename);
-  return undefined;
-};
+  const blob = doc.output("blob");
+  const file = new File([blob], filename, { type: "application/pdf" });
+  if (download) doc.save(filename);
+  return { blob, file, filename };
+}

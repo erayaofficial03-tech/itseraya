@@ -79,10 +79,6 @@ export const SETTINGS_DEFAULTS = {
   pwa_theme_color: "#C9A84C",
   pwa_background_color: "#FAF7F2",
 
-  install_prompt_visible: true,
-  install_prompt_text: "Add Eraya to your home screen",
-  install_prompt_button_label: "Install App",
-
   admin_panel_title: "Eraya Admin",
   admin_welcome_message: "Welcome back to Eraya admin.",
   admin_brand_color: "#C9A84C",

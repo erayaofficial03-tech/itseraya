@@ -11,7 +11,6 @@ const itemBase =
 const BottomNav = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);

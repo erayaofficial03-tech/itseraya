@@ -25,9 +25,10 @@ const Index = () => {
         <HeroSlider />
         <CategoryRow />
         {isLoading ? (
-          <section className="w-full mb-16 px-6">
-            <ProductGridSkeleton count={6} />
-          </section>
+          <>
+            <ProductRowSkeleton count={6} />
+            <ProductRowSkeleton count={6} />
+          </>
         ) : (
           <>
             {s(settings, "section_new_arrivals_visible") && (

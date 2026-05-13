@@ -28,6 +28,7 @@ const SettingsAdmin = () => {
     pwa_name: "", pwa_short_name: "", pwa_description: "",
     pwa_theme_color: "#C9A84C", pwa_background_color: "#FAF7F2",
     instagram_username: "", facebook_page_name: "",
+    app_icon_url: "",
   });
   const [busy, setBusy] = useState(false);
 
@@ -52,6 +53,7 @@ const SettingsAdmin = () => {
         pwa_background_color: (settings as any).pwa_background_color || "#FAF7F2",
         instagram_username: (settings as any).instagram_username || "",
         facebook_page_name: (settings as any).facebook_page_name || "",
+        app_icon_url: (settings as any).app_icon_url || "",
       });
     }
   }, [settings]);
@@ -67,6 +69,7 @@ const SettingsAdmin = () => {
       ...form,
       whatsapp_number: cleanWa || null,
       logo_url: form.logo_url || null,
+      app_icon_url: form.app_icon_url || null,
     }).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
@@ -122,6 +125,9 @@ const SettingsAdmin = () => {
           </div>
           <div>
             <Label>Logo</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Upload your gold transparent logo (used on website, PDF, watermarks).
+            </p>
             <Input type="file" accept="image/*" onChange={async (e) => {
               const f = e.target.files?.[0];
               if (f) {
@@ -130,6 +136,20 @@ const SettingsAdmin = () => {
               }
             }} />
             {form.logo_url && <img src={form.logo_url} className="mt-2 h-16" />}
+          </div>
+          <div>
+            <Label>App icon (home screen)</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Upload your dark-background logo (used only for the app home screen icon).
+            </p>
+            <Input type="file" accept="image/*" onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (f) {
+                const url = await uploadImage(f, "branding");
+                setForm({ ...form, app_icon_url: url });
+              }
+            }} />
+            {form.app_icon_url && <img src={form.app_icon_url} className="mt-2 h-16 rounded" />}
           </div>
           <div>
             <Label>WhatsApp number</Label>

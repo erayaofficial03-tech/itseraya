@@ -48,7 +48,7 @@ const Profile = () => {
     );
   }
 
-  const meta = (user.user_metadata as any) || {};
+  const meta = (user.user_metadata as Record<string, string | undefined>) || {};
   const displayName = profile?.full_name || meta.full_name || meta.name || "Welcome";
   const avatar = profile?.avatar_url || meta.avatar_url || meta.picture;
   const initials = (displayName || user.email || "U").slice(0, 2).toUpperCase();

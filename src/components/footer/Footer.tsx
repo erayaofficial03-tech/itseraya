@@ -74,7 +74,7 @@ const Footer = () => {
           )}
         </div>
 
-        <div className="border-t border-border mt-10 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground gap-2">
+        <div className="border-t border-border mt-10 pt-6 text-center text-xs text-muted-foreground">
           <p>{copyright}</p>
         </div>
       </div>

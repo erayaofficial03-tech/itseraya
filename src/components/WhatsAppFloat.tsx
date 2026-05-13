@@ -34,7 +34,7 @@ const WhatsAppFloat = () => {
       toast("WhatsApp coming soon!");
       return;
     }
-    openWhatsApp(wa, "Hi Eraya! I'd like to know more about your jewellery collection 💛");
+    openWhatsApp(wa, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
   };
 
   return (

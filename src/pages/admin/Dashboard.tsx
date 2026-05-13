@@ -5,6 +5,10 @@ import { useProducts, useCategories } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import {
+  WhatsAppClicksWidget, TopProductsWidget, BannerPerformanceWidget,
+  EnquiryTrendWidget, ConversionFunnelWidget,
+} from "./dashboard-widgets";
 
 const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
   <Card>
@@ -100,6 +104,15 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <WhatsAppClicksWidget />
+        <TopProductsWidget />
+        <EnquiryTrendWidget />
+        <ConversionFunnelWidget />
+        <BannerPerformanceWidget />
+      </div>
+
       <Card>
         <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>
         <CardContent>

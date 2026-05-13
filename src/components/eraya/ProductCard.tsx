@@ -36,7 +36,7 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
     e.preventDefault();
     e.stopPropagation();
     if (enquiryMode === "direct") {
-      openWhatsAppEnquiry(product, settings);
+      openWhatsAppEnquiry(product, settings, "product_card");
       return;
     }
     addToCart({

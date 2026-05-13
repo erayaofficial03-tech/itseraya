@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Heart } from "lucide-react";
 import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import Header from "@/components/header/Header";
@@ -25,6 +26,12 @@ const ProductDetail = () => {
   const { data: wishlist = [] } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
+
+  useEffect(() => {
+    if (product?.id) {
+      void supabase.from("product_views").insert({ product_id: product.id });
+    }
+  }, [product?.id]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   if (!product) return (

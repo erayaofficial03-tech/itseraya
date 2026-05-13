@@ -57,9 +57,24 @@ export const buildWhatsAppUrl = (number: string | null | undefined, message: str
  *
  * Returns true if the popup opened, false otherwise.
  */
+export type WhatsAppSource =
+  | "float_button"
+  | "product_card"
+  | "enquiry_drawer"
+  | "product_detail";
+
+export const logWhatsAppClick = (
+  source: WhatsAppSource,
+  product_id: string | null = null,
+) => {
+  void supabase.from("whatsapp_clicks").insert({ source, product_id });
+};
+
 export const openWhatsApp = (
   number: string | null | undefined,
   message: string,
+  source?: WhatsAppSource,
+  product_id: string | null = null,
 ): boolean => {
   const url = buildWhatsAppUrl(number, message);
   let win: Window | null = null;
@@ -69,6 +84,7 @@ export const openWhatsApp = (
     win = null;
   }
   const blocked = !win || win.closed || typeof win.closed === "undefined";
+  if (source) logWhatsAppClick(source, product_id);
   if (blocked) {
     const detail: WhatsAppBlockedDetail = {
       url,
@@ -84,6 +100,7 @@ export const openWhatsApp = (
 export const openWhatsAppEnquiry = (
   product: Product,
   settings: Settings | undefined,
+  source: WhatsAppSource = "product_detail",
 ) => {
   const number = settings?.whatsapp_number?.replace(/\D/g, "");
   void logEnquiry(product);
@@ -100,5 +117,5 @@ export const openWhatsAppEnquiry = (
     price: formatINR(price),
     url,
   });
-  openWhatsApp(number, msg);
+  openWhatsApp(number, msg, source, product.id);
 };

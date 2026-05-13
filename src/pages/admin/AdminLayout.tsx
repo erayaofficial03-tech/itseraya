@@ -186,9 +186,7 @@ const AdminLayout = () => {
               Admin
             </span>
           </div>
-          <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground justify-self-end truncate max-w-[40vw]">
-            {currentLabel}
-          </span>
+          <div />
         </header>
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">

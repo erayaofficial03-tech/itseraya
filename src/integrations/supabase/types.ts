@@ -488,11 +488,6 @@ export type Database = {
           admin_brand_color: string | null
           admin_panel_title: string | null
           admin_welcome_message: string | null
-          announcement_bg_color: string | null
-          announcement_dismissible: boolean | null
-          announcement_text: string | null
-          announcement_text_color: string | null
-          announcement_visible: boolean | null
           app_icon_url: string | null
           catalogue_download_label: string | null
           catalogue_heading: string | null
@@ -506,8 +501,6 @@ export type Database = {
           color_text: string | null
           enquiry_button_color: string | null
           enquiry_mode: string
-          facebook_connected_at: string | null
-          facebook_page_name: string | null
           favicon_url: string | null
           footer_copyright: string | null
           footer_links_visible: boolean | null
@@ -523,8 +516,6 @@ export type Database = {
           hero_overlay_opacity: number | null
           hero_subtext: string | null
           id: number
-          instagram_connected_at: string | null
-          instagram_username: string | null
           install_prompt_button_label: string | null
           install_prompt_text: string | null
           install_prompt_visible: boolean | null
@@ -594,11 +585,6 @@ export type Database = {
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
-          announcement_bg_color?: string | null
-          announcement_dismissible?: boolean | null
-          announcement_text?: string | null
-          announcement_text_color?: string | null
-          announcement_visible?: boolean | null
           app_icon_url?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
@@ -612,8 +598,6 @@ export type Database = {
           color_text?: string | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
-          facebook_connected_at?: string | null
-          facebook_page_name?: string | null
           favicon_url?: string | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
@@ -629,8 +613,6 @@ export type Database = {
           hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
-          instagram_connected_at?: string | null
-          instagram_username?: string | null
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null
@@ -700,11 +682,6 @@ export type Database = {
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
-          announcement_bg_color?: string | null
-          announcement_dismissible?: boolean | null
-          announcement_text?: string | null
-          announcement_text_color?: string | null
-          announcement_visible?: boolean | null
           app_icon_url?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
@@ -718,8 +695,6 @@ export type Database = {
           color_text?: string | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
-          facebook_connected_at?: string | null
-          facebook_page_name?: string | null
           favicon_url?: string | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
@@ -735,8 +710,6 @@ export type Database = {
           hero_overlay_opacity?: number | null
           hero_subtext?: string | null
           id?: number
-          instagram_connected_at?: string | null
-          instagram_username?: string | null
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null

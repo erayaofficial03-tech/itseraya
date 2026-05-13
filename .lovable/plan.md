@@ -1,36 +1,38 @@
-## 1. Defensive role-banner guard
+# Remove Duplicate Settings Across Admin
 
-There are no role banners left in the admin UI today (already removed from `Dashboard.tsx`), but to make sure none can ever render again without a real role match, add a small wrapper component and use it everywhere a role-gated message would appear.
+After scanning every admin page, three real duplicates remain. The visible "Announcements" duplicate you spotted is the **legacy single‑announcement fields baked into the `settings` row** that the announcement bar still falls back to when the managed `announcements` table is empty.
 
-- Create `src/components/admin/RoleBanner.tsx`:
-  - Props: `role: "admin" | "manager"`, `children`.
-  - Internally calls `useAuth()` and renders `null` unless `(role === "admin" && isAdmin) || (role === "manager" && isManager && !isAdmin)`.
-  - Also returns `null` while `loading` is true so a banner never flashes before the role resolves.
-- Export it for future use; no banners are added back right now. This guarantees any future "You are logged in as …" message is gated by the actual auth state, not just a local prop.
+## Duplicates found
 
-## 2. Mobile admin header — true logo centering
+### 1. Announcements (the one you flagged)
+- Source of truth: `/admin/announcement` (table `announcements`, multi‑item, scheduling, marquee).
+- Hidden duplicate: 5 legacy columns on `settings` — `announcement_visible`, `announcement_text`, `announcement_bg_color`, `announcement_text_color`, `announcement_dismissible`. Used as a fallback inside `src/components/AnnouncementBar.tsx`. They aren't shown in any admin form anymore but they still drive content if the admin table is empty, so editing one place doesn't reflect the other.
 
-In `src/pages/admin/AdminLayout.tsx` the mobile header uses `grid-cols-[auto_1fr_auto]` with a 40 px menu button on the left and an empty `<div />` on the right. The empty div has no width, so the centered column is pushed right.
+### 2. Social presence (inside Settings → Profile & Settings)
+- "Social links" card → `social_links` table (platform + URL, supports many).
+- "Social connections" card → `settings.instagram_username` + `settings.facebook_page_name` (just handles, no URL, no toggle, "live posting coming soon" — never wired up).
+- Both express the same intent. Keep `social_links` (richer), drop the handles card and the two columns.
 
-- Give the right placeholder a fixed size matching the menu button (`<div className="w-10 h-10" />` or `aria-hidden`).
-- Result: the `BrandLogo` + "ADMIN" caption sit perfectly centered between the two equal-width side slots on every viewport.
+### 3. Confusing twin admin pages (not data duplicates, naming duplicates)
+- `Banners` → `/admin/banners` → hero slider images (`banners` table).
+- `Homepage & Banner` → `/admin/banner` → homepage section titles + visibility (Categories, New Arrivals, etc.).
+The word "Banner" in the second label is misleading. Rename it to **Homepage Sections**.
 
-## 3. Remove duplicated settings from Store Settings
+## Changes
 
-`UspsAdmin` (`/admin/usps`, "USPs & Reviews") already owns:
-- `usp_1`, `usp_2`, `usp_3`
-- `usp_interval_ms`, `usp_fade_speed_ms`
+### Frontend
+- `src/components/AnnouncementBar.tsx` — remove the legacy fallback block; render only from the `useAnnouncements()` query.
+- `src/pages/admin/SettingsAdmin.tsx` — delete the "Social connections" card; remove `instagram_username` / `facebook_page_name` from `useState`, `useEffect`, and the `update` payload.
+- `src/lib/queries.ts` + `src/lib/settingsDefaults.ts` — drop the 5 announcement_* and 2 social handle keys from the `Settings` type and defaults.
+- `src/pages/admin/AdminLayout.tsx` — relabel "Homepage & Banner" → "Homepage Sections" (route `/admin/banner` unchanged for back‑compat).
 
-`SettingsAdmin` (`/admin/settings`) currently re-renders the same five fields (lines 177–221). Remove that block and the matching state/save keys from `SettingsAdmin` so each setting has exactly one place to live:
+### Database (migration)
+Drop now‑unused columns from `settings`:
+- `announcement_visible`, `announcement_text`, `announcement_bg_color`, `announcement_text_color`, `announcement_dismissible`
+- `instagram_username`, `instagram_connected_at`, `facebook_page_name`, `facebook_connected_at`
 
-- Delete the `grid grid-cols-2 gap-4` block with USP interval / fade speed inputs.
-- Delete the `space-y-3 rounded-md border border-border p-4` block with the three USP inputs.
-- Remove `usp_interval_ms`, `usp_fade_speed_ms`, `usp_1`, `usp_2`, `usp_3` from the initial `useState` object, the `useEffect` hydration block, and the `update({ ...form })` payload (rely on `UspsAdmin` to write them).
-- Leave a single short note under the WhatsApp section pointing admins to **USPs & Reviews** for the rotating top-bar messages.
+No data preservation needed — the managed `announcements` table and `social_links` table already cover both use cases.
 
-No DB schema changes — the columns stay; only the duplicated UI is removed.
-
-## Files touched
-- `src/components/admin/RoleBanner.tsx` (new)
-- `src/pages/admin/AdminLayout.tsx` (mobile header right slot width)
-- `src/pages/admin/SettingsAdmin.tsx` (drop USP duplicates from form/state/save)
+## Out of scope
+- BannerAdmin vs BannersAdmin code stays as‑is; only the sidebar label changes.
+- All other admin pages were checked (Brand, USPs, SEO, Policies, Categories, Products, Banners, Customers, Enquiries, Labels, Admins, Profile) — no field overlaps with Settings.

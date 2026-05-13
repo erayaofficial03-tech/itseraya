@@ -18,7 +18,11 @@ const AuthCallback = () => {
     const finish = async () => {
       const url = new URL(window.location.href);
       if (url.searchParams.get("code")) {
-        try { await supabase.auth.exchangeCodeForSession(window.location.href); } catch { /* ignore */ }
+        try {
+          await supabase.auth.exchangeCodeForSession(window.location.href);
+        } catch {
+          /* ignore */
+        }
       }
 
       let session = (await supabase.auth.getSession()).data.session;
@@ -29,17 +33,17 @@ const AuthCallback = () => {
 
       if (!session?.user) {
         toast.error("Sign-in failed. Please try again.");
-        navigate("/admin/login", { replace: true });
+        navigate("/login", { replace: true });
         return;
       }
 
       const user = session.user;
       const email = (user.email || "").toLowerCase();
 
-      // Check block status
+      // Block check
       const { data: profile } = await supabase
         .from("profiles")
-        .select("is_blocked")
+        .select("is_blocked, profile_complete, current_mode")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -50,19 +54,27 @@ const AuthCallback = () => {
         return;
       }
 
-      // Role based on email (DB trigger also handles this; this is defensive)
+      // Defensive role assignment (DB trigger also handles this)
       const role: "admin" | "manager" | "customer" =
-        email === ADMIN_EMAIL ? "admin" : MANAGER_EMAILS.includes(email) ? "manager" : "customer";
+        email === ADMIN_EMAIL
+          ? "admin"
+          : MANAGER_EMAILS.includes(email)
+          ? "manager"
+          : "customer";
 
-      // Ensure profile row exists
-      await supabase.from("profiles").upsert({
-        id: user.id,
-        email: user.email!,
-        full_name: (user.user_metadata?.full_name as string) || (user.user_metadata?.name as string) || null,
-        avatar_url: (user.user_metadata?.avatar_url as string) || null,
-      }, { onConflict: "id" });
+      await supabase.from("profiles").upsert(
+        {
+          id: user.id,
+          email: user.email!,
+          full_name:
+            (user.user_metadata?.full_name as string) ||
+            (user.user_metadata?.name as string) ||
+            null,
+          avatar_url: (user.user_metadata?.avatar_url as string) || null,
+        },
+        { onConflict: "id" },
+      );
 
-      // Ensure role row exists (DB trigger enforces admin-email rule)
       if (role !== "customer") {
         await supabase.from("user_roles").upsert(
           { user_id: user.id, role },
@@ -70,8 +82,15 @@ const AuthCallback = () => {
         );
       }
 
+      // Profile completion gate
+      if (!profile?.profile_complete) {
+        navigate("/complete-profile", { replace: true });
+        return;
+      }
+
       const isStaff = role === "admin" || role === "manager";
-      navigate(isStaff ? "/admin" : "/", { replace: true });
+      const wantsAdmin = profile?.current_mode !== "customer";
+      navigate(isStaff && wantsAdmin ? "/admin" : "/", { replace: true });
     };
 
     finish();

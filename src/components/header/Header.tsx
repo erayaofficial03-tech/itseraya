@@ -1,9 +1,11 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Briefcase, Sun, MapPin } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
@@ -43,6 +45,8 @@ const Header = () => {
   const { user, profile, isStaff, signOut } = useAuth();
   const { data: wishlistItems = [] } = useWishlist();
   const wishlistCount = wishlistItems.length;
+  const { count: cartCount } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -51,6 +55,19 @@ const Header = () => {
   const logo = settings?.logo_url || erayaLogo;
 
   const visibleCategories = categories.filter((c) => c.is_visible);
+
+  const collections = [
+    { label: "Bridal Collection", value: "bridal", icon: Crown },
+    { label: "Daily Wear", value: "daily", icon: Sun },
+    { label: "Office Wear", value: "office", icon: Briefcase },
+    { label: "Party Wear", value: "party", icon: Sparkles },
+  ];
+
+  const shopShortcuts = [
+    { label: "New Arrivals", to: "/catalogue?filter=new", icon: Sparkles },
+    { label: "Bestsellers", to: "/catalogue?filter=bestsellers", icon: Crown },
+    { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
+  ];
 
   const results = useMemo(() => {
     if (!q.trim()) return [];

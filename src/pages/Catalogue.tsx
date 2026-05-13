@@ -44,15 +44,18 @@ const Catalogue = () => {
       const url = typeof window !== "undefined" ? window.location.href : "";
       const storeName = s(settings, "store_name") || "Eraya";
       const file = new File([blob], filename, { type: "application/pdf" });
-      const text =
-        `Hi! Here is the latest *${storeName}* catalogue.\n` +
-        `Browse the full collection: ${url}`;
+      const template = s(settings, "catalogue_whatsapp_message_template");
+      const message = template
+        .replace(/\{store_name\}/g, storeName)
+        .replace(/\{url\}/g, url)
+        .replace(/\{tagline\}/g, s(settings, "tagline") || "")
+        .replace(/\{whatsapp\}/g, wa);
 
       // Prefer Web Share API with file attachment (Android/iOS PWA)
       // @ts-ignore - canShare typing
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: `${storeName} Catalogue`, text });
+          await navigator.share({ files: [file], title: `${storeName} Catalogue`, text: message });
           toast.success("Catalogue ready to share", { id: t });
           return;
         } catch (err: any) {
@@ -71,10 +74,8 @@ const Catalogue = () => {
       a.download = filename;
       a.click();
       URL.revokeObjectURL(dlUrl);
-      const msg =
-        `${text}\n\nThe catalogue PDF has been downloaded — please attach it from your files.`;
       const target = wa ? `https://wa.me/${wa}` : "https://wa.me/";
-      window.open(`${target}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+      window.open(`${target}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
       toast.success("PDF downloaded — open WhatsApp and attach the file to share it", { id: t });
     } catch (e: any) {
       toast.error(e?.message ?? "Couldn't create catalogue", { id: t });

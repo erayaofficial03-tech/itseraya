@@ -205,6 +205,7 @@ export type Database = {
           catalogue_download_label: string | null
           catalogue_heading: string | null
           catalogue_subtext: string | null
+          catalogue_whatsapp_message_template: string | null
           category_empty_message: string | null
           category_pieces_label: string | null
           color_accent: string | null
@@ -291,6 +292,7 @@ export type Database = {
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
+          catalogue_whatsapp_message_template?: string | null
           category_empty_message?: string | null
           category_pieces_label?: string | null
           color_accent?: string | null
@@ -377,6 +379,7 @@ export type Database = {
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
+          catalogue_whatsapp_message_template?: string | null
           category_empty_message?: string | null
           category_pieces_label?: string | null
           color_accent?: string | null

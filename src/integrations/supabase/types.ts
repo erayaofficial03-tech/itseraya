@@ -467,6 +467,9 @@ export type Database = {
       }
       settings: {
         Row: {
+          about_body: string | null
+          about_image_url: string | null
+          about_title: string | null
           admin_brand_color: string | null
           admin_panel_title: string | null
           admin_welcome_message: string | null
@@ -555,6 +558,9 @@ export type Database = {
           whatsapp_number: string | null
         }
         Insert: {
+          about_body?: string | null
+          about_image_url?: string | null
+          about_title?: string | null
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
@@ -643,6 +649,9 @@ export type Database = {
           whatsapp_number?: string | null
         }
         Update: {
+          about_body?: string | null
+          about_image_url?: string | null
+          about_title?: string | null
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null

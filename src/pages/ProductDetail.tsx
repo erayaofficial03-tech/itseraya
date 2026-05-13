@@ -47,9 +47,18 @@ const ProductDetail = () => {
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
   const isSaved = wishlist.some((w) => w.product_id === product.id);
-  const related = allProducts
-    .filter((p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id)
-    .slice(0, 8);
+  const sameCategory = allProducts.filter(
+    (p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id
+  );
+  let related = sameCategory.slice(0, 8);
+  if (related.length < 4) {
+    const seen = new Set(related.map((p) => p.id));
+    seen.add(product.id);
+    const bestsellers = allProducts.filter(
+      (p) => p.is_visible && !seen.has(p.id) && (p.tags || []).includes("bestseller")
+    );
+    related = [...related, ...bestsellers].slice(0, 8);
+  }
 
   return (
     <div className="min-h-screen bg-background">

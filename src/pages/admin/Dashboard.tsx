@@ -25,7 +25,8 @@ const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: s
 type RecentUser = { id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string };
 
 const Dashboard = () => {
-  const { isAdmin, isManager } = useAuth();
+  const { isAdmin, isManager, profile, user } = useAuth();
+  const displayName = profile?.full_name || user?.email || "User";
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [userCount, setUserCount] = useState<number | string>("—");
@@ -67,7 +68,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div>
         <h1 className="font-serif text-3xl">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Welcome back to Eraya admin.</p>
+        <p className="text-sm text-muted-foreground">Welcome Back {displayName}</p>
       </div>
 
       {isAdmin && (

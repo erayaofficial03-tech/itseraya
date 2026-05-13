@@ -125,6 +125,13 @@ const AdminLogin = () => {
             >
               {emailBusy ? "Signing in…" : "Sign in with Email"}
             </button>
+            <button
+              type="button"
+              onClick={forgot}
+              className="text-xs text-muted-foreground hover:text-gold underline w-full text-center"
+            >
+              Forgot password?
+            </button>
           </form>
 
           <p className="mt-5 text-xs text-muted-foreground">

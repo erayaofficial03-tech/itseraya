@@ -22,7 +22,7 @@ export const SETTINGS_DEFAULTS = {
   section_trending_visible: true,
   section_sale_title: "On Sale",
   section_sale_visible: true,
-  section_featured_title: "Featured",
+  section_featured_title: "Hot Selling",
   section_featured_visible: true,
 
   nav_home_label: "Home",

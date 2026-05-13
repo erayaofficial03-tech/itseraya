@@ -164,13 +164,29 @@ const BottomNav = () => {
               );
             })}
             {!q.trim() && (
-              <p className="px-6 py-12 text-center text-sm text-muted-foreground">
-                Search by name, description, or category.
-              </p>
+              <div className="px-6 py-8">
+                <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
+                  Popular categories
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {categories.filter((c) => c.is_visible).slice(0, 8).map((c) => (
+                    <Link
+                      key={c.id}
+                      to={`/category/${c.slug}`}
+                      onClick={() => setSearchOpen(false)}
+                      className="px-3 py-1.5 rounded-full border text-xs hover:bg-muted/40"
+                      style={{ borderColor: "#EDE8E1" }}
+                    >
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 };

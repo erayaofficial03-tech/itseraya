@@ -104,6 +104,15 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <WhatsAppClicksWidget />
+        <TopProductsWidget />
+        <EnquiryTrendWidget />
+        <ConversionFunnelWidget />
+        <BannerPerformanceWidget />
+      </div>
+
       <Card>
         <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>
         <CardContent>

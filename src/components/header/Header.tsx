@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, LogIn, LogOut, Heart, Shield } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";

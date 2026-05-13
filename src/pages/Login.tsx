@@ -79,9 +79,13 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="flex-1 px-6 py-10 pb-24 lg:pb-10 max-w-md mx-auto w-full">
-        <h1 className="font-serif text-3xl text-foreground mb-2">Welcome</h1>
-        <p className="text-sm text-muted-foreground mb-6">Sign in to save your favourites and orders.</p>
+      <main className="flex-1 px-6 py-8 pb-24 lg:pb-10 max-w-md mx-auto w-full">
+        <div className="text-center mb-6">
+          <img src={(undefined as any) || "/eraya-logo.png"} alt="Eraya" className="h-14 mx-auto mb-3 object-contain" />
+          <p className="font-serif italic text-gold text-sm mb-4">{(typeof window !== "undefined" ? "" : "")}Adorn Your Story</p>
+          <h1 className="font-serif text-2xl text-foreground mb-1">Welcome</h1>
+          <p className="text-sm text-muted-foreground">Sign in to save your wishlist and track enquiries.</p>
+        </div>
 
         <Button
           variant="outline"

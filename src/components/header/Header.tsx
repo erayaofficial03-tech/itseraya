@@ -127,7 +127,7 @@ const Header = () => {
     <>
       <AnnouncementBar />
       <StatusBar />
-      <header className="w-full sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
+      <header className="w-full sticky top-0 z-50 bg-background lg:bg-background/90 lg:backdrop-blur border-b border-border">
         <div className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-3 items-center h-14 sm:h-16 px-2 sm:px-4 lg:px-6 max-w-7xl mx-auto gap-1 sm:gap-2">
           {/* Left: hamburger (mobile) + desktop nav */}
           <div className="flex items-center justify-start min-w-0">

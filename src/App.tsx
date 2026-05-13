@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import RoleGuard from "./components/auth/RoleGuard";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { lazyWithRetry } from "./lib/lazyWithRetry";
 
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";

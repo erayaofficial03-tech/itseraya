@@ -4,27 +4,29 @@ import erayaLogo from "@/assets/eraya-logo.png";
 interface BrandLogoProps {
   className?: string;
   alt?: string;
-  /** Apply a subtle drop shadow for use on dark backgrounds (e.g. admin sidebar). */
+  /** Apply dark-background variant (warm gold glow). Defaults to light variant. */
   onDark?: boolean;
 }
 
 /**
- * Renders the store logo. Prefers the admin-uploaded `settings.logo_url`,
- * falls back to the bundled gold-transparent Eraya logo. Use everywhere the
- * brand mark appears. Never rendered as text.
+ * Renders the store logo with adaptive premium metallic finish.
+ * Prefers `settings.logo_url`, falls back to bundled gold-transparent PNG.
+ * Uses `.brand-logo` / `.brand-logo-dark` utility classes (see index.css)
+ * for layered drop-shadows simulating bevel + ambient depth + hover polish.
  */
 const BrandLogo = ({ className = "h-10 w-auto", alt, onDark = false }: BrandLogoProps) => {
   const { data: settings } = useSettings();
   const src = settings?.logo_url || erayaLogo;
   const label = alt ?? settings?.store_name ?? "Eraya";
+  const variant = onDark ? "brand-logo brand-logo-dark" : "brand-logo";
   return (
     <img
       src={src}
       alt={label}
-      className={className}
+      className={`${variant} ${className}`}
       loading="eager"
       decoding="async"
-      style={onDark ? { filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))" } : { filter: "none" }}
+      draggable={false}
     />
   );
 };

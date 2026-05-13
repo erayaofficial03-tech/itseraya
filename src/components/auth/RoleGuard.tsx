@@ -5,14 +5,14 @@ import { ShieldX } from "lucide-react";
 
 const Loader = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-ivory gap-4">
-    <img src={erayaLogo} alt="Eraya" className="h-12 w-auto" />
+    <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-12 w-auto" />
     <span className="h-6 w-6 rounded-full border-2 border-gold border-t-transparent animate-spin" />
   </div>
 );
 
 const AccessDenied = ({ message }: { message: string }) => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-ivory gap-4 px-6">
-    <img src={erayaLogo} alt="Eraya" className="h-12 w-auto" />
+    <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-12 w-auto" />
     <ShieldX className="h-10 w-10 text-red-500 mt-4" />
     <h1 className="font-serif text-xl text-charcoal text-center">Access Denied</h1>
     <p className="text-sm text-muted-foreground text-center max-w-xs">{message}</p>

@@ -6,7 +6,7 @@ import ProductRow from "@/components/eraya/ProductRow";
 import SeoHead from "@/components/providers/SeoHead";
 import { useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
-import { ProductGridSkeleton } from "@/components/ui/skeletons";
+import { ProductRowSkeleton } from "@/components/ui/skeletons";
 
 const Index = () => {
   const { data: products = [], isLoading } = useProducts();
@@ -25,9 +25,10 @@ const Index = () => {
         <HeroSlider />
         <CategoryRow />
         {isLoading ? (
-          <section className="w-full mb-16 px-6">
-            <ProductGridSkeleton count={6} />
-          </section>
+          <>
+            <ProductRowSkeleton count={6} />
+            <ProductRowSkeleton count={6} />
+          </>
         ) : (
           <>
             {s(settings, "section_new_arrivals_visible") && (

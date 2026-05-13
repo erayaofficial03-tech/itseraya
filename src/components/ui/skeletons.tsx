@@ -9,19 +9,44 @@ export const SkeletonBlock = ({ className = "" }: { className?: string }) => (
 );
 
 export const ProductCardSkeleton = () => (
-  <div className="space-y-3">
-    <SkeletonBlock className="aspect-[4/5] w-full" />
-    <SkeletonBlock className="h-3 w-3/4" />
-    <SkeletonBlock className="h-3 w-1/3" />
+  <div className="rounded-2xl overflow-hidden bg-white border border-[#EDE8E1] shadow-sm">
+    <SkeletonBlock className="aspect-square w-full rounded-none" />
+    <div className="px-3 pt-2 pb-3 space-y-2">
+      <SkeletonBlock className="h-2 w-1/3" />
+      <SkeletonBlock className="h-3 w-3/4" />
+      <SkeletonBlock className="h-3 w-1/3" />
+    </div>
   </div>
 );
 
 export const ProductGridSkeleton = ({ count = 6 }: { count?: number }) => (
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+  <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
     {Array.from({ length: count }).map((_, i) => (
       <ProductCardSkeleton key={i} />
     ))}
   </div>
+);
+
+/** Mimics a single ProductRow (heading + responsive grid/scroll). */
+export const ProductRowSkeleton = ({ count = 6 }: { count?: number }) => (
+  <section className="w-full mb-10 md:mb-16 px-4 md:px-6">
+    <div className="flex justify-between items-end mb-4 md:mb-6">
+      <SkeletonBlock className="h-6 md:h-8 w-40" />
+      <SkeletonBlock className="h-3 w-16" />
+    </div>
+    {/* Mobile: 3-col grid */}
+    <div className="md:hidden grid grid-cols-3 gap-2">
+      {Array.from({ length: count }).map((_, i) => (
+        <ProductCardSkeleton key={i} />
+      ))}
+    </div>
+    {/* Desktop: row */}
+    <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 gap-5">
+      {Array.from({ length: count }).map((_, i) => (
+        <ProductCardSkeleton key={i} />
+      ))}
+    </div>
+  </section>
 );
 
 export const CategoryCardSkeleton = () => (

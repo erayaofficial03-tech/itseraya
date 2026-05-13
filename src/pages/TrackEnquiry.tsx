@@ -77,7 +77,7 @@ const TrackEnquiry = () => {
         setLoading(false);
         return;
       }
-      const { items: rowItems, ...sessionFields } = row as SessionRow & { items: ItemRow[] };
+      const { items: rowItems, ...sessionFields } = row as unknown as SessionRow & { items: ItemRow[] };
       setSession(sessionFields as SessionRow);
       setItems((rowItems || []) as ItemRow[]);
     } catch (e) {

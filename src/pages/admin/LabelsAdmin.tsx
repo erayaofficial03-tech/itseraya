@@ -26,7 +26,6 @@ const BOOL_KEYS = [
   "nav_show_search",
   "product_tag_visible",
   "footer_show_logo", "footer_show_social", "footer_show_whatsapp",
-  "install_prompt_visible",
 ] as const;
 
 type FormState = Record<string, string | boolean>;

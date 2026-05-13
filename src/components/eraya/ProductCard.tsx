@@ -52,9 +52,9 @@ const ProductCard = ({ product, showWhatsAppIcon = true }: Props) => {
   };
 
   return (
-    <Link to={`/product/${product.id}`} className="block group">
+    <Link to={`/product/${product.id}`} className="block group h-full">
       <div
-        className="rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
+        className="h-full flex flex-col rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
         style={{ borderColor: "#EDE8E1", borderWidth: 1 }}
       >
         <div className="relative aspect-square bg-muted/30">

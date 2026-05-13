@@ -122,7 +122,7 @@ const UsersAdmin = () => {
       <div>
         <h1 className="font-serif text-3xl">Users</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          New signups join as Customer. Promote to Manager or block accounts here. The Admin role is reserved for <span className="font-medium">admin@itseraya.in</span>.
+          Master admin <span className="font-medium">admin@itseraya.in</span> is permanent. You may have at most <span className="font-medium">1 additional Admin</span> and <span className="font-medium">1 Manager</span>. New signups always join as Customer.
         </p>
       </div>
 

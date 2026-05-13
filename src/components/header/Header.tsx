@@ -264,6 +264,15 @@ const Header = () => {
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     About Eraya <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
+                  <Link to="/contact" onClick={closeMenu} className={drawerLinkClass}>
+                    Contact Us <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  <Link to="/faq" onClick={closeMenu} className={drawerLinkClass}>
+                    FAQ <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  <Link to="/care" onClick={closeMenu} className={drawerLinkClass}>
+                    Jewellery Care <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
                   <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
                     <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />

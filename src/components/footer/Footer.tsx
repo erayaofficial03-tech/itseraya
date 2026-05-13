@@ -32,7 +32,7 @@ const Footer = () => {
   return (
     <footer className="hidden md:block w-full bg-background border-t border-border mt-24">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Col 1 — Brand */}
           <div className="flex flex-col items-start gap-3">
             {showLogo && (
@@ -72,13 +72,26 @@ const Footer = () => {
               <ul className="space-y-2 text-sm">
                 <li><Link to="/?filter=new" className="hover:text-gold">New Arrivals</Link></li>
                 <li><Link to="/catalogue" className="hover:text-gold">Catalogue</Link></li>
+                <li><Link to="/search" className="hover:text-gold">Search</Link></li>
                 <li><Link to="/about" className="hover:text-gold">About</Link></li>
                 <li><Link to="/track" className="hover:text-gold">Track Enquiry</Link></li>
               </ul>
             </div>
           )}
 
-          {/* Col 3 — Policies */}
+          {/* Col 3 — Help */}
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
+              Help
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/contact" className="hover:text-gold">Contact Us</Link></li>
+              <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
+              <li><Link to="/care" className="hover:text-gold">Jewellery Care</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 4 — Policies */}
           <div>
             <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-3">
               Policies

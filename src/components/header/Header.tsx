@@ -143,37 +143,44 @@ const Header = () => {
                   </p>
                   {user ? (
                     <>
-                      <div className="flex items-center gap-3 py-3 border-b border-border/60 -mx-6 px-6">
-                        <Avatar className="h-9 w-9 border border-gold">
-                          <AvatarImage src={profile?.avatar_url || undefined} />
+                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-border/60">
+                        <Avatar className="h-10 w-10 border border-gold">
+                          <AvatarImage src={profile?.avatar_url || (user.user_metadata as any)?.avatar_url || undefined} />
                           <AvatarFallback className="bg-charcoal text-ivory text-xs">
                             {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">{profile?.full_name || "Welcome"}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
+                          </p>
                           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          <button
+                            onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                            className="text-xs text-red-600 hover:text-red-700 mt-0.5"
+                          >
+                            Sign out
+                          </button>
                         </div>
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> Profile</span>
+                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> Wishlist</span>
+                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
-                      <button
-                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                        className={`${drawerLinkClass} w-full text-left`}
-                      >
-                        <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Log out</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </button>
+                      {isStaff && (
+                        <Link to="/admin" onClick={closeMenu} className={drawerLinkClass}>
+                          <span className="flex items-center gap-2 text-gold"><Shield className="h-4 w-4" /> Admin Panel</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </Link>
+                      )}
                     </>
                   ) : (
                     <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
-                      <span className="flex items-center gap-2"><LogIn className="h-4 w-4" /> Log in / Sign up</span>
+                      <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
                   )}

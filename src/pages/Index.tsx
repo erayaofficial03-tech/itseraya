@@ -6,7 +6,7 @@ import ProductRow from "@/components/eraya/ProductRow";
 import SeoHead from "@/components/providers/SeoHead";
 import { useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
-import { ProductGridSkeleton } from "@/components/ui/skeletons";
+import { ProductRowSkeleton } from "@/components/ui/skeletons";
 
 const Index = () => {
   const { data: products = [], isLoading } = useProducts();

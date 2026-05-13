@@ -35,7 +35,7 @@ export const ProductRowSkeleton = ({ count = 6 }: { count?: number }) => (
       <SkeletonBlock className="h-3 w-16" />
     </div>
     {/* Mobile: 3-col grid */}
-    <div className="md:hidden grid grid-cols-3 gap-2">
+    <div className="md:hidden grid grid-cols-3 gap-3">
       {Array.from({ length: count }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}

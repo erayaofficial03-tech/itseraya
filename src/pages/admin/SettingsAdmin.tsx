@@ -78,7 +78,8 @@ const SettingsAdmin = () => {
       whatsapp_number: cleanWa || null,
       logo_url: form.logo_url || null,
       app_icon_url: form.app_icon_url || null,
-    }).eq("id", 1);
+      about_image_url: form.about_image_url || null,
+    } as any).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
     else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }

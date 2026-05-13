@@ -7,7 +7,14 @@ export interface Profile {
   email: string;
   full_name: string | null;
   avatar_url: string | null;
+  phone: string | null;
+  city: string | null;
+  state: string | null;
+  profile_complete: boolean;
+  current_mode: "customer" | "admin";
 }
+
+export type AppMode = "customer" | "admin";
 
 export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -18,19 +25,23 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [roleChecked, setRoleChecked] = useState(false);
 
-  useEffect(() => {
-    const loadUserData = async (userId: string) => {
-      const [{ data: roles }, { data: prof }] = await Promise.all([
-        supabase.from("user_roles").select("role").eq("user_id", userId),
-        supabase.from("profiles").select("id,email,full_name,avatar_url").eq("id", userId).maybeSingle(),
-      ]);
-      const r = (roles || []).map((x) => x.role);
-      setIsAdmin(r.includes("admin"));
-      setIsManager(r.includes("manager"));
-      setProfile((prof as Profile) || null);
-      setRoleChecked(true);
-    };
+  const loadUserData = useCallback(async (userId: string) => {
+    const [{ data: roles }, { data: prof }] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", userId),
+      supabase
+        .from("profiles")
+        .select("id,email,full_name,avatar_url,phone,city,state,profile_complete,current_mode")
+        .eq("id", userId)
+        .maybeSingle(),
+    ]);
+    const r = (roles || []).map((x) => x.role);
+    setIsAdmin(r.includes("admin"));
+    setIsManager(r.includes("manager"));
+    setProfile((prof as Profile) || null);
+    setRoleChecked(true);
+  }, []);
 
+  useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, sess) => {
       setSession(sess);
       setUser(sess?.user ?? null);
@@ -57,11 +68,33 @@ export const useAuth = () => {
     });
 
     return () => sub.subscription.unsubscribe();
-  }, []);
+  }, [loadUserData]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
+
+  const switchMode = useCallback(
+    async (mode: AppMode) => {
+      if (!user) return;
+      const { error } = await supabase
+        .from("profiles")
+        .update({ current_mode: mode })
+        .eq("id", user.id);
+      if (!error) {
+        setProfile((p) => (p ? { ...p, current_mode: mode } : p));
+      }
+      return error;
+    },
+    [user],
+  );
+
+  const refreshProfile = useCallback(async () => {
+    if (user) await loadUserData(user.id);
+  }, [user, loadUserData]);
+
+  const isStaff = isAdmin || isManager;
+  const currentMode: AppMode = profile?.current_mode === "admin" ? "admin" : "customer";
 
   return {
     session,
@@ -69,7 +102,10 @@ export const useAuth = () => {
     profile,
     isAdmin,
     isManager,
-    isStaff: isAdmin || isManager,
+    isStaff,
+    currentMode,
+    switchMode,
+    refreshProfile,
     loading,
     roleChecked,
     signOut,

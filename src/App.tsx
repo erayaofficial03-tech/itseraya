@@ -10,6 +10,7 @@ import RoleGuard from "./components/auth/RoleGuard";
 
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import ModeSwitcher from "./components/ModeSwitcher";
 
 import BrandProvider from "./components/providers/BrandProvider";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
@@ -39,6 +40,8 @@ const Faq = lazy(() => import("./pages/Faq"));
 const CareGuide = lazy(() => import("./pages/CareGuide"));
 const Contact = lazy(() => import("./pages/Contact"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminProfile = lazy(() => import("./pages/admin/AdminProfile"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const ProductsAdmin = lazy(() => import("./pages/admin/ProductsAdmin"));

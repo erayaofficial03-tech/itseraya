@@ -1,0 +1,1 @@
+UPDATE public.settings SET section_featured_title='Hot Selling' WHERE id=1 AND (section_featured_title IS NULL OR section_featured_title='Featured');

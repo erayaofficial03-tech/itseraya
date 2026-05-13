@@ -5,7 +5,6 @@ const usps = [
   "Handcrafted with love",
   "Free shipping on orders over ₹999",
   "Easy WhatsApp enquiries",
-  "New arrivals every week",
 ];
 
 const StatusBar = () => {

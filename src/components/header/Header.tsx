@@ -22,6 +22,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -311,9 +312,12 @@ const Header = () => {
 
       {/* Search dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-lg" aria-describedby={undefined}>
+        <DialogContent className="sm:max-w-lg" aria-describedby="search-dialog-desc">
           <DialogHeader>
             <DialogTitle className="font-serif">Search Eraya</DialogTitle>
+            <DialogDescription id="search-dialog-desc">
+              Search for products by name
+            </DialogDescription>
           </DialogHeader>
           <Input
             autoFocus

@@ -1,6 +1,6 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import Hero from "@/components/eraya/Hero";
+import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
 import { useProducts, useSettings } from "@/lib/queries";

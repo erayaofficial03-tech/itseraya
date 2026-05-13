@@ -248,6 +248,27 @@ const UsersAdmin = () => {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!confirmBlock} onOpenChange={(o) => !o && setConfirmBlock(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmBlock?.is_blocked ? "Unblock this user?" : "Block this user?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmBlock?.is_blocked
+                ? <>This will restore access for <strong>{confirmBlock?.email}</strong>.</>
+                : <>This will prevent <strong>{confirmBlock?.email}</strong> from using their account until you unblock them.</>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => confirmBlock && toggleBlock(confirmBlock)}>
+              {confirmBlock?.is_blocked ? "Unblock" : "Block"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

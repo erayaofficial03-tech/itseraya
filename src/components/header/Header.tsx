@@ -1,8 +1,9 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, ShoppingBag, MessageCircle, ChevronRight, User, LogIn, LogOut, Heart } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useWishlist } from "@/hooks/useWishlist";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
@@ -38,7 +39,9 @@ const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, isStaff, signOut } = useAuth();
+  const { data: wishlistItems = [] } = useWishlist();
+  const wishlistCount = wishlistItems.length;
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -72,9 +75,7 @@ const Header = () => {
     openWhatsApp(wa, "Hi Eraya! I'd love some help.");
   };
 
-  const handleCart = () => {
-    toast.info("Use the I Love It button on any product to enquire on WhatsApp.");
-  };
+
 
   const closeMenu = () => setOpen(false);
 
@@ -140,37 +141,44 @@ const Header = () => {
                   </p>
                   {user ? (
                     <>
-                      <div className="flex items-center gap-3 py-3 border-b border-border/60 -mx-6 px-6">
-                        <Avatar className="h-9 w-9 border border-gold">
-                          <AvatarImage src={profile?.avatar_url || undefined} />
+                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-border/60">
+                        <Avatar className="h-10 w-10 border border-gold">
+                          <AvatarImage src={profile?.avatar_url || (user.user_metadata as any)?.avatar_url || undefined} />
                           <AvatarFallback className="bg-charcoal text-ivory text-xs">
                             {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">{profile?.full_name || "Welcome"}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
+                          </p>
                           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          <button
+                            onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                            className="text-xs text-red-600 hover:text-red-700 mt-0.5"
+                          >
+                            Sign out
+                          </button>
                         </div>
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> Profile</span>
+                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> Wishlist</span>
+                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
-                      <button
-                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                        className={`${drawerLinkClass} w-full text-left`}
-                      >
-                        <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Log out</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </button>
+                      {isStaff && (
+                        <Link to="/admin" onClick={closeMenu} className={drawerLinkClass}>
+                          <span className="flex items-center gap-2 text-gold"><Shield className="h-4 w-4" /> Admin Panel</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </Link>
+                      )}
                     </>
                   ) : (
                     <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
-                      <span className="flex items-center gap-2"><LogIn className="h-4 w-4" /> Log in / Sign up</span>
+                      <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
                   )}
@@ -223,13 +231,26 @@ const Header = () => {
           </div>
 
           {/* Center: logo */}
-          <Link to="/" className="flex justify-center min-w-0">
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 sm:h-10 w-auto max-w-full object-contain" />
+          <Link to="/" className="flex justify-center min-w-0 items-center">
+            <img
+              src={logo}
+              alt={settings?.store_name || "Eraya"}
+              className="h-9 sm:h-10 w-auto object-contain max-w-[160px]"
+              onError={(e) => {
+                const img = e.currentTarget;
+                img.style.display = "none";
+                const next = img.nextElementSibling as HTMLElement | null;
+                next?.removeAttribute("hidden");
+              }}
+            />
+            <span hidden className="font-serif text-xl text-gold">
+              {settings?.store_name || "Eraya"}
+            </span>
           </Link>
 
           {/* Right: action icons */}
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
-            {/* Search hidden on mobile (lives inside drawer); shown sm+ */}
+            {/* Search hidden on mobile (lives in bottom nav); shown sm+ */}
             {s(settings, "nav_show_search") && (
               <Button
                 variant="ghost"
@@ -270,8 +291,19 @@ const Header = () => {
               </Button>
             )}
 
-            <Button variant="ghost" size="icon" aria-label="Cart" onClick={handleCart} className="h-10 w-10 -mr-1 sm:mr-0">
-              <ShoppingBag className="h-5 w-5" />
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Wishlist"
+              onClick={() => navigate("/wishlist")}
+              className="relative h-10 w-10 -mr-1 sm:mr-0"
+            >
+              <Heart className="h-5 w-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
+                  {wishlistCount > 9 ? "9+" : wishlistCount}
+                </span>
+              )}
             </Button>
           </div>
         </div>

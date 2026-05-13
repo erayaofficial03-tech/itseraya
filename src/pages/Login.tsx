@@ -21,11 +21,12 @@ const Login = () => {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const from = (location.state as { from?: string } | null)?.from || "/";
+  const from = (location.state as { from?: string } | null)?.from;
 
   useEffect(() => {
     if (!loading && user) {
-      navigate(isStaff ? "/admin" : from, { replace: true });
+      const dest = isStaff ? "/admin" : (from || "/profile");
+      navigate(dest, { replace: true });
     }
   }, [user, isStaff, loading, navigate, from]);
 

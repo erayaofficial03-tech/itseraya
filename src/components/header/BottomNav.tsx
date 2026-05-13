@@ -1,60 +1,156 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { Home, LayoutGrid, Heart, MessageCircle } from "lucide-react";
-import { useSettings } from "@/lib/queries";
-import { openWhatsApp } from "@/lib/whatsapp";
-import { toast } from "sonner";
+import { useState, useMemo, useEffect } from "react";
+import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
+import { Home, LayoutGrid, Search, User, X } from "lucide-react";
+import { useProducts, productImage, withImageParams, formatINR } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 
 const itemBase =
-  "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[9px] font-medium tracking-wide transition-colors";
+  "flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium tracking-wide transition-colors";
 
 const BottomNav = () => {
-  const { data: settings } = useSettings();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: products = [] } = useProducts();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [q, setQ] = useState("");
+
+  const results = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return [];
+    return products
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(term) ||
+          (p.description ?? "").toLowerCase().includes(term) ||
+          (p.categories?.name ?? "").toLowerCase().includes(term),
+      )
+      .slice(0, 30);
+  }, [q, products]);
+
+  useEffect(() => {
+    if (!searchOpen) setQ("");
+  }, [searchOpen]);
 
   if (pathname.startsWith("/admin")) return null;
   if (pathname.startsWith("/auth/")) return null;
   if (pathname.startsWith("/reset-password")) return null;
 
-  const handleWa = () => {
-    const wa = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!wa) {
-      toast.info("WhatsApp number not set yet.");
-      return;
-    }
-    openWhatsApp(wa, "Hi Eraya! I'd love some help.");
-  };
-
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `${itemBase} ${isActive ? "text-gold" : "text-muted-foreground hover:text-foreground"}`;
 
+  const handleProfile = () => {
+    navigate(user ? "/profile" : "/login");
+  };
+
   return (
-    <nav
-      aria-label="Bottom navigation"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t"
-      style={{
-        paddingBottom: "env(safe-area-inset-bottom)",
-        borderTopColor: "#EDE8E1",
-      }}
-    >
-      <div className="flex items-stretch h-16">
-        <NavLink to="/" end className={linkClass}>
-          <Home className="h-5 w-5" />
-          <span>Home</span>
-        </NavLink>
-        <NavLink to="/catalogue" className={linkClass}>
-          <LayoutGrid className="h-5 w-5" />
-          <span>Catalogue</span>
-        </NavLink>
-        <NavLink to="/wishlist" className={linkClass}>
-          <Heart className="h-5 w-5" />
-          <span>Wishlist</span>
-        </NavLink>
-        <button onClick={handleWa} className={`${itemBase} text-muted-foreground hover:text-foreground`}>
-          <MessageCircle className="h-5 w-5" />
-          <span>WhatsApp</span>
-        </button>
-      </div>
-    </nav>
+    <>
+      <nav
+        aria-label="Bottom navigation"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t"
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom)",
+          borderTopColor: "#EDE8E1",
+        }}
+      >
+        <div className="flex items-stretch h-16">
+          <NavLink to="/" end className={linkClass}>
+            <Home className="h-5 w-5" />
+            <span>Home</span>
+          </NavLink>
+          <NavLink to="/catalogue" className={linkClass}>
+            <LayoutGrid className="h-5 w-5" />
+            <span>Catalogue</span>
+          </NavLink>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className={`${itemBase} text-muted-foreground hover:text-foreground`}
+          >
+            <Search className="h-5 w-5" />
+            <span>Search</span>
+          </button>
+          <button
+            onClick={handleProfile}
+            className={`${itemBase} ${pathname === "/profile" ? "text-gold" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            <User className="h-5 w-5" />
+            <span>Profile</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Search overlay */}
+      {searchOpen && (
+        <div className="md:hidden fixed inset-0 z-[60] bg-white animate-in slide-in-from-bottom duration-200 flex flex-col">
+          <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: "#EDE8E1" }}>
+            <Search className="h-5 w-5 text-muted-foreground shrink-0" />
+            <input
+              autoFocus
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search jewellery…"
+              className="flex-1 outline-none bg-transparent text-[18px] placeholder:text-muted-foreground"
+            />
+            <button
+              onClick={() => setSearchOpen(false)}
+              aria-label="Close search"
+              className="p-2 -mr-2"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto">
+            {q.trim() && results.length === 0 && (
+              <div className="px-6 py-12 text-center">
+                <p className="text-sm text-muted-foreground mb-3">No results for "{q}"</p>
+                <Link
+                  to="/catalogue"
+                  onClick={() => setSearchOpen(false)}
+                  className="text-sm text-gold underline"
+                >
+                  Browse the catalogue
+                </Link>
+              </div>
+            )}
+            {results.map((p) => {
+              const price = p.discounted_price ?? p.original_price;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setSearchOpen(false);
+                    navigate(`/product/${p.id}`);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 border-b text-left active:bg-muted/40"
+                  style={{ borderColor: "#EDE8E1" }}
+                >
+                  <img
+                    src={withImageParams(productImage(p), 96, 70)}
+                    alt={p.name}
+                    className="h-12 w-12 rounded-md object-cover bg-muted"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">{p.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {p.categories?.name || ""}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold text-gold shrink-0">
+                    {formatINR(price)}
+                  </span>
+                </button>
+              );
+            })}
+            {!q.trim() && (
+              <p className="px-6 py-12 text-center text-sm text-muted-foreground">
+                Search by name, description, or category.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

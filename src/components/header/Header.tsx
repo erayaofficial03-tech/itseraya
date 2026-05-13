@@ -309,7 +309,7 @@ const Header = () => {
                 <button
                   type="button"
                   aria-label="Quick navigation: Shop, Support, About"
-                  className={`lg:hidden inline-flex items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
+                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
                 >
                   Menu
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
@@ -414,20 +414,20 @@ const Header = () => {
                 size="icon"
                 aria-label="Search"
                 onClick={() => setSearchOpen(true)}
-                className="h-9 w-9 sm:h-10 sm:w-10"
+                className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Search className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>
             )}
 
-            {/* Account: avatar when signed in, login icon otherwise */}
+            {/* Account: avatar when signed in, login icon otherwise (hidden on mobile — lives in bottom nav) */}
             {user ? (
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Profile"
                 onClick={() => navigate("/profile")}
-                className="h-9 w-9 sm:h-10 sm:w-10"
+                className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border border-gold">
                   <AvatarImage src={profile?.avatar_url || undefined} />
@@ -442,7 +442,7 @@ const Header = () => {
                 size="icon"
                 aria-label="Log in"
                 onClick={() => navigate("/login")}
-                className="h-9 w-9 sm:h-10 sm:w-10"
+                className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <User className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>

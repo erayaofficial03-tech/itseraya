@@ -39,7 +39,6 @@ const SearchPage = lazy(() => import("./pages/Search"));
 const Faq = lazy(() => import("./pages/Faq"));
 const CareGuide = lazy(() => import("./pages/CareGuide"));
 const Contact = lazy(() => import("./pages/Contact"));
-const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminProfile = lazy(() => import("./pages/admin/AdminProfile"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
@@ -111,21 +110,23 @@ const App = () => (
               <Route path="/contact" element={<Public><Contact /></Public>} />
 
               {/* Customer auth */}
-              <Route path="/login" element={<Public><Login /></Public>} />
+              <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Public><Profile /></Public>} />
               <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/complete-profile" element={<CompleteProfile />} />
 
               {/* OAuth callback */}
               <Route path={ROUTES.authCallback} element={<AuthCallback />} />
 
               {/* Admin */}
-              <Route path={ROUTES.adminLogin} element={<AdminLogin />} />
+              <Route path={ROUTES.adminLogin} element={<Login />} />
               <Route
                 path={ROUTES.admin}
                 element={<Admin><AdminLayout /></Admin>}
               >
                 <Route index element={<Dashboard />} />
+                <Route path="profile" element={<AdminProfile />} />
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="banner" element={<BannerAdmin />} />
@@ -147,6 +148,7 @@ const App = () => (
             
           </Suspense>
           <WhatsAppFloat />
+          <ModeSwitcher />
           <BottomNav />
         </EnquiryCartProvider>
         </BrowserRouter>

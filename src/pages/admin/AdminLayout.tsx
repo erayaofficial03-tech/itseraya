@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
-  Users, Inbox, Megaphone, Palette, Type, Search, UserRound, Images, FileText,
+  Users, Inbox, Megaphone, Palette, Type, Search, UserRound, Images, FileText, Eye,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import BrandLogo from "@/components/BrandLogo";
 
@@ -33,13 +34,45 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
   { to: "/admin/settings", icon: SettingsIcon, label: "Store Settings", role: "admin" },
 ];
 
-const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: typeof items; onNavigate?: () => void; onSignOut: () => void }) => (
+const SidebarBody = ({
+  visibleItems,
+  onNavigate,
+  onSignOut,
+  onSwitchToCustomer,
+  profile,
+  userEmail,
+}: {
+  visibleItems: typeof items;
+  onNavigate?: () => void;
+  onSignOut: () => void;
+  onSwitchToCustomer: () => void;
+  profile: { full_name: string | null; avatar_url: string | null } | null;
+  userEmail?: string | null;
+}) => (
   <div className="flex flex-col h-full">
     <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
       <BrandLogo className="h-10 w-auto" onDark />
       <span className="h-px w-8 bg-gold/60" />
       <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
     </div>
+
+    <Link
+      to="/admin/profile"
+      onClick={onNavigate}
+      className="mx-3 mt-3 flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors"
+    >
+      <Avatar className="h-9 w-9 border border-gold">
+        <AvatarImage src={profile?.avatar_url || undefined} />
+        <AvatarFallback className="bg-charcoal text-ivory text-xs">
+          {(profile?.full_name || userEmail || "U").slice(0, 2).toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium truncate">{profile?.full_name || "My Profile"}</p>
+        <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
+      </div>
+    </Link>
+
     <nav className="flex-1 p-3 space-y-1 overflow-auto">
       {visibleItems.map((item) => (
         <NavLink
@@ -59,7 +92,14 @@ const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: ty
         </NavLink>
       ))}
     </nav>
-    <div className="p-3 border-t border-border">
+    <div className="p-3 border-t border-border space-y-1">
+      <Button
+        variant="outline"
+        className="w-full justify-start gap-2 border-gold/40 text-charcoal hover:bg-gold/10"
+        onClick={() => { onSwitchToCustomer(); onNavigate?.(); }}
+      >
+        <Eye className="h-4 w-4" /> Switch to Customer View
+      </Button>
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="ghost" className="w-full justify-start gap-2">
@@ -84,7 +124,7 @@ const SidebarBody = ({ visibleItems, onNavigate, onSignOut }: { visibleItems: ty
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin } = useAuth();
+  const { isAdmin, profile, user, switchMode } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const visibleItems = items.filter((i) => (i.role === "admin" ? isAdmin : true));
@@ -95,12 +135,22 @@ const AdminLayout = () => {
     qc.clear();
     navigate("/login", { replace: true });
   };
+  const switchToCustomer = async () => {
+    await switchMode("customer");
+    navigate("/", { replace: true });
+  };
   const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (
     <div className="min-h-screen flex w-full bg-muted/30">
       <aside className="hidden md:flex md:w-64 lg:w-72 shrink-0 bg-background border-r border-border flex-col">
-        <SidebarBody visibleItems={visibleItems} onSignOut={signOut} />
+        <SidebarBody
+          visibleItems={visibleItems}
+          onSignOut={signOut}
+          onSwitchToCustomer={switchToCustomer}
+          profile={profile}
+          userEmail={user?.email}
+        />
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -112,7 +162,14 @@ const AdminLayout = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-72">
-              <SidebarBody visibleItems={visibleItems} onNavigate={() => setMobileOpen(false)} onSignOut={signOut} />
+              <SidebarBody
+                visibleItems={visibleItems}
+                onNavigate={() => setMobileOpen(false)}
+                onSignOut={signOut}
+                onSwitchToCustomer={switchToCustomer}
+                profile={profile}
+                userEmail={user?.email}
+              />
             </SheetContent>
           </Sheet>
           <div className="flex flex-col items-center justify-center gap-1">

@@ -116,5 +116,5 @@ export const openWhatsAppEnquiry = (
     price: formatINR(price),
     url,
   });
-  openWhatsApp(number, msg);
+  openWhatsApp(number, msg, "product_detail", product.id);
 };

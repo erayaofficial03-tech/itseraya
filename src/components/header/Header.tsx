@@ -4,6 +4,7 @@ import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Sh
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { logInstallEvent } from "@/lib/installAnalytics";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
+import InstallTroubleshootSheet from "@/components/InstallTroubleshootSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -55,6 +56,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, triggerInstall } = useInstallPrompt();
   const [q, setQ] = useState("");
   const logo = settings?.logo_url || erayaLogo;
@@ -111,6 +113,9 @@ const Header = () => {
       closeMenu();
     } else if (result === "dismissed") {
       logInstallEvent("dismissed");
+    } else if (result === "unavailable") {
+      logInstallEvent("unavailable");
+      setShowTroubleshoot(true);
     } else if (result === "installed") {
       toast("Eraya is already installed on your device");
     }
@@ -315,6 +320,7 @@ const Header = () => {
               </SheetContent>
             </Sheet>
             <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
+            <InstallTroubleshootSheet open={showTroubleshoot} onClose={() => setShowTroubleshoot(false)} />
 
             {/* Mobile/tablet primary dropdown — quick access to Shop, Support, About */}
             <DropdownMenu>

@@ -396,6 +396,7 @@ export type Database = {
           original_price: number
           sizes: string[]
           sku: string
+          slug: string | null
           tags: string[]
         }
         Insert: {
@@ -411,6 +412,7 @@ export type Database = {
           original_price?: number
           sizes?: string[]
           sku?: string
+          slug?: string | null
           tags?: string[]
         }
         Update: {
@@ -426,6 +428,7 @@ export type Database = {
           original_price?: number
           sizes?: string[]
           sku?: string
+          slug?: string | null
           tags?: string[]
         }
         Relationships: [

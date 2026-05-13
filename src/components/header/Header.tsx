@@ -233,13 +233,26 @@ const Header = () => {
           </div>
 
           {/* Center: logo */}
-          <Link to="/" className="flex justify-center min-w-0">
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 sm:h-10 w-auto max-w-full object-contain" />
+          <Link to="/" className="flex justify-center min-w-0 items-center">
+            <img
+              src={logo}
+              alt={settings?.store_name || "Eraya"}
+              className="h-9 sm:h-10 w-auto object-contain max-w-[160px]"
+              onError={(e) => {
+                const img = e.currentTarget;
+                img.style.display = "none";
+                const next = img.nextElementSibling as HTMLElement | null;
+                next?.removeAttribute("hidden");
+              }}
+            />
+            <span hidden className="font-serif text-xl text-gold">
+              {settings?.store_name || "Eraya"}
+            </span>
           </Link>
 
           {/* Right: action icons */}
           <div className="flex items-center justify-end gap-0.5 sm:gap-1">
-            {/* Search hidden on mobile (lives inside drawer); shown sm+ */}
+            {/* Search hidden on mobile (lives in bottom nav); shown sm+ */}
             {s(settings, "nav_show_search") && (
               <Button
                 variant="ghost"
@@ -280,8 +293,19 @@ const Header = () => {
               </Button>
             )}
 
-            <Button variant="ghost" size="icon" aria-label="Cart" onClick={handleCart} className="h-10 w-10 -mr-1 sm:mr-0">
-              <ShoppingBag className="h-5 w-5" />
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Wishlist"
+              onClick={() => navigate("/wishlist")}
+              className="relative h-10 w-10 -mr-1 sm:mr-0"
+            >
+              <Heart className="h-5 w-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
+                  {wishlistCount > 9 ? "9+" : wishlistCount}
+                </span>
+              )}
             </Button>
           </div>
         </div>

@@ -18,7 +18,7 @@ const TEXT_KEYS = [
   "category_empty_message", "category_pieces_label",
   "footer_tagline", "footer_copyright", "footer_whatsapp_label",
   "pdf_store_name", "pdf_tagline", "pdf_footer_text",
-  "install_prompt_text", "install_prompt_button_label",
+  
   "admin_panel_title", "admin_welcome_message",
 ] as const;
 

@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Gem, FolderTree, Image, Settings as SettingsIcon, LogOut, Menu,
-  Users, Inbox, Megaphone, Palette, Type, Search, UserRound, Images,
+  Users, Inbox, Megaphone, Palette, Type, Search, UserRound, Images, FileText,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";

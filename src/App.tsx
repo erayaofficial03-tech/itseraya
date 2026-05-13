@@ -81,7 +81,7 @@ const App = () => (
           <ScrollToTop />
           <InstallPrompt />
           <Suspense fallback={<PageLoader />}>
-            <PageTransition>
+            
             <Routes>
               {/* Public storefront */}
               <Route path={ROUTES.home} element={<Public><Index /></Public>} />

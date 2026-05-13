@@ -303,10 +303,15 @@ const Header = () => {
             </Sheet>
             <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
 
-            <nav className="hidden lg:flex space-x-7">
-              <NavLink to="/" className={navLinkClass}>{s(settings, "nav_home_label")}</NavLink>
+            <nav className="hidden lg:flex space-x-7" aria-label="Primary">
+              <NavLink to="/" className={navLinkClass} aria-label={`${s(settings, "nav_home_label")} – go to home page`}>
+                {s(settings, "nav_home_label")}
+              </NavLink>
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
+                <DropdownMenuTrigger
+                  aria-label="Shop menu – browse catalogue and categories"
+                  className={`text-sm font-medium tracking-wide hover:text-gold transition-colors px-1 py-1 ${focusRing}`}
+                >
                   {s(settings, "nav_catalogue_label")}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -323,10 +328,17 @@ const Header = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button onClick={handleWhatsAppClick} className="text-sm font-medium tracking-wide hover:text-gold transition-colors">
+              <button
+                type="button"
+                onClick={handleWhatsAppClick}
+                aria-label="Contact support on WhatsApp"
+                className={`text-sm font-medium tracking-wide hover:text-gold transition-colors px-1 py-1 ${focusRing}`}
+              >
                 Support
               </button>
-              <NavLink to="/about" className={navLinkClass}>About</NavLink>
+              <NavLink to="/about" className={navLinkClass} aria-label="About Eraya – our story">
+                About
+              </NavLink>
             </nav>
           </div>
 

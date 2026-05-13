@@ -5,6 +5,10 @@ import { useProducts, useCategories } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import {
+  WhatsAppClicksWidget, TopProductsWidget, BannerPerformanceWidget,
+  EnquiryTrendWidget, ConversionFunnelWidget,
+} from "./dashboard-widgets";
 
 const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
   <Card>

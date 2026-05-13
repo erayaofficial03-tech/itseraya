@@ -20,7 +20,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="pt-4 md:pt-6 pb-20 md:pb-0">
-        <Hero />
+        <HeroSlider />
         <CategoryRow />
         {isLoading ? (
           <section className="w-full mb-16 px-6">
@@ -32,14 +32,28 @@ const Index = () => {
               <ProductRow
                 title={s(settings, "section_new_arrivals_title")}
                 products={newArrivals}
-                viewAllHref="/catalogue"
+                viewAllHref="/catalogue?filter=new"
               />
             )}
             {s(settings, "section_trending_visible") && (
               <ProductRow
                 title={s(settings, "section_trending_title")}
                 products={trending}
-                viewAllHref="/catalogue"
+                viewAllHref="/catalogue?filter=bestseller"
+              />
+            )}
+            {s(settings, "section_sale_visible") && (
+              <ProductRow
+                title={s(settings, "section_sale_title")}
+                products={onSale}
+                viewAllHref="/catalogue?filter=sale"
+              />
+            )}
+            {s(settings, "section_featured_visible") && (
+              <ProductRow
+                title={s(settings, "section_featured_title")}
+                products={featured}
+                viewAllHref="/catalogue?filter=featured"
               />
             )}
             {s(settings, "section_sale_visible") && (

@@ -7,7 +7,7 @@ const OneThirdTwoThirdsSection = () => {
     <section className="w-full mb-16 px-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          <Link to="/category/rings" className="block">
+          <Link to="/collection/rings" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
                 src={organicEarring} 
@@ -27,7 +27,7 @@ const OneThirdTwoThirdsSection = () => {
         </div>
 
         <div className="lg:col-span-2">
-          <Link to="/category/necklaces" className="block">
+          <Link to="/collection/necklaces" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
                 src={circularCollection} 

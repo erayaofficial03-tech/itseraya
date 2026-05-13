@@ -31,7 +31,7 @@ const ProductInfo = () => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/category/earrings">Earrings</Link>
+                <Link to="/collection/earrings">Earrings</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

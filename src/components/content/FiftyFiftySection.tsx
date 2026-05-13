@@ -7,7 +7,7 @@ const FiftyFiftySection = () => {
     <section className="w-full mb-16 px-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <Link to="/category/earrings" className="block">
+          <Link to="/collection/earrings" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
                 src={earringsCollection} 
@@ -27,7 +27,7 @@ const FiftyFiftySection = () => {
         </div>
 
         <div>
-          <Link to="/category/bracelets" className="block">
+          <Link to="/collection/bracelets" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
                 src={linkBracelet} 

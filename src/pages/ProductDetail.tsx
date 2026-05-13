@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import { FileDown } from "lucide-react";
+import { FileDown, Heart } from "lucide-react";
+import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
@@ -25,6 +26,8 @@ const ProductDetail = () => {
   const { data: product, isLoading } = useProduct(productId);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
+  const { data: wishlist = [] } = useWishlist();
+  const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
@@ -154,6 +157,20 @@ const ProductDetail = () => {
 
             <div className="flex flex-col gap-3 pt-4">
               <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
+              {(() => {
+                const isSaved = wishlist.some((w) => w.product_id === product.id);
+                return (
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleWishlist.mutate({ productId: product.id, isSaved })}
+                    disabled={toggleWishlist.isPending}
+                    className="w-full h-11"
+                  >
+                    <Heart className={`mr-1 ${isSaved ? "fill-gold text-gold" : ""}`} />
+                    {isSaved ? "Saved to wishlist" : "Add to wishlist"}
+                  </Button>
+                );
+              })()}
               <div className="grid grid-cols-2 gap-3">
                 <ShareMenu
                   product={product}

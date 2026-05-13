@@ -100,6 +100,7 @@ export const openWhatsApp = (
 export const openWhatsAppEnquiry = (
   product: Product,
   settings: Settings | undefined,
+  source: WhatsAppSource = "product_detail",
 ) => {
   const number = settings?.whatsapp_number?.replace(/\D/g, "");
   void logEnquiry(product);
@@ -116,5 +117,5 @@ export const openWhatsAppEnquiry = (
     price: formatINR(price),
     url,
   });
-  openWhatsApp(number, msg, "product_detail", product.id);
+  openWhatsApp(number, msg, source, product.id);
 };

@@ -76,11 +76,6 @@ const Footer = () => {
 
         <div className="border-t border-border mt-10 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground gap-2">
           <p>{copyright}</p>
-          {linksVisible && (
-            <div className="flex gap-4">
-              <Link to="/catalogue" className="hover:text-gold">{s(settings, "nav_catalogue_label")}</Link>
-            </div>
-          )}
         </div>
       </div>
     </footer>

@@ -101,7 +101,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
 
       const number = settings?.whatsapp_number?.replace(/\D/g, "");
       if (number) {
-        openWhatsApp(number, msg);
+        openWhatsApp(number, msg, "enquiry_drawer");
       } else {
         toast.info("WhatsApp number not set — your enquiry is saved.");
       }

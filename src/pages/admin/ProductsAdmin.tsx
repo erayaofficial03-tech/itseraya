@@ -15,10 +15,18 @@ import { useCategories, useProducts, formatINR, productImage, type Product } fro
 import { uploadImage } from "@/lib/upload";
 
 const empty = {
-  name: "", category_id: "", description: "", original_price: 0,
+  name: "", slug: "", category_id: "", description: "", original_price: 0,
   discounted_price: null as number | null, tags: [] as string[],
-  is_featured: false, is_visible: true,
+  is_featured: false, is_visible: true, slugManuallyEdited: false,
 };
+
+const generateSlug = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 
 const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => void }) => {
   const qc = useQueryClient();
@@ -27,6 +35,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
     product
       ? {
           name: product.name,
+          slug: product.slug || "",
           category_id: product.category_id || "",
           description: product.description || "",
           original_price: Number(product.original_price),
@@ -34,6 +43,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
           tags: product.tags || [],
           is_featured: product.is_featured,
           is_visible: product.is_visible,
+          slugManuallyEdited: !!product.slug,
         }
       : empty,
   );
@@ -72,6 +82,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
     try {
       const payload = {
         name: form.name,
+        slug: form.slug || generateSlug(form.name),
         category_id: form.category_id || null,
         description: form.description || null,
         original_price: Number(form.original_price),
@@ -115,7 +126,30 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2">
           <Label>Name</Label>
-          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <Input
+            value={form.name}
+            onChange={(e) => {
+              const name = e.target.value;
+              setForm({
+                ...form,
+                name,
+                slug: form.slugManuallyEdited ? form.slug : generateSlug(name),
+              });
+            }}
+          />
+        </div>
+        <div className="col-span-2">
+          <Label>URL Slug</Label>
+          <Input
+            value={form.slug}
+            onChange={(e) =>
+              setForm({ ...form, slug: generateSlug(e.target.value), slugManuallyEdited: true })
+            }
+            placeholder="auto-generated-from-name"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Preview: <span className="font-mono">/jewellery/{form.slug || "your-product-name"}</span>
+          </p>
         </div>
         <div>
           <Label>Category</Label>

@@ -23,7 +23,7 @@ const ProductCard = ({ product }: Props) => {
   const price = product.discounted_price ?? product.original_price;
 
   return (
-    <Link to={`/product/${product.id}`} className="block group h-full">
+    <Link to={`/jewellery/${product.slug ?? product.id}`} className="block group h-full">
       <div className="h-full flex flex-col bg-background">
         <div className="relative aspect-square bg-muted/30 overflow-hidden">
           <img

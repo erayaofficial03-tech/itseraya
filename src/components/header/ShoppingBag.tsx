@@ -149,7 +149,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                   onClick={onClose}
                   asChild
                 >
-                  <Link to="/category/shop">
+                  <Link to="/collection/shop">
                     Continue Shopping
                   </Link>
                 </Button>

@@ -4,8 +4,10 @@
 
 export const ROUTES = {
   home: "/",
-  category: "/category/:category",
-  product: "/product/:productId",
+  category: "/collection/:category",
+  product: "/jewellery/:slug",
+  productLegacy: "/product/:productId",
+  categoryLegacy: "/category/:category",
   catalogue: "/catalogue",
   about: "/about",
   login: "/login",

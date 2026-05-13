@@ -6,21 +6,25 @@ import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import Breadcrumb from "@/components/eraya/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
 import ShareMenu from "@/components/product/ShareMenu";
 import {
-  useProduct, useProducts, useSettings,
+  useProductBySlug, useProducts, useSettings,
   formatINR, productImage, discountPct, withImageParams,
 } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import {
+  productSchema, breadcrumbSchema, injectSchema, SITE_URL,
+} from "@/lib/structuredData";
 
 const ProductDetail = () => {
-  const { productId } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
-  const { data: product, isLoading } = useProduct(productId);
+  const { data: product, isLoading } = useProductBySlug(slug);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
   const { data: wishlist = [] } = useWishlist();
@@ -32,6 +36,22 @@ const ProductDetail = () => {
       void supabase.from("product_views").insert({ product_id: product.id });
     }
   }, [product?.id]);
+
+  // Inject Product + Breadcrumb JSON-LD
+  useEffect(() => {
+    if (!product) return;
+    injectSchema("ld-product", productSchema(product, settings));
+    const crumbs: { name: string; url: string }[] = [{ name: "Home", url: "/" }];
+    if (product.categories?.name && product.categories.slug) {
+      crumbs.push({ name: product.categories.name, url: `/collection/${product.categories.slug}` });
+    }
+    crumbs.push({ name: product.name, url: `/jewellery/${product.slug ?? ""}` });
+    injectSchema("ld-breadcrumb", breadcrumbSchema(crumbs));
+    return () => {
+      injectSchema("ld-product", null);
+      injectSchema("ld-breadcrumb", null);
+    };
+  }, [product, settings]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   if (!product) return (
@@ -60,12 +80,32 @@ const ProductDetail = () => {
     related = [...related, ...bestsellers].slice(0, 8);
   }
 
+  const storeName = s(settings, "store_name");
+  const seoTitle = `${product.name} — ${storeName} | Artificial Jewellery`;
+  const seoDesc = product.description
+    ? product.description.slice(0, 160)
+    : `Buy ${product.name} from ${storeName}. Premium artificial jewellery at ${formatINR(price)}. WhatsApp enquiry available.`;
+  const keywords = [
+    product.name,
+    product.categories?.name,
+    ...(product.tags || []),
+    storeName,
+    "artificial jewellery",
+    "imitation jewellery",
+    "fashion jewellery India",
+    product.categories?.name ? `${product.categories.name} India` : null,
+  ].filter(Boolean).join(", ");
+
   return (
     <div className="min-h-screen bg-background">
       <SeoHead
-        title={`${product.name} — ${s(settings, "store_name")}`}
-        description={product.description || undefined}
+        title={seoTitle}
+        description={seoDesc}
         ogImage={images[0]}
+        ogImageAlt={product.name}
+        ogType="product"
+        canonical={`${SITE_URL}/jewellery/${product.slug ?? ""}`}
+        keywords={keywords}
       />
       {/* Hide header on mobile in favor of overlay back arrow */}
       <div className="hidden md:block">
@@ -73,6 +113,17 @@ const ProductDetail = () => {
       </div>
 
       <main className="md:pt-6 max-w-7xl mx-auto pb-24 md:pb-16">
+        <div className="hidden md:block px-6 mb-4">
+          <Breadcrumb
+            items={[
+              { name: "Home", href: "/" },
+              ...(product.categories?.slug
+                ? [{ name: product.categories.name!, href: `/collection/${product.categories.slug}` }]
+                : []),
+              { name: product.name },
+            ]}
+          />
+        </div>
         <section className="md:px-6 grid grid-cols-1 lg:grid-cols-2 md:gap-12">
           <div className="relative">
             <div className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative">

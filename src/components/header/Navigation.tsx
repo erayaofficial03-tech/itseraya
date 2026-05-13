@@ -94,7 +94,7 @@ const Navigation = () => {
   const navItems = [
     { 
       name: "Shop", 
-      href: "/category/shop",
+      href: "/collection/shop",
       submenuItems: [
         "Rings",
         "Necklaces", 
@@ -109,7 +109,7 @@ const Navigation = () => {
     },
     { 
       name: "New in", 
-      href: "/category/new-in",
+      href: "/collection/new-in",
       submenuItems: [
         "This Week's Arrivals",
         "Spring Collection",
@@ -250,7 +250,7 @@ const Navigation = () => {
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
                         <Link 
-                          to={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                          to={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/collection/${subItem.toLowerCase()}`}
                           className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light block py-2"
                         >
                           {subItem}
@@ -268,11 +268,11 @@ const Navigation = () => {
                     // Determine the link destination based on dropdown and image
                     let linkTo = "/";
                     if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/category/rings";
-                      else if (image.label === "Earrings") linkTo = "/category/earrings";
+                      if (image.label === "Rings") linkTo = "/collection/rings";
+                      else if (image.label === "Earrings") linkTo = "/collection/earrings";
                     } else if (activeDropdown === "New in") {
-                      if (image.label === "Arcus Bracelet") linkTo = "/product/arcus-bracelet";
-                      else if (image.label === "Span Bracelet") linkTo = "/product/span-bracelet";
+                      if (image.label === "Arcus Bracelet") linkTo = "/jewellery/arcus-bracelet";
+                      else if (image.label === "Span Bracelet") linkTo = "/jewellery/span-bracelet";
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }
@@ -358,7 +358,7 @@ const Navigation = () => {
                      {item.submenuItems.map((subItem, subIndex) => (
                        <Link
                          key={subIndex}
-                         to={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                         to={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/collection/${subItem.toLowerCase()}`}
                          className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
                          onClick={() => setIsMobileMenuOpen(false)}
                        >

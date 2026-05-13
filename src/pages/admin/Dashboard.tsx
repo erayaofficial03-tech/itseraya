@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gem, FolderTree, MessageCircle, Users as UsersIcon } from "lucide-react";
+import { Gem, FolderTree, MessageCircle, Users as UsersIcon, Search as SearchIcon, ExternalLink } from "lucide-react";
 import { useProducts, useCategories } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,6 +106,61 @@ const Dashboard = () => {
         <ConversionFunnelWidget />
         <BannerPerformanceWidget />
       </div>
+
+      {isAdmin && (
+        <Card className="border-gold/30">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <SearchIcon className="h-4 w-4 text-gold" />
+              Google Search Setup
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <ul className="space-y-1.5 text-muted-foreground">
+              <li>✅ SEO-friendly URLs active (<code className="text-xs">/jewellery/&lt;slug&gt;</code>, <code className="text-xs">/collection/&lt;slug&gt;</code>)</li>
+              <li>✅ Sitemap generated at <code className="text-xs">/sitemap.xml</code></li>
+              <li>✅ <code className="text-xs">robots.txt</code> configured</li>
+              <li>✅ Structured data (Product, Organization, BreadcrumbList) active</li>
+            </ul>
+            <div>
+              <p className="font-medium text-foreground mb-2">Next steps to appear on Google:</p>
+              <ol className="list-decimal pl-5 space-y-1 text-muted-foreground">
+                <li>Open Google Search Console</li>
+                <li>Add property: <code className="text-xs">itseraya.in</code></li>
+                <li>Verify ownership (HTML tag method)</li>
+                <li>Submit sitemap: <code className="text-xs">itseraya.in/sitemap.xml</code></li>
+                <li>Request indexing for the homepage</li>
+              </ol>
+            </div>
+            <div className="flex flex-wrap gap-2 pt-1">
+              <a
+                href="https://search.google.com/search-console"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded border border-gold/40 text-gold hover:bg-gold/10"
+              >
+                Open Google Search Console <ExternalLink className="h-3 w-3" />
+              </a>
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded border border-border hover:bg-muted"
+              >
+                Open Sitemap <ExternalLink className="h-3 w-3" />
+              </a>
+              <a
+                href="/robots.txt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded border border-border hover:bg-muted"
+              >
+                Open robots.txt <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>

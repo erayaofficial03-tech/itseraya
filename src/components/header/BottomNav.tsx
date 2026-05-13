@@ -133,7 +133,7 @@ const BottomNav = () => {
                   key={p.id}
                   onClick={() => {
                     setSearchOpen(false);
-                    navigate(`/product/${p.id}`);
+                    navigate(`/jewellery/${p.slug ?? p.id}`);
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 border-b text-left active:bg-muted/40"
                   style={{ borderColor: "#EDE8E1" }}
@@ -164,7 +164,7 @@ const BottomNav = () => {
                   {categories.filter((c) => c.is_visible).slice(0, 8).map((c) => (
                     <Link
                       key={c.id}
-                      to={`/category/${c.slug}`}
+                      to={`/collection/${c.slug}`}
                       onClick={() => setSearchOpen(false)}
                       className="px-3 py-1.5 rounded-full border text-xs hover:bg-muted/40"
                       style={{ borderColor: "#EDE8E1" }}

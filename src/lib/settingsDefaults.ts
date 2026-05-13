@@ -56,11 +56,6 @@ export const SETTINGS_DEFAULTS = {
   footer_whatsapp_label: "Chat with us",
   footer_links_visible: true,
 
-  announcement_visible: false,
-  announcement_text: "🎉 Free delivery on orders above ₹999!",
-  announcement_bg_color: "#C9A84C",
-  announcement_text_color: "#2C2C2C",
-  announcement_dismissible: true,
 
   pdf_store_name: "Eraya",
   pdf_tagline: "Adorn Your Story",

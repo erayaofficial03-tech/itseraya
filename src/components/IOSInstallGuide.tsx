@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useEffect, useId, useRef } from "react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { logInstallEvent } from "@/lib/installAnalytics";
@@ -10,8 +11,63 @@ interface IOSInstallGuideProps {
   onClose: () => void;
 }
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
   const { isIOSNonSafari } = useInstallPrompt();
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descId = useId();
+
+  // Esc to close + body scroll lock
+  useEffect(() => {
+    if (!open) return;
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && sheetRef.current) {
+        const nodes = sheetRef.current.querySelectorAll<HTMLElement>(FOCUSABLE);
+        if (nodes.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Move focus into the sheet on next frame so the animated node is mounted
+    const t = window.setTimeout(() => {
+      const first = sheetRef.current?.querySelector<HTMLElement>(FOCUSABLE);
+      first?.focus();
+    }, 0);
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      window.clearTimeout(t);
+      previouslyFocused.current?.focus?.();
+    };
+  }, [open, onClose]);
 
   const copyLink = async () => {
     try {
@@ -33,18 +89,21 @@ const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 z-[80] bg-black/60"
-            aria-hidden
+            aria-hidden="true"
           />
 
           <motion.div
+            ref={sheetRef}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             role="dialog"
             aria-modal="true"
-            aria-label="Install Eraya on iPhone"
-            className="fixed bottom-0 left-0 right-0 z-[90] bg-white rounded-t-3xl px-6 pt-6 pb-10 max-h-[92vh] overflow-y-auto"
+            aria-labelledby={titleId}
+            aria-describedby={descId}
+            tabIndex={-1}
+            className="fixed bottom-0 left-0 right-0 z-[90] bg-white rounded-t-3xl px-6 pt-6 pb-10 max-h-[92vh] overflow-y-auto focus:outline-none"
           >
             <div className="w-10 h-1 bg-[#EDE8E1] rounded-full mx-auto mb-6" />
 

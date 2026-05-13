@@ -55,7 +55,9 @@ const SidebarBody = ({
 }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
-      <BrandLogo className="h-10 w-auto" />
+      <Link to="/admin" onClick={onNavigate} aria-label="Go to admin home" className="inline-flex">
+        <BrandLogo className="h-10 w-auto" />
+      </Link>
       <span className="h-px w-8 bg-gold/60" />
       <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
     </div>

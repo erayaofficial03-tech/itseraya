@@ -24,14 +24,12 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
 
       {/* Mobile: horizontal scroll of fixed-width cards */}
       <div
-        className="md:hidden flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-4 px-4"
-        style={{ scrollSnapType: "x mandatory" }}
+        className="md:hidden flex overflow-x-auto gap-3 pb-3 scrollbar-hide -mx-4 px-4 snap-x snap-mandatory"
       >
-        {products.map((p) => (
+        {products.map((p, idx) => (
           <div
             key={p.id}
-            className="flex-shrink-0 w-[160px]"
-            style={{ scrollSnapAlign: "start" }}
+            className={`flex-shrink-0 w-44 snap-start ${idx === products.length - 1 ? "mr-4" : ""}`}
           >
             <ProductCard product={p} />
           </div>

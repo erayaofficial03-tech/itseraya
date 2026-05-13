@@ -20,14 +20,14 @@ const CategoryRow = () => {
         className="md:hidden flex overflow-x-auto gap-4 pb-2 scrollbar-hide -mx-4 px-4"
         style={{ scrollSnapType: "x mandatory" }}
       >
-        {visible.map((c) => (
+        {visible.map((c, idx) => (
           <Link
             key={c.id}
             to={`/category/${c.slug}`}
-            className="flex-shrink-0 w-20 group"
+            className={`flex-shrink-0 flex flex-col items-center gap-2 w-20 group ${idx === visible.length - 1 ? "mr-4" : ""}`}
             style={{ scrollSnapAlign: "start" }}
           >
-            <div className="w-20 h-20 overflow-hidden rounded-full bg-muted/30 mb-2 border-2 border-transparent group-hover:border-gold transition-all">
+            <div className="w-20 h-20 overflow-hidden rounded-full bg-muted/30 border-2 border-[#EDE8E1] group-hover:border-gold transition-all">
               <img
                 src={c.image_url || ""}
                 alt={c.name}
@@ -35,7 +35,7 @@ const CategoryRow = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <p className="text-center text-[12px] truncate group-hover:text-gold transition-colors">
+            <p className="text-xs text-center w-20 truncate group-hover:text-gold transition-colors">
               {c.name}
             </p>
           </Link>

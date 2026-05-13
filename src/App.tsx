@@ -34,6 +34,10 @@ const TrackEnquiry = lazy(() => import("./pages/TrackEnquiry"));
 const ReturnPolicy = lazy(() => import("./pages/ReturnPolicy"));
 const ShippingPolicy = lazy(() => import("./pages/ShippingPolicy"));
 const CancellationPolicy = lazy(() => import("./pages/CancellationPolicy"));
+const SearchPage = lazy(() => import("./pages/Search"));
+const Faq = lazy(() => import("./pages/Faq"));
+const CareGuide = lazy(() => import("./pages/CareGuide"));
+const Contact = lazy(() => import("./pages/Contact"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -98,6 +102,10 @@ const App = () => (
               <Route path="/return-policy" element={<Public><ReturnPolicy /></Public>} />
               <Route path="/shipping-policy" element={<Public><ShippingPolicy /></Public>} />
               <Route path="/cancellation-policy" element={<Public><CancellationPolicy /></Public>} />
+              <Route path="/search" element={<Public><SearchPage /></Public>} />
+              <Route path="/faq" element={<Public><Faq /></Public>} />
+              <Route path="/care" element={<Public><CareGuide /></Public>} />
+              <Route path="/contact" element={<Public><Contact /></Public>} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Public><Login /></Public>} />

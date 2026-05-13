@@ -4,6 +4,8 @@ import { Share2, MessageCircle } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
+import ProductListItem from "@/components/eraya/ProductListItem";
+import ViewToggle, { useViewMode } from "@/components/eraya/ViewToggle";
 import SeoHead from "@/components/providers/SeoHead";
 import { Button } from "@/components/ui/button";
 import { useProducts, useSettings, useCategories } from "@/lib/queries";
@@ -32,6 +34,7 @@ const Catalogue = () => {
     : s(settings, "catalogue_heading");
 
   const [activeCat, setActiveCat] = useState<string>("all");
+  const [view, setView] = useViewMode();
   const filtered = useMemo(() => {
     let list = visible;
     if (filterParam === "new") {
@@ -119,6 +122,10 @@ const Catalogue = () => {
           ))}
         </div>
 
+        <div className="flex justify-end mb-4">
+          <ViewToggle mode={view} onChange={setView} />
+        </div>
+
         {filtered.length === 0 ? (
           <div className="text-center py-16 max-w-sm mx-auto">
             <img src={erayaLogo} alt="Eraya" className="h-10 mx-auto mb-5 object-contain opacity-90" />
@@ -141,6 +148,10 @@ const Catalogue = () => {
                 WhatsApp us
               </Button>
             )}
+          </div>
+        ) : view === "list" ? (
+          <div className="divide-y divide-border">
+            {filtered.map((p) => <ProductListItem key={p.id} product={p} />)}
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">

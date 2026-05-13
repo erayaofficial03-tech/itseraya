@@ -15,6 +15,7 @@ import { s } from "@/lib/settingsDefaults";
 
 const Profile = () => {
   const { user, profile, isStaff, loading, signOut } = useAuth();
+  const { data: settings } = useSettings();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -21,7 +21,7 @@ const Hero = () => {
           width={1600}
           height={700}
           decoding="async"
-          fetchpriority="high"
+          {...({ fetchpriority: "high" } as any)}
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div

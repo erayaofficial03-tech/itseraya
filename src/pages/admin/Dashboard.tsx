@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gem, FolderTree, MessageCircle, Users as UsersIcon } from "lucide-react";
 import { useProducts, useCategories } from "@/lib/queries";
@@ -10,16 +11,18 @@ import {
   EnquiryTrendWidget, ConversionFunnelWidget,
 } from "./dashboard-widgets";
 
-const Stat = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
-  <Card>
-    <CardHeader className="flex flex-row items-center justify-between pb-2">
-      <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-      <Icon className="h-5 w-5 text-gold" />
-    </CardHeader>
-    <CardContent>
-      <p className="text-3xl font-serif">{value}</p>
-    </CardContent>
-  </Card>
+const Stat = ({ icon: Icon, label, value, to }: { icon: any; label: string; value: string | number; to: string }) => (
+  <Link to={to} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-lg">
+    <Card className="transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-gold/40 cursor-pointer h-full">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
+        <Icon className="h-5 w-5 text-gold" />
+      </CardHeader>
+      <CardContent>
+        <p className="text-3xl font-serif">{value}</p>
+      </CardContent>
+    </Card>
+  </Link>
 );
 
 type RecentUser = { id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string };
@@ -73,10 +76,10 @@ const Dashboard = () => {
 
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Stat icon={Gem} label="Products" value={products.length} />
-        <Stat icon={FolderTree} label="Categories" value={categories.length} />
-        <Stat icon={MessageCircle} label="Enquiries" value={enquiryCount} />
-        <Stat icon={UsersIcon} label="Total Users" value={userCount} />
+        <Stat icon={Gem} label="Products" value={products.length} to="/admin/products" />
+        <Stat icon={FolderTree} label="Categories" value={categories.length} to="/admin/categories" />
+        <Stat icon={MessageCircle} label="Enquiries" value={enquiryCount} to="/admin/enquiries" />
+        <Stat icon={UsersIcon} label="Total Users" value={userCount} to="/admin/users" />
       </div>
 
       <Card>

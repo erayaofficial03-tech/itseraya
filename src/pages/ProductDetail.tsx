@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
-import { Share2, FileDown } from "lucide-react";
+import { FileDown } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
+import ShareMenu from "@/components/product/ShareMenu";
 import {
   useProduct, useProducts, useSettings,
   formatINR, productImage, discountPct, withImageParams,
 } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { generateProductPdf } from "@/lib/pdf";
-import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -44,17 +44,7 @@ const ProductDetail = () => {
     .filter((p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id)
     .slice(0, 8);
 
-  const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: product.name, text: `Check out ${product.name} from Eraya`, url });
-      } catch {}
-    } else {
-      await navigator.clipboard.writeText(url);
-      toast("Link copied to clipboard!");
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -163,9 +153,12 @@ const ProductDetail = () => {
             <div className="flex flex-col gap-3 pt-4">
               <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
               <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" onClick={handleShare} className="h-11">
-                  <Share2 /> {s(settings, "product_share_button_label")}
-                </Button>
+                <ShareMenu
+                  product={product}
+                  settings={settings}
+                  buttonLabel={s(settings, "product_share_button_label")}
+                  className="h-11 w-full"
+                />
                 <Button variant="outline" onClick={() => generateProductPdf(product, settings)} className="h-11">
                   <FileDown /> {s(settings, "product_pdf_button_label")}
                 </Button>

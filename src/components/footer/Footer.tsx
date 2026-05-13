@@ -34,9 +34,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col items-center text-center gap-4">
           {showLogo && (
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-14 w-auto" />
+            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-14 w-auto object-contain" />
           )}
-          <p className="font-serif italic text-lg text-gold">{s(settings, "footer_tagline")}</p>
+          <p className="font-serif italic text-lg text-gold">{s(settings, "tagline")}</p>
 
           {(showSocial || showWhatsApp) && (
             <div className="flex items-center gap-3 mt-2">

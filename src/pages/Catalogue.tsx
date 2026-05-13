@@ -31,7 +31,7 @@ const Catalogue = () => {
             <FileDown /> {s(settings, "catalogue_download_label")}
           </Button>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-2 gap-y-6 sm:gap-x-3 md:gap-x-4 md:gap-y-8 lg:gap-x-5 lg:gap-y-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-6 sm:gap-x-4 md:gap-x-5 md:gap-y-8 lg:gap-y-10">
           {visible.map((p) => <ProductCard key={p.id} product={p} showWhatsAppIcon />)}
         </div>
       </main>

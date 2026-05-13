@@ -38,7 +38,7 @@ const CategoryRow = () => {
       </div>
 
       {/* Tablet & desktop: 6 / 8 column grid */}
-      <div className="hidden md:grid md:grid-cols-6 lg:grid-cols-8 gap-4 lg:gap-5">
+      <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-7 gap-4 lg:gap-5">
         {visible.map((c) => (
           <Link key={c.id} to={`/category/${c.slug}`} className="group">
             <div className="aspect-square overflow-hidden rounded-full bg-muted/30 mb-2 border-2 border-transparent group-hover:border-gold transition-all">

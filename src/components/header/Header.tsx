@@ -178,7 +178,7 @@ const Header = () => {
 
           {/* Center: logo */}
           <Link to="/" className="flex justify-center min-w-0">
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 sm:h-10 w-auto max-w-full" />
+            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-8 sm:h-10 w-auto max-w-full object-contain" />
           </Link>
 
           {/* Right: action icons */}

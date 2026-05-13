@@ -22,6 +22,7 @@ const SettingsAdmin = () => {
 
   const [form, setForm] = useState({
     whatsapp_number: "",
+    whatsapp_float_visible: true,
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
     usp_1: "", usp_2: "", usp_3: "",
     whatsapp_message_template: "",
@@ -39,6 +40,7 @@ const SettingsAdmin = () => {
     if (settings) {
       setForm({
         whatsapp_number: settings.whatsapp_number || "",
+        whatsapp_float_visible: (settings as any).whatsapp_float_visible !== false,
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
         usp_1: (settings as any).usp_1 || "",
@@ -129,6 +131,21 @@ const SettingsAdmin = () => {
             <p className="text-xs text-muted-foreground mt-1">
               Used by the "I Love It" enquiry button. Digits only, including country code.
             </p>
+          </div>
+          <div className="flex items-center justify-between rounded-md border border-border p-3">
+            <div>
+              <Label className="text-sm">Show floating WhatsApp chat button</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {form.whatsapp_number.replace(/\D/g, "")
+                  ? "Appears on every customer page (bottom-right)."
+                  : "Hidden automatically until a WhatsApp number is saved."}
+              </p>
+            </div>
+            <Switch
+              checked={form.whatsapp_float_visible && !!form.whatsapp_number.replace(/\D/g, "")}
+              disabled={!form.whatsapp_number.replace(/\D/g, "")}
+              onCheckedChange={(v) => setForm({ ...form, whatsapp_float_visible: v })}
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

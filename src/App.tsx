@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import RoleGuard from "./components/auth/RoleGuard";
 import InstallPrompt from "./components/pwa/InstallPrompt";
+import BottomNav from "./components/header/BottomNav";
 import BrandProvider from "./components/providers/BrandProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";
@@ -22,6 +23,10 @@ const About = lazy(() => import("./pages/About"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+const Login = lazy(() => import("./pages/Login"));
+const Profile = lazy(() => import("./pages/Profile"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Wishlist = lazy(() => import("./pages/Wishlist"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -78,6 +83,12 @@ const App = () => (
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
 
+              {/* Customer auth */}
+              <Route path="/login" element={<Public><Login /></Public>} />
+              <Route path="/profile" element={<Public><Profile /></Public>} />
+              <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
               {/* OAuth callback */}
               <Route path={ROUTES.authCallback} element={<AuthCallback />} />
 
@@ -105,6 +116,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          <BottomNav />
         </BrowserRouter>
       </BrandProvider>
     </TooltipProvider>

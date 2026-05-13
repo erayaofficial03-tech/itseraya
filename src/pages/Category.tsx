@@ -1,12 +1,17 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import Breadcrumb from "@/components/eraya/Breadcrumb";
 import ProductCard from "@/components/eraya/ProductCard";
 import ProductListItem from "@/components/eraya/ProductListItem";
 import ViewToggle, { useViewMode } from "@/components/eraya/ViewToggle";
 import { useCategories, useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import {
+  categoryListSchema, breadcrumbSchema, injectSchema, SITE_URL,
+} from "@/lib/structuredData";
 
 const Category = () => {
   const { category: slug } = useParams();
@@ -19,14 +24,54 @@ const Category = () => {
   );
   const [view, setView] = useViewMode();
 
+  useEffect(() => {
+    if (!cat) return;
+    injectSchema(
+      "ld-itemlist",
+      categoryListSchema(cat.name, filtered.map((p) => ({ name: p.name, slug: p.slug }))),
+    );
+    injectSchema(
+      "ld-breadcrumb",
+      breadcrumbSchema([
+        { name: "Home", url: "/" },
+        { name: cat.name, url: `/collection/${cat.slug}` },
+      ]),
+    );
+    return () => {
+      injectSchema("ld-itemlist", null);
+      injectSchema("ld-breadcrumb", null);
+    };
+  }, [cat, filtered]);
+
+  const storeName = s(settings, "store_name");
+  const catName = cat?.name || "All Products";
+  const seoTitle = `${catName} — ${storeName} | Buy ${catName} Online`;
+  const seoDesc = cat
+    ? `Shop ${catName} from ${storeName}. Handpicked artificial ${catName.toLowerCase()} for every occasion. WhatsApp enquiry available.`
+    : `Browse all jewellery from ${storeName}.`;
+  const keywords = cat
+    ? `${catName}, buy ${catName} online, artificial ${catName}, ${storeName}, fashion jewellery`
+    : undefined;
+
   return (
     <div className="min-h-screen bg-background">
-      <SeoHead title={`${cat?.name || "All Products"} — ${s(settings, "store_name")}`} />
+      <SeoHead
+        title={seoTitle}
+        description={seoDesc}
+        canonical={cat ? `${SITE_URL}/collection/${cat.slug}` : undefined}
+        keywords={keywords}
+      />
       <Header />
       <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-24">
-        <div className="text-center mb-6 md:mb-8">
+        <Breadcrumb
+          items={[
+            { name: "Home", href: "/" },
+            { name: catName },
+          ]}
+        />
+        <div className="text-center mb-6 md:mb-8 mt-4">
           <h1 className="font-serif text-3xl md:text-5xl text-foreground">
-            {cat?.name || "All Products"}
+            {catName}
           </h1>
           <p className="text-sm text-muted-foreground mt-2">
             {filtered.length} {s(settings, "category_pieces_label")}

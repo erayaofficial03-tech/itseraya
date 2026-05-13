@@ -56,26 +56,33 @@ const ShareMenu = ({
   };
 
   const sharePdf = async () => {
+    if (busy) return;
+    setPdfBusy(true);
+    const t = toast.loading("Generating PDF…");
     try {
       await generateProductPdf(product, settings);
       const msg = `Hi! I'm interested in *${product.name}*\nPrice: ${priceText}\n\nPlease find the product details attached.\n\n${url}`;
       const target = waNum ? `https://wa.me/${waNum}` : "https://wa.me/";
       window.open(`${target}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
-      toast.success("PDF downloaded — open WhatsApp and attach the file to share it");
+      toast.success("PDF downloaded — open WhatsApp and attach the file to share it", { id: t });
     } catch (e: any) {
-      toast.error(e?.message ?? "Couldn't create PDF");
+      toast.error(e?.message ?? "Couldn't create PDF", { id: t });
+    } finally {
+      setPdfBusy(false);
+      setOpen(false);
     }
-    setOpen(false);
   };
 
   const shareImage = async () => {
-    setOpen(false);
+    if (busy) return;
+    setImgBusy(true);
+    const t = toast.loading("Preparing image…");
     try {
       const el =
         (document.querySelector(imageSelector) as HTMLElement | null) ||
         (document.querySelector(`img[alt="${product.name}"]`) as HTMLElement | null);
       if (!el) {
-        toast.error("Couldn't find the product image to share");
+        toast.error("Couldn't find the product image to share", { id: t });
         return;
       }
       const canvas = await html2canvas(el, { useCORS: true, backgroundColor: "#ffffff" });
@@ -83,7 +90,7 @@ const ShareMenu = ({
         canvas.toBlob((b) => resolve(b), "image/jpeg", 0.92),
       );
       if (!blob) {
-        toast.error("Couldn't prepare the image");
+        toast.error("Couldn't prepare the image", { id: t });
         return;
       }
       const file = new File([blob], `${product.name.replace(/\s+/g, "-")}.jpg`, {
@@ -92,10 +99,10 @@ const ShareMenu = ({
       const text = `Hi! I'm interested in *${product.name}*\nPrice: ${priceText}\n\n${url}`;
       // @ts-ignore - canShare typing
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        toast.dismiss(t);
         await navigator.share({ files: [file], title: product.name, text });
         return;
       }
-      // Fallback: download the image and open WhatsApp
       const dlUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = dlUrl;
@@ -104,9 +111,12 @@ const ShareMenu = ({
       URL.revokeObjectURL(dlUrl);
       const target = waNum ? `https://wa.me/${waNum}` : "https://wa.me/";
       window.open(`${target}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
-      toast.info("Image downloaded — attach it in WhatsApp to share");
+      toast.info("Image downloaded — attach it in WhatsApp to share", { id: t });
     } catch {
-      toast.error("Open the product image and use your phone's share button to send it on WhatsApp");
+      toast.error("Open the product image and use your phone's share button to send it on WhatsApp", { id: t });
+    } finally {
+      setImgBusy(false);
+      setOpen(false);
     }
   };
 

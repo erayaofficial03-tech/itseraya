@@ -97,7 +97,11 @@ export const s = <K extends keyof Defaults>(
   settings: Settings | undefined | null,
   key: K,
 ): Defaults[K] => {
-  const raw = settings ? (settings as unknown as Record<string, unknown>)[key as string] : undefined;
-  if (raw === null || raw === undefined || raw === "") return SETTINGS_DEFAULTS[key];
-  return raw as Defaults[K];
+  try {
+    const raw = settings ? (settings as unknown as Record<string, unknown>)[key as string] : undefined;
+    if (raw === null || raw === undefined || raw === "") return SETTINGS_DEFAULTS[key];
+    return raw as Defaults[K];
+  } catch {
+    return SETTINGS_DEFAULTS[key];
+  }
 };

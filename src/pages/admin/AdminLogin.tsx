@@ -27,7 +27,7 @@ const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-ivory">
       <div className="w-full max-w-md text-center">
-        <img src={erayaLogo} alt="Eraya" className="h-16 w-auto mx-auto" />
+        <img src={erayaLogo} alt="Eraya" className="h-16 w-auto mx-auto object-contain" />
         <p className="mt-3 font-serif text-2xl text-charcoal">Adorn Your Story</p>
         <span className="block mx-auto mt-4 h-px w-10 bg-gold/70" />
 

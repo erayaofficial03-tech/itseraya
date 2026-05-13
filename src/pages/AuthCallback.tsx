@@ -79,7 +79,7 @@ const AuthCallback = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-ivory gap-5">
-      <img src={erayaLogo} alt="Eraya" className="h-14 w-auto" />
+      <img src={erayaLogo} alt="Eraya" className="h-14 w-auto object-contain" />
       <span className="h-8 w-8 rounded-full border-[3px] border-gold border-t-transparent animate-spin" />
       <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Signing you in…</p>
     </div>

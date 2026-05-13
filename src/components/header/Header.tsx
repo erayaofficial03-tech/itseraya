@@ -240,7 +240,33 @@ const Header = () => {
               </Button>
             )}
 
-            {/* Public storefront — no sign-in required */}
+            {/* Account: avatar when signed in, login icon otherwise (desktop) */}
+            {user ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Profile"
+                onClick={() => navigate("/profile")}
+                className="hidden lg:inline-flex h-10 w-10"
+              >
+                <Avatar className="h-7 w-7 border border-gold">
+                  <AvatarImage src={profile?.avatar_url || undefined} />
+                  <AvatarFallback className="bg-charcoal text-ivory text-[10px]">
+                    {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Log in"
+                onClick={() => navigate("/login")}
+                className="hidden lg:inline-flex h-10 w-10"
+              >
+                <User className="h-5 w-5" />
+              </Button>
+            )}
 
             <Button variant="ghost" size="icon" aria-label="Cart" onClick={handleCart} className="h-10 w-10 -mr-1 sm:mr-0">
               <ShoppingBag className="h-5 w-5" />

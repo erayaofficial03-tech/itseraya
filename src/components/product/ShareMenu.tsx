@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Share2, Link as LinkIcon, FileDown, Smartphone, MessageCircle, Image as ImageIcon } from "lucide-react";
+import { Share2, Link as LinkIcon, FileDown, Smartphone, MessageCircle, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,

@@ -12,6 +12,7 @@ import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
 import PageTransition from "./components/PageTransition";
 import BrandProvider from "./components/providers/BrandProvider";
+import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";
 import { ROUTES } from "./lib/routes";
@@ -29,6 +30,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Profile = lazy(() => import("./pages/Profile"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
+const TrackEnquiry = lazy(() => import("./pages/TrackEnquiry"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -68,6 +70,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrandProvider>
+        <EnquiryCartProvider>
         <SeoHead />
         <Toaster />
         <Sonner />
@@ -85,6 +88,7 @@ const App = () => (
               <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
               <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
+              <Route path="/track" element={<Public><TrackEnquiry /></Public>} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Public><Login /></Public>} />
@@ -123,6 +127,7 @@ const App = () => (
           <WhatsAppFloat />
           <BottomNav />
         </BrowserRouter>
+        </EnquiryCartProvider>
       </BrandProvider>
     </TooltipProvider>
   </QueryClientProvider>

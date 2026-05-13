@@ -204,9 +204,6 @@ const UsersAdmin = () => {
                             <Button size="icon" variant="outline" onClick={() => toggleBlock(u)} title={u.is_blocked ? "Unblock" : "Block"}>
                               {u.is_blocked ? <ShieldCheck className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
                             </Button>
-                            <Button size="icon" variant="outline" onClick={() => setConfirmDelete(u)} title="Delete">
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
                           </>
                         )}
                       </div>

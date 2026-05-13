@@ -201,6 +201,7 @@ export type Database = {
           announcement_text: string | null
           announcement_text_color: string | null
           announcement_visible: boolean | null
+          app_icon_url: string | null
           catalogue_download_label: string | null
           catalogue_heading: string | null
           catalogue_subtext: string | null
@@ -286,6 +287,7 @@ export type Database = {
           announcement_text?: string | null
           announcement_text_color?: string | null
           announcement_visible?: boolean | null
+          app_icon_url?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
@@ -371,6 +373,7 @@ export type Database = {
           announcement_text?: string | null
           announcement_text_color?: string | null
           announcement_visible?: boolean | null
+          app_icon_url?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null

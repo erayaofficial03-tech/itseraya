@@ -269,13 +269,31 @@ const Header = () => {
                   </button>
                 </div>
 
-                <div className="border-t border-border px-6 py-4 text-center">
-                  <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
-                    {settings?.store_name || "Eraya"}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground/80 mt-1">
-                    © {new Date().getFullYear()} All rights reserved
-                  </p>
+                <div className="shrink-0 border-t border-border p-3 space-y-1 bg-[hsl(var(--background))]">
+                  {isStaff && (
+                    <button
+                      onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium border border-gold/40 text-charcoal hover:bg-gold/10 transition-colors"
+                    >
+                      <Cog className="h-4 w-4" /> Switch to Admin Mode
+                    </button>
+                  )}
+                  {user && (
+                    <button
+                      onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" /> Sign out
+                    </button>
+                  )}
+                  <div className="px-3 py-2 text-center">
+                    <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
+                      {settings?.store_name || "Eraya"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground/80 mt-1">
+                      © {new Date().getFullYear()} All rights reserved
+                    </p>
+                  </div>
                 </div>
 
               </SheetContent>

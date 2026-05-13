@@ -68,7 +68,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div>
         <h1 className="font-serif text-3xl">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Welcome back to Eraya admin.</p>
+        <p className="text-sm text-muted-foreground">Welcome Back {displayName}</p>
       </div>
 
       {isAdmin && (

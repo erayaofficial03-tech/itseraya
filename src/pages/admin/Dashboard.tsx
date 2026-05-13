@@ -161,6 +161,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       )}
+
+      <Card>
         <CardHeader><CardTitle className="text-base">Recent signups</CardTitle></CardHeader>
         <CardContent>
           {recent.length === 0 ? (

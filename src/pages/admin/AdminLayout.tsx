@@ -182,12 +182,12 @@ const AdminLayout = () => {
               />
             </SheetContent>
           </Sheet>
-          <div className="flex flex-col items-center justify-center gap-1">
+          <Link to="/admin" aria-label="Go to admin home" className="flex flex-col items-center justify-center gap-1">
             <BrandLogo className="h-7 w-auto" />
             <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-muted-foreground leading-none">
               Admin
             </span>
-          </div>
+          </Link>
           <div className="w-10 h-10" aria-hidden />
         </header>
 

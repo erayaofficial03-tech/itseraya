@@ -4,14 +4,69 @@ import { productImage, discountPct } from "./queries";
 import { s } from "./settingsDefaults";
 
 /**
- * jsPDF's bundled Helvetica font cannot render the ₹ glyph — it shows as a
- * tofu/blank character. We use the universally understood "Rs." prefix
- * inside PDFs only. The website continues to use ₹ via formatINR().
+ * jsPDF's default Helvetica cannot render ₹ (U+20B9). We lazy-load Noto Sans
+ * (Regular + Bold) TTFs once per session, base64 them, register via VFS, and
+ * switch the active font to "NotoSans". On any failure we transparently fall
+ * back to helvetica + the "Rs." prefix so PDFs always render.
  */
+const NOTO_REGULAR_URL =
+  "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts/hinted/ttf/NotoSans/NotoSans-Regular.ttf";
+const NOTO_BOLD_URL =
+  "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts/hinted/ttf/NotoSans/NotoSans-Bold.ttf";
+
+let fontCache: { regular: string; bold: string } | null = null;
+let fontLoadFailed = false;
+
+const fetchFontBase64 = async (url: string): Promise<string> => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`font fetch ${res.status}`);
+  const buf = await res.arrayBuffer();
+  let binary = "";
+  const bytes = new Uint8Array(buf);
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunk)));
+  }
+  return btoa(binary);
+};
+
+/**
+ * Registers Noto Sans on the given doc. Returns true if available, false if
+ * we should fall back to helvetica + Rs. prefix.
+ */
+const ensureRupeeFont = async (doc: jsPDF): Promise<boolean> => {
+  if (fontLoadFailed) return false;
+  try {
+    if (!fontCache) {
+      const [regular, bold] = await Promise.all([
+        fetchFontBase64(NOTO_REGULAR_URL),
+        fetchFontBase64(NOTO_BOLD_URL),
+      ]);
+      fontCache = { regular, bold };
+    }
+    doc.addFileToVFS("NotoSans-Regular.ttf", fontCache.regular);
+    doc.addFont("NotoSans-Regular.ttf", "NotoSans", "normal");
+    doc.addFileToVFS("NotoSans-Bold.ttf", fontCache.bold);
+    doc.addFont("NotoSans-Bold.ttf", "NotoSans", "bold");
+    return true;
+  } catch {
+    fontLoadFailed = true;
+    return false;
+  }
+};
+
+/** Active font family for the current generation pass. */
+let pdfFont: "NotoSans" | "helvetica" = "helvetica";
+
+const setFont = (doc: jsPDF, weight: "normal" | "bold") => {
+  doc.setFont(pdfFont, weight);
+};
+
 const formatPdfPrice = (amount: number): string => {
   const formatted = Math.round(amount).toLocaleString("en-IN");
-  return `Rs. ${formatted}`;
+  return pdfFont === "NotoSans" ? `₹${formatted}` : `Rs. ${formatted}`;
 };
+
 
 const slugify = (str: string) =>
   str

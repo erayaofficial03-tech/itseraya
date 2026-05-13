@@ -55,7 +55,7 @@ const Wishlist = () => {
           </div>
         ) : !user ? (
           <div className="text-center py-12 max-w-sm mx-auto">
-            <img src={erayaLogo} alt="Eraya" className="h-12 mx-auto mb-5 object-contain" />
+            <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-12 mx-auto mb-5 object-contain" />
             <p className="text-foreground font-medium mb-2">Sign in to save your favourite pieces</p>
             <p className="text-sm text-muted-foreground mb-6">
               Your wishlist syncs across devices once you sign in.

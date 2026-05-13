@@ -109,7 +109,7 @@ const Login = () => {
 
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <img src={erayaLogo} alt="Eraya" className="h-14 mx-auto object-contain" />
+          <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-14 mx-auto object-contain" />
           <p className="font-serif italic text-gold text-sm mt-3">
             {s(settings, "tagline")}
           </p>

@@ -53,7 +53,7 @@ const About = () => {
 
           <div className="mt-14 flex flex-col items-center gap-3">
             <p className="font-serif italic text-gold text-lg md:text-xl">{tagline}</p>
-            <img src={logo} alt={settings?.store_name || "Eraya"} className="h-10 w-auto object-contain opacity-90" />
+            <img src={logo} alt={settings?.store_name || "Eraya"} draggable={false} className="brand-logo h-10 w-auto object-contain opacity-90" />
           </div>
         </article>
       </main>

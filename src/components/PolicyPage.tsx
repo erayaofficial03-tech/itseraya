@@ -42,7 +42,7 @@ const PolicyPage = ({ title, body, lastUpdated }: Props) => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <img src={logo} alt={storeName} className="h-8 w-auto object-contain" />
+        <img src={logo} alt={storeName} draggable={false} className="brand-logo h-8 w-auto object-contain" />
       </header>
 
       <div
@@ -83,7 +83,7 @@ const PolicyPage = ({ title, body, lastUpdated }: Props) => {
       </main>
 
       <footer className="text-center pb-10 pt-4">
-        <img src={logo} alt={storeName} className="h-7 w-auto object-contain mx-auto mb-2 opacity-80" />
+        <img src={logo} alt={storeName} draggable={false} className="brand-logo h-7 w-auto object-contain mx-auto mb-2 opacity-80" />
         <p
           className="font-serif italic text-sm"
           style={{ color: headingColor }}

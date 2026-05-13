@@ -97,7 +97,7 @@ const CompleteProfile = () => {
     <div className="min-h-screen flex items-center justify-center bg-ivory px-5 py-8">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <img src={erayaLogo} alt="Eraya" className="h-14 mx-auto object-contain" />
+          <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-14 mx-auto object-contain" />
           <h1 className="font-serif text-2xl text-charcoal mt-4">Complete Your Profile</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Just a few details to get started.

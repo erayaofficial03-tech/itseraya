@@ -138,7 +138,7 @@ const Header = () => {
                 <SheetHeader className="px-6 py-5 border-b border-border items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
-                      <img src={logo} alt={settings?.store_name || "Eraya"} className="h-12 w-auto object-contain" />
+                      <img src={logo} alt={settings?.store_name || "Eraya"} draggable={false} className="brand-logo h-12 w-auto object-contain" />
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
@@ -333,7 +333,8 @@ const Header = () => {
             <img
               src={logo}
               alt={settings?.store_name || "Eraya"}
-              className="h-9 sm:h-10 w-auto object-contain max-w-[160px]"
+              draggable={false}
+              className="brand-logo h-9 sm:h-10 w-auto object-contain max-w-[160px]"
               onError={(e) => {
                 const img = e.currentTarget;
                 img.style.display = "none";

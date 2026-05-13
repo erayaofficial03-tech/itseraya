@@ -28,7 +28,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-      <img src={erayaLogo} alt="Eraya" className="h-12 mb-6" />
+      <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-12 mb-6" />
       <form onSubmit={submit} className="w-full max-w-sm space-y-4">
         <h1 className="font-serif text-2xl text-foreground text-center">Set a new password</h1>
         <div className="space-y-2">

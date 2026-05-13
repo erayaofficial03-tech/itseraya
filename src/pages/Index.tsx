@@ -1,25 +1,48 @@
+import { useEffect } from "react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
 import SeoHead from "@/components/providers/SeoHead";
-import { useProducts, useSettings } from "@/lib/queries";
+import { useProducts, useSettings, useSocialLinks } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { ProductRowSkeleton } from "@/components/ui/skeletons";
+import {
+  organizationSchema, websiteSchema, injectSchema, SITE_URL,
+} from "@/lib/structuredData";
 
 const Index = () => {
   const { data: products = [], isLoading } = useProducts();
   const { data: settings } = useSettings();
+  const { data: socials = [] } = useSocialLinks();
   const visible = products.filter((p) => p.is_visible);
   const newArrivals = visible.filter((p) => p.tags.includes("new"));
   const trending = visible.filter((p) => p.tags.includes("bestseller"));
   const onSale = visible.filter((p) => p.discounted_price && p.original_price > p.discounted_price);
   const featured = visible.filter((p) => p.is_featured);
 
+  useEffect(() => {
+    const social = (socials || []).filter((l: any) => l.is_visible).map((l: any) => l.url);
+    injectSchema("ld-organization", organizationSchema(settings, social));
+    injectSchema("ld-website", websiteSchema(settings));
+    return () => {
+      injectSchema("ld-organization", null);
+      injectSchema("ld-website", null);
+    };
+  }, [settings, socials]);
+
+  const storeName = s(settings, "store_name");
+  const tagline = s(settings, "tagline");
+
   return (
     <div className="min-h-screen bg-background">
-      <SeoHead title={`${s(settings, "store_name")} — ${s(settings, "tagline")}`} />
+      <SeoHead
+        title={`${storeName} — ${tagline} | Artificial Jewellery for Women`}
+        description={`${storeName} offers premium handcrafted artificial jewellery for women. Shop rings, earrings, necklaces, bangles and more. WhatsApp enquiries welcome.`}
+        canonical={SITE_URL}
+        keywords={`${storeName}, artificial jewellery, imitation jewellery, fashion jewellery India, jewellery for women, buy jewellery online, rings, earrings, necklaces, bangles`}
+      />
       <Header />
       <main className="pt-4 md:pt-6 pb-20 md:pb-0">
         <HeroSlider />

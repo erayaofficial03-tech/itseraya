@@ -137,15 +137,6 @@ const LabelsAdmin = () => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="install" className="border rounded-lg px-4 bg-card">
-          <AccordionTrigger>Install prompt</AccordionTrigger>
-          <AccordionContent className="space-y-3">
-            {text("install_prompt_text", "Prompt text")}
-            {text("install_prompt_button_label", "Button label")}
-            {toggle("install_prompt_visible", "Show prompt")}
-          </AccordionContent>
-        </AccordionItem>
-
         <AccordionItem value="admin" className="border rounded-lg px-4 bg-card">
           <AccordionTrigger>Admin panel</AccordionTrigger>
           <AccordionContent className="space-y-3">

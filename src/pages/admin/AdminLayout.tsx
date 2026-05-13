@@ -22,6 +22,7 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
   { to: "/admin/categories", icon: FolderTree, label: "Categories", role: "staff" },
   { to: "/admin/announcement", icon: Megaphone, label: "Announcement", role: "staff" },
   { to: "/admin/banner", icon: Image, label: "Homepage & Banner", role: "staff" },
+  { to: "/admin/banners", icon: Images, label: "Banners", role: "staff" },
   { to: "/admin/brand", icon: Palette, label: "Brand & Colors", role: "admin" },
   { to: "/admin/labels", icon: Type, label: "Labels & Text", role: "admin" },
   { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },

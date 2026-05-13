@@ -26,6 +26,7 @@ const items: { to: string; end?: boolean; icon: any; label: string; role: ItemRo
   { to: "/admin/brand", icon: Palette, label: "Brand & Colors", role: "admin" },
   { to: "/admin/labels", icon: Type, label: "Labels & Text", role: "admin" },
   { to: "/admin/seo", icon: Search, label: "SEO & Meta", role: "admin" },
+  { to: "/admin/policies", icon: FileText, label: "Policies", role: "admin" },
   { to: "/admin/enquiries", icon: Inbox, label: "Enquiries", role: "staff" },
   { to: "/admin/customers", icon: UserRound, label: "Customers", role: "staff" },
   { to: "/admin/users", icon: Users, label: "Users", role: "admin" },

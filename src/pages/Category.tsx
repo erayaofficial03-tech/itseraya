@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import SeoHead from "@/components/providers/SeoHead";
 import ProductCard from "@/components/eraya/ProductCard";
 import { useCategories, useProducts, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";

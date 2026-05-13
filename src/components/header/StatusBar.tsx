@@ -24,10 +24,10 @@ const StatusBar = () => {
 
   return (
     <div className="w-full bg-charcoal text-ivory">
-      <div className="max-w-7xl mx-auto px-4 h-8 flex items-center justify-center overflow-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-7 sm:h-8 flex items-center justify-center overflow-hidden">
         <p
           key={`${i}-${current}`}
-          className="text-[11px] sm:text-xs font-light tracking-[0.2em] uppercase animate-fade-in"
+          className="text-[10px] sm:text-xs font-light tracking-[0.18em] sm:tracking-[0.2em] uppercase animate-fade-in truncate text-center"
           style={{ animationDuration: `${fadeSpeed}ms` }}
         >
           {current}

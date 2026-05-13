@@ -355,20 +355,20 @@ const Header = () => {
                 size="icon"
                 aria-label="Search"
                 onClick={() => setSearchOpen(true)}
-                className="hidden sm:inline-flex h-10 w-10"
+                className="h-10 w-10"
               >
                 <Search className="h-5 w-5" />
               </Button>
             )}
 
-            {/* Account: avatar when signed in, login icon otherwise (desktop) */}
+            {/* Account: avatar when signed in, login icon otherwise */}
             {user ? (
               <Button
                 variant="ghost"
                 size="icon"
                 aria-label="Profile"
                 onClick={() => navigate("/profile")}
-                className="hidden lg:inline-flex h-10 w-10"
+                className="h-10 w-10"
               >
                 <Avatar className="h-7 w-7 border border-gold">
                   <AvatarImage src={profile?.avatar_url || undefined} />
@@ -383,7 +383,7 @@ const Header = () => {
                 size="icon"
                 aria-label="Log in"
                 onClick={() => navigate("/login")}
-                className="hidden lg:inline-flex h-10 w-10"
+                className="h-10 w-10"
               >
                 <User className="h-5 w-5" />
               </Button>

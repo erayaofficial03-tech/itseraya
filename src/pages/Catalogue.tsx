@@ -1,11 +1,16 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Share2, MessageCircle } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";
 import SeoHead from "@/components/providers/SeoHead";
+import { Button } from "@/components/ui/button";
 import { useProducts, useSettings, useCategories } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import { openWhatsApp } from "@/lib/whatsapp";
+import erayaLogo from "@/assets/eraya-logo.png";
+import { toast } from "sonner";
 
 const Catalogue = () => {
   const { data: products = [] } = useProducts();

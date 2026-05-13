@@ -114,7 +114,7 @@ const UsersAdmin = () => {
       <div>
         <h1 className="font-serif text-3xl">Users</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Pre-assigned managers: <span className="font-medium">erayaofficial03@gmail.com</span>. Admin: <span className="font-medium">admin@itseraya.in</span>.
+          New signups join as Customer. Promote to Manager or block accounts here. The Admin role is reserved for <span className="font-medium">admin@itseraya.in</span>.
         </p>
       </div>
 

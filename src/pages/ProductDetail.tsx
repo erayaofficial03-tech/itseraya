@@ -26,6 +26,8 @@ const ProductDetail = () => {
   const { data: product, isLoading } = useProduct(productId);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
+  const { data: wishlist = [] } = useWishlist();
+  const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;

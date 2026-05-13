@@ -23,6 +23,7 @@ const SettingsAdmin = () => {
   const [form, setForm] = useState({
     store_name: "", tagline: "", logo_url: "", whatsapp_number: "",
     usp_interval_ms: 3500, usp_fade_speed_ms: 300,
+    usp_1: "", usp_2: "", usp_3: "",
     whatsapp_message_template: "",
     catalogue_whatsapp_message_template: "",
     store_address: "", store_email: "", store_phone: "", store_city: "",
@@ -44,6 +45,9 @@ const SettingsAdmin = () => {
         whatsapp_number: settings.whatsapp_number || "",
         usp_interval_ms: settings.usp_interval_ms,
         usp_fade_speed_ms: settings.usp_fade_speed_ms,
+        usp_1: (settings as any).usp_1 || "",
+        usp_2: (settings as any).usp_2 || "",
+        usp_3: (settings as any).usp_3 || "",
         whatsapp_message_template: (settings as any).whatsapp_message_template || "",
         catalogue_whatsapp_message_template: (settings as any).catalogue_whatsapp_message_template || "",
         store_address: (settings as any).store_address || "",
@@ -194,6 +198,27 @@ const SettingsAdmin = () => {
               />
               <p className="text-xs text-muted-foreground mt-1">Animation duration for each fade-in.</p>
             </div>
+          </div>
+          <div className="space-y-3 rounded-md border border-border p-4">
+            <Label className="text-sm font-semibold">Top status bar messages (USPs)</Label>
+            <p className="text-xs text-muted-foreground -mt-1">
+              The black bar at the very top cycles through these three lines. Leave any blank to skip.
+            </p>
+            <Input
+              placeholder="USP 1 — e.g. Handcrafted with love"
+              value={form.usp_1}
+              onChange={(e) => setForm({ ...form, usp_1: e.target.value })}
+            />
+            <Input
+              placeholder="USP 2 — e.g. Free shipping on orders over ₹999"
+              value={form.usp_2}
+              onChange={(e) => setForm({ ...form, usp_2: e.target.value })}
+            />
+            <Input
+              placeholder="USP 3 — e.g. Easy WhatsApp enquiries"
+              value={form.usp_3}
+              onChange={(e) => setForm({ ...form, usp_3: e.target.value })}
+            />
           </div>
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save settings"}

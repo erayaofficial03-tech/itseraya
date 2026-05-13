@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

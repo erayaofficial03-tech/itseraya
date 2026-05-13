@@ -90,7 +90,7 @@ const Login = () => {
           <img src="/eraya-logo.png" alt="Eraya" className="h-14 mx-auto mb-3 object-contain" />
           <p className="font-serif italic text-gold text-sm mb-4">Adorn Your Story</p>
           <h1 className="font-serif text-2xl text-foreground mb-1">Welcome</h1>
-          <p className="text-sm text-muted-foreground">Sign in to save your wishlist and track enquiries.</p>
+          
         </div>
 
         <Button

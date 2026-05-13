@@ -100,12 +100,12 @@ const App = () => (
               <Route path={ROUTES.product} element={<Public><ProductDetail /></Public>} />
               <Route path={ROUTES.catalogue} element={<Public><Catalogue /></Public>} />
               <Route path={ROUTES.about} element={<Public><About /></Public>} />
-              <Route path={ROUTES.checkout} element={<Public><Checkout /></Public>} />
               <Route path="/track" element={<Public><TrackEnquiry /></Public>} />
               <Route path="/return-policy" element={<Public><ReturnPolicy /></Public>} />
               <Route path="/shipping-policy" element={<Public><ShippingPolicy /></Public>} />
               <Route path="/cancellation-policy" element={<Public><CancellationPolicy /></Public>} />
-              <Route path="/search" element={<Public><SearchPage /></Public>} />
+              <Route path="/privacy-policy" element={<Public><PrivacyPolicy /></Public>} />
+              <Route path="/terms-of-service" element={<Public><TermsOfService /></Public>} />
               <Route path="/faq" element={<Public><Faq /></Public>} />
               <Route path="/care" element={<Public><CareGuide /></Public>} />
               <Route path="/contact" element={<Public><Contact /></Public>} />
@@ -121,7 +121,6 @@ const App = () => (
               <Route path={ROUTES.authCallback} element={<AuthCallback />} />
 
               {/* Admin */}
-              <Route path={ROUTES.adminLogin} element={<Login />} />
               <Route
                 path={ROUTES.admin}
                 element={<Admin><AdminLayout /></Admin>}
@@ -132,13 +131,13 @@ const App = () => (
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="banner" element={<BannerAdmin />} />
                 <Route path="banners" element={<BannersAdmin />} />
+                <Route path="usps" element={<AdminOnly><UspsAdmin /></AdminOnly>} />
                 <Route path="announcement" element={<AnnouncementAdmin />} />
                 <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
                 <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
                 <Route path="policies" element={<AdminOnly><PoliciesAdmin /></AdminOnly>} />
                 <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />
-                <Route path="admins" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="users" element={<AdminOnly><AdminsAdmin /></AdminOnly>} />
                 <Route path="enquiries" element={<EnquiriesAdmin />} />
                 <Route path="customers" element={<CustomersAdmin />} />

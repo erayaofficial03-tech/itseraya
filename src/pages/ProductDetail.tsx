@@ -83,6 +83,8 @@ const ProductDetail = () => {
                 alt={product.name}
                 loading="eager"
                 decoding="async"
+                crossOrigin="anonymous"
+                data-product-image
                 className="w-full h-full object-cover"
               />
             </div>

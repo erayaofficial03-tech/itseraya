@@ -16,6 +16,7 @@ const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
   const copyLink = async () => {
     try {
       await navigator.clipboard?.writeText(window.location.origin);
+      logInstallEvent("copy_link", "ios");
       toast.success("Link copied! Open Safari and paste it to install");
     } catch {
       toast.error("Couldn't copy link — please type itseraya.in in Safari");

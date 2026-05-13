@@ -82,6 +82,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
     try {
       const payload = {
         name: form.name,
+        slug: form.slug || generateSlug(form.name),
         category_id: form.category_id || null,
         description: form.description || null,
         original_price: Number(form.original_price),
@@ -125,7 +126,30 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2">
           <Label>Name</Label>
-          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <Input
+            value={form.name}
+            onChange={(e) => {
+              const name = e.target.value;
+              setForm({
+                ...form,
+                name,
+                slug: form.slugManuallyEdited ? form.slug : generateSlug(name),
+              });
+            }}
+          />
+        </div>
+        <div className="col-span-2">
+          <Label>URL Slug</Label>
+          <Input
+            value={form.slug}
+            onChange={(e) =>
+              setForm({ ...form, slug: generateSlug(e.target.value), slugManuallyEdited: true })
+            }
+            placeholder="auto-generated-from-name"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Preview: <span className="font-mono">/jewellery/{form.slug || "your-product-name"}</span>
+          </p>
         </div>
         <div>
           <Label>Category</Label>

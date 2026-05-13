@@ -225,7 +225,7 @@ const SettingsAdmin = () => {
           <div className="space-y-2">
             <Label>Catalogue share message</Label>
             <Textarea rows={6} value={form.catalogue_whatsapp_message_template} onChange={(e) => setForm({ ...form, catalogue_whatsapp_message_template: e.target.value })} />
-            <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available variables: <code>{"{store_name}"}</code>, <code>{"{url}"}</code>, <code>{"{tagline}"}</code>, <code>{"{whatsapp}"}</code></p>
+            <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available placeholders: store name, tagline, URL, WhatsApp number.</p>
           </div>
         </CardContent>
       </Card>

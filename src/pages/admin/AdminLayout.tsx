@@ -147,7 +147,7 @@ const AdminLayout = () => {
     await switchMode("customer");
     navigate("/", { replace: true });
   };
-  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
+  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.path : location.pathname.startsWith(i.path)))?.label || "Admin";
 
   return (
     <div className="min-h-screen flex w-full bg-muted/30">

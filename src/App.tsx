@@ -24,7 +24,6 @@ const Category = lazy(() => import("./pages/Category"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
 const Catalogue = lazy(() => import("./pages/Catalogue"));
 const About = lazy(() => import("./pages/About"));
-const Checkout = lazy(() => import("./pages/Checkout"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 const Login = lazy(() => import("./pages/Login"));
@@ -35,7 +34,8 @@ const TrackEnquiry = lazy(() => import("./pages/TrackEnquiry"));
 const ReturnPolicy = lazy(() => import("./pages/ReturnPolicy"));
 const ShippingPolicy = lazy(() => import("./pages/ShippingPolicy"));
 const CancellationPolicy = lazy(() => import("./pages/CancellationPolicy"));
-const SearchPage = lazy(() => import("./pages/Search"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Faq = lazy(() => import("./pages/Faq"));
 const CareGuide = lazy(() => import("./pages/CareGuide"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -56,6 +56,7 @@ const LabelsAdmin = lazy(() => import("./pages/admin/LabelsAdmin"));
 const SeoAdmin = lazy(() => import("./pages/admin/SeoAdmin"));
 const CustomersAdmin = lazy(() => import("./pages/admin/CustomersAdmin"));
 const PoliciesAdmin = lazy(() => import("./pages/admin/PoliciesAdmin"));
+const UspsAdmin = lazy(() => import("./pages/admin/UspsAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

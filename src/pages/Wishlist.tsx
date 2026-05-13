@@ -16,6 +16,7 @@ import { toast } from "sonner";
 const Wishlist = () => {
   const { user, loading: authLoading } = useAuth();
   const { data: products = [], isLoading } = useWishlistProducts();
+  const { data: settings } = useSettings();
   const navigate = useNavigate();
 
   const google = async () => {

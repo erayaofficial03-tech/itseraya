@@ -85,6 +85,10 @@ export const SETTINGS_DEFAULTS = {
 
   enquiry_mode: "cart" as "cart" | "direct",
 
+  usp_1: "Handcrafted with love",
+  usp_2: "Free shipping on orders over ₹999",
+  usp_3: "Easy WhatsApp enquiries",
+
   about_title: "Our Story",
   about_body:
     "Eraya was born from a love of beautiful, wearable jewellery crafted for every woman.",

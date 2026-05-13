@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,7 +44,7 @@ const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
-  const { user, profile, isStaff, signOut } = useAuth();
+  const { user, profile, isStaff, signOut, switchMode } = useAuth();
   const { data: wishlistItems = [] } = useWishlist();
   const wishlistCount = wishlistItems.length;
   const { count: cartCount } = useEnquiryCart();
@@ -210,10 +210,13 @@ const Header = () => {
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       {isStaff && (
-                        <Link to="/admin" onClick={closeMenu} className={drawerLinkClass}>
-                          <span className="flex items-center gap-2 text-gold"><Shield className="h-4 w-4" /> Admin Panel</span>
+                        <button
+                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                          className={`${drawerLinkClass} w-full text-left`}
+                        >
+                          <span className="flex items-center gap-2 text-gold"><Cog className="h-4 w-4" /> Switch to Admin Mode</span>
                           <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                        </Link>
+                        </button>
                       )}
                     </>
                   ) : (

@@ -148,7 +148,6 @@ const App = () => (
             
           </Suspense>
           <WhatsAppFloat />
-          <ModeSwitcher />
           <BottomNav />
         </EnquiryCartProvider>
         </BrowserRouter>

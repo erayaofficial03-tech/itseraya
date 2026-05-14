@@ -98,7 +98,7 @@ const SidebarBody = ({
         </NavLink>
       ))}
     </nav>
-    <div className="p-3 border-t border-border space-y-1">
+    <div className="sticky bottom-0 mt-auto p-3 border-t border-border space-y-1 bg-background">
       <Button
         variant="outline"
         className="w-full justify-start gap-2 border-gold/40 text-charcoal hover:bg-gold/10"

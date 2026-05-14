@@ -1,8 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
-import { Home, LayoutGrid, Search, Heart, X } from "lucide-react";
+import { Home, LayoutGrid, Search, User, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 
 
 const itemBase =
@@ -11,6 +12,7 @@ const itemBase =
 const BottomNav = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -78,9 +80,13 @@ const BottomNav = () => {
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
-          <NavLink to="/wishlist" className={linkClass} aria-label="Wishlist">
-            <Heart className="h-5 w-5" />
-            <span>Wishlist</span>
+          <NavLink
+            to={user ? "/profile" : "/login"}
+            className={linkClass}
+            aria-label="Profile"
+          >
+            <User className="h-5 w-5" />
+            <span>Profile</span>
           </NavLink>
         </div>
       </nav>

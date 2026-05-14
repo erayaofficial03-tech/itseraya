@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { logInstallEvent } from "@/lib/installAnalytics";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
@@ -234,9 +235,6 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Shop
                   </p>
-                  <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
-                    {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
                   {shopShortcuts.map((sc) => {
                     const Icon = sc.icon;
                     return (
@@ -246,16 +244,31 @@ const Header = () => {
                       </Link>
                     );
                   })}
-                  {visibleCategories.map((c) => (
-                    <Link
-                      key={c.id}
-                      to={`/collection/${c.slug}`}
-                      onClick={closeMenu}
-                      className={drawerLinkClass}
-                    >
-                      {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </Link>
-                  ))}
+
+                  {/* Catalogue (collapsible with categories) */}
+                  <Collapsible>
+                    <CollapsibleTrigger className={`${drawerLinkClass} w-full text-left group`}>
+                      <span className="flex items-center gap-2">
+                        <LayoutGrid className="h-4 w-4" /> {s(settings, "nav_catalogue_label")}
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <Link to="/catalogue" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm text-muted-foreground`}>
+                        View all <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      {visibleCategories.map((c) => (
+                        <Link
+                          key={c.id}
+                          to={`/collection/${c.slug}`}
+                          onClick={closeMenu}
+                          className={`${drawerLinkClass} pl-10 text-sm`}
+                        >
+                          {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </Link>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Info
@@ -289,21 +302,34 @@ const Header = () => {
                   <Link to="/care" onClick={closeMenu} className={drawerLinkClass}>
                     Jewellery Care <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
-                  <Link to="/return-policy" onClick={closeMenu} className={drawerLinkClass}>
-                    Return Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  <Link to="/shipping-policy" onClick={closeMenu} className={drawerLinkClass}>
-                    Shipping Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  <Link to="/cancellation-policy" onClick={closeMenu} className={drawerLinkClass}>
-                    Cancellation Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  <Link to="/privacy-policy" onClick={closeMenu} className={drawerLinkClass}>
-                    Privacy Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  <Link to="/terms-of-service" onClick={closeMenu} className={drawerLinkClass}>
-                    Terms of Service <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
+
+                  {/* Policies (collapsible) */}
+                  <Collapsible>
+                    <CollapsibleTrigger className={`${drawerLinkClass} w-full text-left group`}>
+                      <span className="flex items-center gap-2">
+                        <FileText className="h-4 w-4" /> Policies
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <Link to="/return-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
+                        Return Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/shipping-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
+                        Shipping Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/cancellation-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
+                        Cancellation Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/privacy-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
+                        Privacy Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/terms-of-service" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
+                        Terms of Service <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    </CollapsibleContent>
+                  </Collapsible>
+
                   <button
                     onClick={() => { handleWhatsAppClick(); closeMenu(); }}
                     className={`${drawerLinkClass} w-full text-left`}
@@ -311,7 +337,7 @@ const Header = () => {
                     <span className="flex items-center gap-2">
                       <MessageCircle className="h-4 w-4" /> Support
                     </span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                   </button>
                 </div>
 

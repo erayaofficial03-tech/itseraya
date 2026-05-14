@@ -47,7 +47,7 @@ const Footer = () => {
               return (
                 <a
                   key={l.id}
-                  href={l.url}
+                  href={safeUrl(l.url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={l.platform}
@@ -82,7 +82,7 @@ const Footer = () => {
                       return (
                         <a
                           key={l.id}
-                          href={l.url}
+                          href={safeUrl(l.url)}
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={l.platform}

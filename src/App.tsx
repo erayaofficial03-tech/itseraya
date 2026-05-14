@@ -44,6 +44,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Faq = lazy(() => import("./pages/Faq"));
 const CareGuide = lazy(() => import("./pages/CareGuide"));
 const Contact = lazy(() => import("./pages/Contact"));
+const DomainHealth = lazy(() => import("./pages/DomainHealth"));
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const AdminLayout = lazyWithRetry(() => import("./pages/admin/AdminLayout"), { reloadKey: "AdminLayout" });
@@ -133,6 +134,7 @@ const App = () => (
               <Route path="/faq" element={<Public><Faq /></Public>} />
               <Route path="/care" element={<Public><CareGuide /></Public>} />
               <Route path="/contact" element={<Public><Contact /></Public>} />
+              <Route path="/domain-health" element={<DomainHealth />} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Login />} />

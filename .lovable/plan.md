@@ -1,43 +1,57 @@
-## Problem
+# Goal
 
-Homepage sections and side-menu shortcuts use mismatched filter slugs, so several "View all" links land on the wrong (or empty) Catalogue view.
+Make every published build show up immediately for returning visitors — no manual hard-refresh, no stuck old UI. Build on the SW auto-update we already added in `src/main.tsx` and close the remaining cache gaps.
 
-| Source | Section | Link | Catalogue handler |
-|---|---|---|---|
-| Homepage | Trending Now (tag `bestseller`) | `?filter=bestseller` ❌ | only knows `bestsellers` |
-| Homepage | Hot Selling (`is_featured`) | `?filter=featured` ❌ | not handled at all |
-| Header side menu | Bestsellers | `?filter=bestsellers` ✅ | filters by `is_featured` (wrong field — should be `bestseller` tag to match homepage "Trending Now") |
-| Header side menu | New Arrivals | `?filter=new` ✅ | OK |
-| Header side menu | On Sale | `?filter=sale` ✅ | OK |
+## What's already in place
 
-Net result: "View all" under Trending Now and Hot Selling on the homepage are broken, and the side menu's "Bestsellers" link shows featured products instead of bestseller-tagged ones.
+- `src/main.tsx` registers the PWA service worker, polls `registration.update()` every 60s + on tab focus, and on `onNeedRefresh` wipes all `caches` and reloads silently.
 
-## Fix (presentation only — no schema/data changes)
+## Gaps to close
 
-**1. Standardize the filter vocabulary** to match how the homepage defines each section:
-- `new` → newest products (unchanged)
-- `bestseller` → products with the `bestseller` tag (Trending Now)
-- `featured` → `is_featured = true` (Hot Selling)
-- `sale` → discounted products (unchanged)
+1. **HTML can still be cached by the browser.** `index.html` has no cache-control meta. If a CDN/browser holds it, the SW update never even gets a chance to run.
+2. **Workbox runtime caches** (configured in `vite.config.ts`) use cache-first style strategies for navigations/images/Supabase. These survive SW updates unless explicitly purged — which our `onNeedRefresh` handler now does, but only *after* the new SW activates.
+3. **Build asset filenames** — Vite already content-hashes JS/CSS, so those are safe. No change needed.
+4. **React Query cache / localStorage** — fine to keep (intentionally persistent for UX).
 
-**2. `src/pages/Catalogue.tsx`**
-- Update the filter switch to handle: `new`, `bestseller`, `featured`, `sale`.
-- Update the heading map: `bestseller` → "Trending Now", `featured` → "Hot Selling".
-- Update the comment on `filterParam`.
+## Plan
 
-**3. `src/pages/Index.tsx`**
-- Trending Now `viewAllHref` already uses `?filter=bestseller` — keep.
-- Hot Selling `viewAllHref` already uses `?filter=featured` — keep.
+### 1. `index.html` — prevent stale HTML
+Add inside `<head>`:
+```html
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+```
+Ensures the browser always revalidates the entry HTML, so it picks up the new bundle hashes on the next navigation.
 
-**4. `src/components/header/Header.tsx`** side-menu quick links
-- Change "Bestsellers" entry to `{ label: "Trending Now", to: "/catalogue?filter=bestseller", icon: Crown }` so it matches the homepage section semantically.
-- Add a "Hot Selling" entry (`?filter=featured`) so all four homepage sections are reachable from the side menu, matching the user's spec (Best seller / new arrivals / on sale + Hot Selling parity with homepage).
-- Keep New Arrivals and On Sale as-is.
+### 2. `vite.config.ts` — switch navigation strategy to NetworkFirst with short timeout
+Change the `request.mode === "navigate"` runtime cache to `NetworkFirst` with `networkTimeoutSeconds: 3` and a small `expiration` (e.g. maxAgeSeconds: 60). Image cache stays as-is. This means: online users always get the freshest HTML; offline users still get the cached shell.
 
-## Verification
+### 3. `src/main.tsx` — make update detection more aggressive
+- Keep the 60s poll + focus/visibility checks.
+- Also call `registration.update()` once immediately on registration (not just on interval).
+- On `onNeedRefresh`, in addition to wiping `caches`, also call `registration.unregister()` *before* `updateSW(true)` only as a fallback if `updateSW` rejects — guarantees no zombie SW.
 
-- Click each side-menu shortcut and each homepage "View all" → Catalogue heading + product list should match the corresponding homepage row.
-- Trending Now (homepage) and Trending Now (side menu) should show the same set.
-- Hot Selling (homepage) and Hot Selling (side menu) should show the same set.
+### 4. Add a `/version.json` build stamp (optional but bulletproof)
+- Vite plugin or simple build script writes `public/version.json` with the build timestamp.
+- App fetches `/version.json` (no-store) on focus; if it differs from the embedded build constant, force `location.reload()`. This is a belt-and-suspenders fallback for the rare case the SW itself is broken on a device.
 
-No backend, RLS, or product data changes.
+### Files to change
+
+- `index.html` — add cache-control metas
+- `vite.config.ts` — NetworkFirst for navigations
+- `src/main.tsx` — minor SW handler tweaks
+- (Optional) `vite.config.ts` + `src/main.tsx` — version.json stamp + check
+
+### What the user will experience
+
+- First publish after this ships: returning visitors get the new build within ~60s of opening the tab (or instantly on next focus/navigation).
+- Every publish after that: same — fully automatic, no toast, no manual refresh.
+- Offline still works (cached shell).
+
+## Out of scope
+
+- React Query / localStorage wipes (would log users out / lose enquiry cart — not what "cache clear" means here).
+- Server-side CDN cache headers (handled by Lovable hosting).
+
+Approve and I'll implement steps 1–3. Step 4 (version.json) only if you want the extra safety net.

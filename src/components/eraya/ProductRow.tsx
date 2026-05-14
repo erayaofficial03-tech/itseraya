@@ -14,9 +14,23 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
   // Cap every section at 12 products (6×2 desktop / 4×2 tablet / 3×2 mobile)
   const items = products.slice(0, 12);
 
+  // iOS safe-area insets added on top of the per-breakpoint base padding so
+  // cards never get clipped behind a notch / rounded screen corner.
+  const safePadX = {
+    paddingLeft: "max(1rem, env(safe-area-inset-left))",
+    paddingRight: "max(1rem, env(safe-area-inset-right))",
+  } as const;
+  const safeScrollPadX = {
+    scrollPaddingLeft: "max(1rem, env(safe-area-inset-left))",
+    scrollPaddingRight: "max(1rem, env(safe-area-inset-right))",
+  } as const;
+
   return (
     <section className="w-full mb-10 md:mb-16">
-      <div className="flex justify-between items-end mb-4 md:mb-6 px-4 md:px-6 lg:px-8">
+      <div
+        className="flex justify-between items-end mb-4 md:mb-6 md:px-6 lg:px-8"
+        style={safePadX}
+      >
         <h2 className="font-serif text-[22px] md:text-3xl text-foreground">{title}</h2>
         {viewAllHref && (
           <Link to={viewAllHref} className="text-sm text-gold hover:underline whitespace-nowrap">
@@ -29,12 +43,13 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
       <div
         className="
           overflow-x-auto overflow-y-hidden scrollbar-hide
-          px-4 md:px-6 lg:px-8 pb-3
-          scroll-pl-4 md:scroll-pl-6 lg:scroll-pl-8
-          scroll-pr-4 md:scroll-pr-6 lg:scroll-pr-8
+          md:px-6 lg:px-8 pb-3
+          md:scroll-pl-6 lg:scroll-pl-8
+          md:scroll-pr-6 lg:scroll-pr-8
           [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain]
           snap-x snap-mandatory scroll-smooth
         "
+        style={{ ...safePadX, ...safeScrollPadX }}
       >
         <div
           className="

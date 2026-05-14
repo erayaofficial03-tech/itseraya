@@ -30,7 +30,37 @@ const Footer = () => {
   );
 
   return (
-    <footer className="hidden md:block w-full bg-background border-t border-border mt-24">
+    <>
+      {/* Mobile slim copyright bar */}
+      <footer className="md:hidden w-full bg-background border-t border-border mt-12 px-4 py-5 pb-24 flex flex-col items-center gap-3 text-center">
+        {showLogo && (
+          <Link to="/" aria-label="Go to home" className="inline-flex">
+            <img src={logo} alt={settings?.store_name || "Eraya"} draggable={false} className="brand-logo h-7 w-auto object-contain" />
+          </Link>
+        )}
+        <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">{copyright}</p>
+        {showSocial && socials.filter((l) => l.is_visible).length > 0 && (
+          <div className="flex items-center gap-2">
+            {socials.filter((l) => l.is_visible).map((l) => {
+              const Icon = platformIcon(l.platform);
+              return (
+                <a
+                  key={l.id}
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={l.platform}
+                  className="p-2 rounded-full border border-border hover:border-gold hover:text-gold transition-colors"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </footer>
+
+      <footer className="hidden md:block w-full bg-background border-t border-border mt-24">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Col 1 — Brand */}

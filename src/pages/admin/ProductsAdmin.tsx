@@ -80,6 +80,36 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
   const submit = async () => {
     setBusy(true);
     try {
+      // Section limit checks (max 10 each)
+      const wantsFeatured = !!form.is_featured && !product?.is_featured;
+      const wantsBestseller =
+        form.tags.includes("bestseller") && !(product?.tags || []).includes("bestseller");
+
+      if (wantsFeatured) {
+        const { count } = await supabase
+          .from("products")
+          .select("id", { count: "exact", head: true })
+          .eq("is_featured", true)
+          .eq("is_visible", true);
+        if ((count ?? 0) >= 10) {
+          toast.error("Hot Selling is full (max 10). Unfeature another product first.");
+          setBusy(false);
+          return;
+        }
+      }
+      if (wantsBestseller) {
+        const { count } = await supabase
+          .from("products")
+          .select("id", { count: "exact", head: true })
+          .contains("tags", ["bestseller"])
+          .eq("is_visible", true);
+        if ((count ?? 0) >= 10) {
+          toast.error("Trending Now is full (max 10). Remove the bestseller tag from another product first.");
+          setBusy(false);
+          return;
+        }
+      }
+
       const payload = {
         name: form.name,
         slug: form.slug || generateSlug(form.name),

@@ -8,6 +8,7 @@ import ProductListItem from "@/components/eraya/ProductListItem";
 import ViewToggle, { useViewMode } from "@/components/eraya/ViewToggle";
 import SeoHead from "@/components/providers/SeoHead";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useProducts, useSettings, useCategories } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsApp } from "@/lib/whatsapp";

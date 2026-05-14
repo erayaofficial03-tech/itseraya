@@ -9,6 +9,7 @@ import {
   discountPct,
   withImageParams,
 } from "@/lib/queries";
+import SafeImage from "@/components/ui/SafeImage";
 
 interface Props {
   product: Product;

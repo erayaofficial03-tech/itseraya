@@ -194,14 +194,22 @@ const Header = () => {
                       </Link>
                       {isStaff && (
                         <button
-                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                          onClick={() => {
+                            void switchMode("admin").catch(() => {});
+                            closeMenu();
+                            navigate("/admin");
+                          }}
                           className={`${drawerLinkClass} w-full text-left`}
                         >
                           <span className="flex items-center gap-2"><Cog className="h-4 w-4" /> Switch to Admin Panel</span>
                         </button>
                       )}
                       <button
-                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                        onClick={() => {
+                          void signOut().catch(() => {});
+                          closeMenu();
+                          navigate("/");
+                        }}
                         className={`${drawerLinkClass} w-full text-left`}
                       >
                         <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Sign Out</span>

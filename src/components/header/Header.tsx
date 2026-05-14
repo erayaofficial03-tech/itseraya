@@ -161,7 +161,76 @@ const Header = () => {
                     Search jewellery…
                   </button>
 
+                  {/* ACCOUNT (moved to top) */}
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-1">
+                    Account
+                  </p>
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-border/60">
+                        <Avatar className="h-10 w-10 border border-gold">
+                          <AvatarImage src={profile?.avatar_url || (user.user_metadata as any)?.avatar_url || undefined} />
+                          <AvatarFallback className="bg-charcoal text-ivory text-xs">
+                            {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                        </div>
+                      </div>
+                      <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                      {isStaff && (
+                        <button
+                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                          className={`${drawerLinkClass} w-full text-left`}
+                        >
+                          <span className="flex items-center gap-2"><Cog className="h-4 w-4" /> Switch to Admin Panel</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </button>
+                      )}
+                      <button
+                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                        className={`${drawerLinkClass} w-full text-left`}
+                      >
+                        <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Sign Out</span>
+                      </button>
+                    </>
+                  ) : (
+                    <div className="my-3 rounded-xl border border-gold/50 bg-gold/5 p-4">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="h-10 w-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0">
+                          <User className="h-5 w-5 text-gold" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-foreground">Sign In to Your Account</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Save wishlist & track your enquiries</p>
+                        </div>
+                      </div>
+                      <Link
+                        to="/login"
+                        onClick={closeMenu}
+                        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-charcoal text-ivory text-sm font-medium hover:opacity-90 transition"
+                      >
+                        Sign In <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  )}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Shop
                   </p>
                   <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>

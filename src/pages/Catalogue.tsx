@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Share2, MessageCircle } from "lucide-react";
+import { useSearchParams, Link } from "react-router-dom";
+import { Share2, MessageCircle, PackageSearch, ArrowLeft } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import ProductCard from "@/components/eraya/ProductCard";

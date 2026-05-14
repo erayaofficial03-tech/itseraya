@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
-import { Home, LayoutGrid, Search, User, X } from "lucide-react";
+import { Home, LayoutGrid, Search, Heart, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
@@ -81,12 +81,12 @@ const BottomNav = () => {
             <span>Search</span>
           </button>
           <NavLink
-            to={user ? "/profile" : "/login"}
+            to="/wishlist"
             className={linkClass}
-            aria-label="Profile"
+            aria-label="Wishlist"
           >
-            <User className="h-5 w-5" />
-            <span>Profile</span>
+            <Heart className="h-5 w-5" />
+            <span>Wishlist</span>
           </NavLink>
         </div>
       </nav>

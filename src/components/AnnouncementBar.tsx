@@ -60,7 +60,7 @@ const AnnouncementBar = () => {
       <span>{current.message}</span>
       {current.cta_text && current.cta_url && (
         <a
-          href={current.cta_url}
+          href={safeUrl(current.cta_url)}
           className="underline underline-offset-2 font-medium hover:opacity-80"
         >
           {current.cta_text}

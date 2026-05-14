@@ -257,51 +257,6 @@ const Header = () => {
                   ))}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
-                    Account
-                  </p>
-                  {user ? (
-                    <>
-                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-border/60">
-                        <Avatar className="h-10 w-10 border border-gold">
-                          <AvatarImage src={profile?.avatar_url || (user.user_metadata as any)?.avatar_url || undefined} />
-                          <AvatarFallback className="bg-charcoal text-ivory text-xs">
-                            {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium truncate">
-                            {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
-                          </p>
-                          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                        </div>
-                      </div>
-                      <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                      <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                    </>
-                  )}
-
-                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Info
                   </p>
                   {!isInstalled && (
@@ -357,33 +312,6 @@ const Header = () => {
                     </span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </button>
-                </div>
-
-                <div className="shrink-0 border-t border-border p-3 space-y-1 bg-[hsl(var(--background))]">
-                  {isStaff && (
-                    <button
-                      onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium border border-gold/40 text-charcoal hover:bg-gold/10 transition-colors"
-                    >
-                      <Cog className="h-4 w-4" /> Switch to Admin Mode
-                    </button>
-                  )}
-                  {user && (
-                    <button
-                      onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors"
-                    >
-                      <LogOut className="h-4 w-4" /> Sign out
-                    </button>
-                  )}
-                  <div className="px-3 py-2 text-center">
-                    <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
-                      {settings?.store_name || "Eraya"}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground/80 mt-1">
-                      © {new Date().getFullYear()} All rights reserved
-                    </p>
-                  </div>
                 </div>
 
               </SheetContent>

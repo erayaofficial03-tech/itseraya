@@ -58,7 +58,7 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
-  const { isIOS, isInstalled, triggerInstall } = useInstallPrompt();
+  const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
   const [q, setQ] = useState("");
   const logo = settings?.logo_url || erayaLogo;
 

@@ -100,7 +100,7 @@ const BottomNav = () => {
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="md:hidden fixed inset-0 z-[60] bg-white flex flex-col"
+          className="md:hidden fixed inset-0 z-[60] bg-white flex flex-col ios-fill-screen"
         >
           <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: "#EDE8E1" }}>
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />

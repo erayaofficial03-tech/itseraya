@@ -185,15 +185,12 @@ const Header = () => {
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                       {isStaff && (
                         <button
@@ -201,7 +198,6 @@ const Header = () => {
                           className={`${drawerLinkClass} w-full text-left`}
                         >
                           <span className="flex items-center gap-2"><Cog className="h-4 w-4" /> Switch to Admin Panel</span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         </button>
                       )}
                       <button
@@ -240,7 +236,6 @@ const Header = () => {
                     return (
                       <Link key={sc.label} to={sc.to} onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {sc.label}</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
                     );
                   })}
@@ -251,11 +246,11 @@ const Header = () => {
                       <span className="flex items-center gap-2">
                         <LayoutGrid className="h-4 w-4" /> {s(settings, "nav_catalogue_label")}
                       </span>
-                      <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                      <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-data-[state=open]:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <Link to="/catalogue" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm text-muted-foreground`}>
-                        View all <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        View all
                       </Link>
                       {visibleCategories.map((c) => (
                         <Link
@@ -264,7 +259,7 @@ const Header = () => {
                           onClick={closeMenu}
                           className={`${drawerLinkClass} pl-10 text-sm`}
                         >
-                          {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          {c.name}
                         </Link>
                       ))}
                     </CollapsibleContent>
@@ -283,7 +278,7 @@ const Header = () => {
                         Install Eraya App
                       </span>
                       <span
-                        className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full ${
+                        className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full shrink-0 ${
                           isIOS
                             ? "bg-[#F0F0F0] text-[#555]"
                             : "bg-[#E8F5E9] text-[#2E7D32]"
@@ -294,13 +289,13 @@ const Header = () => {
                     </button>
                   )}
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
-                    About Eraya <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <span>About Eraya</span>
                   </Link>
                   <Link to="/faq" onClick={closeMenu} className={drawerLinkClass}>
-                    FAQ <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <span>FAQ</span>
                   </Link>
                   <Link to="/care" onClick={closeMenu} className={drawerLinkClass}>
-                    Jewellery Care <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <span>Jewellery Care</span>
                   </Link>
 
                   {/* Policies (collapsible) */}
@@ -309,23 +304,23 @@ const Header = () => {
                       <span className="flex items-center gap-2">
                         <FileText className="h-4 w-4" /> Policies
                       </span>
-                      <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                      <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-data-[state=open]:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <Link to="/return-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
-                        Return Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        Return Policy
                       </Link>
                       <Link to="/shipping-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
-                        Shipping Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        Shipping Policy
                       </Link>
                       <Link to="/cancellation-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
-                        Cancellation Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        Cancellation Policy
                       </Link>
                       <Link to="/privacy-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
-                        Privacy Policy <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        Privacy Policy
                       </Link>
                       <Link to="/terms-of-service" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>
-                        Terms of Service <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        Terms of Service
                       </Link>
                     </CollapsibleContent>
                   </Collapsible>
@@ -337,7 +332,6 @@ const Header = () => {
                     <span className="flex items-center gap-2">
                       <MessageCircle className="h-4 w-4" /> Support
                     </span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                   </button>
                 </div>
 

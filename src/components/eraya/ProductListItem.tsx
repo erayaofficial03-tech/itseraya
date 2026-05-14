@@ -28,7 +28,7 @@ const ProductListItem = ({ product }: Props) => {
       className="group flex items-center gap-4 py-3 px-1 active:bg-muted/40 transition-colors"
     >
       <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-muted/30">
-        <img
+        <SafeImage
           src={withImageParams(productImage(product), 200, 80)}
           alt={product.name}
           loading="lazy"

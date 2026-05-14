@@ -134,6 +134,7 @@ const App = () => (
               <Route path="/faq" element={<Public><Faq /></Public>} />
               <Route path="/care" element={<Public><CareGuide /></Public>} />
               <Route path="/contact" element={<Public><Contact /></Public>} />
+              <Route path="/domain-health" element={<DomainHealth />} />
 
               {/* Customer auth */}
               <Route path="/login" element={<Login />} />

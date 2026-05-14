@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
 import ShareMenu from "@/components/product/ShareMenu";
+import SafeImage from "@/components/ui/SafeImage";
 import {
   useProductBySlug, useProducts, useSettings,
   formatINR, productImage, discountPct, withImageParams,

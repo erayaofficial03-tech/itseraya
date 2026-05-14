@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { safeUrl } from "@/lib/safeUrl";
 
 export type Banner = {
   id: string;
@@ -174,7 +175,7 @@ const HeroSlider = () => {
                   style={{ background: "var(--gradient-gold)" }}
                 >
                   <Link
-                    to={slide.cta_url}
+                    to={safeUrl(slide.cta_url)}
                     onClick={() => {
                       if (slide.id !== "__fallback__") {
                         logBannerClick(slide.id, window.location.pathname);

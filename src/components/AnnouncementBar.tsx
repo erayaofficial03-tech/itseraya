@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useAnnouncements } from "@/lib/queries";
+import { safeUrl } from "@/lib/safeUrl";
 
 const STORAGE_KEY = "eraya:announcement-dismissed-v2";
 
@@ -59,7 +60,7 @@ const AnnouncementBar = () => {
       <span>{current.message}</span>
       {current.cta_text && current.cta_url && (
         <a
-          href={current.cta_url}
+          href={safeUrl(current.cta_url)}
           className="underline underline-offset-2 font-medium hover:opacity-80"
         >
           {current.cta_text}

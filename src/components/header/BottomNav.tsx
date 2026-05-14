@@ -62,6 +62,7 @@ const BottomNav = () => {
         style={{
           paddingBottom: "env(safe-area-inset-bottom)",
           borderTopColor: "#EDE8E1",
+          boxShadow: "0 -1px 0 #EDE8E1",
         }}
       >
         <div className="flex items-stretch h-16">

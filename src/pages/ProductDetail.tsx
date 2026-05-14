@@ -128,13 +128,11 @@ const ProductDetail = () => {
         <section className="md:px-6 grid grid-cols-1 lg:grid-cols-2 md:gap-12">
           <div className="relative">
             <div className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative">
-              <img
+              <SafeImage
                 src={withImageParams(images[activeImg], 900, 85)}
                 alt={product.name}
                 loading="eager"
                 decoding="async"
-                crossOrigin="anonymous"
-                data-product-image
                 className="w-full h-full object-cover"
               />
               {/* Mobile overlay buttons */}

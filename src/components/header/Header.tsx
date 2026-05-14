@@ -285,7 +285,7 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Info
                   </p>
-                  {!isInstalled && (
+                  {showInstallButton && (
                     <button
                       onClick={handleInstall}
                       className={`${drawerLinkClass} w-full text-left`}

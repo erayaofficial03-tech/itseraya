@@ -9,6 +9,7 @@ import {
   discountPct,
   withImageParams,
 } from "@/lib/queries";
+import SafeImage from "@/components/ui/SafeImage";
 
 interface Props {
   product: Product;
@@ -26,7 +27,7 @@ const ProductCard = ({ product }: Props) => {
     <Link to={`/jewellery/${product.slug ?? product.id}`} className="block group h-full">
       <div className="h-full flex flex-col bg-background">
         <div className="relative aspect-square bg-muted/30 overflow-hidden">
-          <img
+          <SafeImage
             src={withImageParams(productImage(product), 400, 80)}
             alt={product.name}
             loading="lazy"

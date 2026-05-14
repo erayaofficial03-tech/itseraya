@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
 import ShareMenu from "@/components/product/ShareMenu";
+import SafeImage from "@/components/ui/SafeImage";
 import {
   useProductBySlug, useProducts, useSettings,
   formatINR, productImage, discountPct, withImageParams,
@@ -127,13 +128,11 @@ const ProductDetail = () => {
         <section className="md:px-6 grid grid-cols-1 lg:grid-cols-2 md:gap-12">
           <div className="relative">
             <div className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative">
-              <img
+              <SafeImage
                 src={withImageParams(images[activeImg], 900, 85)}
                 alt={product.name}
                 loading="eager"
                 decoding="async"
-                crossOrigin="anonymous"
-                data-product-image
                 className="w-full h-full object-cover"
               />
               {/* Mobile overlay buttons */}
@@ -163,7 +162,7 @@ const ProductDetail = () => {
                       i === activeImg ? "border-gold" : "border-transparent"
                     }`}
                   >
-                    <img
+                    <SafeImage
                       src={withImageParams(url, 200, 70)}
                       alt=""
                       loading="lazy"

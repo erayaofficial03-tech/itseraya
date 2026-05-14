@@ -145,8 +145,9 @@ const AdminLayout = () => {
     qc.clear();
     navigate("/login", { replace: true });
   };
-  const switchToCustomer = async () => {
-    await switchMode("customer");
+  const switchToCustomer = () => {
+    // Fire-and-forget the mode update so a slow/failed DB call never blocks navigation
+    void switchMode("customer").catch(() => {});
     navigate("/", { replace: true });
   };
   const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.path : location.pathname.startsWith(i.path)))?.label || "Admin";

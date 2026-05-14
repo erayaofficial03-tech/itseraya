@@ -3,6 +3,7 @@ import { Instagram, Facebook, Youtube, Twitter, MessageCircle, Link as LinkIcon 
 import erayaLogo from "@/assets/eraya-logo.png";
 import { useSettings, useSocialLinks } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
+import { safeUrl } from "@/lib/safeUrl";
 
 const platformIcon = (platform: string) => {
   const p = platform.toLowerCase();

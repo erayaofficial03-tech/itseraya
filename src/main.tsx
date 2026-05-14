@@ -17,24 +17,27 @@ const isPreviewHost =
 if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
 } else if ("serviceWorker" in navigator) {
-  Promise.all([
-    import("virtual:pwa-register"),
-    import("sonner"),
-  ]).then(([{ registerSW }, { toast }]) => {
+  import("virtual:pwa-register").then(({ registerSW }) => {
     const updateSW = registerSW({
       immediate: true,
-      onNeedRefresh() {
-        toast("A new version of Eraya is available", {
-          description: "Reload to get the latest improvements.",
-          duration: Infinity,
-          action: {
-            label: "Reload",
-            onClick: () => updateSW(true),
-          },
+      // Poll for a new build every 60s so visitors auto-refresh after a publish
+      onRegisteredSW(swUrl, registration) {
+        if (!registration) return;
+        const check = () => registration.update().catch(() => {});
+        setInterval(check, 60_000);
+        // Also re-check whenever the tab regains focus
+        window.addEventListener("focus", check);
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") check();
         });
       },
-      onOfflineReady() {
-        toast.success("Eraya is ready to use offline");
+      // New build detected → wipe caches and reload silently
+      async onNeedRefresh() {
+        try {
+          const names = await caches.keys();
+          await Promise.all(names.map((n) => caches.delete(n)));
+        } catch {}
+        updateSW(true);
       },
     });
   });

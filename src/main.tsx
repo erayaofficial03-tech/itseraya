@@ -17,7 +17,25 @@ const isPreviewHost =
 if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
 } else if ("serviceWorker" in navigator) {
-  import("virtual:pwa-register").then(({ registerSW }) => {
-    registerSW({ immediate: true });
+  Promise.all([
+    import("virtual:pwa-register"),
+    import("sonner"),
+  ]).then(([{ registerSW }, { toast }]) => {
+    const updateSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {
+        toast("A new version of Eraya is available", {
+          description: "Reload to get the latest improvements.",
+          duration: Infinity,
+          action: {
+            label: "Reload",
+            onClick: () => updateSW(true),
+          },
+        });
+      },
+      onOfflineReady() {
+        toast.success("Eraya is ready to use offline");
+      },
+    });
   });
 }

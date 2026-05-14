@@ -24,6 +24,8 @@ if (isPreviewHost || isInIframe) {
       onRegisteredSW(swUrl, registration) {
         if (!registration) return;
         const check = () => registration.update().catch(() => {});
+        // Check immediately, then poll every 60s
+        check();
         setInterval(check, 60_000);
         // Also re-check whenever the tab regains focus
         window.addEventListener("focus", check);
@@ -37,7 +39,16 @@ if (isPreviewHost || isInIframe) {
           const names = await caches.keys();
           await Promise.all(names.map((n) => caches.delete(n)));
         } catch {}
-        updateSW(true);
+        try {
+          await updateSW(true);
+        } catch {
+          // Fallback: nuke the SW and hard reload so visitors aren't stranded
+          try {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map((r) => r.unregister()));
+          } catch {}
+          window.location.reload();
+        }
       },
     });
   });

@@ -48,7 +48,11 @@ export default defineConfig(({ mode }) => ({
           {
             urlPattern: ({ request }) => request.mode === "navigate",
             handler: "NetworkFirst",
-            options: { cacheName: "html", networkTimeoutSeconds: 3 },
+            options: {
+              cacheName: "html",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 },
+            },
           },
           {
             urlPattern: ({ request }) => request.destination === "image",

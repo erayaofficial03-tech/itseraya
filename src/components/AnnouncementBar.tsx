@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useAnnouncements } from "@/lib/queries";
+import { safeUrl } from "@/lib/safeUrl";
 
 const STORAGE_KEY = "eraya:announcement-dismissed-v2";
 

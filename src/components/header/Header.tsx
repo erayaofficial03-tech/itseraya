@@ -161,33 +161,8 @@ const Header = () => {
                     Search jewellery…
                   </button>
 
+                  {/* ACCOUNT (moved to top) */}
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-1">
-                    Shop
-                  </p>
-                  <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
-                    {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                  {shopShortcuts.map((sc) => {
-                    const Icon = sc.icon;
-                    return (
-                      <Link key={sc.label} to={sc.to} onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {sc.label}</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                    );
-                  })}
-                  {visibleCategories.map((c) => (
-                    <Link
-                      key={c.id}
-                      to={`/collection/${c.slug}`}
-                      onClick={closeMenu}
-                      className={drawerLinkClass}
-                    >
-                      {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </Link>
-                  ))}
-
-                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Account
                   </p>
                   {user ? (
@@ -218,19 +193,68 @@ const Header = () => {
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       </Link>
+                      {isStaff && (
+                        <button
+                          onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
+                          className={`${drawerLinkClass} w-full text-left`}
+                        >
+                          <span className="flex items-center gap-2"><Cog className="h-4 w-4" /> Switch to Admin Panel</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </button>
+                      )}
+                      <button
+                        onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
+                        className={`${drawerLinkClass} w-full text-left`}
+                      >
+                        <span className="flex items-center gap-2"><LogOut className="h-4 w-4" /> Sign Out</span>
+                      </button>
                     </>
                   ) : (
-                    <>
-                      <Link to="/login" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    <div className="my-3 rounded-xl border border-gold/50 bg-gold/5 p-4">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="h-10 w-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0">
+                          <User className="h-5 w-5 text-gold" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-foreground">Sign In to Your Account</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">Save wishlist & track your enquiries</p>
+                        </div>
+                      </div>
+                      <Link
+                        to="/login"
+                        onClick={closeMenu}
+                        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-charcoal text-ivory text-sm font-medium hover:opacity-90 transition"
+                      >
+                        Sign In <ChevronRight className="h-4 w-4" />
                       </Link>
-                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
-                    </>
+                    </div>
                   )}
+
+                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                    Shop
+                  </p>
+                  <Link to="/catalogue" onClick={closeMenu} className={drawerLinkClass}>
+                    {s(settings, "nav_catalogue_label")} <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                  {shopShortcuts.map((sc) => {
+                    const Icon = sc.icon;
+                    return (
+                      <Link key={sc.label} to={sc.to} onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Icon className="h-4 w-4" /> {sc.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    );
+                  })}
+                  {visibleCategories.map((c) => (
+                    <Link
+                      key={c.id}
+                      to={`/collection/${c.slug}`}
+                      onClick={closeMenu}
+                      className={drawerLinkClass}
+                    >
+                      {c.name} <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </Link>
+                  ))}
 
                   <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
                     Info
@@ -288,33 +312,6 @@ const Header = () => {
                     </span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </button>
-                </div>
-
-                <div className="shrink-0 border-t border-border p-3 space-y-1 bg-[hsl(var(--background))]">
-                  {isStaff && (
-                    <button
-                      onClick={async () => { await switchMode("admin"); closeMenu(); navigate("/admin"); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium border border-gold/40 text-charcoal hover:bg-gold/10 transition-colors"
-                    >
-                      <Cog className="h-4 w-4" /> Switch to Admin Mode
-                    </button>
-                  )}
-                  {user && (
-                    <button
-                      onClick={async () => { await signOut(); closeMenu(); navigate("/"); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-muted transition-colors"
-                    >
-                      <LogOut className="h-4 w-4" /> Sign out
-                    </button>
-                  )}
-                  <div className="px-3 py-2 text-center">
-                    <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
-                      {settings?.store_name || "Eraya"}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground/80 mt-1">
-                      © {new Date().getFullYear()} All rights reserved
-                    </p>
-                  </div>
                 </div>
 
               </SheetContent>

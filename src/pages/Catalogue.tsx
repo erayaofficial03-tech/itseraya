@@ -19,7 +19,7 @@ const Catalogue = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
   const [params] = useSearchParams();
-  const filterParam = params.get("filter"); // new | bestsellers | sale
+  const filterParam = params.get("filter"); // new | bestseller | featured | sale
   const collectionParam = params.get("collection"); // bridal | daily | office | party
   const visible = products.filter((p) => p.is_visible);
   const visibleCategories = categories.filter((c) => c.is_visible);
@@ -29,7 +29,8 @@ const Catalogue = () => {
     : collectionParam === "office" ? "Office Wear"
     : collectionParam === "party" ? "Party Wear"
     : filterParam === "new" ? "New Arrivals"
-    : filterParam === "bestsellers" ? "Bestsellers"
+    : filterParam === "bestseller" ? "Trending Now"
+    : filterParam === "featured" ? "Hot Selling"
     : filterParam === "sale" ? "On Sale"
     : s(settings, "catalogue_heading");
 
@@ -41,7 +42,9 @@ const Catalogue = () => {
       list = [...list].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at)).slice(0, 60);
     } else if (filterParam === "sale") {
       list = list.filter((p) => p.discounted_price && p.discounted_price < p.original_price);
-    } else if (filterParam === "bestsellers") {
+    } else if (filterParam === "bestseller") {
+      list = list.filter((p) => (p.tags || []).includes("bestseller"));
+    } else if (filterParam === "featured") {
       list = list.filter((p) => p.is_featured);
     }
     if (collectionParam) {

@@ -65,7 +65,8 @@ const Header = () => {
 
   const shopShortcuts = [
     { label: "New Arrivals", to: "/catalogue?filter=new", icon: Sparkles },
-    { label: "Bestsellers", to: "/catalogue?filter=bestsellers", icon: Crown },
+    { label: "Trending Now", to: "/catalogue?filter=bestseller", icon: Crown },
+    { label: "Hot Selling", to: "/catalogue?filter=featured", icon: Flame },
     { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
   ];
 

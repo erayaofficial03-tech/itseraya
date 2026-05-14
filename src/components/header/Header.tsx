@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut } from "lucide-react";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { logInstallEvent } from "@/lib/installAnalytics";
 import IOSInstallGuide from "@/components/IOSInstallGuide";
@@ -65,7 +65,8 @@ const Header = () => {
 
   const shopShortcuts = [
     { label: "New Arrivals", to: "/catalogue?filter=new", icon: Sparkles },
-    { label: "Bestsellers", to: "/catalogue?filter=bestsellers", icon: Crown },
+    { label: "Trending Now", to: "/catalogue?filter=bestseller", icon: Crown },
+    { label: "Hot Selling", to: "/catalogue?filter=featured", icon: Flame },
     { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
   ];
 

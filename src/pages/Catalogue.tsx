@@ -144,7 +144,17 @@ const Catalogue = () => {
           ))}
         </div>
 
-        <div className="flex justify-end mb-4">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <Select value={sortParam} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-[200px] bg-white">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="price-asc">Price: Low to High</SelectItem>
+              <SelectItem value="price-desc">Price: High to Low</SelectItem>
+            </SelectContent>
+          </Select>
           <ViewToggle mode={view} onChange={setView} />
         </div>
 

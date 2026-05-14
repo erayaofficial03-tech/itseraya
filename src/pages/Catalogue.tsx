@@ -14,13 +14,16 @@ import { openWhatsApp } from "@/lib/whatsapp";
 import erayaLogo from "@/assets/eraya-logo.png";
 import { toast } from "sonner";
 
+const priceOf = (p: any) => (p.discounted_price ?? p.original_price) as number;
+
 const Catalogue = () => {
   const { data: products = [] } = useProducts();
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const filterParam = params.get("filter"); // new | bestseller | featured | sale
   const collectionParam = params.get("collection"); // bridal | daily | office | party
+  const sortParam = (params.get("sort") || "newest") as "newest" | "price-asc" | "price-desc";
   const visible = products.filter((p) => p.is_visible);
   const visibleCategories = categories.filter((c) => c.is_visible);
   const heading =
@@ -36,6 +39,14 @@ const Catalogue = () => {
 
   const [activeCat, setActiveCat] = useState<string>("all");
   const [view, setView] = useViewMode();
+
+  const handleSortChange = (value: string) => {
+    const next = new URLSearchParams(params);
+    if (!value || value === "newest") next.delete("sort");
+    else next.set("sort", value);
+    setParams(next, { replace: true });
+  };
+
   const filtered = useMemo(() => {
     let list = visible;
     if (filterParam === "new") {
@@ -53,8 +64,16 @@ const Catalogue = () => {
       );
     }
     if (activeCat !== "all") list = list.filter((p) => p.category_id === activeCat);
+
+    if (sortParam === "price-asc") {
+      list = [...list].sort((a, b) => priceOf(a) - priceOf(b));
+    } else if (sortParam === "price-desc") {
+      list = [...list].sort((a, b) => priceOf(b) - priceOf(a));
+    } else {
+      list = [...list].sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+    }
     return list;
-  }, [visible, activeCat, filterParam, collectionParam]);
+  }, [visible, activeCat, filterParam, collectionParam, sortParam]);
 
   return (
     <div className="min-h-screen bg-background">

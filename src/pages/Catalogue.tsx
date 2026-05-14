@@ -130,28 +130,63 @@ const Catalogue = () => {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-16 max-w-sm mx-auto">
-            <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-10 mx-auto mb-5 object-contain opacity-90" />
-            <p className="font-medium text-foreground mb-2">Our collection is coming soon</p>
-            <p className="text-sm text-muted-foreground mb-6">
-              Check back shortly for new arrivals.
-            </p>
-            {settings?.whatsapp_number && (
-              <Button
-                variant="outline"
-                className="border-green-600 text-green-700 hover:bg-green-50"
-                onClick={() =>
-                  openWhatsApp(
-                    settings.whatsapp_number!.replace(/\D/g, ""),
-                    "Hi Eraya! When will the new collection drop?",
-                  )
-                }
-              >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                WhatsApp us
-              </Button>
-            )}
-          </div>
+          (filterParam || collectionParam || activeCat !== "all") ? (
+            <div className="text-center py-16 max-w-sm mx-auto">
+              <div className="mx-auto mb-5 h-14 w-14 rounded-full bg-muted flex items-center justify-center">
+                <PackageSearch className="h-7 w-7 text-muted-foreground" />
+              </div>
+              <p className="font-serif text-xl text-foreground mb-2">No products match this filter</p>
+              <p className="text-sm text-muted-foreground mb-6">
+                We couldn't find anything in <span className="font-medium text-foreground">{heading}</span> right now. Try browsing the full collection.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <Button asChild className="bg-charcoal text-white hover:bg-charcoal/90">
+                  <Link to="/catalogue">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Back to Shop
+                  </Link>
+                </Button>
+                {settings?.whatsapp_number && (
+                  <Button
+                    variant="outline"
+                    className="border-green-600 text-green-700 hover:bg-green-50"
+                    onClick={() =>
+                      openWhatsApp(
+                        settings.whatsapp_number!.replace(/\D/g, ""),
+                        `Hi Eraya! Do you have anything under "${heading}"?`,
+                      )
+                    }
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    WhatsApp us
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-16 max-w-sm mx-auto">
+              <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-10 mx-auto mb-5 object-contain opacity-90" />
+              <p className="font-medium text-foreground mb-2">Our collection is coming soon</p>
+              <p className="text-sm text-muted-foreground mb-6">
+                Check back shortly for new arrivals.
+              </p>
+              {settings?.whatsapp_number && (
+                <Button
+                  variant="outline"
+                  className="border-green-600 text-green-700 hover:bg-green-50"
+                  onClick={() =>
+                    openWhatsApp(
+                      settings.whatsapp_number!.replace(/\D/g, ""),
+                      "Hi Eraya! When will the new collection drop?",
+                    )
+                  }
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  WhatsApp us
+                </Button>
+              )}
+            </div>
+          )
         ) : view === "list" ? (
           <div className="divide-y divide-border">
             {filtered.map((p) => <ProductListItem key={p.id} product={p} />)}

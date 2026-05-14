@@ -14,23 +14,22 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
   // Cap every section at 12 products (6×2 desktop / 4×2 tablet / 3×2 mobile)
   const items = products.slice(0, 12);
 
-  // iOS safe-area insets added on top of the per-breakpoint base padding so
-  // cards never get clipped behind a notch / rounded screen corner.
-  const safePadX = {
-    paddingLeft: "max(1rem, env(safe-area-inset-left))",
-    paddingRight: "max(1rem, env(safe-area-inset-right))",
-  } as const;
-  const safeScrollPadX = {
-    scrollPaddingLeft: "max(1rem, env(safe-area-inset-left))",
-    scrollPaddingRight: "max(1rem, env(safe-area-inset-right))",
-  } as const;
+  // iOS safe-area insets are folded into each breakpoint's base padding via
+  // max(...), so cards never get clipped by a notch / rounded corner AND the
+  // desktop padding is preserved.
+  const padX =
+    "pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] " +
+    "md:pl-[max(1.5rem,env(safe-area-inset-left))] md:pr-[max(1.5rem,env(safe-area-inset-right))] " +
+    "lg:pl-[max(2rem,env(safe-area-inset-left))] lg:pr-[max(2rem,env(safe-area-inset-right))]";
+
+  const scrollPadX =
+    "[scroll-padding-left:max(1rem,env(safe-area-inset-left))] [scroll-padding-right:max(1rem,env(safe-area-inset-right))] " +
+    "md:[scroll-padding-left:max(1.5rem,env(safe-area-inset-left))] md:[scroll-padding-right:max(1.5rem,env(safe-area-inset-right))] " +
+    "lg:[scroll-padding-left:max(2rem,env(safe-area-inset-left))] lg:[scroll-padding-right:max(2rem,env(safe-area-inset-right))]";
 
   return (
     <section className="w-full mb-10 md:mb-16">
-      <div
-        className="flex justify-between items-end mb-4 md:mb-6 md:px-6 lg:px-8"
-        style={safePadX}
-      >
+      <div className={`flex justify-between items-end mb-4 md:mb-6 ${padX}`}>
         <h2 className="font-serif text-[22px] md:text-3xl text-foreground">{title}</h2>
         {viewAllHref && (
           <Link to={viewAllHref} className="text-sm text-gold hover:underline whitespace-nowrap">
@@ -41,15 +40,12 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
 
       {/* Horizontal swipe scroll — 2 rows, responsive columns per viewport */}
       <div
-        className="
-          overflow-x-auto overflow-y-hidden scrollbar-hide
-          md:px-6 lg:px-8 pb-3
-          md:scroll-pl-6 lg:scroll-pl-8
-          md:scroll-pr-6 lg:scroll-pr-8
+        className={`
+          overflow-x-auto overflow-y-hidden scrollbar-hide pb-3
+          ${padX} ${scrollPadX}
           [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain]
           snap-x snap-mandatory scroll-smooth
-        "
-        style={{ ...safePadX, ...safeScrollPadX }}
+        `}
       >
         <div
           className="

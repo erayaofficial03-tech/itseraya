@@ -274,3 +274,12 @@
     .ios-no-zoom { font-size: 16px !important; }
   }
 }
+
+/* iOS-safe full-screen overlay backdrop.
+   100dvh handles modern iOS keyboard collapsing the visual viewport,
+   -webkit-fill-available is the legacy fallback for older iOS Safari. */
+.ios-fill-screen {
+  height: 100vh;
+  height: 100dvh;
+  height: -webkit-fill-available;
+}

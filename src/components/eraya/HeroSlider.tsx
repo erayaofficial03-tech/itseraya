@@ -175,7 +175,7 @@ const HeroSlider = () => {
                   style={{ background: "var(--gradient-gold)" }}
                 >
                   <Link
-                    to={slide.cta_url}
+                    to={safeUrl(slide.cta_url)}
                     onClick={() => {
                       if (slide.id !== "__fallback__") {
                         logBannerClick(slide.id, window.location.pathname);

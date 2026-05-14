@@ -68,10 +68,24 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
       retry: 2,
-      refetchOnWindowFocus: false,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchIntervalInBackground: false,
     },
   },
 });
+
+// iOS PWA: invalidate stale queries when app returns to foreground
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      queryClient.invalidateQueries({
+        predicate: (query) => Date.now() - query.state.dataUpdatedAt > 5 * 60 * 1000,
+      });
+    }
+  });
+}
 
 const Public = ({ children }: { children: React.ReactNode }) => (
   <RoleGuard require="public">{children}</RoleGuard>

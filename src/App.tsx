@@ -89,7 +89,9 @@ if (typeof document !== "undefined") {
 }
 
 const Public = ({ children }: { children: React.ReactNode }) => (
-  <RoleGuard require="public">{children}</RoleGuard>
+  <RoleGuard require="public">
+    <StorefrontPage>{children}</StorefrontPage>
+  </RoleGuard>
 );
 const Admin = ({ children }: { children: React.ReactNode }) => (
   <RoleGuard require="admin">{children}</RoleGuard>

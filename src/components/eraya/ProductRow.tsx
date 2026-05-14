@@ -30,6 +30,7 @@ const ProductRow = ({ title, products, viewAllHref }: Props) => {
         className="
           overflow-x-auto overflow-y-hidden scrollbar-hide
           px-4 md:px-6 pb-3
+          scroll-pl-4 md:scroll-pl-6 scroll-pr-4 md:scroll-pr-6
           [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain]
           snap-x snap-mandatory scroll-smooth
         "

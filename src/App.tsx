@@ -12,6 +12,7 @@ import { lazyWithRetry } from "./lib/lazyWithRetry";
 
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import StorefrontPage from "./components/layout/StorefrontPage";
 
 
 import BrandProvider from "./components/providers/BrandProvider";
@@ -88,7 +89,9 @@ if (typeof document !== "undefined") {
 }
 
 const Public = ({ children }: { children: React.ReactNode }) => (
-  <RoleGuard require="public">{children}</RoleGuard>
+  <RoleGuard require="public">
+    <StorefrontPage>{children}</StorefrontPage>
+  </RoleGuard>
 );
 const Admin = ({ children }: { children: React.ReactNode }) => (
   <RoleGuard require="admin">{children}</RoleGuard>

@@ -109,7 +109,7 @@ const BottomNav = () => {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search jewellery…"
-              className="flex-1 outline-none bg-transparent text-[18px] placeholder:text-muted-foreground"
+              className="ios-no-zoom flex-1 outline-none bg-transparent text-[18px] placeholder:text-muted-foreground"
             />
             <button
               onClick={() => setSearchOpen(false)}

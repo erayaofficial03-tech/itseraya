@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { safeUrl } from "@/lib/safeUrl";
 
 export type Banner = {
   id: string;

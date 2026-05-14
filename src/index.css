@@ -266,3 +266,11 @@
     overscroll-behavior-y: none;
   }
 }
+
+/* iOS zoom-on-focus prevention — opt-in via .ios-no-zoom on the input.
+   Only applies on iOS Safari at phone widths so desktop text-sm inputs are unaffected. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 480px) {
+    .ios-no-zoom { font-size: 16px !important; }
+  }
+}

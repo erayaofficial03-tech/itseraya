@@ -19,10 +19,12 @@ const Index = () => {
   const visible = products.filter((p) => p.is_visible);
   const newArrivals = [...visible]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 10);
-  const trending = visible.filter((p) => p.tags.includes("bestseller")).slice(0, 10);
-  const onSale = visible.filter((p) => p.discounted_price && p.original_price > p.discounted_price);
-  const featured = visible.filter((p) => p.is_featured).slice(0, 10);
+    .slice(0, 12);
+  const trending = visible.filter((p) => p.tags.includes("bestseller")).slice(0, 12);
+  const onSale = visible
+    .filter((p) => p.discounted_price && p.original_price > p.discounted_price)
+    .slice(0, 12);
+  const featured = visible.filter((p) => p.is_featured).slice(0, 12);
 
   useEffect(() => {
     const social = (socials || []).filter((l: any) => l.is_visible).map((l: any) => l.url);

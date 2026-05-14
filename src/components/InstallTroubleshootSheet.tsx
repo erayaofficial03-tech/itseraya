@@ -77,7 +77,7 @@ const InstallTroubleshootSheet = ({ open, onClose }: Props) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[80] bg-black/60"
+            className="fixed inset-0 z-[80] bg-black/60 ios-fill-screen"
             aria-hidden="true"
           />
           <motion.div
@@ -91,7 +91,7 @@ const InstallTroubleshootSheet = ({ open, onClose }: Props) => {
             aria-labelledby={titleId}
             aria-describedby={descId}
             tabIndex={-1}
-            className="fixed bottom-0 left-0 right-0 z-[90] bg-white rounded-t-3xl px-6 pt-6 pb-10 max-h-[92vh] overflow-y-auto focus:outline-none"
+            className="fixed bottom-0 left-0 right-0 z-[90] bg-white rounded-t-3xl px-6 pt-6 pb-10 max-h-[92dvh] overflow-y-auto focus:outline-none"
           >
             <div className="w-10 h-1 bg-[#EDE8E1] rounded-full mx-auto mb-6" />
             <button

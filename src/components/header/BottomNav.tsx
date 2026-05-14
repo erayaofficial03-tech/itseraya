@@ -81,12 +81,12 @@ const BottomNav = () => {
             <span>Search</span>
           </button>
           <NavLink
-            to={user ? "/profile" : "/login"}
+            to="/wishlist"
             className={linkClass}
-            aria-label="Profile"
+            aria-label="Wishlist"
           >
-            <User className="h-5 w-5" />
-            <span>Profile</span>
+            <Heart className="h-5 w-5" />
+            <span>Wishlist</span>
           </NavLink>
         </div>
       </nav>

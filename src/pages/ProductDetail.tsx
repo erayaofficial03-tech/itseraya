@@ -162,7 +162,7 @@ const ProductDetail = () => {
                       i === activeImg ? "border-gold" : "border-transparent"
                     }`}
                   >
-                    <img
+                    <SafeImage
                       src={withImageParams(url, 200, 70)}
                       alt=""
                       loading="lazy"

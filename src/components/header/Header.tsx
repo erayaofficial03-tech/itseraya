@@ -156,7 +156,7 @@ const Header = () => {
                 <SheetHeader className="px-6 py-5 border-b border-border items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
-                      <img src={logo} alt={settings?.store_name || "Eraya"} draggable={false} className="brand-logo h-12 w-auto object-contain" />
+                      <BrandLogo className="h-12 w-auto object-contain" />
                     </Link>
                   </SheetTitle>
                 </SheetHeader>

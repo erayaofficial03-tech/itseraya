@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  LayoutDashboard, Diamond, Tag, Megaphone, Image, Star, Monitor, Palette, Type,
+  LayoutDashboard, Diamond, Tag, Tags, Megaphone, Image, Star, Monitor, Palette, Type,
   Search, FileText, MessageSquare, Users, UserCog, Settings as SettingsIcon,
   LogOut, Menu, Eye,
 } from "lucide-react";
@@ -22,6 +22,7 @@ const navItems: { label: string; path: string; end?: boolean; icon: any; roles: 
   { label: "Dashboard",         path: "/admin",              end: true, icon: LayoutDashboard, roles: ["admin","manager"] },
   { label: "Products",          path: "/admin/products",     icon: Diamond,         roles: ["admin","manager"] },
   { label: "Categories",        path: "/admin/categories",   icon: Tag,             roles: ["admin","manager"] },
+  { label: "Product Tags",      path: "/admin/tags",         icon: Tags,            roles: ["admin"] },
   { label: "Announcements",     path: "/admin/announcement", icon: Megaphone,       roles: ["admin","manager"] },
   { label: "Banners",           path: "/admin/banners",      icon: Image,           roles: ["admin","manager"] },
   { label: "USPs & Reviews",    path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },

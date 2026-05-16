@@ -60,6 +60,7 @@ const EnquiriesAdmin = lazyWithRetry(() => import("./pages/admin/EnquiriesAdmin"
 const AnnouncementAdmin = lazyWithRetry(() => import("./pages/admin/AnnouncementAdmin"), { reloadKey: "AnnouncementAdmin" });
 const BrandAdmin = lazyWithRetry(() => import("./pages/admin/BrandAdmin"), { reloadKey: "BrandAdmin" });
 const LabelsAdmin = lazyWithRetry(() => import("./pages/admin/LabelsAdmin"), { reloadKey: "LabelsAdmin" });
+const ProductTagsAdmin = lazyWithRetry(() => import("./pages/admin/ProductTagsAdmin"), { reloadKey: "ProductTagsAdmin" });
 const SeoAdmin = lazyWithRetry(() => import("./pages/admin/SeoAdmin"), { reloadKey: "SeoAdmin" });
 const CustomersAdmin = lazyWithRetry(() => import("./pages/admin/CustomersAdmin"), { reloadKey: "CustomersAdmin" });
 const PoliciesAdmin = lazyWithRetry(() => import("./pages/admin/PoliciesAdmin"), { reloadKey: "PoliciesAdmin" });
@@ -163,6 +164,7 @@ const App = () => (
                 <Route path="announcement" element={<AnnouncementAdmin />} />
                 <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
+                <Route path="tags" element={<AdminOnly><ProductTagsAdmin /></AdminOnly>} />
                 <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
                 <Route path="policies" element={<AdminOnly><PoliciesAdmin /></AdminOnly>} />
                 <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />

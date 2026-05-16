@@ -64,29 +64,42 @@ const HeroSlider = () => {
     }
   };
 
-  // Fallback hero when no banners
+  // Fallback hero when no banners — soft, feminine, editorial
   if (visible.length === 0) {
     return (
-      <section
-        className="relative w-full flex items-center"
-        style={{
-          minHeight: 420,
-          background: "linear-gradient(135deg, #1C1C1C 0%, #2C2010 50%, rgba(201,168,76,0.12) 100%)",
-        }}
-      >
-        <div className="px-6 max-w-xl">
-          <h1 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
-            {s(settings, "hero_headline")}
-          </h1>
-          <p className="text-white/80 text-sm md:text-base mt-3">
-            {s(settings, "hero_subtext")}
-          </p>
-          <a
-            href={s(settings, "hero_cta_url") || "/catalogue"}
-            className="mt-5 inline-block px-7 py-3 bg-[#C9A84C] text-white text-sm font-semibold rounded-full"
-          >
-            {s(settings, "hero_cta_label")}
-          </a>
+      <section className="relative w-full px-4 md:px-8 pt-3 md:pt-6">
+        <div
+          className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-br from-blush via-ivory-warm to-blush-deep/60"
+          style={{ minHeight: 460 }}
+        >
+          {/* Soft top-to-bottom ivory wash so any background image stays bright */}
+          {settings?.hero_image_url && (
+            <>
+              <img
+                src={settings.hero_image_url}
+                alt={s(settings, "hero_headline")}
+                decoding="async"
+                fetchPriority="high"
+                className="absolute inset-0 w-full h-full object-cover animate-soft-zoom"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ivory/85 via-ivory/30 to-transparent" />
+            </>
+          )}
+          <div className="relative z-10 h-full min-h-[460px] flex flex-col justify-end md:justify-center max-w-2xl px-7 md:px-14 py-10 md:py-16">
+            <span className="eyebrow animate-fade-up">New Season · Spring '26</span>
+            <h1 className="editorial-headline text-[44px] md:text-7xl text-ink mt-3 md:mt-4 animate-fade-up [animation-delay:80ms]">
+              {s(settings, "hero_headline")}
+            </h1>
+            <p className="font-body text-base md:text-lg text-ink-soft mt-4 md:mt-5 max-w-md animate-fade-up [animation-delay:160ms]">
+              {s(settings, "hero_subtext")}
+            </p>
+            <a
+              href={s(settings, "hero_cta_url") || "/catalogue"}
+              className="mt-7 md:mt-8 inline-flex w-fit items-center justify-center rounded-full bg-ink text-ivory uppercase tracking-[0.18em] text-xs px-8 py-4 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all ease-luxury animate-fade-up [animation-delay:240ms]"
+            >
+              {s(settings, "hero_cta_label")}
+            </a>
+          </div>
         </div>
       </section>
     );

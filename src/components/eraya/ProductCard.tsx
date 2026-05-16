@@ -16,6 +16,38 @@ interface Props {
   showWhatsAppIcon?: boolean;
 }
 
+/**
+ * Map raw product tags → elegant micro-labels shown on the product image.
+ * Only the first matching label is rendered to keep cards uncluttered.
+ */
+const LABELS: Array<{ match: RegExp; text: string; tone: "ink" | "champagne" | "blush" }> = [
+  { match: /bestseller|best-seller|best_seller/i, text: "Bestseller", tone: "champagne" },
+  { match: /waterproof|water-proof/i, text: "Waterproof", tone: "blush" },
+  { match: /anti[-_ ]?tarnish|tarnish[-_ ]?resistant/i, text: "Anti-Tarnish", tone: "blush" },
+  { match: /hypoallergenic/i, text: "Hypoallergenic", tone: "blush" },
+  { match: /everyday/i, text: "Everyday Favorite", tone: "ink" },
+  { match: /new/i, text: "New", tone: "ink" },
+];
+
+const pickLabel = (tags: string[] = []) => {
+  for (const def of LABELS) {
+    if (tags.some((t) => def.match.test(t))) return def;
+  }
+  return null;
+};
+
+const toneClass = (tone: "ink" | "champagne" | "blush") => {
+  switch (tone) {
+    case "champagne":
+      return "bg-champagne/95 text-ink";
+    case "blush":
+      return "bg-ivory/90 text-ink backdrop-blur-sm";
+    case "ink":
+    default:
+      return "bg-ink/90 text-ivory backdrop-blur-sm";
+  }
+};
+
 const ProductCard = ({ product }: Props) => {
   const { data: wishlist = [] } = useWishlist();
   const { data: ratings = {} } = useProductRatings();
@@ -24,34 +56,40 @@ const ProductCard = ({ product }: Props) => {
 
   const hasDiscount =
     !!product.discounted_price && product.original_price > product.discounted_price;
-  const pct = hasDiscount
-    ? Math.round(
-        ((product.original_price - (product.discounted_price as number)) /
-          product.original_price) *
-          100
-      )
-    : 0;
   const current = product.discounted_price ?? product.original_price;
   const rating = ratings[product.id];
+  const label = pickLabel(product.tags);
 
   return (
-    <Link to={`/jewellery/${product.slug ?? product.id}`} className="block group h-full">
-      <div className="h-full flex flex-col bg-background">
-        <div className="relative aspect-square bg-muted/30 overflow-hidden">
+    <Link
+      to={`/jewellery/${product.slug ?? product.id}`}
+      className="block group h-full"
+    >
+      <article className="h-full flex flex-col">
+        {/* Image — 4:5 editorial portrait */}
+        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm">
           <SafeImage
-            src={withImageParams(productImage(product), 400, 80)}
+            src={withImageParams(productImage(product), 500, 80)}
             alt={product.name}
             loading="lazy"
             decoding="async"
-            width={400}
-            height={400}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-xl"
+            width={500}
+            height={625}
+            className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
           />
-          {hasDiscount && (
-            <div className="absolute top-2 left-2 bg-[#C9A84C] text-white text-[10px] font-bold px-2 py-1 rounded-full z-10">
-              {pct}% OFF
-            </div>
+
+          {/* Micro-label */}
+          {label && (
+            <span
+              className={`absolute top-2.5 left-2.5 md:top-3 md:left-3 px-2.5 py-1 rounded-full font-body text-[10px] tracking-[0.14em] uppercase ${toneClass(
+                label.tone,
+              )}`}
+            >
+              {label.text}
+            </span>
           )}
+
+          {/* Wishlist */}
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -60,41 +98,46 @@ const ProductCard = ({ product }: Props) => {
             }}
             aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
             disabled={toggle.isPending}
-            className="absolute top-2 right-2 h-7 w-7 md:h-8 md:w-8 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center hover:bg-white transition active:scale-95 disabled:opacity-60"
+            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-ivory/85 backdrop-blur-sm flex items-center justify-center hover:bg-ivory transition-all ease-luxury active:scale-95 disabled:opacity-60 shadow-soft"
           >
-            <Heart className={`h-3.5 w-3.5 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
+            <Heart
+              className={`h-4 w-4 transition-colors ${
+                isSaved ? "fill-champagne text-champagne" : "text-ink-soft"
+              }`}
+              strokeWidth={1.6}
+            />
           </button>
         </div>
 
-        <div className="pt-2 md:pt-3 pb-3 px-1 flex flex-col gap-0.5">
-          <p className="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-muted-foreground truncate">
+        {/* Meta */}
+        <div className="pt-3 md:pt-4 pb-2 px-0.5 flex flex-col gap-1">
+          <p className="font-body text-[10px] tracking-[0.18em] uppercase text-ink-mute truncate">
             {product.categories?.name || "\u00A0"}
           </p>
+
+          <h3 className="font-display text-[15px] md:text-[17px] leading-snug text-ink line-clamp-2 group-hover:text-champagne-deep transition-colors ease-luxury">
+            {product.name}
+          </h3>
+
           {rating && (
             <div className="mt-0.5">
               <StarRating rating={rating.avg} count={rating.count} size="sm" />
             </div>
           )}
-          <h3 className="font-serif text-[12px] md:text-[14px] leading-snug text-foreground line-clamp-2 group-hover:text-gold transition-colors">
-            {product.name}
-          </h3>
 
-          {/* Price row */}
-          <div className="flex items-center gap-2 flex-wrap mt-1">
-            <span className="text-[15px] font-bold text-[#C9A84C]">
+          {/* Price */}
+          <div className="flex items-baseline gap-2 flex-wrap mt-1.5">
+            <span className="price-now text-[15px] md:text-[16px]">
               ₹{current.toLocaleString("en-IN")}
             </span>
             {hasDiscount && (
-              <span
-                className="text-[12px] text-[#9A8F85] line-through decoration-[#9A8F85]"
-                style={{ textDecorationThickness: "1.5px" }}
-              >
+              <span className="price-was text-[12px] md:text-[13px]">
                 ₹{product.original_price.toLocaleString("en-IN")}
               </span>
             )}
           </div>
         </div>
-      </div>
+      </article>
     </Link>
   );
 };

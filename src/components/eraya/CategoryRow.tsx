@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { useCategories, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 
+/**
+ * Editorial category tiles — rounded rectangles, 4:5 portrait crop,
+ * soft shadow on hover, label below in Cormorant.
+ */
 const CategoryRow = () => {
   const { data: categories = [] } = useCategories();
   const { data: settings } = useSettings();
@@ -10,55 +14,71 @@ const CategoryRow = () => {
   if (!visible.length) return null;
 
   return (
-    <section className="w-full px-4 md:px-6 mb-10 md:mb-16">
-      <h2 className="font-serif text-[22px] md:text-3xl text-foreground mb-4 md:mb-6">
-        {s(settings, "section_categories_title")}
-      </h2>
+    <section className="w-full section-y">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="flex items-end justify-between mb-6 md:mb-10">
+          <div>
+            <span className="eyebrow">Shop by edit</span>
+            <h2 className="font-display text-3xl md:text-5xl mt-2 text-ink">
+              {s(settings, "section_categories_title")}
+            </h2>
+          </div>
+        </div>
 
-      {/* Mobile: horizontal scroll of 80px circles */}
-      <div
-        className="md:hidden flex overflow-x-auto gap-4 pb-2 scrollbar-hide -mx-4 px-4"
-        style={{ scrollSnapType: "x mandatory" }}
-      >
-        {visible.map((c, idx) => (
-          <Link
-            key={c.id}
-            to={`/collection/${c.slug}`}
-            className={`flex-shrink-0 flex flex-col items-center gap-2 w-20 group ${idx === visible.length - 1 ? "mr-4" : ""}`}
-            style={{ scrollSnapAlign: "start" }}
-          >
-            <div className="w-20 h-20 overflow-hidden rounded-full bg-muted/30 border-2 border-[#EDE8E1] group-hover:border-gold transition-all">
-              <img
-                src={c.image_url || ""}
-                alt={c.name}
-                loading="lazy" decoding="async" width={160} height={160}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <p className="text-xs text-center w-20 truncate group-hover:text-gold transition-colors">
-              {c.name}
-            </p>
-          </Link>
-        ))}
-      </div>
+        {/* Mobile: horizontal snap rail */}
+        <div
+          className="md:hidden flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-4 px-4 snap-x snap-mandatory"
+        >
+          {visible.map((c) => (
+            <Link
+              key={c.id}
+              to={`/collection/${c.slug}`}
+              className="group shrink-0 w-[140px] snap-start"
+            >
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm lift-hover">
+                <img
+                  src={c.image_url || ""}
+                  alt={c.name}
+                  loading="lazy"
+                  decoding="async"
+                  width={280}
+                  height={350}
+                  className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
+              </div>
+              <p className="mt-3 font-display text-base text-ink text-center">
+                {c.name}
+              </p>
+            </Link>
+          ))}
+        </div>
 
-      {/* Tablet & desktop grid */}
-      <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-7 gap-4 lg:gap-5">
-        {visible.map((c) => (
-          <Link key={c.id} to={`/collection/${c.slug}`} className="group">
-            <div className="aspect-square overflow-hidden rounded-full bg-muted/30 mb-2 border-2 border-transparent group-hover:border-gold transition-all">
-              <img
-                src={c.image_url || ""}
-                alt={c.name}
-                loading="lazy" decoding="async" width={400} height={400}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-            </div>
-            <p className="text-center font-serif text-base group-hover:text-gold transition-colors">
-              {c.name}
-            </p>
-          </Link>
-        ))}
+        {/* Tablet & desktop grid */}
+        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+          {visible.map((c) => (
+            <Link key={c.id} to={`/collection/${c.slug}`} className="group">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm lift-hover">
+                <img
+                  src={c.image_url || ""}
+                  alt={c.name}
+                  loading="lazy"
+                  decoding="async"
+                  width={500}
+                  height={625}
+                  className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <span className="eyebrow text-ivory/80">Explore</span>
+                </div>
+              </div>
+              <p className="mt-4 font-display text-xl text-ink text-center">
+                {c.name}
+              </p>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

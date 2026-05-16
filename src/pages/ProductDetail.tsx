@@ -144,7 +144,7 @@ const ProductDetail = () => {
                   decoding="async"
                   width={900}
                   height={900}
-                  className="absolute inset-0 w-full h-full object-cover object-center"
+                  className="absolute inset-0 w-full h-full object-cover object-center mx-[10px] py-0 px-0 my-[10px] bg-[#f9f6f0]"
                 />
                 {/* Mobile overlay buttons */}
                 <button

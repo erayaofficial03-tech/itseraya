@@ -31,6 +31,7 @@ import {
 import { GripVertical, Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import type { Announcement } from "@/lib/queries";
+import { confirm } from "@/components/ui/confirm-dialog";
 
 const useAllAnnouncements = () =>
   useQuery({
@@ -157,7 +158,7 @@ const AnnouncementAdmin = () => {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this announcement?")) return;
+    if (!(await confirm({ title: "Delete this announcement?", description: "This action cannot be undone." }))) return;
     const { error } = await supabase.from("announcements").delete().eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Deleted");

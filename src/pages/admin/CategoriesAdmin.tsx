@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { toast } from "sonner";
 import { Trash2, Pencil, Plus } from "lucide-react";
 import { useCategories, type Category } from "@/lib/queries";
+import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage } from "@/lib/upload";
 
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -88,7 +89,7 @@ const CategoriesAdmin = () => {
   const [open, setOpen] = useState(false);
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this category? Products will become uncategorised.")) return;
+    if (!(await confirm({ title: "Delete this category?", description: "Products will become uncategorised." }))) return;
     const { error } = await supabase.from("categories").delete().eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["categories"] }); }

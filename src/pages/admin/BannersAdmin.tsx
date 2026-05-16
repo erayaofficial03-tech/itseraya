@@ -32,6 +32,7 @@ import { ColorPicker } from "@/components/admin/controls/ColorPicker";
 import { FontWeightPicker } from "@/components/admin/controls/FontWeightPicker";
 import { AlignPicker } from "@/components/admin/controls/AlignPicker";
 import { FontFamilySelect } from "@/components/admin/controls/FontFamilySelect";
+import { confirm } from "@/components/ui/confirm-dialog";
 
 type Viewport = "mobile" | "tablet" | "desktop";
 
@@ -518,7 +519,7 @@ const BannersAdmin = () => {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this banner?")) return;
+    if (!(await confirm({ title: "Delete this banner?", description: "This action cannot be undone." }))) return;
     const { error } = await supabase.from("banners").delete().eq("id", id);
     if (error) return toast.error(error.message);
     if (selectedId === id) setSelectedId(null);

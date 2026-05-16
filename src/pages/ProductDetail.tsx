@@ -1,8 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Heart } from "lucide-react";
 import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/hooks/useAuth";
+import StarRating from "@/components/eraya/StarRating";
+import ReviewForm from "@/components/eraya/ReviewForm";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
@@ -31,8 +35,22 @@ const ProductDetail = () => {
   const { data: allProducts = [] } = useProducts();
   const { data: wishlist = [] } = useWishlist();
   const toggleWishlist = useToggleWishlist();
+  const { user, profile } = useAuth();
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+
+  const { data: productReviews = [], refetch: refetchReviews } = useQuery({
+    queryKey: ["reviews", product?.id, user?.id],
+    enabled: !!product?.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("*")
+        .eq("product_id", product!.id)
+        .order("created_at", { ascending: false });
+      return data || [];
+    },
+  });
 
   useEffect(() => {
     if (product?.id) {
@@ -204,14 +222,19 @@ const ProductDetail = () => {
                 </span>
               )}
               <h1 className="font-serif text-[22px] md:text-4xl text-foreground mb-2">{product.name}</h1>
-              <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="text-xl md:text-2xl font-semibold text-gold">{formatINR(price)}</span>
+              <div className="flex items-center gap-3 flex-wrap mt-2">
+                <span className="text-2xl font-bold text-[#C9A84C]">
+                  ₹{price.toLocaleString("en-IN")}
+                </span>
                 {product.discounted_price && product.original_price > product.discounted_price && (
                   <>
-                    <span className="text-sm md:text-base text-muted-foreground line-through">
-                      {formatINR(product.original_price)}
+                    <span
+                      className="text-base text-[#9A8F85] line-through decoration-[#9A8F85]"
+                      style={{ textDecorationThickness: "2px" }}
+                    >
+                      ₹{product.original_price.toLocaleString("en-IN")}
                     </span>
-                    <span className="text-[11px] bg-gold/10 text-gold rounded-full px-2 py-0.5 font-medium">
+                    <span className="text-sm font-semibold text-white bg-[#C9A84C] px-3 py-1 rounded-full">
                       {pct}% OFF
                     </span>
                   </>
@@ -266,6 +289,86 @@ const ProductDetail = () => {
             <ProductRow title={s(settings, "product_related_title")} products={related} />
           </div>
         )}
+
+        {/* Reviews section */}
+        <section className="mt-14 md:mt-20 px-4 md:px-6">
+          <h2 className="font-serif text-2xl mb-4">Reviews</h2>
+          {(() => {
+            const visible = productReviews.filter((r: any) => !r.is_hidden && r.is_approved);
+            const avg = visible.length
+              ? visible.reduce((a: number, r: any) => a + r.rating, 0) / visible.length
+              : 0;
+            return visible.length > 0 ? (
+              <div className="border-t border-[#EDE8E1] pt-6 flex items-center gap-4 mb-4">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-[#C9A84C]">{avg.toFixed(1)}</div>
+                  <StarRating rating={avg} size="md" showCount={false} />
+                  <div className="text-xs text-[#9A8F85] mt-1">{visible.length} reviews</div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">No reviews yet. Be the first to share your thoughts.</p>
+            );
+          })()}
+
+          <div className="space-y-4 mt-4">
+            {productReviews.map((review: any) => (
+              <div
+                key={review.id}
+                className={`p-4 rounded-2xl border ${
+                  review.is_hidden
+                    ? "border-[#F5D78E] bg-[#FFFBF0] opacity-60"
+                    : "border-[#EDE8E1] bg-white"
+                }`}
+              >
+                {review.is_hidden && (
+                  <div className="text-xs text-[#9A8F85] mb-2 italic">
+                    🙈 This review is hidden and only visible to you
+                  </div>
+                )}
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <StarRating rating={review.rating} size="sm" showCount={false} />
+                    <p className="text-sm font-semibold mt-1">{review.customer_name}</p>
+                    {review.customer_city && (
+                      <p className="text-xs text-[#9A8F85]">{review.customer_city}</p>
+                    )}
+                  </div>
+                  <span className="text-xs text-[#9A8F85] flex-shrink-0">
+                    {new Date(review.created_at).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <p className="text-sm text-[#2C2C2C] mt-2 leading-relaxed">{review.review_text}</p>
+                {review.is_fake && (
+                  <span className="text-[10px] text-[#9A8F85] mt-1 block">✓ Verified Customer</span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {user ? (
+            <ReviewForm
+              productId={product.id}
+              productName={product.name}
+              userId={user.id}
+              userProfile={profile}
+              onSubmitted={() => refetchReviews()}
+            />
+          ) : (
+            <div className="mt-4 p-4 bg-[#FAF8F5] rounded-2xl border border-[#EDE8E1] text-center">
+              <p className="text-sm text-[#9A8F85]">
+                <Link to="/login" className="text-[#C9A84C] underline">
+                  Sign in
+                </Link>{" "}
+                to write a review
+              </p>
+            </div>
+          )}
+        </section>
       </main>
       <Footer />
     </div>

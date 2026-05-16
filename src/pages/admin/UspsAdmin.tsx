@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
+import ReviewsManager from "@/components/admin/ReviewsManager";
 
 const UspsAdmin = () => {
   const { data: settings } = useSettings();
@@ -84,7 +85,7 @@ const UspsAdmin = () => {
       <Card>
         <CardHeader><CardTitle>Reviews</CardTitle></CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Customer reviews management is coming soon.</p>
+          <ReviewsManager />
         </CardContent>
       </Card>
     </div>

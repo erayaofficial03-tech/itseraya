@@ -66,6 +66,7 @@ const SeoAdmin = lazyWithRetry(() => import("./pages/admin/SeoAdmin"), { reloadK
 const CustomersAdmin = lazyWithRetry(() => import("./pages/admin/CustomersAdmin"), { reloadKey: "CustomersAdmin" });
 const PoliciesAdmin = lazyWithRetry(() => import("./pages/admin/PoliciesAdmin"), { reloadKey: "PoliciesAdmin" });
 const UspsAdmin = lazyWithRetry(() => import("./pages/admin/UspsAdmin"), { reloadKey: "UspsAdmin" });
+const HomepageSectionsAdmin = lazyWithRetry(() => import("./pages/admin/HomepageSectionsAdmin"), { reloadKey: "HomepageSectionsAdmin" });
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -161,6 +162,7 @@ const App = () => (
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="banner" element={<BannerAdmin />} />
+                <Route path="sections" element={<HomepageSectionsAdmin />} />
                 <Route path="banners" element={<BannersAdmin />} />
                 <Route path="usps" element={<AdminOnly><UspsAdmin /></AdminOnly>} />
                 <Route path="announcement" element={<AnnouncementAdmin />} />

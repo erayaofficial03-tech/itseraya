@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.next_product_sku(timestamp with time zone) FROM PUBLIC, anon, authenticated, service_role;

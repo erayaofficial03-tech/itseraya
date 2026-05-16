@@ -99,11 +99,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body, 'Inter', system-ui, sans-serif);
     font-feature-settings: "ss01", "cv11";
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-family: var(--font-heading, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
     font-weight: 500;
     letter-spacing: -0.01em;
     line-height: 1.15;

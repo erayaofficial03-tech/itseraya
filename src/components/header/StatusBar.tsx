@@ -23,7 +23,7 @@ const StatusBar = () => {
   const current = usps[i % usps.length];
 
   return (
-    <div className="w-full bg-[hsl(var(--ink))] text-[hsl(var(--champagne))] border-b border-[hsl(var(--champagne))]/20">
+    <div className="w-full bg-[hsl(var(--ink))] text-[hsl(var(--ivory))] border-b border-[hsl(var(--ivory))]/15">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-7 sm:h-8 flex items-center justify-center overflow-hidden">
         <p
           key={`${i}-${current}`}

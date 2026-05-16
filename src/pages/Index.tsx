@@ -86,6 +86,7 @@ const Index = () => {
                 viewAllHref="/catalogue?filter=featured"
               />
             )}
+            <ReviewsSection />
           </>
         )}
       </main>

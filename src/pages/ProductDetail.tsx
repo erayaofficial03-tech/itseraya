@@ -130,32 +130,41 @@ const ProductDetail = () => {
         <section className="md:px-6 grid grid-cols-1 lg:grid-cols-2 md:gap-12">
           <div className="relative">
             <div
-              className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative cursor-zoom-in"
-              onClick={() => setIsZoomOpen(true)}
+              className="md:pt-0"
+              style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 0px)" }}
             >
-              <SafeImage
-                src={withImageParams(images[activeImg], 900, 85)}
-                alt={product.name}
-                loading="eager"
-                decoding="async"
-                className="w-full h-full object-cover"
-              />
-              {/* Mobile overlay buttons */}
-              <button
-                onClick={(e) => { e.stopPropagation(); navigate(-1); }}
-                aria-label="Back"
-                className="md:hidden absolute top-3 left-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
+              <div
+                className="aspect-square w-full overflow-hidden rounded-b-2xl md:rounded-lg bg-muted/30 mb-3 relative cursor-zoom-in"
+                onClick={() => setIsZoomOpen(true)}
               >
-                <ArrowLeft className="h-5 w-5 text-charcoal" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); toggleWishlist.mutate({ productId: product.id, isSaved }); }}
-                aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-                disabled={toggleWishlist.isPending}
-                className="md:hidden absolute top-3 right-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
-              >
-                <Heart className={`h-5 w-5 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
-              </button>
+                <SafeImage
+                  src={withImageParams(images[activeImg], 900, 85)}
+                  alt={product.name}
+                  loading="eager"
+                  decoding="async"
+                  width={900}
+                  height={900}
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+                {/* Mobile overlay buttons */}
+                <button
+                  onClick={(e) => { e.stopPropagation(); navigate(-1); }}
+                  aria-label="Back"
+                  className="md:hidden absolute left-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
+                  style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}
+                >
+                  <ArrowLeft className="h-5 w-5 text-charcoal" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleWishlist.mutate({ productId: product.id, isSaved }); }}
+                  aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
+                  disabled={toggleWishlist.isPending}
+                  className="md:hidden absolute right-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
+                  style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}
+                >
+                  <Heart className={`h-5 w-5 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
+                </button>
+              </div>
             </div>
             {images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto px-4 md:px-0 scrollbar-hide">
@@ -183,6 +192,7 @@ const ProductDetail = () => {
               initialIndex={activeImg}
               isOpen={isZoomOpen}
               onClose={() => setIsZoomOpen(false)}
+              alt={product.name}
             />
           </div>
 

@@ -93,11 +93,6 @@ const ProductCard = ({ product }: Props) => {
               </span>
             )}
           </div>
-          {hasDiscount && (
-            <span className="inline-block self-start mt-1 text-[10px] font-semibold text-white bg-[#2C2C2C] px-2 py-0.5 rounded-full">
-              {pct}% OFF
-            </span>
-          )}
         </div>
       </div>
     </Link>

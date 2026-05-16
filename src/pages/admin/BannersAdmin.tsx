@@ -320,6 +320,81 @@ const ScheduleEditor = ({
   );
 };
 
+const FocalPointOverlay = ({
+  x, y, onChange,
+}: {
+  x: number;
+  y: number;
+  onChange: (x: number, y: number) => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+
+  const updateFromEvent = (clientX: number, clientY: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const nx = Math.round(Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100)));
+    const ny = Math.round(Math.max(0, Math.min(100, ((clientY - r.top) / r.height) * 100)));
+    onChange(nx, ny);
+  };
+
+  useEffect(() => {
+    if (!dragging) return;
+    const onMove = (e: PointerEvent) => updateFromEvent(e.clientX, e.clientY);
+    const onUp = () => setDragging(false);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragging]);
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "absolute inset-0 z-20 select-none",
+        dragging ? "cursor-grabbing" : "cursor-crosshair",
+      )}
+      onPointerDown={(e) => {
+        (e.target as Element).setPointerCapture?.(e.pointerId);
+        setDragging(true);
+        updateFromEvent(e.clientX, e.clientY);
+      }}
+    >
+      {/* crosshair guides */}
+      <div
+        className="absolute top-0 bottom-0 w-px bg-white/30 pointer-events-none"
+        style={{ left: `${x}%` }}
+      />
+      <div
+        className="absolute left-0 right-0 h-px bg-white/30 pointer-events-none"
+        style={{ top: `${y}%` }}
+      />
+      {/* handle */}
+      <div
+        className={cn(
+          "absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform",
+          dragging && "scale-110",
+        )}
+        style={{ left: `${x}%`, top: `${y}%` }}
+      >
+        <div className="relative h-6 w-6 rounded-full bg-white/95 shadow-[0_2px_8px_rgba(0,0,0,0.4)] ring-2 ring-[#C9A84C] flex items-center justify-center">
+          <div className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+        </div>
+        <div className="absolute left-1/2 -translate-x-1/2 mt-1.5 px-1.5 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono whitespace-nowrap">
+          {x}% · {y}%
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const defaultsForNew = (order: number): Partial<Banner> => ({
   title: null,
   subtitle: null,
@@ -571,7 +646,7 @@ const BannersAdmin = () => {
                 </div>
                 <div className="bg-muted/40 rounded-xl p-3 overflow-x-auto">
                   <div
-                    className="mx-auto rounded-lg overflow-hidden shadow-sm bg-black"
+                    className="mx-auto rounded-lg overflow-hidden shadow-sm bg-black relative"
                     style={{ width: "100%", maxWidth: VIEWPORTS[viewport].width }}
                   >
                     <BannerRenderer
@@ -582,8 +657,23 @@ const BannersAdmin = () => {
                       trackClicks={false}
                       animKey={`${draft.id}-${viewport}`}
                     />
+                    {draft.image_url && (
+                      <FocalPointOverlay
+                        x={draft.bg_focal_x ?? 50}
+                        y={draft.bg_focal_y ?? 50}
+                        onChange={(x, y) => {
+                          updateDraft("bg_focal_x", x);
+                          updateDraft("bg_focal_y", y);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
+                {draft.image_url && (
+                  <p className="text-[11px] text-muted-foreground text-center">
+                    Drag the dot on the preview to reposition the background image.
+                  </p>
+                )}
               </CardContent>
             </Card>
 

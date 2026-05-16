@@ -1,57 +1,40 @@
-# Goal
+## Product image experience — premium mobile overhaul
 
-Make every published build show up immediately for returning visitors — no manual hard-refresh, no stuck old UI. Build on the SW auto-update we already added in `src/main.tsx` and close the remaining cache gaps.
+### 1. Square image container (ProductDetail.tsx)
+- Wrap mobile image in `pt-[env(safe-area-inset-top)]` container so it sits below iPhone notch / Android status bar in standalone PWA mode.
+- Keep `aspect-square` + `overflow-hidden`, add `rounded-b-2xl` on mobile for a softer luxury feel (rounded bottom corners only — top stays flush with safe area).
+- Wrap `<SafeImage>` in a centered flex container with `object-cover object-center` to guarantee no stretch.
+- Add explicit `width={900} height={900}` on the image to prevent CLS.
+- Request a smaller variant on mobile (`withImageParams(url, 640, 80)` under `lg`) via `<picture>` srcset for faster loading.
 
-## What's already in place
+### 2. Top safe-area / spacing fix
+- Add `pt-[max(env(safe-area-inset-top),0.75rem)]` to the mobile image wrapper.
+- Move mobile overlay buttons (back, wishlist) down by the same safe-area offset (`top-[calc(env(safe-area-inset-top)+0.75rem)]`) so they don't clip behind the status bar.
+- Add `mb-4` rhythm between image and product info block.
 
-- `src/main.tsx` registers the PWA service worker, polls `registration.update()` every 60s + on tab focus, and on `onNeedRefresh` wipes all `caches` and reloads silently.
+### 3. Premium lightbox (rewrite `ImageZoom.tsx`)
+Replace the current scroll-list modal with a proper single-image lightbox:
+- Uses shadcn `Dialog` (Radix) — gives ESC close, focus trap, outside-click close, body-scroll lock for free.
+- Centered single image at `max-h-[100dvh] max-w-[100vw] object-contain`.
+- Horizontal swipe (touch) + arrow keys to move between images; dots indicator at bottom.
+- Pinch-zoom: rely on native browser pinch on the `<img>` (set `touch-action: pinch-zoom`).
+- Backdrop: `bg-black/95 backdrop-blur-sm`, fade-in 200ms, image scale-in from 0.96 → 1.
+- Close button: top-right, circular, `bg-white/10 backdrop-blur-md`, ring on focus, sits above safe-area inset top.
+- Prev / Next arrows on tablet+ only; hidden on mobile (swipe instead).
+- Counter `2 / 5` bottom-center, subtle.
 
-## Gaps to close
+### 4. Performance
+- `loading="eager"` only for `activeImg`; thumbs remain `lazy`.
+- Preload next/prev hi-res inside lightbox using `<link rel="preload" as="image">` injected on open.
+- Memoize image URL list to avoid recompute.
+- Drop the existing scrollIntoView effect (replaced by indexed display).
 
-1. **HTML can still be cached by the browser.** `index.html` has no cache-control meta. If a CDN/browser holds it, the SW update never even gets a chance to run.
-2. **Workbox runtime caches** (configured in `vite.config.ts`) use cache-first style strategies for navigations/images/Supabase. These survive SW updates unless explicitly purged — which our `onNeedRefresh` handler now does, but only *after* the new SW activates.
-3. **Build asset filenames** — Vite already content-hashes JS/CSS, so those are safe. No change needed.
-4. **React Query cache / localStorage** — fine to keep (intentionally persistent for UX).
+### 5. Files touched
+- `src/pages/ProductDetail.tsx` — safe-area, square wrapper, srcset, button offsets.
+- `src/components/product/ImageZoom.tsx` — full rewrite to Dialog-based premium lightbox.
+- `src/index.css` — add `.safe-top { padding-top: env(safe-area-inset-top); }` utility if not present.
 
-## Plan
-
-### 1. `index.html` — prevent stale HTML
-Add inside `<head>`:
-```html
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-```
-Ensures the browser always revalidates the entry HTML, so it picks up the new bundle hashes on the next navigation.
-
-### 2. `vite.config.ts` — switch navigation strategy to NetworkFirst with short timeout
-Change the `request.mode === "navigate"` runtime cache to `NetworkFirst` with `networkTimeoutSeconds: 3` and a small `expiration` (e.g. maxAgeSeconds: 60). Image cache stays as-is. This means: online users always get the freshest HTML; offline users still get the cached shell.
-
-### 3. `src/main.tsx` — make update detection more aggressive
-- Keep the 60s poll + focus/visibility checks.
-- Also call `registration.update()` once immediately on registration (not just on interval).
-- On `onNeedRefresh`, in addition to wiping `caches`, also call `registration.unregister()` *before* `updateSW(true)` only as a fallback if `updateSW` rejects — guarantees no zombie SW.
-
-### 4. Add a `/version.json` build stamp (optional but bulletproof)
-- Vite plugin or simple build script writes `public/version.json` with the build timestamp.
-- App fetches `/version.json` (no-store) on focus; if it differs from the embedded build constant, force `location.reload()`. This is a belt-and-suspenders fallback for the rare case the SW itself is broken on a device.
-
-### Files to change
-
-- `index.html` — add cache-control metas
-- `vite.config.ts` — NetworkFirst for navigations
-- `src/main.tsx` — minor SW handler tweaks
-- (Optional) `vite.config.ts` + `src/main.tsx` — version.json stamp + check
-
-### What the user will experience
-
-- First publish after this ships: returning visitors get the new build within ~60s of opening the tab (or instantly on next focus/navigation).
-- Every publish after that: same — fully automatic, no toast, no manual refresh.
-- Offline still works (cached shell).
-
-## Out of scope
-
-- React Query / localStorage wipes (would log users out / lose enquiry cart — not what "cache clear" means here).
-- Server-side CDN cache headers (handled by Lovable hosting).
-
-Approve and I'll implement steps 1–3. Step 4 (version.json) only if you want the extra safety net.
+### 6. Out of scope / remaining UX notes
+- The PDP already uses real product images from Supabase; the legacy demo `ProductImageGallery.tsx` is unused on this route and is left untouched.
+- True pinch-zoom-and-pan inside the lightbox (à la Instagram) would require a gesture lib (e.g. `react-zoom-pan-pinch`) — flagging for a follow-up.
+- Bottom nav still overlaps long pages; not in this scope.

@@ -53,12 +53,6 @@ const useAllBanners = () =>
     },
   });
 
-const toLocalInput = (iso: string | null) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  const off = d.getTimezoneOffset() * 60000;
-  return new Date(d.getTime() - off).toISOString().slice(0, 16);
-};
 
 const SortableRow = ({
   b, selected, onSelect, onToggleActive, onDelete,

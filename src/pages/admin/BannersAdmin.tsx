@@ -571,7 +571,7 @@ const BannersAdmin = () => {
                 </div>
                 <div className="bg-muted/40 rounded-xl p-3 overflow-x-auto">
                   <div
-                    className="mx-auto rounded-lg overflow-hidden shadow-sm bg-black"
+                    className="mx-auto rounded-lg overflow-hidden shadow-sm bg-black relative"
                     style={{ width: "100%", maxWidth: VIEWPORTS[viewport].width }}
                   >
                     <BannerRenderer
@@ -582,8 +582,23 @@ const BannersAdmin = () => {
                       trackClicks={false}
                       animKey={`${draft.id}-${viewport}`}
                     />
+                    {draft.image_url && (
+                      <FocalPointOverlay
+                        x={draft.bg_focal_x ?? 50}
+                        y={draft.bg_focal_y ?? 50}
+                        onChange={(x, y) => {
+                          updateDraft("bg_focal_x", x);
+                          updateDraft("bg_focal_y", y);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
+                {draft.image_url && (
+                  <p className="text-[11px] text-muted-foreground text-center">
+                    Drag the dot on the preview to reposition the background image.
+                  </p>
+                )}
               </CardContent>
             </Card>
 

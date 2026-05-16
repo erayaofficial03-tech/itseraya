@@ -34,7 +34,7 @@ const ProductCard = ({ product }: Props) => {
             decoding="async"
             width={400}
             height={400}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-xl"
           />
           {pct > 0 && (
             <span className="absolute top-2 left-2 bg-charcoal/90 text-white text-[9px] tracking-wider px-1.5 py-0.5 rounded-sm font-light">

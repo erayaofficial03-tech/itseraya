@@ -5,6 +5,7 @@ import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
 import SeoHead from "@/components/providers/SeoHead";
+import ReviewsSection from "@/components/eraya/ReviewsSection";
 import { useProducts, useSettings, useSocialLinks } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { ProductRowSkeleton } from "@/components/ui/skeletons";

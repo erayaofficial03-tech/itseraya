@@ -155,7 +155,9 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
         const { error } = await supabase.from("products").update(payload).eq("id", product.id);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase.from("products").insert(payload).select("id").single();
+        const sku = await generateProductSku();
+        const insertPayload = sku ? { ...payload, sku } : payload;
+        const { data, error } = await supabase.from("products").insert(insertPayload).select("id").single();
         if (error) throw error;
         productId = data.id;
       }

@@ -54,8 +54,11 @@ const Index = () => {
       <Header />
       <main className="pb-20 md:pb-0">
         <HeroSlider />
+        <div className="section-divider" />
         <TrustStrip />
+        <div className="section-divider" />
         <CategoryRow />
+        <div className="section-divider" />
         {isLoading ? (
           <>
             <ProductRowSkeleton count={6} />
@@ -64,42 +67,56 @@ const Index = () => {
         ) : (
           <>
             {s(settings, "section_new_arrivals_visible") && (
-              <ProductRow
-                eyebrow="Just in"
-                title={s(settings, "section_new_arrivals_title")}
-                products={newArrivals}
-                viewAllHref="/catalogue?filter=new"
-              />
+              <>
+                <ProductRow
+                  eyebrow="Just in"
+                  title={s(settings, "section_new_arrivals_title")}
+                  products={newArrivals}
+                  viewAllHref="/catalogue?filter=new"
+                />
+                <div className="section-divider" />
+              </>
             )}
             {s(settings, "section_trending_visible") && (
-              <ProductRow
-                eyebrow="Loved most"
-                title={s(settings, "section_trending_title")}
-                products={trending}
-                viewAllHref="/catalogue?filter=bestseller"
-              />
+              <>
+                <ProductRow
+                  eyebrow="Loved most"
+                  title={s(settings, "section_trending_title")}
+                  products={trending}
+                  viewAllHref="/catalogue?filter=bestseller"
+                />
+                <div className="section-divider" />
+              </>
             )}
 
             <EmotionalStrip text="Jewellery that feels like you." />
+            <div className="section-divider" />
 
             {s(settings, "section_sale_visible") && (
-              <ProductRow
-                eyebrow="Sweet steals"
-                title={s(settings, "section_sale_title")}
-                products={onSale}
-                viewAllHref="/catalogue?filter=sale"
-              />
+              <>
+                <ProductRow
+                  eyebrow="Sweet steals"
+                  title={s(settings, "section_sale_title")}
+                  products={onSale}
+                  viewAllHref="/catalogue?filter=sale"
+                />
+                <div className="section-divider" />
+              </>
             )}
             {s(settings, "section_featured_visible") && (
-              <ProductRow
-                eyebrow="Editor's pick"
-                title={s(settings, "section_featured_title")}
-                products={featured}
-                viewAllHref="/catalogue?filter=featured"
-              />
+              <>
+                <ProductRow
+                  eyebrow="Editor's pick"
+                  title={s(settings, "section_featured_title")}
+                  products={featured}
+                  viewAllHref="/catalogue?filter=featured"
+                />
+                <div className="section-divider" />
+              </>
             )}
 
             <ErayaGirls />
+            <div className="section-divider" />
             <ReviewsSection />
           </>
         )}

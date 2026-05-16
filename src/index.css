@@ -116,6 +116,14 @@
 }
 
 @layer utilities {
+  /* Whisper-soft hairline divider between homepage sections */
+  .section-divider {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80rem;
+    height: 1px;
+    background-color: hsl(var(--ink) / 0.08);
+  }
   /* ─── Typography utilities ─────────────────────────── */
   .font-serif    { font-family: 'Playfair Display', Georgia, serif; }
   .font-display  { font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; }

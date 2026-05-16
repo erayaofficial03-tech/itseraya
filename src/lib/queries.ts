@@ -193,6 +193,28 @@ export const useCategories = () =>
     },
   });
 
+export type ProductLabel = {
+  id: string;
+  slug: string;
+  name: string;
+  tone: "ink" | "champagne" | "blush";
+  display_order: number;
+  is_active: boolean;
+};
+
+export const useProductLabels = (opts: { includeInactive?: boolean } = {}) =>
+  useQuery({
+    queryKey: ["product_labels", opts.includeInactive ? "all" : "active"],
+    staleTime: FIVE_MIN,
+    queryFn: async () => {
+      let q = supabase.from("product_labels").select("*").order("display_order");
+      if (!opts.includeInactive) q = q.eq("is_active", true);
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []) as ProductLabel[];
+    },
+  });
+
 export const useProducts = () =>
   useQuery({
     queryKey: ["products"],

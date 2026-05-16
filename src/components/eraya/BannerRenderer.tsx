@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,8 @@ interface Props {
   useRouter?: boolean;
   /** Track click in banner_clicks */
   trackClicks?: boolean;
+  /** Track impression in banner_impressions (default true when trackClicks is true) */
+  trackImpressions?: boolean;
   /** Key for animation transitions */
   animKey?: string;
 }
@@ -22,8 +25,23 @@ export const BannerRenderer = ({
   height,
   useRouter = true,
   trackClicks = true,
+  trackImpressions,
   animKey,
 }: Props) => {
+  const shouldTrackImpressions = trackImpressions ?? trackClicks;
+
+  useEffect(() => {
+    if (!shouldTrackImpressions) return;
+    if (!banner.id || banner.id === "__fallback__") return;
+    const path = window.location.pathname;
+    const key = `banner_imp_${banner.id}_${path}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch { /* ignore */ }
+    void supabase.from("banner_impressions").insert({ banner_id: banner.id, page_path: path });
+  }, [banner.id, shouldTrackImpressions]);
+
   const isDesktop = viewport === "desktop";
   const isTablet = viewport === "tablet";
 

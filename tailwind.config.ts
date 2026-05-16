@@ -17,6 +17,8 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
+        display: ['Cormorant Garamond', 'Playfair Display', 'Georgia', 'serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,8 +57,26 @@ export default {
         },
         /* Eraya specific colors */
         gold: "hsl(var(--gold))",
-        ivory: "hsl(var(--ivory))",
+        ivory: {
+          DEFAULT: "hsl(var(--ivory))",
+          warm: "hsl(var(--ivory-warm))",
+        },
         charcoal: "hsl(var(--charcoal))",
+        blush: {
+          DEFAULT: "hsl(var(--blush))",
+          deep: "hsl(var(--blush-deep))",
+        },
+        sand: "hsl(var(--sand))",
+        champagne: {
+          DEFAULT: "hsl(var(--champagne))",
+          soft: "hsl(var(--champagne-soft))",
+          deep: "hsl(var(--champagne-deep))",
+        },
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          soft: "hsl(var(--ink-soft))",
+          mute: "hsl(var(--ink-mute))",
+        },
         "surface-dark": {
           DEFAULT: "hsl(var(--surface-dark))",
           foreground: "hsl(var(--surface-dark-foreground))",
@@ -120,20 +140,26 @@ export default {
           },
         },
         "fade-in": {
-          from: {
-            opacity: "0",
-          },
-          to: {
-            opacity: "1",
-          },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(14px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "soft-zoom": {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.06)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out", 
+        "accordion-up": "accordion-up 0.2s ease-out",
         "slide-in": "slide-in 0.3s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
-        "fade-in": "fade-in 0.2s ease-out",
+        "fade-in": "fade-in 0.3s cubic-bezier(0.32, 0.72, 0, 1)",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.32, 0.72, 0, 1) both",
+        "soft-zoom": "soft-zoom 8s cubic-bezier(0.32, 0.72, 0, 1) both",
       },
       transitionTimingFunction: {
         "smooth": "cubic-bezier(0.4, 0, 0.2, 1)",

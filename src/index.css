@@ -2,72 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Eraya Design System — Blush, Gold, Ivory, Charcoal */
+/* ============================================================
+   Eraya Design System — Soft Luxury · Feminine Editorial
+   Warm ivory · Champagne · Blush · Warm charcoal
+   ============================================================ */
 
 @layer base {
   :root {
-    /* Ivory background, near-black text */
-    --background: 36 33% 97%;
-    --foreground: 0 0% 8%;
+    /* Warm ivory background, warm charcoal text */
+    --background: 36 38% 97%;
+    --foreground: 25 12% 18%;
 
-    /* Status bar */
-    --status-bar: 0 0% 8%;
-    --status-bar-foreground: 36 33% 97%;
+    /* Status bar (kept dark for legibility) */
+    --status-bar: 25 12% 18%;
+    --status-bar-foreground: 36 38% 97%;
 
     /* Navigation */
-    --nav-background: 36 33% 97%;
-    --nav-foreground: 0 0% 8%;
-    --nav-hover: 43 55% 52%;
+    --nav-background: 36 38% 97%;
+    --nav-foreground: 25 12% 18%;
+    --nav-hover: 38 42% 58%;
 
-    /* Primary = Gold */
-    --primary: 43 55% 52%;
-    --primary-foreground: 0 0% 8%;
-    --primary-hover: 43 55% 46%;
+    /* Primary = Champagne (softer than old gold) */
+    --primary: 38 42% 58%;
+    --primary-foreground: 25 14% 16%;
+    --primary-hover: 38 42% 50%;
 
-    /* Secondary = Black surface */
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 36 33% 97%;
+    /* Secondary = warm charcoal surface */
+    --secondary: 25 12% 18%;
+    --secondary-foreground: 36 38% 97%;
 
-    --muted: 36 25% 92%;
-    --muted-foreground: 0 0% 38%;
+    --muted: 34 26% 93%;
+    --muted-foreground: 25 10% 42%;
 
-    --accent: 43 55% 52%;
-    --accent-foreground: 0 0% 8%;
+    --accent: 18 40% 95%;          /* soft blush accent surface */
+    --accent-foreground: 25 14% 18%;
 
-    --border: 0 0% 88%;
-    --input: 0 0% 88%;
-    --ring: 43 55% 52%;
+    --border: 30 18% 86%;
+    --input: 30 18% 86%;
+    --ring: 38 42% 58%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 25 12% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 25 12% 18%;
 
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 65% 52%;
+    --destructive-foreground: 36 38% 97%;
 
-    --radius: 0.5rem;
+    /* Softer corner radius across the system */
+    --radius: 0.875rem;
 
-    /* Eraya custom tokens */
-    --gold: 43 55% 52%;
-    --gold-soft: 43 65% 72%;
-    --ivory: 36 33% 97%;
-    --charcoal: 0 0% 8%;
-    --surface-dark: 0 0% 8%;
-    --surface-dark-foreground: 36 33% 97%;
-    --gradient-gold: linear-gradient(135deg, hsl(43 55% 52%) 0%, hsl(43 65% 72%) 100%);
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 8% / 0.25);
-    --shadow-gold: 0 10px 30px -10px hsl(43 55% 52% / 0.45);
+    /* ─── Eraya luxury tokens ───────────────────────────── */
+    --ivory: 36 38% 97%;
+    --ivory-warm: 34 28% 94%;
+    --blush: 18 40% 95%;
+    --blush-deep: 12 35% 88%;
+    --sand: 32 22% 88%;
+    --champagne: 38 42% 58%;
+    --champagne-soft: 38 55% 78%;
+    --champagne-deep: 36 45% 44%;
+    --ink: 25 14% 16%;
+    --ink-soft: 25 10% 32%;
+    --ink-mute: 25 8% 52%;
 
-    --sidebar-background: 36 33% 97%;
-    --sidebar-foreground: 0 0% 8%;
-    --sidebar-primary: 43 55% 52%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 36 25% 92%;
-    --sidebar-accent-foreground: 0 0% 8%;
-    --sidebar-border: 0 0% 88%;
-    --sidebar-ring: 43 55% 52%;
+    /* Legacy aliases kept so existing classes don't break */
+    --gold: var(--champagne);
+    --gold-soft: var(--champagne-soft);
+    --charcoal: var(--ink);
+    --surface-dark: var(--ink);
+    --surface-dark-foreground: var(--ivory);
+
+    /* Gradients & shadows */
+    --gradient-gold: linear-gradient(135deg, hsl(38 42% 58%) 0%, hsl(38 55% 78%) 100%);
+    --gradient-blush: linear-gradient(180deg, hsl(18 50% 97%) 0%, hsl(36 38% 97%) 100%);
+    --gradient-ivory: linear-gradient(180deg, hsl(36 38% 98%) 0%, hsl(34 28% 94%) 100%);
+    --shadow-soft: 0 2px 18px -8px hsl(25 14% 16% / 0.10);
+    --shadow-card: 0 14px 40px -22px hsl(25 14% 16% / 0.18);
+    --shadow-elegant: 0 18px 50px -24px hsl(25 14% 16% / 0.22);
+    --shadow-gold: 0 14px 36px -16px hsl(38 42% 58% / 0.45);
+
+    /* Sidebar */
+    --sidebar-background: 36 38% 97%;
+    --sidebar-foreground: 25 12% 18%;
+    --sidebar-primary: 38 42% 58%;
+    --sidebar-primary-foreground: 25 14% 16%;
+    --sidebar-accent: 34 26% 93%;
+    --sidebar-accent-foreground: 25 14% 18%;
+    --sidebar-border: 30 18% 86%;
+    --sidebar-ring: 38 42% 58%;
   }
 }
 
@@ -76,43 +99,137 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
-    @apply tracking-tight;
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: hsl(var(--ink));
   }
+  h1 { line-height: 1.05; letter-spacing: -0.02em; }
+  h2 { line-height: 1.12; }
+  h3, h4 { line-height: 1.25; }
+  p { color: hsl(var(--ink-soft)); }
 }
 
 @layer utilities {
-  .font-serif {
-    font-family: 'Playfair Display', Georgia, serif;
+  /* ─── Typography utilities ─────────────────────────── */
+  .font-serif    { font-family: 'Playfair Display', Georgia, serif; }
+  .font-display  { font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif; }
+  .font-body     { font-family: 'Inter', system-ui, sans-serif; }
+
+  .eyebrow {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: hsl(var(--champagne-deep));
   }
-  .text-gold {
-    color: hsl(var(--gold));
+  .editorial-headline {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
   }
-  .bg-gold {
-    background-color: hsl(var(--gold));
+  .price-now {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    color: hsl(var(--ink));
+    letter-spacing: 0.005em;
   }
-  .bg-charcoal {
-    background-color: hsl(var(--charcoal));
-  }
-  .text-charcoal {
-    color: hsl(var(--charcoal));
-  }
-  .bg-surface-dark {
-    background-color: hsl(var(--surface-dark));
-  }
-  .text-surface-dark-foreground {
-    color: hsl(var(--surface-dark-foreground));
-  }
-  .border-gold {
-    border-color: hsl(var(--gold));
+  .price-was {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    color: hsl(var(--ink-mute));
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: hsl(var(--ink-mute) / 0.6);
   }
 
-  /* Horizontal "peek" scroller.
-     Set --peek (visible item count, can be fractional like 4.5)
-     and --peek-gap (gap between items) on the parent. */
+  /* ─── Section rhythm — kills random gaps between rows ─ */
+  .section-y { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+  @media (min-width: 768px) { .section-y { padding-top: 4rem; padding-bottom: 4rem; } }
+  @media (min-width: 1024px) { .section-y { padding-top: 5rem; padding-bottom: 5rem; } }
+
+  /* ─── Color helpers (back-compat + new) ────────────── */
+  .text-gold      { color: hsl(var(--champagne)); }
+  .bg-gold        { background-color: hsl(var(--champagne)); }
+  .text-charcoal  { color: hsl(var(--ink)); }
+  .bg-charcoal    { background-color: hsl(var(--ink)); }
+  .bg-surface-dark { background-color: hsl(var(--ink)); }
+  .text-surface-dark-foreground { color: hsl(var(--ivory)); }
+  .border-gold    { border-color: hsl(var(--champagne)); }
+  .text-ink-soft  { color: hsl(var(--ink-soft)); }
+  .text-ink-mute  { color: hsl(var(--ink-mute)); }
+  .bg-ivory       { background-color: hsl(var(--ivory)); }
+  .bg-ivory-warm  { background-color: hsl(var(--ivory-warm)); }
+  .bg-blush       { background-color: hsl(var(--blush)); }
+  .bg-sand        { background-color: hsl(var(--sand)); }
+  .bg-champagne   { background-color: hsl(var(--champagne)); }
+  .text-champagne { color: hsl(var(--champagne)); }
+  .text-champagne-deep { color: hsl(var(--champagne-deep)); }
+  .border-champagne { border-color: hsl(var(--champagne) / 0.4); }
+
+  /* Soft shadows */
+  .shadow-soft    { box-shadow: var(--shadow-soft); }
+  .shadow-card    { box-shadow: var(--shadow-card); }
+
+  /* ─── Motion ───────────────────────────────────────── */
+  .ease-luxury { transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1); }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+  .animate-soft-zoom {
+    animation: soft-zoom 8s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--ivory-warm)) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes fade-up {
+    0%   { opacity: 0; transform: translateY(14px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes soft-zoom {
+    0%   { transform: scale(1); }
+    100% { transform: scale(1.06); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  /* Subtle hover lift for cards */
+  .lift-hover {
+    transition: transform 380ms cubic-bezier(0.32, 0.72, 0, 1),
+                box-shadow 380ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .lift-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Soft image zoom on parent hover */
+  .img-soft-zoom {
+    transition: transform 700ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .group:hover .img-soft-zoom,
+  .lift-hover:hover .img-soft-zoom {
+    transform: scale(1.04);
+  }
+
+  /* Horizontal "peek" scroller. */
   .peek-row {
     --peek: 4.5;
     --peek-gap: 0.75rem;
@@ -138,12 +255,7 @@
 }
 
 /* ============================================================
-   Brand logo — premium metallic gold rendering
-   Layered drop-shadows simulate bevel/emboss + ambient depth
-   on a transparent PNG. Two adaptive variants:
-     .brand-logo       → light backgrounds (dark separation outline)
-     .brand-logo-dark  → dark backgrounds  (warm gold halo)
-   Plus auto-switch under a `.dark` wrapper.
+   Brand logo — premium metallic gold rendering (unchanged)
    ============================================================ */
 @layer utilities {
   .brand-logo {
@@ -153,22 +265,14 @@
     transition:
       filter 280ms cubic-bezier(0.4, 0, 0.2, 1),
       transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* LIGHT BG — bevel highlight (top), emboss shadow (bottom),
-       crisp 1px dark separation outline so gold reads on white,
-       then close + soft ambient floor shadow for depth.
-       saturate/contrast push the gold toward a richer metallic. */
     filter:
-      drop-shadow(0 -0.6px 0 hsl(45 95% 97% / 1))      /* top bevel highlight */
-      drop-shadow(0 0.6px 0 hsl(38 75% 18% / 0.7))     /* bottom bevel emboss */
-      drop-shadow(0.7px 0 0 hsl(38 60% 22% / 0.28))    /* right separation */
-      drop-shadow(-0.7px 0 0 hsl(38 60% 22% / 0.28))   /* left separation */
+      drop-shadow(0 -0.6px 0 hsl(45 95% 97% / 1))
+      drop-shadow(0 0.6px 0 hsl(38 75% 18% / 0.7))
+      drop-shadow(0.7px 0 0 hsl(38 60% 22% / 0.28))
+      drop-shadow(-0.7px 0 0 hsl(38 60% 22% / 0.28))
       saturate(1.22)
       contrast(1.1);
   }
-  /* Hover/active polish — only fires when the logo sits inside an
-     interactive ancestor (link or button), so static splash/loader
-     marks don't react to the cursor. No transforms = no layout shift. */
   :is(a, button):hover .brand-logo:not(.brand-logo-dark) {
     filter:
       drop-shadow(0 -0.6px 0 hsl(45 100% 99% / 1))
@@ -189,17 +293,14 @@
       contrast(1.1)
       brightness(0.98);
   }
-
-  /* DARK BG — bevel + warm gold ambient halo for separation
-     against deep charcoal/ivory surfaces (admin sidebar, splash). */
   .brand-logo-dark {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.65))   /* highlight */
-      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.7))        /* shadow */
-      drop-shadow(0 0 4px hsl(45 90% 62% / 0.45))      /* inner gold glow */
-      drop-shadow(0 0 14px hsl(45 85% 58% / 0.28))     /* mid halo */
-      drop-shadow(0 0 28px hsl(45 80% 55% / 0.16))     /* outer halo */
-      drop-shadow(0 2px 5px hsl(0 0% 0% / 0.6))        /* floor depth */
+      drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.65))
+      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.7))
+      drop-shadow(0 0 4px hsl(45 90% 62% / 0.45))
+      drop-shadow(0 0 14px hsl(45 85% 58% / 0.28))
+      drop-shadow(0 0 28px hsl(45 80% 55% / 0.16))
+      drop-shadow(0 2px 5px hsl(0 0% 0% / 0.6))
       saturate(1.22)
       contrast(1.08)
       brightness(1.06);
@@ -227,8 +328,6 @@
       contrast(1.06)
       brightness(1.02);
   }
-
-  /* Auto-adapt under a `.dark` ancestor unless explicitly forced light. */
   .dark .brand-logo:not(.brand-logo-light):not(.brand-logo-dark) {
     filter:
       drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.65))
@@ -242,7 +341,6 @@
       brightness(1.06);
   }
 }
-
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -267,17 +365,12 @@
   }
 }
 
-/* iOS zoom-on-focus prevention — opt-in via .ios-no-zoom on the input.
-   Only applies on iOS Safari at phone widths so desktop text-sm inputs are unaffected. */
 @supports (-webkit-touch-callout: none) {
   @media (max-width: 480px) {
     .ios-no-zoom { font-size: 16px !important; }
   }
 }
 
-/* iOS-safe full-screen overlay backdrop.
-   100dvh handles modern iOS keyboard collapsing the visual viewport,
-   -webkit-fill-available is the legacy fallback for older iOS Safari. */
 .ios-fill-screen {
   height: 100vh;
   height: 100dvh;

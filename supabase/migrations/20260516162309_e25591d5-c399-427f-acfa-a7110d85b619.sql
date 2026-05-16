@@ -1,0 +1,2 @@
+REVOKE EXECUTE ON FUNCTION public.next_product_sku(timestamp with time zone) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.next_product_sku(timestamp with time zone) TO service_role;

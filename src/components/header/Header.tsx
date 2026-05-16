@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
-import erayaLogo from "@/assets/eraya-logo.png";
+import BrandLogo from "@/components/BrandLogo";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsApp } from "@/lib/whatsapp";
@@ -60,7 +60,6 @@ const Header = () => {
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
   const [q, setQ] = useState("");
-  const logo = settings?.logo_url || erayaLogo;
 
   const visibleCategories = categories.filter((c) => c.is_visible);
 
@@ -84,7 +83,7 @@ const Header = () => {
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium tracking-wide transition-colors px-1 py-1 ${focusRing} ${
-      isActive ? "text-gold" : "text-foreground hover:text-gold"
+      isActive ? "text-[hsl(var(--champagne))]" : "text-ivory hover:text-[hsl(var(--champagne))]"
     }`;
 
   
@@ -138,7 +137,7 @@ const Header = () => {
     <>
       <AnnouncementBar />
       <StatusBar />
-      <header className="w-full sticky top-0 z-50 bg-background lg:bg-background/90 lg:backdrop-blur border-b border-border">
+      <header className="w-full sticky top-0 z-50 bg-[hsl(var(--ink))] lg:bg-[hsl(var(--ink))]/95 lg:backdrop-blur border-b border-[hsl(var(--ink-soft))]/40 text-ivory">
         <div className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-3 items-center h-14 sm:h-16 px-2 sm:px-4 lg:px-6 max-w-7xl mx-auto gap-1 sm:gap-2">
           {/* Left: hamburger (mobile) + desktop nav */}
           <div className="flex items-center justify-start min-w-0">
@@ -363,7 +362,7 @@ const Header = () => {
                 <button
                   type="button"
                   aria-label="Quick navigation: Shop, Support, About"
-                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-foreground hover:text-gold transition-colors ${focusRing}`}
+                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-ivory hover:text-[hsl(var(--champagne))] transition-colors ${focusRing}`}
                 >
                   Menu
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
@@ -409,7 +408,7 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger
                   aria-label="Shop menu – browse catalogue and categories"
-                  className={`text-sm font-medium tracking-wide hover:text-gold transition-colors px-1 py-1 ${focusRing}`}
+                  className={`text-sm font-medium tracking-wide text-ivory hover:text-[hsl(var(--champagne))] transition-colors px-1 py-1 ${focusRing}`}
                 >
                   {s(settings, "nav_catalogue_label")}
                 </DropdownMenuTrigger>
@@ -438,21 +437,7 @@ const Header = () => {
 
           {/* Center: logo */}
           <Link to="/" className="flex justify-center min-w-0 items-center px-1">
-            <img
-              src={logo}
-              alt={settings?.store_name || "Eraya"}
-              draggable={false}
-              className="brand-logo h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[140px] lg:max-w-[180px]"
-              onError={(e) => {
-                const img = e.currentTarget;
-                img.style.display = "none";
-                const next = img.nextElementSibling as HTMLElement | null;
-                next?.removeAttribute("hidden");
-              }}
-            />
-            <span hidden className="font-serif text-lg sm:text-xl text-gold truncate">
-              {settings?.store_name || "Eraya"}
-            </span>
+            <BrandLogo onDark className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[140px] lg:max-w-[180px]" />
           </Link>
 
           {/* Right: action icons */}

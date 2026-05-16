@@ -384,24 +384,22 @@ const BannersAdmin = () => {
 
                   {/* BACKGROUND */}
                   <TabsContent value="bg" className="space-y-4 pt-4">
-                    <div>
-                      <Label className="text-xs mb-1.5 block">Background image</Label>
-                      <Input type="file" accept="image/*" onChange={(e) => {
-                        const f = e.target.files?.[0]; if (f) void uploadFor("image_url", f);
-                      }} />
-                      {draft.image_url && (
-                        <img src={draft.image_url} className="mt-2 w-full max-w-sm aspect-[16/7] object-cover rounded" alt="" />
-                      )}
-                    </div>
-                    <div>
-                      <Label className="text-xs mb-1.5 block">Mobile image (optional)</Label>
-                      <Input type="file" accept="image/*" onChange={(e) => {
-                        const f = e.target.files?.[0]; if (f) void uploadFor("image_mobile_url", f);
-                      }} />
-                      {draft.image_mobile_url && (
-                        <img src={draft.image_mobile_url} className="mt-2 w-32 aspect-[3/4] object-cover rounded" alt="" />
-                      )}
-                    </div>
+                    <ImageField
+                      label="Background image"
+                      url={draft.image_url}
+                      aspect="aspect-[16/7]"
+                      previewWidth="w-full max-w-sm"
+                      onUpload={(f) => uploadFor("image_url", f)}
+                      onRemove={() => updateDraft("image_url", null)}
+                    />
+                    <ImageField
+                      label="Mobile image (optional)"
+                      url={draft.image_mobile_url}
+                      aspect="aspect-[3/4]"
+                      previewWidth="w-32"
+                      onUpload={(f) => uploadFor("image_mobile_url", f)}
+                      onRemove={() => updateDraft("image_mobile_url", null)}
+                    />
                     <div className="grid grid-cols-2 gap-4">
                       <RangeSlider label="Focal point X" value={draft.bg_focal_x ?? 50} onChange={(v) => updateDraft("bg_focal_x", v)} min={0} max={100} unit="%" />
                       <RangeSlider label="Focal point Y" value={draft.bg_focal_y ?? 50} onChange={(v) => updateDraft("bg_focal_y", v)} min={0} max={100} unit="%" />

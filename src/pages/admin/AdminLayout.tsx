@@ -54,33 +54,36 @@ const SidebarBody = ({
   profile: { full_name: string | null; avatar_url: string | null } | null;
   userEmail?: string | null;
 }) => (
-  <div className="flex flex-col h-full">
-    <div className="px-5 py-6 border-b border-border flex flex-col items-center gap-2 bg-gradient-to-b from-ivory/40 to-transparent">
+  <div className="flex flex-col h-full bg-[hsl(var(--ink))] text-[hsl(var(--ivory))]">
+    {/* Brand block */}
+    <div className="px-5 py-6 border-b border-[hsl(var(--ivory))]/10 flex flex-col items-center gap-2">
       <Link to="/admin" onClick={onNavigate} aria-label="Go to admin home" className="inline-flex">
-        <BrandLogo className="h-10 w-auto" />
+        <BrandLogo className="h-10 w-auto" onDark />
       </Link>
-      <span className="h-px w-8 bg-gold/60" />
-      <p className="text-[10px] font-medium tracking-[0.35em] uppercase text-muted-foreground">Admin</p>
+      <span className="h-px w-10 bg-[hsl(var(--champagne))]/70" />
+      <p className="text-[10px] font-medium tracking-[0.4em] uppercase text-[hsl(var(--champagne))]">Admin</p>
     </div>
 
+    {/* Profile chip */}
     <Link
       to="/admin/profile"
       onClick={onNavigate}
-      className="mx-3 mt-3 flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors"
+      className="mx-3 mt-3 flex items-center gap-3 px-3 py-2 rounded-md hover:bg-[hsl(var(--ivory))]/5 transition-colors"
     >
-      <Avatar className="h-9 w-9 border border-gold">
+      <Avatar className="h-9 w-9 border border-[hsl(var(--champagne))]/60">
         <AvatarImage src={profile?.avatar_url || undefined} />
-        <AvatarFallback className="bg-charcoal text-ivory text-xs">
+        <AvatarFallback className="bg-[hsl(var(--ivory))]/10 text-[hsl(var(--ivory))] text-xs">
           {(profile?.full_name || userEmail || "U").slice(0, 2).toUpperCase()}
         </AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium truncate">{profile?.full_name || "My Profile"}</p>
-        <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
+        <p className="text-sm font-medium truncate text-[hsl(var(--ivory))]">{profile?.full_name || "My Profile"}</p>
+        <p className="text-[11px] text-[hsl(var(--ivory))]/55 truncate">{userEmail}</p>
       </div>
     </Link>
 
-    <nav className="flex-1 p-3 space-y-1 overflow-auto">
+    {/* Nav */}
+    <nav className="flex-1 p-3 space-y-0.5 overflow-auto">
       {visibleItems.map((item) => (
         <NavLink
           key={item.path}
@@ -88,28 +91,44 @@ const SidebarBody = ({
           end={item.end}
           onClick={onNavigate}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              isActive ? "text-charcoal" : "text-foreground hover:bg-muted"
+            `relative flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              isActive
+                ? "bg-[hsl(var(--ivory))]/10 text-[hsl(var(--champagne))]"
+                : "text-[hsl(var(--ivory))]/75 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
             }`
           }
-          style={({ isActive }) => (isActive ? { background: "hsl(var(--gold))" } : undefined)}
         >
-          <item.icon className="h-4 w-4 shrink-0" />
-          <span className="truncate">{item.label}</span>
+          {({ isActive }) => (
+            <>
+              {isActive && (
+                <span
+                  className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-[hsl(var(--champagne))]"
+                  aria-hidden
+                />
+              )}
+              <item.icon className="h-4 w-4 shrink-0" />
+              <span className="truncate">{item.label}</span>
+            </>
+          )}
         </NavLink>
       ))}
     </nav>
-    <div className="shrink-0 mt-auto p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-border space-y-1 bg-background">
+
+    {/* Footer actions */}
+    <div className="shrink-0 mt-auto p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-[hsl(var(--ivory))]/10 space-y-1">
       <Button
         variant="outline"
-        className="w-full justify-start gap-2 border-gold/40 text-charcoal hover:bg-gold/10"
+        className="w-full justify-start gap-2 bg-transparent border-[hsl(var(--champagne))]/40 text-[hsl(var(--ivory))] hover:bg-[hsl(var(--champagne))]/10 hover:text-[hsl(var(--champagne))]"
         onClick={() => { onSwitchToCustomer(); onNavigate?.(); }}
       >
         <Eye className="h-4 w-4" /> Switch to Customer View
       </Button>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="ghost" className="w-full justify-start gap-2">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-[hsl(var(--ivory))]/70 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
+          >
             <LogOut className="h-4 w-4" /> Sign out
           </Button>
         </AlertDialogTrigger>
@@ -147,15 +166,14 @@ const AdminLayout = () => {
     navigate("/login", { replace: true });
   };
   const switchToCustomer = () => {
-    // Fire-and-forget the mode update so a slow/failed DB call never blocks navigation
     void switchMode("customer").catch(() => {});
     navigate("/", { replace: true });
   };
-  const currentLabel = visibleItems.find((i) => (i.end ? location.pathname === i.path : location.pathname.startsWith(i.path)))?.label || "Admin";
 
   return (
-    <div className="min-h-screen flex w-full bg-muted/30">
-      <aside className="hidden md:flex md:w-64 lg:w-72 shrink-0 bg-background border-r border-border flex-col">
+    <div className="min-h-screen flex w-full bg-background">
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex md:w-64 lg:w-72 shrink-0 flex-col border-r border-[hsl(var(--ink))]/10">
         <SidebarBody
           visibleItems={visibleItems}
           onSignOut={signOut}
@@ -166,14 +184,20 @@ const AdminLayout = () => {
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden sticky top-0 z-30 bg-background border-b border-border grid grid-cols-[auto_1fr_auto] items-center h-14 px-4">
+        {/* Mobile top bar — matches storefront dark header */}
+        <header className="md:hidden sticky top-0 z-30 bg-[hsl(var(--ink))] text-[hsl(var(--ivory))] border-b border-[hsl(var(--champagne))]/20 grid grid-cols-[auto_1fr_auto] items-center h-14 px-4">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Menu"
+                className="text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/10 hover:text-[hsl(var(--ivory))]"
+              >
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-72">
+            <SheetContent side="left" className="p-0 w-72 bg-[hsl(var(--ink))] border-r border-[hsl(var(--ivory))]/10">
               <SidebarBody
                 visibleItems={visibleItems}
                 onNavigate={() => setMobileOpen(false)}
@@ -184,16 +208,16 @@ const AdminLayout = () => {
               />
             </SheetContent>
           </Sheet>
-          <Link to="/admin" aria-label="Go to admin home" className="flex flex-col items-center justify-center gap-1">
-            <BrandLogo className="h-7 w-auto" />
-            <span className="text-[9px] font-medium tracking-[0.3em] uppercase text-muted-foreground leading-none">
+          <Link to="/admin" aria-label="Go to admin home" className="flex flex-col items-center justify-center gap-0.5">
+            <BrandLogo className="h-7 w-auto" onDark />
+            <span className="text-[9px] font-medium tracking-[0.35em] uppercase text-[hsl(var(--champagne))] leading-none">
               Admin
             </span>
           </Link>
           <div className="w-10 h-10" aria-hidden />
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto bg-background">
           <Outlet />
         </main>
       </div>

@@ -14,6 +14,8 @@ import StarRating from "@/components/eraya/StarRating";
 interface Props {
   product: Product;
   showWhatsAppIcon?: boolean;
+  /** When false, suppress the corner micro-label even if the product is tagged. */
+  showLabel?: boolean;
 }
 
 /**
@@ -48,7 +50,7 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
   }
 };
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, showLabel = true }: Props) => {
   const { data: wishlist = [] } = useWishlist();
   const { data: ratings = {} } = useProductRatings();
   const toggle = useToggleWishlist();
@@ -58,7 +60,7 @@ const ProductCard = ({ product }: Props) => {
     !!product.discounted_price && product.original_price > product.discounted_price;
   const current = product.discounted_price ?? product.original_price;
   const rating = ratings[product.id];
-  const label = pickLabel(product.tags);
+  const label = showLabel ? pickLabel(product.tags) : null;
 
   return (
     <Link

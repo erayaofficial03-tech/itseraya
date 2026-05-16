@@ -131,7 +131,7 @@ const Header = () => {
   // iOS (always — guided flow) OR Android/Desktop with a captured native prompt.
   const showInstallButton = !isInstalled && (isIOS || isInstallable);
 
-  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-foreground border-b border-border/60 active:bg-muted/40 -mx-6 px-6 transition-colors";
+  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-[hsl(var(--champagne))]";
 
   return (
     <>
@@ -152,11 +152,11 @@ const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--background))]">
-                <SheetHeader className="px-6 py-5 border-b border-border items-center">
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--ink))] text-ivory border-r border-ivory/10">
+                <SheetHeader className="px-6 py-5 border-b border-ivory/10 items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
-                      <BrandLogo className="h-12 w-auto object-contain" />
+                      <BrandLogo onDark className="h-12 w-auto object-contain" />
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
@@ -165,19 +165,19 @@ const Header = () => {
                   {/* Search inside drawer */}
                   <button
                     onClick={() => { closeMenu(); setSearchOpen(true); }}
-                    className="w-full flex items-center gap-2 mb-5 px-3 py-2.5 rounded-md bg-muted text-muted-foreground text-sm"
+                    className="w-full flex items-center gap-2 mb-5 px-3 py-2.5 rounded-md bg-ivory/10 text-ivory/70 text-sm hover:bg-ivory/15 transition-colors"
                   >
                     <Search className="h-4 w-4" />
                     Search jewellery…
                   </button>
 
                   {/* ACCOUNT (moved to top) */}
-                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mb-1">
+                  <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[hsl(var(--champagne))] mb-1">
                     Account
                   </p>
                   {user ? (
                     <>
-                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-border/60">
+                      <div className="flex items-center gap-3 py-3 -mx-6 px-6 border-b border-ivory/10">
                         <Avatar className="h-10 w-10 border border-gold">
                           <AvatarImage src={profile?.avatar_url || (user.user_metadata as any)?.avatar_url || undefined} />
                           <AvatarFallback className="bg-charcoal text-ivory text-xs">
@@ -188,7 +188,7 @@ const Header = () => {
                           <p className="text-sm font-medium truncate">
                             {profile?.full_name || (user.user_metadata as any)?.full_name || "Welcome"}
                           </p>
-                          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                          <p className="text-xs text-ivory/60 truncate">{user.email}</p>
                         </div>
                       </div>
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
@@ -224,14 +224,14 @@ const Header = () => {
                       </button>
                     </>
                   ) : (
-                    <div className="my-3 rounded-xl border border-gold/50 bg-gold/5 p-4">
+                    <div className="my-3 rounded-xl border border-[hsl(var(--champagne))]/40 bg-[hsl(var(--champagne))]/10 p-4">
                       <div className="flex items-start gap-3 mb-3">
-                        <div className="h-10 w-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-[hsl(var(--champagne))]/15 border border-[hsl(var(--champagne))]/40 flex items-center justify-center shrink-0">
                           <User className="h-5 w-5 text-gold" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-foreground">Sign In to Your Account</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">Save wishlist & track your enquiries</p>
+                          <p className="text-sm font-semibold text-ivory">Sign In to Your Account</p>
+                          <p className="text-xs text-ivory/60 mt-0.5">Save wishlist & track your enquiries</p>
                         </div>
                       </div>
                       <Link
@@ -244,7 +244,7 @@ const Header = () => {
                     </div>
                   )}
 
-                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                  <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[hsl(var(--champagne))] mt-6 mb-1">
                     Shop
                   </p>
                   {shopShortcuts.map((sc) => {
@@ -262,10 +262,10 @@ const Header = () => {
                       <span className="flex items-center gap-2">
                         <LayoutGrid className="h-4 w-4" /> {s(settings, "nav_catalogue_label")}
                       </span>
-                      <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-data-[state=open]:rotate-180" />
+                      <ChevronDown className="h-4 w-4 text-ivory/60 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <Link to="/catalogue" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm text-muted-foreground`}>
+                      <Link to="/catalogue" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm text-ivory/60`}>
                         View all
                       </Link>
                       {visibleCategories.map((c) => (
@@ -281,7 +281,7 @@ const Header = () => {
                     </CollapsibleContent>
                   </Collapsible>
 
-                  <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-muted-foreground mt-6 mb-1">
+                  <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[hsl(var(--champagne))] mt-6 mb-1">
                     Info
                   </p>
                   {showInstallButton && (
@@ -320,7 +320,7 @@ const Header = () => {
                       <span className="flex items-center gap-2">
                         <FileText className="h-4 w-4" /> Policies
                       </span>
-                      <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0 transition-transform group-data-[state=open]:rotate-180" />
+                      <ChevronDown className="h-4 w-4 text-ivory/60 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <Link to="/return-policy" onClick={closeMenu} className={`${drawerLinkClass} pl-10 text-sm`}>

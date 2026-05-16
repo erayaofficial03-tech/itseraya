@@ -63,9 +63,10 @@ const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
             gap-4 md:gap-5 lg:gap-6
           "
         >
-          {items.map((p) => (
+          {items.map((p, i) => (
             <div key={p.id} className="snap-start">
-              <ProductCard product={p} />
+              {/* Only the first 3 cards per row show a micro-label to keep the grid calm */}
+              <ProductCard product={p} showLabel={i < 3} />
             </div>
           ))}
         </div>

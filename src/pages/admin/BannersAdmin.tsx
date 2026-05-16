@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { GripVertical, Plus, Trash2, Smartphone, Tablet, Monitor, Loader2 } from "lucide-react";
+import { GripVertical, Plus, Trash2, Smartphone, Tablet, Monitor, Loader2, Upload, X, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { uploadImage } from "@/lib/upload";
 import { cn } from "@/lib/utils";
@@ -98,6 +98,61 @@ const SortableRow = ({
       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onDelete}>
         <Trash2 className="h-3.5 w-3.5 text-destructive" />
       </Button>
+    </div>
+  );
+};
+
+const ImageField = ({
+  label, url, aspect, previewWidth, onUpload, onRemove,
+}: {
+  label: string;
+  url: string | null;
+  aspect: string;
+  previewWidth: string;
+  onUpload: (f: File) => Promise<void> | void;
+  onRemove: () => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const handle = async (f?: File | null) => {
+    if (!f) return;
+    setBusy(true);
+    try { await onUpload(f); } finally { setBusy(false); }
+  };
+  return (
+    <div>
+      <Label className="text-xs mb-1.5 block">{label}</Label>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => { void handle(e.target.files?.[0]); e.target.value = ""; }}
+      />
+      {url ? (
+        <div className="flex items-start gap-3">
+          <img src={url} className={cn("object-cover rounded border border-border", previewWidth, aspect)} alt="" />
+          <div className="flex flex-col gap-1.5">
+            <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => inputRef.current?.click()}>
+              {busy ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Upload className="h-3.5 w-3.5 mr-1" />}
+              Replace
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={onRemove}>
+              <X className="h-3.5 w-3.5 mr-1" /> Remove
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={busy}
+          className="flex flex-col items-center justify-center gap-1 w-full max-w-sm aspect-[16/7] border-2 border-dashed border-border rounded-md hover:border-[#C9A84C] hover:bg-muted/50 transition-colors text-muted-foreground"
+        >
+          {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImageIcon className="h-5 w-5" />}
+          <span className="text-xs">{busy ? "Uploading…" : "Click to upload image"}</span>
+        </button>
+      )}
     </div>
   );
 };
@@ -384,24 +439,22 @@ const BannersAdmin = () => {
 
                   {/* BACKGROUND */}
                   <TabsContent value="bg" className="space-y-4 pt-4">
-                    <div>
-                      <Label className="text-xs mb-1.5 block">Background image</Label>
-                      <Input type="file" accept="image/*" onChange={(e) => {
-                        const f = e.target.files?.[0]; if (f) void uploadFor("image_url", f);
-                      }} />
-                      {draft.image_url && (
-                        <img src={draft.image_url} className="mt-2 w-full max-w-sm aspect-[16/7] object-cover rounded" alt="" />
-                      )}
-                    </div>
-                    <div>
-                      <Label className="text-xs mb-1.5 block">Mobile image (optional)</Label>
-                      <Input type="file" accept="image/*" onChange={(e) => {
-                        const f = e.target.files?.[0]; if (f) void uploadFor("image_mobile_url", f);
-                      }} />
-                      {draft.image_mobile_url && (
-                        <img src={draft.image_mobile_url} className="mt-2 w-32 aspect-[3/4] object-cover rounded" alt="" />
-                      )}
-                    </div>
+                    <ImageField
+                      label="Background image"
+                      url={draft.image_url}
+                      aspect="aspect-[16/7]"
+                      previewWidth="w-full max-w-sm"
+                      onUpload={(f) => uploadFor("image_url", f)}
+                      onRemove={() => updateDraft("image_url", null)}
+                    />
+                    <ImageField
+                      label="Mobile image (optional)"
+                      url={draft.image_mobile_url}
+                      aspect="aspect-[3/4]"
+                      previewWidth="w-32"
+                      onUpload={(f) => uploadFor("image_mobile_url", f)}
+                      onRemove={() => updateDraft("image_mobile_url", null)}
+                    />
                     <div className="grid grid-cols-2 gap-4">
                       <RangeSlider label="Focal point X" value={draft.bg_focal_x ?? 50} onChange={(v) => updateDraft("bg_focal_x", v)} min={0} max={100} unit="%" />
                       <RangeSlider label="Focal point Y" value={draft.bg_focal_y ?? 50} onChange={(v) => updateDraft("bg_focal_y", v)} min={0} max={100} unit="%" />

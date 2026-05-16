@@ -196,7 +196,7 @@ const products: Product[] = [
 const ProductGrid = () => {
   return (
     <section className="w-full px-6 mb-16">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-5">
           {products.map((product) => (
             <Link key={product.id} to={`/jewellery/${product.id}`}>
               <Card 

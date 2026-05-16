@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useProducts } from "@/lib/queries";
+import { confirm } from "@/components/ui/confirm-dialog";
 
 type Filter = "all" | "pending" | "approved" | "hidden" | "fake";
 
@@ -94,7 +95,7 @@ const ReviewsManager = () => {
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this review permanently?")) return;
+    if (!(await confirm({ title: "Delete this review?", description: "This action is permanent and cannot be undone." }))) return;
     const { error } = await supabase.from("reviews").delete().eq("id", id);
     if (error) toast.error(error.message);
     else {

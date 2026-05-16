@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Pencil, Plus, X, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "sonner";
 import { useCategories, useProducts, formatINR, productImage, type Product } from "@/lib/queries";
+import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage } from "@/lib/upload";
 
 const empty = {
@@ -308,7 +309,7 @@ const ProductsAdmin = () => {
   const [open, setOpen] = useState(false);
 
   const remove = async (id: string) => {
-    if (!confirm("Delete this product?")) return;
+    if (!(await confirm({ title: "Delete this product?", description: "This action cannot be undone." }))) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
     if (error) toast.error(error.message);
     else {

@@ -498,6 +498,42 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_sections: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_visible: boolean
+          props: Json
+          type: string
+          updated_at: string
+          visible_desktop: boolean
+          visible_mobile: boolean
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          props?: Json
+          type: string
+          updated_at?: string
+          visible_desktop?: boolean
+          visible_mobile?: boolean
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          props?: Json
+          type?: string
+          updated_at?: string
+          visible_desktop?: boolean
+          visible_mobile?: boolean
+        }
+        Relationships: []
+      }
       install_events: {
         Row: {
           event_type: string

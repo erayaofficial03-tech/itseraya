@@ -20,6 +20,35 @@ const empty = {
   is_featured: false, is_visible: true, slugManuallyEdited: false,
 };
 
+// Admin-only SKU generation via edge function, with a client-side fallback
+// if the function is unreachable. The DB trigger remains as a final safety net.
+const generateProductSku = async (): Promise<string | null> => {
+  try {
+    const { data, error } = await supabase.functions.invoke("generate-product-sku");
+    if (!error && data?.sku) return data.sku as string;
+  } catch {}
+
+  // Fallback: derive next ERY/YY/NNN from existing products
+  try {
+    const yy = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      year: "2-digit",
+    }).format(new Date());
+    const prefix = `ERY/${yy}/`;
+    const { data } = await supabase
+      .from("products")
+      .select("sku")
+      .like("sku", `${prefix}%`)
+      .order("sku", { ascending: false })
+      .limit(1);
+    const last = data?.[0]?.sku as string | undefined;
+    const lastN = last ? parseInt(last.slice(prefix.length), 10) || 0 : 0;
+    return `${prefix}${String(lastN + 1).padStart(3, "0")}`;
+  } catch {
+    return null; // Let the DB trigger assign one
+  }
+};
+
 const generateSlug = (name: string): string =>
   name
     .toLowerCase()
@@ -126,7 +155,9 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
         const { error } = await supabase.from("products").update(payload).eq("id", product.id);
         if (error) throw error;
       } else {
-        const { data, error } = await supabase.from("products").insert(payload).select("id").single();
+        const sku = await generateProductSku();
+        const insertPayload = sku ? { ...payload, sku } : payload;
+        const { data, error } = await supabase.from("products").insert(insertPayload).select("id").single();
         if (error) throw error;
         productId = data.id;
       }

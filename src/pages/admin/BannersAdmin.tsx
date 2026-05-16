@@ -160,6 +160,172 @@ const ImageField = ({
   );
 };
 
+const combineDateTime = (date: Date | undefined, time: string): string | null => {
+  if (!date) return null;
+  const [h, m] = (time || "00:00").split(":").map((n) => parseInt(n, 10) || 0);
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  return d.toISOString();
+};
+
+const DateTimePicker = ({
+  label, value, onChange, placeholder, minDate,
+}: {
+  label: string;
+  value: string | null;
+  onChange: (iso: string | null) => void;
+  placeholder: string;
+  minDate?: Date;
+}) => {
+  const date = value ? new Date(value) : undefined;
+  const time = date ? format(date, "HH:mm") : "09:00";
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs flex items-center justify-between">
+        <span>{label}</span>
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            className="text-[10px] text-muted-foreground hover:text-destructive flex items-center gap-0.5"
+          >
+            <X className="h-3 w-3" /> Clear
+          </button>
+        )}
+      </Label>
+      <div className="flex gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className={cn("flex-1 justify-start text-left font-normal h-9", !date && "text-muted-foreground")}
+            >
+              <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+              {date ? format(date, "MMM d, yyyy") : <span className="text-xs">{placeholder}</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(d) => onChange(combineDateTime(d ?? undefined, time))}
+              disabled={minDate ? (d) => d < new Date(minDate.toDateString()) : undefined}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="relative">
+          <Clock className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Input
+            type="time"
+            value={time}
+            onChange={(e) => onChange(combineDateTime(date || new Date(), e.target.value))}
+            className="w-[110px] h-9 pl-7 text-xs"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ScheduleEditor = ({
+  startsAt, expiresAt, isActive, onChange,
+}: {
+  startsAt: string | null;
+  expiresAt: string | null;
+  isActive: boolean;
+  onChange: (starts: string | null, expires: string | null) => void;
+}) => {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(new Date()), 30_000);
+    return () => window.clearInterval(t);
+  }, []);
+
+  const startsDate = startsAt ? new Date(startsAt) : null;
+  const expiresDate = expiresAt ? new Date(expiresAt) : null;
+  const invalidRange = startsDate && expiresDate && expiresDate <= startsDate;
+
+  let state: "off" | "live" | "scheduled" | "expired" | "invalid" = isActive ? "live" : "off";
+  let detail = "";
+  if (!isActive) {
+    state = "off";
+    detail = "Inactive — toggle the banner on to enable scheduling.";
+  } else if (invalidRange) {
+    state = "invalid";
+    detail = "End date must be after start date.";
+  } else if (startsDate && now < startsDate) {
+    state = "scheduled";
+    detail = `Goes live ${format(startsDate, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (expiresDate && now >= expiresDate) {
+    state = "expired";
+    detail = `Expired ${format(expiresDate, "MMM d, yyyy 'at' h:mm a")}`;
+  } else {
+    state = "live";
+    detail = expiresDate
+      ? `Showing now until ${format(expiresDate, "MMM d, yyyy 'at' h:mm a")}`
+      : "Showing now — no end date set.";
+  }
+
+  const palette = {
+    live:      { dot: "bg-emerald-500", ring: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30", label: "Currently active" },
+    scheduled: { dot: "bg-amber-500",   ring: "bg-amber-500/15 text-amber-700 border-amber-500/30",       label: "Scheduled" },
+    expired:   { dot: "bg-muted-foreground", ring: "bg-muted text-muted-foreground border-border",        label: "Expired" },
+    off:       { dot: "bg-muted-foreground", ring: "bg-muted text-muted-foreground border-border",        label: "Inactive" },
+    invalid:   { dot: "bg-destructive", ring: "bg-destructive/10 text-destructive border-destructive/30", label: "Invalid range" },
+  }[state];
+
+  return (
+    <div className="space-y-4">
+      <div className={cn("flex items-start gap-3 p-3 rounded-lg border", palette.ring)}>
+        <span className="relative flex h-2.5 w-2.5 mt-1.5 shrink-0">
+          {state === "live" && (
+            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60 animate-ping" />
+          )}
+          <span className={cn("relative inline-flex h-2.5 w-2.5 rounded-full", palette.dot)} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold leading-tight">{palette.label}</p>
+          <p className="text-[11px] opacity-80 mt-0.5">{detail}</p>
+        </div>
+        {state === "live" ? <CircleDot className="h-4 w-4 opacity-70" /> : <CircleDashed className="h-4 w-4 opacity-70" />}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <DateTimePicker
+          label="Starts at"
+          value={startsAt}
+          placeholder="Anytime (no start)"
+          onChange={(v) => onChange(v, expiresAt)}
+        />
+        <DateTimePicker
+          label="Ends at"
+          value={expiresAt}
+          placeholder="Never expires"
+          minDate={startsDate || undefined}
+          onChange={(v) => onChange(startsAt, v)}
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        {[
+          { label: "Start now", fn: () => onChange(new Date().toISOString(), expiresAt) },
+          { label: "+1 day", fn: () => onChange(startsAt, new Date(Date.now() + 86400000).toISOString()) },
+          { label: "+7 days", fn: () => onChange(startsAt, new Date(Date.now() + 7 * 86400000).toISOString()) },
+          { label: "+30 days", fn: () => onChange(startsAt, new Date(Date.now() + 30 * 86400000).toISOString()) },
+          { label: "Always on", fn: () => onChange(null, null) },
+        ].map((p) => (
+          <Button key={p.label} type="button" variant="outline" size="sm" className="h-7 text-[11px]" onClick={p.fn}>
+            {p.label}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const defaultsForNew = (order: number): Partial<Banner> => ({
   title: null,
   subtitle: null,

@@ -83,7 +83,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
                 label.tone,
               )}`}
             >
-              {label.text}
+              {label.name}
             </span>
           )}
 

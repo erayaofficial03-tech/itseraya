@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
 import ShareMenu from "@/components/product/ShareMenu";
+import ImageZoom from "@/components/product/ImageZoom";
 import SafeImage from "@/components/ui/SafeImage";
 import {
   useProductBySlug, useProducts, useSettings,
@@ -31,6 +32,7 @@ const ProductDetail = () => {
   const { data: wishlist = [] } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
 
   useEffect(() => {
     if (product?.id) {
@@ -127,7 +129,10 @@ const ProductDetail = () => {
         </div>
         <section className="md:px-6 grid grid-cols-1 lg:grid-cols-2 md:gap-12">
           <div className="relative">
-            <div className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative">
+            <div
+              className="aspect-square overflow-hidden md:rounded-lg bg-muted/30 mb-3 relative cursor-zoom-in"
+              onClick={() => setIsZoomOpen(true)}
+            >
               <SafeImage
                 src={withImageParams(images[activeImg], 900, 85)}
                 alt={product.name}
@@ -137,14 +142,14 @@ const ProductDetail = () => {
               />
               {/* Mobile overlay buttons */}
               <button
-                onClick={() => navigate(-1)}
+                onClick={(e) => { e.stopPropagation(); navigate(-1); }}
                 aria-label="Back"
                 className="md:hidden absolute top-3 left-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
               >
                 <ArrowLeft className="h-5 w-5 text-charcoal" />
               </button>
               <button
-                onClick={() => toggleWishlist.mutate({ productId: product.id, isSaved })}
+                onClick={(e) => { e.stopPropagation(); toggleWishlist.mutate({ productId: product.id, isSaved }); }}
                 aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
                 disabled={toggleWishlist.isPending}
                 className="md:hidden absolute top-3 right-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
@@ -173,6 +178,12 @@ const ProductDetail = () => {
                 ))}
               </div>
             )}
+            <ImageZoom
+              images={images}
+              initialIndex={activeImg}
+              isOpen={isZoomOpen}
+              onClose={() => setIsZoomOpen(false)}
+            />
           </div>
 
           <div className="space-y-5 px-4 md:px-0 mt-4 md:mt-0 lg:sticky lg:top-24 lg:h-fit">

@@ -57,10 +57,10 @@ const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
         <div
           className="
             grid grid-rows-2 grid-flow-col
-            auto-cols-[44%]
-            md:auto-cols-[26%]
-            lg:auto-cols-[17%]
-            gap-4 md:gap-5 lg:gap-6
+            auto-cols-[31%]
+            md:auto-cols-[23%]
+            lg:auto-cols-[15.5%]
+            gap-3 md:gap-5 lg:gap-6
           "
         >
           {items.map((p, i) => (

@@ -4,6 +4,9 @@ import Footer from "@/components/footer/Footer";
 import HeroSlider from "@/components/eraya/HeroSlider";
 import CategoryRow from "@/components/eraya/CategoryRow";
 import ProductRow from "@/components/eraya/ProductRow";
+import TrustStrip from "@/components/eraya/TrustStrip";
+import EmotionalStrip from "@/components/eraya/EmotionalStrip";
+import ErayaGirls from "@/components/eraya/ErayaGirls";
 import SeoHead from "@/components/providers/SeoHead";
 import ReviewsSection from "@/components/eraya/ReviewsSection";
 import { useProducts, useSettings, useSocialLinks } from "@/lib/queries";
@@ -49,8 +52,9 @@ const Index = () => {
         keywords={`${storeName}, artificial jewellery, imitation jewellery, fashion jewellery India, jewellery for women, buy jewellery online, rings, earrings, necklaces, bangles`}
       />
       <Header />
-      <main className="pt-4 md:pt-6 pb-20 md:pb-0">
+      <main className="pb-20 md:pb-0">
         <HeroSlider />
+        <TrustStrip />
         <CategoryRow />
         {isLoading ? (
           <>
@@ -61,6 +65,7 @@ const Index = () => {
           <>
             {s(settings, "section_new_arrivals_visible") && (
               <ProductRow
+                eyebrow="Just in"
                 title={s(settings, "section_new_arrivals_title")}
                 products={newArrivals}
                 viewAllHref="/catalogue?filter=new"
@@ -68,13 +73,18 @@ const Index = () => {
             )}
             {s(settings, "section_trending_visible") && (
               <ProductRow
+                eyebrow="Loved most"
                 title={s(settings, "section_trending_title")}
                 products={trending}
                 viewAllHref="/catalogue?filter=bestseller"
               />
             )}
+
+            <EmotionalStrip text="Jewellery that feels like you." />
+
             {s(settings, "section_sale_visible") && (
               <ProductRow
+                eyebrow="Sweet steals"
                 title={s(settings, "section_sale_title")}
                 products={onSale}
                 viewAllHref="/catalogue?filter=sale"
@@ -82,11 +92,14 @@ const Index = () => {
             )}
             {s(settings, "section_featured_visible") && (
               <ProductRow
+                eyebrow="Editor's pick"
                 title={s(settings, "section_featured_title")}
                 products={featured}
                 viewAllHref="/catalogue?filter=featured"
               />
             )}
+
+            <ErayaGirls />
             <ReviewsSection />
           </>
         )}
@@ -97,3 +110,4 @@ const Index = () => {
 };
 
 export default Index;
+

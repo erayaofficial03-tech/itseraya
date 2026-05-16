@@ -26,6 +26,7 @@ import { uploadImage } from "@/lib/upload";
 import { cn } from "@/lib/utils";
 import { type Banner } from "@/components/eraya/banner-types";
 import { BannerRenderer } from "@/components/eraya/BannerRenderer";
+import { BannerAnalytics } from "@/components/admin/BannerAnalytics";
 import { RangeSlider } from "@/components/admin/controls/RangeSlider";
 import { ColorPicker } from "@/components/admin/controls/ColorPicker";
 import { FontWeightPicker } from "@/components/admin/controls/FontWeightPicker";
@@ -590,6 +591,8 @@ const BannersAdmin = () => {
           </Button>
         </div>
       </div>
+
+      <BannerAnalytics banners={items} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
         {/* LEFT: list */}

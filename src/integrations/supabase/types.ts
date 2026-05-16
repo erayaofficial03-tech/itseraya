@@ -94,6 +94,27 @@ export type Database = {
           },
         ]
       }
+      banner_impressions: {
+        Row: {
+          banner_id: string | null
+          id: string
+          page_path: string | null
+          viewed_at: string
+        }
+        Insert: {
+          banner_id?: string | null
+          id?: string
+          page_path?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          banner_id?: string | null
+          id?: string
+          page_path?: string | null
+          viewed_at?: string
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           autoplay_duration: number | null

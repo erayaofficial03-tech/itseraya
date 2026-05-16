@@ -23,12 +23,15 @@ const StatusBar = () => {
   const current = usps[i % usps.length];
 
   return (
-    <div className="w-full bg-[hsl(var(--ink))] text-[hsl(var(--ivory))] border-b border-[hsl(var(--ivory))]/15">
+    <div className="w-full bg-[hsl(var(--status-bar))] text-[hsl(var(--status-bar-foreground))] border-b border-[hsl(var(--status-bar-foreground))]/15">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-7 sm:h-8 flex items-center justify-center overflow-hidden">
         <p
           key={`${i}-${current}`}
-          className="text-[11px] sm:text-xs font-medium tracking-[0.22em] sm:tracking-[0.24em] uppercase animate-fade-in truncate text-center"
-          style={{ animationDuration: `${fadeSpeed}ms` }}
+          className="text-[11px] sm:text-xs font-medium tracking-[0.22em] sm:tracking-[0.24em] uppercase animate-fade-in truncate text-center text-[hsl(var(--status-bar-foreground))]"
+          style={{
+            animationDuration: `${fadeSpeed}ms`,
+            textShadow: "0 1px 0 hsl(var(--status-bar) / 0.6)",
+          }}
         >
           {current}
         </p>

@@ -1,64 +1,35 @@
-# Admin panel — align with customer view
+# Status bar — guarantee high contrast on any background
 
-Bring the admin into the same soft-luxury editorial aesthetic as the storefront: dark ink chrome (matching the new header/footer), warm ivory content surfaces, Cormorant Garamond serif headings, champagne accents, and the same hairline dividers and soft card shadows.
+The status bar sits above the header on every page (storefront + admin). Today it hard-codes `bg-[hsl(var(--ink))]` and ivory text, which works against the new dark header but would wash out if the bar background ever changes (admin theming, future banners, settings-driven tinting).
 
-## Visual direction
+## Goal
 
-- **Sidebar (desktop) & mobile top bar** — dark `--ink` background, ivory text, champagne hover/active states, champagne hairline divider under the brand mark. Mirrors the new site header.
-- **Main content** — warm ivory `--background`, Cormorant page titles with a small eyebrow label (uppercase, tracking-[0.3em], champagne) — same pattern as homepage section heads.
-- **Cards & surfaces** — white `--card` on ivory, `shadow-card`, 14px radius, `border-border` hairlines. Section bands separated by `.section-divider`.
-- **Buttons** — primary = champagne fill on ink text; secondary = ink outline; ghost stays subtle. Destructive keeps red.
-- **Tables** — ivory header row with champagne uppercase column labels, ink rows on white, hover = `bg-muted/40`, hairline row borders.
-- **Forms** — labels in uppercase tracking, inputs with ivory-warm fill, champagne focus ring.
-- **Badges/chips** — reuse the micro-label tones from product cards (champagne / blush / ink) so admin status pills match storefront vibe.
-- **Dialogs / sheets / dropdowns** — ivory surface, serif title, champagne accent line.
+Lock the status bar to AA contrast no matter what tone sits behind it: dark ink, warm ivory, blush, champagne, or an admin-uploaded color.
 
-## Files to change
+## Approach
+
+- **Pin both layers together.** Keep the bar's own surface fixed at `--ink` (warm charcoal) and the text fixed at `--ivory` at full opacity — no `/NN` opacity modifiers on the foreground. This guarantees ~14:1 contrast, well above WCAG AA, on any page.
+- **Remove low-opacity tokens.** Audit the file for any `text-…/20`, `/40`, `/55` etc. on the announcement line and replace with solid `text-[hsl(var(--ivory))]`. Border can keep `/15` (decorative hairline, not text).
+- **Add a subtle text shadow** (`0 1px 0 hsl(var(--ink) / 0.6)`) so if a future tint ever leaks through (e.g., translucent header), the glyphs still read crisply.
+- **Future-proofing token.** Introduce two semantic tokens in `index.css`:
+  - `--status-bar: var(--ink);`
+  - `--status-bar-foreground: var(--ivory);`
+  
+  Then the component reads `bg-[hsl(var(--status-bar))] text-[hsl(var(--status-bar-foreground))]`. Any later theme change updates one place and contrast stays paired. (Tokens already exist on lines 17–18 of `index.css` — wire them up instead of re-declaring.)
+
+## Files
 
 ```text
-Shell
-  src/pages/admin/AdminLayout.tsx       — dark ink sidebar, ivory champagne active, mobile header retone
-  src/components/BrandLogo.tsx          — verify onDark variant used in sidebar (no change if already supports)
-
-Shared admin primitives (new)
-  src/components/admin/PageHeader.tsx   — eyebrow + serif title + optional actions slot
-  src/components/admin/AdminCard.tsx    — thin wrapper around Card with shadow-card + ivory tone
-  src/components/admin/AdminTable.tsx   — styled <table> wrapper (or class presets) for consistent rows
-
-Pages (apply PageHeader + AdminCard + table/form classes)
-  src/pages/admin/Dashboard.tsx + dashboard-widgets.tsx
-  src/pages/admin/ProductsAdmin.tsx
-  src/pages/admin/CategoriesAdmin.tsx
-  src/pages/admin/ProductTagsAdmin.tsx
-  src/pages/admin/AnnouncementAdmin.tsx
-  src/pages/admin/BannerAdmin.tsx
-  src/pages/admin/BannersAdmin.tsx
-  src/pages/admin/UspsAdmin.tsx
-  src/pages/admin/BrandAdmin.tsx
-  src/pages/admin/LabelsAdmin.tsx
-  src/pages/admin/SeoAdmin.tsx
-  src/pages/admin/PoliciesAdmin.tsx
-  src/pages/admin/EnquiriesAdmin.tsx
-  src/pages/admin/CustomersAdmin.tsx
-  src/pages/admin/AdminsAdmin.tsx
-  src/pages/admin/SettingsAdmin.tsx
-  src/pages/admin/AdminProfile.tsx
-
-Tokens
-  src/index.css                         — add admin-scoped utilities if needed
-                                          (.admin-eyebrow, .admin-th, .admin-card already
-                                          composable from existing tokens — only add if reused)
+src/index.css                       — confirm/keep --status-bar + --status-bar-foreground tokens
+src/components/header/StatusBar.tsx — swap hard-coded ink/ivory for the two tokens,
+                                      drop any low-opacity text, add tiny text-shadow
 ```
 
-## Build order
+## Verification
 
-1. **Shell** — restyle `AdminLayout` sidebar + mobile header to dark ink / champagne. Verify logo legible.
-2. **Primitives** — add `PageHeader` and `AdminCard` so every page uses the same heading and surface.
-3. **Pages, in passes** — apply primitives + table/form classes page by page, starting with Dashboard, Products, Categories, ProductTags (highest-traffic), then the rest.
-4. **QA** — walk every admin route at desktop + mobile widths via preview, confirm contrast, active states, focus rings, dialog tones.
+- Visually check the bar on `/` (dark header), `/admin` (ivory main), and `/admin/profile` after the new admin theme.
+- Confirm at 320px width (smallest viewport) the text stays legible and isn't clipped.
 
 ## Out of scope
 
-- No changes to admin functionality, queries, or routes.
-- No changes to storefront pages.
-- No new admin features.
+- No copy changes, no animation changes, no admin setting to recolor the bar.

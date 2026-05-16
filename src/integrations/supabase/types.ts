@@ -96,52 +96,205 @@ export type Database = {
       }
       banners: {
         Row: {
+          autoplay_duration: number | null
+          bg_focal_x: number | null
+          bg_focal_y: number | null
+          btn_align: string | null
+          btn_bg_color: string | null
+          btn_border_color: string | null
+          btn_border_radius: number | null
+          btn_border_width: number | null
+          btn_font_size: number | null
+          btn_font_weight: string | null
+          btn_full_width_mobile: boolean | null
+          btn_italic: boolean | null
+          btn_letter_spacing: number | null
+          btn_padding_x: number | null
+          btn_padding_y: number | null
+          btn_shadow: boolean | null
+          btn_text: string | null
+          btn_text_color: string | null
+          btn_url: string | null
+          btn_visible: boolean | null
+          content_h_align: string | null
+          content_max_width: number | null
+          content_padding_x: number | null
+          content_padding_y: number | null
+          content_v_align: string | null
           created_at: string | null
           cta_text: string | null
           cta_url: string | null
           display_order: number | null
           expires_at: string | null
+          heading_color: string | null
+          heading_font_family: string | null
+          heading_font_size_desktop: number | null
+          heading_font_size_mobile: number | null
+          heading_font_weight: string | null
+          heading_italic: boolean | null
+          heading_letter_spacing: number | null
+          heading_line_height: number | null
+          heading_opacity: number | null
+          heading_text: string | null
+          heading_uppercase: boolean | null
+          height_desktop: number | null
+          height_mobile: number | null
           id: string
           image_mobile_url: string | null
           image_url: string | null
           is_active: boolean | null
+          overlay_color: string | null
+          overlay_gradient: boolean | null
           overlay_opacity: number | null
           starts_at: string | null
+          subheading_color: string | null
+          subheading_font_family: string | null
+          subheading_font_size_desktop: number | null
+          subheading_font_size_mobile: number | null
+          subheading_font_weight: string | null
+          subheading_italic: boolean | null
+          subheading_letter_spacing: number | null
+          subheading_opacity: number | null
+          subheading_text: string | null
+          subheading_uppercase: boolean | null
           subtitle: string | null
           text_color: string | null
           title: string | null
+          transition: string | null
         }
         Insert: {
+          autoplay_duration?: number | null
+          bg_focal_x?: number | null
+          bg_focal_y?: number | null
+          btn_align?: string | null
+          btn_bg_color?: string | null
+          btn_border_color?: string | null
+          btn_border_radius?: number | null
+          btn_border_width?: number | null
+          btn_font_size?: number | null
+          btn_font_weight?: string | null
+          btn_full_width_mobile?: boolean | null
+          btn_italic?: boolean | null
+          btn_letter_spacing?: number | null
+          btn_padding_x?: number | null
+          btn_padding_y?: number | null
+          btn_shadow?: boolean | null
+          btn_text?: string | null
+          btn_text_color?: string | null
+          btn_url?: string | null
+          btn_visible?: boolean | null
+          content_h_align?: string | null
+          content_max_width?: number | null
+          content_padding_x?: number | null
+          content_padding_y?: number | null
+          content_v_align?: string | null
           created_at?: string | null
           cta_text?: string | null
           cta_url?: string | null
           display_order?: number | null
           expires_at?: string | null
+          heading_color?: string | null
+          heading_font_family?: string | null
+          heading_font_size_desktop?: number | null
+          heading_font_size_mobile?: number | null
+          heading_font_weight?: string | null
+          heading_italic?: boolean | null
+          heading_letter_spacing?: number | null
+          heading_line_height?: number | null
+          heading_opacity?: number | null
+          heading_text?: string | null
+          heading_uppercase?: boolean | null
+          height_desktop?: number | null
+          height_mobile?: number | null
           id?: string
           image_mobile_url?: string | null
           image_url?: string | null
           is_active?: boolean | null
+          overlay_color?: string | null
+          overlay_gradient?: boolean | null
           overlay_opacity?: number | null
           starts_at?: string | null
+          subheading_color?: string | null
+          subheading_font_family?: string | null
+          subheading_font_size_desktop?: number | null
+          subheading_font_size_mobile?: number | null
+          subheading_font_weight?: string | null
+          subheading_italic?: boolean | null
+          subheading_letter_spacing?: number | null
+          subheading_opacity?: number | null
+          subheading_text?: string | null
+          subheading_uppercase?: boolean | null
           subtitle?: string | null
           text_color?: string | null
           title?: string | null
+          transition?: string | null
         }
         Update: {
+          autoplay_duration?: number | null
+          bg_focal_x?: number | null
+          bg_focal_y?: number | null
+          btn_align?: string | null
+          btn_bg_color?: string | null
+          btn_border_color?: string | null
+          btn_border_radius?: number | null
+          btn_border_width?: number | null
+          btn_font_size?: number | null
+          btn_font_weight?: string | null
+          btn_full_width_mobile?: boolean | null
+          btn_italic?: boolean | null
+          btn_letter_spacing?: number | null
+          btn_padding_x?: number | null
+          btn_padding_y?: number | null
+          btn_shadow?: boolean | null
+          btn_text?: string | null
+          btn_text_color?: string | null
+          btn_url?: string | null
+          btn_visible?: boolean | null
+          content_h_align?: string | null
+          content_max_width?: number | null
+          content_padding_x?: number | null
+          content_padding_y?: number | null
+          content_v_align?: string | null
           created_at?: string | null
           cta_text?: string | null
           cta_url?: string | null
           display_order?: number | null
           expires_at?: string | null
+          heading_color?: string | null
+          heading_font_family?: string | null
+          heading_font_size_desktop?: number | null
+          heading_font_size_mobile?: number | null
+          heading_font_weight?: string | null
+          heading_italic?: boolean | null
+          heading_letter_spacing?: number | null
+          heading_line_height?: number | null
+          heading_opacity?: number | null
+          heading_text?: string | null
+          heading_uppercase?: boolean | null
+          height_desktop?: number | null
+          height_mobile?: number | null
           id?: string
           image_mobile_url?: string | null
           image_url?: string | null
           is_active?: boolean | null
+          overlay_color?: string | null
+          overlay_gradient?: boolean | null
           overlay_opacity?: number | null
           starts_at?: string | null
+          subheading_color?: string | null
+          subheading_font_family?: string | null
+          subheading_font_size_desktop?: number | null
+          subheading_font_size_mobile?: number | null
+          subheading_font_weight?: string | null
+          subheading_italic?: boolean | null
+          subheading_letter_spacing?: number | null
+          subheading_opacity?: number | null
+          subheading_text?: string | null
+          subheading_uppercase?: boolean | null
           subtitle?: string | null
           text_color?: string | null
           title?: string | null
+          transition?: string | null
         }
         Relationships: []
       }

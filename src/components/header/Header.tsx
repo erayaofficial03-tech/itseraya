@@ -131,7 +131,7 @@ const Header = () => {
   // iOS (always — guided flow) OR Android/Desktop with a captured native prompt.
   const showInstallButton = !isInstalled && (isIOS || isInstallable);
 
-  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-foreground border-b border-border/60 active:bg-muted/40 -mx-6 px-6 transition-colors";
+  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-[hsl(var(--champagne))]";
 
   return (
     <>
@@ -152,11 +152,11 @@ const Header = () => {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--background))]">
-                <SheetHeader className="px-6 py-5 border-b border-border items-center">
+              <SheetContent side="left" className="w-[85vw] max-w-sm p-0 flex flex-col h-[100dvh] bg-[hsl(var(--ink))] text-ivory border-r border-ivory/10">
+                <SheetHeader className="px-6 py-5 border-b border-ivory/10 items-center">
                   <SheetTitle asChild>
                     <Link to="/" onClick={closeMenu} className="inline-flex justify-center">
-                      <BrandLogo className="h-12 w-auto object-contain" />
+                      <BrandLogo onDark className="h-12 w-auto object-contain" />
                     </Link>
                   </SheetTitle>
                 </SheetHeader>

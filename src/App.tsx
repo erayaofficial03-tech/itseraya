@@ -117,6 +117,7 @@ const App = () => (
         <ConfirmDialogRoot />
           <ScrollToTop />
           
+          <ChunkErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             
             <Routes>
@@ -178,6 +179,7 @@ const App = () => (
             </Routes>
             
           </Suspense>
+          </ChunkErrorBoundary>
           <WhatsAppFloat />
           <BottomNav />
         </EnquiryCartProvider>

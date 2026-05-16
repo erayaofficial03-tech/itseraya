@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor,
-  useSensor, useSensors, DragEndEvent,
+  useSensor, useSensors, type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove, SortableContext, sortableKeyboardCoordinates,
@@ -10,41 +10,31 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
-} from "@/components/ui/dialog";
-import { GripVertical, Plus, Pencil, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { GripVertical, Plus, Trash2, Smartphone, Tablet, Monitor, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { uploadImage } from "@/lib/upload";
-import type { Banner } from "@/components/eraya/HeroSlider";
+import { cn } from "@/lib/utils";
+import { type Banner } from "@/components/eraya/banner-types";
+import { BannerRenderer } from "@/components/eraya/BannerRenderer";
+import { RangeSlider } from "@/components/admin/controls/RangeSlider";
+import { ColorPicker } from "@/components/admin/controls/ColorPicker";
+import { FontWeightPicker } from "@/components/admin/controls/FontWeightPicker";
+import { AlignPicker } from "@/components/admin/controls/AlignPicker";
+import { FontFamilySelect } from "@/components/admin/controls/FontFamilySelect";
 
-const blank = (order = 0): Partial<Banner> => ({
-  title: "",
-  subtitle: "",
-  cta_text: "Shop Now",
-  cta_url: "/catalogue",
-  image_url: "",
-  image_mobile_url: "",
-  overlay_opacity: 40,
-  text_color: "#FFFFFF",
-  is_active: true,
-  display_order: order,
-  starts_at: null,
-  expires_at: null,
-});
+type Viewport = "mobile" | "tablet" | "desktop";
 
-const toLocalInput = (iso: string | null) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  const off = d.getTimezoneOffset() * 60000;
-  return new Date(d.getTime() - off).toISOString().slice(0, 16);
+const VIEWPORTS: Record<Viewport, { width: number; label: string; Icon: typeof Smartphone }> = {
+  mobile: { width: 390, label: "Mobile", Icon: Smartphone },
+  tablet: { width: 768, label: "Tablet", Icon: Tablet },
+  desktop: { width: 1280, label: "Desktop", Icon: Monitor },
 };
 
 const useAllBanners = () =>
@@ -56,51 +46,155 @@ const useAllBanners = () =>
         .select("*")
         .order("display_order", { ascending: true });
       if (error) throw error;
-      return (data || []) as Banner[];
+      return (data || []) as unknown as Banner[];
     },
   });
 
-const SortableRow = ({ b, onEdit, onDelete }: { b: Banner; onEdit: () => void; onDelete: () => void }) => {
+const toLocalInput = (iso: string | null) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const off = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - off).toISOString().slice(0, 16);
+};
+
+const SortableRow = ({
+  b, selected, onSelect, onToggleActive, onDelete,
+}: {
+  b: Banner; selected: boolean;
+  onSelect: () => void; onToggleActive: (v: boolean) => void; onDelete: () => void;
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: b.id });
   const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
   return (
-    <div ref={setNodeRef} style={style} className="flex items-center gap-3 p-3 border border-border rounded-md bg-card">
-      <button {...attributes} {...listeners} className="cursor-grab text-muted-foreground hover:text-foreground p-1">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "flex items-center gap-2 p-2 border rounded-lg bg-card transition-colors",
+        selected ? "border-[#C9A84C] ring-1 ring-[#C9A84C]" : "border-border hover:border-muted-foreground/40",
+      )}
+    >
+      <button {...attributes} {...listeners} className="cursor-grab text-muted-foreground p-1">
         <GripVertical className="h-4 w-4" />
       </button>
-      {b.image_url ? (
-        <img src={b.image_url} alt="" className="h-12 w-20 rounded object-cover bg-muted shrink-0" />
-      ) : (
-        <div className="h-12 w-20 rounded bg-muted shrink-0" />
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{b.title || "Untitled banner"}</p>
-        <div className="flex flex-wrap gap-1.5 mt-1">
-          {!b.is_active && <Badge variant="outline">Inactive</Badge>}
-          {b.starts_at && <Badge variant="outline" className="text-[10px]">From {new Date(b.starts_at).toLocaleDateString()}</Badge>}
-          {b.expires_at && <Badge variant="outline" className="text-[10px]">Until {new Date(b.expires_at).toLocaleDateString()}</Badge>}
+      <button onClick={onSelect} className="flex items-center gap-2 flex-1 min-w-0 text-left">
+        {b.image_url ? (
+          <img src={b.image_url} className="h-10 w-14 rounded object-cover bg-muted shrink-0" alt="" />
+        ) : (
+          <div className="h-10 w-14 rounded bg-muted shrink-0" />
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium truncate">{b.heading_text || b.title || "Untitled"}</p>
+          <div className="flex gap-1 mt-0.5">
+            {b.is_active ? (
+              <Badge className="text-[9px] py-0 h-4 bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15 border-0">Active</Badge>
+            ) : (
+              <Badge variant="outline" className="text-[9px] py-0 h-4">Off</Badge>
+            )}
+          </div>
         </div>
-      </div>
-      <Button variant="ghost" size="icon" onClick={onEdit}><Pencil className="h-4 w-4" /></Button>
-      <Button variant="ghost" size="icon" onClick={onDelete}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+      </button>
+      <Switch checked={!!b.is_active} onCheckedChange={onToggleActive} />
+      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onDelete}>
+        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+      </Button>
     </div>
   );
 };
+
+const defaultsForNew = (order: number): Partial<Banner> => ({
+  title: null,
+  subtitle: null,
+  is_active: true,
+  display_order: order,
+  starts_at: null,
+  expires_at: null,
+  text_color: "#FFFFFF",
+  image_url: null,
+  image_mobile_url: null,
+  heading_text: "Adorn Your Story",
+  heading_font_family: "Playfair Display",
+  heading_font_size_mobile: 28,
+  heading_font_size_desktop: 48,
+  heading_font_weight: "bold",
+  heading_italic: false,
+  heading_uppercase: false,
+  heading_letter_spacing: 0,
+  heading_line_height: 1.2,
+  heading_color: "#FFFFFF",
+  heading_opacity: 100,
+  subheading_text: "Handcrafted artificial jewellery",
+  subheading_font_family: "Inter",
+  subheading_font_size_mobile: 14,
+  subheading_font_size_desktop: 18,
+  subheading_font_weight: "normal",
+  subheading_italic: false,
+  subheading_uppercase: false,
+  subheading_letter_spacing: 0,
+  subheading_color: "#FFFFFF",
+  subheading_opacity: 85,
+  content_h_align: "left",
+  content_v_align: "center",
+  content_padding_x: 24,
+  content_padding_y: 32,
+  content_max_width: 560,
+  btn_visible: true,
+  btn_text: "Shop Now",
+  btn_url: "/catalogue",
+  btn_bg_color: "#C9A84C",
+  btn_text_color: "#FFFFFF",
+  btn_border_color: "transparent",
+  btn_border_width: 0,
+  btn_border_radius: 50,
+  btn_font_size: 14,
+  btn_font_weight: "semibold",
+  btn_italic: false,
+  btn_letter_spacing: 0,
+  btn_padding_x: 28,
+  btn_padding_y: 14,
+  btn_shadow: true,
+  btn_align: "left",
+  btn_full_width_mobile: false,
+  overlay_color: "#000000",
+  overlay_opacity: 40,
+  overlay_gradient: true,
+  bg_focal_x: 50,
+  bg_focal_y: 50,
+  height_mobile: 420,
+  height_desktop: 580,
+  autoplay_duration: 5000,
+  transition: "fade",
+});
 
 const BannersAdmin = () => {
   const { data: list = [], refetch } = useAllBanners();
   const qc = useQueryClient();
   const [items, setItems] = useState<Banner[]>([]);
-  const [editing, setEditing] = useState<Partial<Banner> | null>(null);
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Banner | null>(null);
+  const [viewport, setViewport] = useState<Viewport>("mobile");
+  const [saving, setSaving] = useState(false);
+  const saveTimer = useRef<number | null>(null);
 
-  useEffect(() => { setItems(list); }, [list]);
+  useEffect(() => {
+    setItems(list);
+    if (!selectedId && list.length > 0) setSelectedId(list[0].id);
+  }, [list, selectedId]);
+
+  useEffect(() => {
+    const found = items.find((i) => i.id === selectedId) || null;
+    setDraft(found ? { ...found } : null);
+  }, [selectedId, items]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
+
+  const invalidate = () => {
+    qc.invalidateQueries({ queryKey: ["banners-active"] });
+    qc.invalidateQueries({ queryKey: ["admin-banners"] });
+  };
 
   const handleDragEnd = async (e: DragEndEvent) => {
     const { active, over } = e;
@@ -112,175 +206,410 @@ const BannersAdmin = () => {
     await Promise.all(next.map((it, idx) =>
       supabase.from("banners").update({ display_order: idx }).eq("id", it.id),
     ));
-    qc.invalidateQueries({ queryKey: ["banners-active"] });
-    qc.invalidateQueries({ queryKey: ["admin-banners"] });
+    invalidate();
   };
 
-  const openNew = () => { setEditing(blank(items.length)); setOpen(true); };
-  const openEdit = (b: Banner) => { setEditing(b); setOpen(true); };
-
-  const save = async () => {
-    if (!editing) return;
-    setBusy(true);
-    const payload = {
-      title: editing.title || null,
-      subtitle: editing.subtitle || null,
-      cta_text: editing.cta_text || null,
-      cta_url: editing.cta_url || "/catalogue",
-      image_url: editing.image_url || null,
-      image_mobile_url: editing.image_mobile_url || null,
-      overlay_opacity: editing.overlay_opacity ?? 40,
-      text_color: editing.text_color || "#FFFFFF",
-      is_active: editing.is_active ?? true,
-      display_order: editing.display_order ?? 0,
-      starts_at: editing.starts_at || null,
-      expires_at: editing.expires_at || null,
-    };
-    const { error } = editing.id
-      ? await supabase.from("banners").update(payload).eq("id", editing.id)
-      : await supabase.from("banners").insert(payload);
-    setBusy(false);
+  const addNew = async () => {
+    const payload = defaultsForNew(items.length);
+    const { data, error } = await supabase
+      .from("banners")
+      .insert(payload as never)
+      .select()
+      .single();
     if (error) return toast.error(error.message);
-    toast.success("Saved");
-    setOpen(false); setEditing(null);
-    refetch();
-    qc.invalidateQueries({ queryKey: ["banners-active"] });
+    toast.success("Banner created");
+    await refetch();
+    invalidate();
+    setSelectedId((data as { id: string }).id);
   };
 
   const remove = async (id: string) => {
     if (!confirm("Delete this banner?")) return;
     const { error } = await supabase.from("banners").delete().eq("id", id);
     if (error) return toast.error(error.message);
+    if (selectedId === id) setSelectedId(null);
     toast.success("Deleted");
-    refetch();
-    qc.invalidateQueries({ queryKey: ["banners-active"] });
+    await refetch();
+    invalidate();
   };
 
+  const toggleActive = async (id: string, v: boolean) => {
+    setItems((prev) => prev.map((b) => (b.id === id ? { ...b, is_active: v } : b)));
+    await supabase.from("banners").update({ is_active: v }).eq("id", id);
+    invalidate();
+  };
+
+  // Debounced auto-save
+  const updateDraft = <K extends keyof Banner>(key: K, value: Banner[K]) => {
+    setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
+  };
+
+  useEffect(() => {
+    if (!draft) return;
+    const original = items.find((i) => i.id === draft.id);
+    if (!original) return;
+    const changed = JSON.stringify(original) !== JSON.stringify(draft);
+    if (!changed) return;
+    if (saveTimer.current) window.clearTimeout(saveTimer.current);
+    saveTimer.current = window.setTimeout(async () => {
+      setSaving(true);
+      const { id, ...payload } = draft;
+      const { error } = await supabase.from("banners").update(payload as never).eq("id", id);
+      setSaving(false);
+      if (error) {
+        toast.error(error.message);
+      } else {
+        setItems((prev) => prev.map((b) => (b.id === id ? draft : b)));
+        invalidate();
+      }
+    }, 800);
+    return () => { if (saveTimer.current) window.clearTimeout(saveTimer.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft]);
+
+  const uploadFor = async (field: "image_url" | "image_mobile_url", file: File) => {
+    const url = await uploadImage(file, "banners", field === "image_mobile_url" ? "mobile" : "");
+    updateDraft(field, url);
+  };
+
+  const previewHeight = useMemo(() => {
+    if (!draft) return 420;
+    if (viewport === "desktop") return draft.height_desktop ?? 580;
+    if (viewport === "tablet") return Math.round(((draft.height_mobile ?? 420) + (draft.height_desktop ?? 580)) / 2);
+    return draft.height_mobile ?? 420;
+  }, [draft, viewport]);
+
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="font-serif text-3xl">Banner Slider</h1>
-          <p className="text-sm text-muted-foreground">Hero slider banners. Drag to reorder.</p>
+          <h1 className="font-serif text-3xl">Banners</h1>
+          <p className="text-sm text-muted-foreground">Visual editor with live preview · changes auto-save</p>
         </div>
-        <Button onClick={openNew} className="bg-gold text-charcoal hover:bg-gold/90">
-          <Plus className="h-4 w-4 mr-1" /> Add Banner
-        </Button>
+        <div className="flex items-center gap-3">
+          {saving && (
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <Loader2 className="h-3 w-3 animate-spin" /> Saving…
+            </span>
+          )}
+          <Button onClick={addNew} className="bg-[#C9A84C] text-white hover:bg-[#b3934a]">
+            <Plus className="h-4 w-4 mr-1" /> Add Banner
+          </Button>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader><CardTitle>Banners</CardTitle></CardHeader>
-        <CardContent>
-          {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">No banners yet — your homepage will show the fallback hero.</p>
-          ) : (
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                <div className="space-y-2">
-                  {items.map((b) => (
-                    <SortableRow key={b.id} b={b} onEdit={() => openEdit(b)} onDelete={() => remove(b.id)} />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          )}
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
+        {/* LEFT: list */}
+        <Card>
+          <CardContent className="p-3">
+            {items.length === 0 ? (
+              <p className="text-xs text-muted-foreground p-4 text-center">No banners yet. Click "Add Banner".</p>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                  <div className="space-y-1.5">
+                    {items.map((b) => (
+                      <SortableRow
+                        key={b.id}
+                        b={b}
+                        selected={b.id === selectedId}
+                        onSelect={() => setSelectedId(b.id)}
+                        onToggleActive={(v) => toggleActive(b.id, v)}
+                        onDelete={() => remove(b.id)}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+          </CardContent>
+        </Card>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editing?.id ? "Edit banner" : "New banner"}</DialogTitle>
-          </DialogHeader>
-          {editing && (
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Title</Label>
-                  <Input value={editing.title || ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Adorn Your Story" />
-                </div>
-                <div>
-                  <Label>Subtitle</Label>
-                  <Input value={editing.subtitle || ""} onChange={(e) => setEditing({ ...editing, subtitle: e.target.value })} placeholder="Handcrafted jewellery…" />
-                </div>
-              </div>
-              <div>
-                <Label>Desktop image</Label>
-                <Input type="file" accept="image/*" onChange={async (e) => {
-                  const f = e.target.files?.[0];
-                  if (f) { const url = await uploadImage(f, "banners"); setEditing({ ...editing, image_url: url }); }
-                }} />
-                {editing.image_url && <img src={editing.image_url} className="mt-2 w-full max-w-md aspect-[16/7] object-cover rounded" />}
-              </div>
-              <div>
-                <Label>Mobile image (optional)</Label>
-                <Input type="file" accept="image/*" onChange={async (e) => {
-                  const f = e.target.files?.[0];
-                  if (f) { const url = await uploadImage(f, "banners", "mobile"); setEditing({ ...editing, image_mobile_url: url }); }
-                }} />
-                {editing.image_mobile_url && <img src={editing.image_mobile_url} className="mt-2 w-40 aspect-[3/4] object-cover rounded" />}
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>CTA text</Label>
-                  <Input value={editing.cta_text || ""} onChange={(e) => setEditing({ ...editing, cta_text: e.target.value })} placeholder="Shop Now" />
-                </div>
-                <div>
-                  <Label>CTA URL</Label>
-                  <Input value={editing.cta_url || ""} onChange={(e) => setEditing({ ...editing, cta_url: e.target.value })} placeholder="/catalogue" />
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center justify-between">
-                  <Label>Overlay opacity</Label>
-                  <span className="text-xs text-muted-foreground">{editing.overlay_opacity}%</span>
-                </div>
-                <Slider min={0} max={70} step={1} value={[editing.overlay_opacity ?? 40]} onValueChange={(v) => setEditing({ ...editing, overlay_opacity: v[0] })} />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Text color</Label>
-                  <Input type="color" value={editing.text_color || "#FFFFFF"} onChange={(e) => setEditing({ ...editing, text_color: e.target.value })} />
-                </div>
-                <div className="flex items-end justify-between gap-2">
-                  <Label>Active</Label>
-                  <Switch checked={editing.is_active ?? true} onCheckedChange={(v) => setEditing({ ...editing, is_active: v })} />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Starts at</Label>
-                  <Input type="datetime-local" value={toLocalInput((editing.starts_at as string) ?? null)} onChange={(e) => setEditing({ ...editing, starts_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
-                </div>
-                <div>
-                  <Label>Expires at</Label>
-                  <Input type="datetime-local" value={toLocalInput((editing.expires_at as string) ?? null)} onChange={(e) => setEditing({ ...editing, expires_at: e.target.value ? new Date(e.target.value).toISOString() : null })} />
-                </div>
-              </div>
-              <div>
-                <Label>Preview</Label>
-                <div className="mt-1 relative rounded-lg overflow-hidden aspect-[16/7] bg-muted">
-                  {editing.image_url && <img src={editing.image_url} className="absolute inset-0 w-full h-full object-cover" alt="" />}
-                  <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/60 to-transparent" style={{ opacity: (editing.overlay_opacity ?? 40) / 100 }} />
-                  <div className="relative h-full flex flex-col justify-center px-6" style={{ color: editing.text_color || "#FFFFFF" }}>
-                    {editing.title && <p className="font-serif text-xl">{editing.title}</p>}
-                    {editing.subtitle && <p className="text-xs opacity-90">{editing.subtitle}</p>}
-                    {editing.cta_text && (
-                      <span className="mt-2 inline-block w-fit text-xs px-3 py-1 rounded-full bg-gold text-charcoal">{editing.cta_text}</span>
-                    )}
+        {/* RIGHT: preview + controls */}
+        {draft ? (
+          <div className="space-y-4">
+            {/* Preview */}
+            <Card>
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <Label className="text-xs uppercase tracking-wider text-muted-foreground">Live preview</Label>
+                  <div className="inline-flex rounded-md border border-border overflow-hidden">
+                    {(Object.keys(VIEWPORTS) as Viewport[]).map((v) => {
+                      const { Icon, label } = VIEWPORTS[v];
+                      return (
+                        <button
+                          key={v}
+                          onClick={() => setViewport(v)}
+                          className={cn(
+                            "px-3 py-1.5 text-xs flex items-center gap-1.5",
+                            viewport === v ? "bg-[#C9A84C] text-white" : "bg-background hover:bg-muted",
+                          )}
+                        >
+                          <Icon className="h-3.5 w-3.5" /> {label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={save} disabled={busy} className="bg-gold text-charcoal hover:bg-gold/90">
-              {busy ? "Saving…" : "Save"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+                <div className="bg-muted/40 rounded-xl p-3 overflow-x-auto">
+                  <div
+                    className="mx-auto rounded-lg overflow-hidden shadow-sm bg-black"
+                    style={{ width: "100%", maxWidth: VIEWPORTS[viewport].width }}
+                  >
+                    <BannerRenderer
+                      banner={draft}
+                      viewport={viewport}
+                      height={previewHeight}
+                      useRouter={false}
+                      trackClicks={false}
+                      animKey={`${draft.id}-${viewport}`}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Controls */}
+            <Card>
+              <CardContent className="p-4">
+                <Tabs defaultValue="bg">
+                  <TabsList className="flex flex-wrap h-auto">
+                    <TabsTrigger value="bg">Background</TabsTrigger>
+                    <TabsTrigger value="heading">Heading</TabsTrigger>
+                    <TabsTrigger value="sub">Subheading</TabsTrigger>
+                    <TabsTrigger value="layout">Layout</TabsTrigger>
+                    <TabsTrigger value="button">Button</TabsTrigger>
+                    <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                  </TabsList>
+
+                  {/* BACKGROUND */}
+                  <TabsContent value="bg" className="space-y-4 pt-4">
+                    <div>
+                      <Label className="text-xs mb-1.5 block">Background image</Label>
+                      <Input type="file" accept="image/*" onChange={(e) => {
+                        const f = e.target.files?.[0]; if (f) void uploadFor("image_url", f);
+                      }} />
+                      {draft.image_url && (
+                        <img src={draft.image_url} className="mt-2 w-full max-w-sm aspect-[16/7] object-cover rounded" alt="" />
+                      )}
+                    </div>
+                    <div>
+                      <Label className="text-xs mb-1.5 block">Mobile image (optional)</Label>
+                      <Input type="file" accept="image/*" onChange={(e) => {
+                        const f = e.target.files?.[0]; if (f) void uploadFor("image_mobile_url", f);
+                      }} />
+                      {draft.image_mobile_url && (
+                        <img src={draft.image_mobile_url} className="mt-2 w-32 aspect-[3/4] object-cover rounded" alt="" />
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Focal point X" value={draft.bg_focal_x ?? 50} onChange={(v) => updateDraft("bg_focal_x", v)} min={0} max={100} unit="%" />
+                      <RangeSlider label="Focal point Y" value={draft.bg_focal_y ?? 50} onChange={(v) => updateDraft("bg_focal_y", v)} min={0} max={100} unit="%" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Height (mobile)" value={draft.height_mobile ?? 420} onChange={(v) => updateDraft("height_mobile", v)} min={240} max={800} unit="px" />
+                      <RangeSlider label="Height (desktop)" value={draft.height_desktop ?? 580} onChange={(v) => updateDraft("height_desktop", v)} min={300} max={900} unit="px" />
+                    </div>
+                    <ColorPicker
+                      label="Overlay color"
+                      value={draft.overlay_color || "#000000"}
+                      onChange={(v) => updateDraft("overlay_color", v)}
+                      opacity={draft.overlay_opacity ?? 40}
+                      onOpacityChange={(v) => updateDraft("overlay_opacity", v)}
+                    />
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs">Gradient overlay</Label>
+                      <Switch checked={!!draft.overlay_gradient} onCheckedChange={(v) => updateDraft("overlay_gradient", v)} />
+                    </div>
+                  </TabsContent>
+
+                  {/* HEADING */}
+                  <TabsContent value="heading" className="space-y-4 pt-4">
+                    <div>
+                      <Label className="text-xs">Text</Label>
+                      <Input value={draft.heading_text || ""} onChange={(e) => updateDraft("heading_text", e.target.value)} />
+                    </div>
+                    <FontFamilySelect label="Font family" value={draft.heading_font_family || "Playfair Display"} onChange={(v) => updateDraft("heading_font_family", v)} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Size (mobile)" value={draft.heading_font_size_mobile ?? 28} onChange={(v) => updateDraft("heading_font_size_mobile", v)} min={16} max={60} unit="px" />
+                      <RangeSlider label="Size (desktop)" value={draft.heading_font_size_desktop ?? 48} onChange={(v) => updateDraft("heading_font_size_desktop", v)} min={20} max={80} unit="px" />
+                    </div>
+                    <FontWeightPicker value={draft.heading_font_weight || "bold"} onChange={(v) => updateDraft("heading_font_weight", v)} />
+                    <div className="flex gap-6">
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch checked={!!draft.heading_italic} onCheckedChange={(v) => updateDraft("heading_italic", v)} /> Italic
+                      </label>
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch checked={!!draft.heading_uppercase} onCheckedChange={(v) => updateDraft("heading_uppercase", v)} /> Uppercase
+                      </label>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Letter spacing" value={Number(draft.heading_letter_spacing ?? 0)} onChange={(v) => updateDraft("heading_letter_spacing", v)} min={-2} max={10} step={0.5} unit="px" />
+                      <RangeSlider label="Line height" value={Number(draft.heading_line_height ?? 1.2)} onChange={(v) => updateDraft("heading_line_height", v)} min={0.8} max={2} step={0.1} />
+                    </div>
+                    <ColorPicker
+                      label="Color"
+                      value={draft.heading_color || "#FFFFFF"}
+                      onChange={(v) => updateDraft("heading_color", v)}
+                      opacity={draft.heading_opacity ?? 100}
+                      onOpacityChange={(v) => updateDraft("heading_opacity", v)}
+                    />
+                  </TabsContent>
+
+                  {/* SUBHEADING */}
+                  <TabsContent value="sub" className="space-y-4 pt-4">
+                    <div>
+                      <Label className="text-xs">Text</Label>
+                      <Input value={draft.subheading_text || ""} onChange={(e) => updateDraft("subheading_text", e.target.value)} placeholder="Optional subtitle" />
+                    </div>
+                    <FontFamilySelect label="Font family" value={draft.subheading_font_family || "Inter"} onChange={(v) => updateDraft("subheading_font_family", v)} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Size (mobile)" value={draft.subheading_font_size_mobile ?? 14} onChange={(v) => updateDraft("subheading_font_size_mobile", v)} min={10} max={32} unit="px" />
+                      <RangeSlider label="Size (desktop)" value={draft.subheading_font_size_desktop ?? 18} onChange={(v) => updateDraft("subheading_font_size_desktop", v)} min={12} max={48} unit="px" />
+                    </div>
+                    <FontWeightPicker value={draft.subheading_font_weight || "normal"} onChange={(v) => updateDraft("subheading_font_weight", v)} />
+                    <div className="flex gap-6">
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch checked={!!draft.subheading_italic} onCheckedChange={(v) => updateDraft("subheading_italic", v)} /> Italic
+                      </label>
+                      <label className="flex items-center gap-2 text-xs">
+                        <Switch checked={!!draft.subheading_uppercase} onCheckedChange={(v) => updateDraft("subheading_uppercase", v)} /> Uppercase
+                      </label>
+                    </div>
+                    <RangeSlider label="Letter spacing" value={Number(draft.subheading_letter_spacing ?? 0)} onChange={(v) => updateDraft("subheading_letter_spacing", v)} min={-2} max={10} step={0.5} unit="px" />
+                    <ColorPicker
+                      label="Color"
+                      value={draft.subheading_color || "#FFFFFF"}
+                      onChange={(v) => updateDraft("subheading_color", v)}
+                      opacity={draft.subheading_opacity ?? 85}
+                      onOpacityChange={(v) => updateDraft("subheading_opacity", v)}
+                    />
+                  </TabsContent>
+
+                  {/* LAYOUT */}
+                  <TabsContent value="layout" className="space-y-4 pt-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <AlignPicker label="Horizontal align" value={draft.content_h_align || "left"} onChange={(v) => updateDraft("content_h_align", v)} axis="h" />
+                      <AlignPicker label="Vertical align" value={draft.content_v_align || "center"} onChange={(v) => updateDraft("content_v_align", v)} axis="v" />
+                    </div>
+                    <RangeSlider label="Max content width" value={draft.content_max_width ?? 560} onChange={(v) => updateDraft("content_max_width", v)} min={200} max={800} unit="px" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <RangeSlider label="Padding X" value={draft.content_padding_x ?? 24} onChange={(v) => updateDraft("content_padding_x", v)} min={0} max={80} unit="px" />
+                      <RangeSlider label="Padding Y" value={draft.content_padding_y ?? 32} onChange={(v) => updateDraft("content_padding_y", v)} min={0} max={80} unit="px" />
+                    </div>
+                  </TabsContent>
+
+                  {/* BUTTON */}
+                  <TabsContent value="button" className="space-y-4 pt-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs">Show button</Label>
+                      <Switch checked={!!draft.btn_visible} onCheckedChange={(v) => updateDraft("btn_visible", v)} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs">Text</Label>
+                        <Input value={draft.btn_text || ""} onChange={(e) => updateDraft("btn_text", e.target.value)} />
+                      </div>
+                      <div>
+                        <Label className="text-xs">URL</Label>
+                        <Input value={draft.btn_url || ""} onChange={(e) => updateDraft("btn_url", e.target.value)} placeholder="/catalogue" />
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-3 space-y-3">
+                      <Label className="text-[10px] uppercase tracking-wider text-muted-foreground">Style</Label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <ColorPicker label="Background" value={draft.btn_bg_color || "#C9A84C"} onChange={(v) => updateDraft("btn_bg_color", v)} />
+                        <ColorPicker label="Text color" value={draft.btn_text_color || "#FFFFFF"} onChange={(v) => updateDraft("btn_text_color", v)} />
+                      </div>
+                      <RangeSlider label="Border radius" value={draft.btn_border_radius ?? 50} onChange={(v) => updateDraft("btn_border_radius", v)} min={0} max={50} unit="px" />
+                      <div className="grid grid-cols-2 gap-4">
+                        <RangeSlider label="Border width" value={draft.btn_border_width ?? 0} onChange={(v) => updateDraft("btn_border_width", v)} min={0} max={4} unit="px" />
+                        <ColorPicker label="Border color" value={draft.btn_border_color || "#000000"} onChange={(v) => updateDraft("btn_border_color", v)} />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs">Shadow</Label>
+                        <Switch checked={!!draft.btn_shadow} onCheckedChange={(v) => updateDraft("btn_shadow", v)} />
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-3 space-y-3">
+                      <Label className="text-[10px] uppercase tracking-wider text-muted-foreground">Typography</Label>
+                      <RangeSlider label="Font size" value={draft.btn_font_size ?? 14} onChange={(v) => updateDraft("btn_font_size", v)} min={10} max={24} unit="px" />
+                      <FontWeightPicker value={draft.btn_font_weight || "semibold"} onChange={(v) => updateDraft("btn_font_weight", v)} />
+                      <div className="flex gap-6">
+                        <label className="flex items-center gap-2 text-xs">
+                          <Switch checked={!!draft.btn_italic} onCheckedChange={(v) => updateDraft("btn_italic", v)} /> Italic
+                        </label>
+                      </div>
+                      <RangeSlider label="Letter spacing" value={Number(draft.btn_letter_spacing ?? 0)} onChange={(v) => updateDraft("btn_letter_spacing", v)} min={-1} max={8} step={0.5} unit="px" />
+                    </div>
+
+                    <div className="border-t pt-3 space-y-3">
+                      <Label className="text-[10px] uppercase tracking-wider text-muted-foreground">Size & Alignment</Label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <RangeSlider label="Padding X" value={draft.btn_padding_x ?? 28} onChange={(v) => updateDraft("btn_padding_x", v)} min={8} max={60} unit="px" />
+                        <RangeSlider label="Padding Y" value={draft.btn_padding_y ?? 14} onChange={(v) => updateDraft("btn_padding_y", v)} min={6} max={30} unit="px" />
+                      </div>
+                      <AlignPicker label="Button align" value={draft.btn_align || "left"} onChange={(v) => updateDraft("btn_align", v)} />
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs">Full width on mobile</Label>
+                        <Switch checked={!!draft.btn_full_width_mobile} onCheckedChange={(v) => updateDraft("btn_full_width_mobile", v)} />
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* SCHEDULE */}
+                  <TabsContent value="schedule" className="space-y-4 pt-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label className="text-xs">Starts at</Label>
+                        <Input
+                          type="datetime-local"
+                          value={toLocalInput(draft.starts_at)}
+                          onChange={(e) => updateDraft("starts_at", e.target.value ? new Date(e.target.value).toISOString() : null)}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Expires at</Label>
+                        <Input
+                          type="datetime-local"
+                          value={toLocalInput(draft.expires_at)}
+                          onChange={(e) => updateDraft("expires_at", e.target.value ? new Date(e.target.value).toISOString() : null)}
+                        />
+                      </div>
+                    </div>
+                    <RangeSlider label="Autoplay duration" value={draft.autoplay_duration ?? 5000} onChange={(v) => updateDraft("autoplay_duration", v)} min={2000} max={10000} step={500} unit="ms" />
+                    <div>
+                      <Label className="text-xs mb-1.5 block">Transition</Label>
+                      <div className="inline-flex rounded-md border border-border overflow-hidden">
+                        {["fade", "slide"].map((t) => (
+                          <button
+                            key={t}
+                            onClick={() => updateDraft("transition", t)}
+                            className={cn(
+                              "px-4 py-1.5 text-xs capitalize",
+                              (draft.transition || "fade") === t ? "bg-[#C9A84C] text-white" : "bg-background hover:bg-muted",
+                            )}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <Card>
+            <CardContent className="p-10 text-center text-sm text-muted-foreground">
+              Select a banner from the list, or click "Add Banner" to create one.
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };

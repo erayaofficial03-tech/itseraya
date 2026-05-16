@@ -102,6 +102,61 @@ const SortableRow = ({
   );
 };
 
+const ImageField = ({
+  label, url, aspect, previewWidth, onUpload, onRemove,
+}: {
+  label: string;
+  url: string | null;
+  aspect: string;
+  previewWidth: string;
+  onUpload: (f: File) => Promise<void> | void;
+  onRemove: () => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const handle = async (f?: File | null) => {
+    if (!f) return;
+    setBusy(true);
+    try { await onUpload(f); } finally { setBusy(false); }
+  };
+  return (
+    <div>
+      <Label className="text-xs mb-1.5 block">{label}</Label>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => { void handle(e.target.files?.[0]); e.target.value = ""; }}
+      />
+      {url ? (
+        <div className="flex items-start gap-3">
+          <img src={url} className={cn("object-cover rounded border border-border", previewWidth, aspect)} alt="" />
+          <div className="flex flex-col gap-1.5">
+            <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => inputRef.current?.click()}>
+              {busy ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Upload className="h-3.5 w-3.5 mr-1" />}
+              Replace
+            </Button>
+            <Button type="button" size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={onRemove}>
+              <X className="h-3.5 w-3.5 mr-1" /> Remove
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={busy}
+          className="flex flex-col items-center justify-center gap-1 w-full max-w-sm aspect-[16/7] border-2 border-dashed border-border rounded-md hover:border-[#C9A84C] hover:bg-muted/50 transition-colors text-muted-foreground"
+        >
+          {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImageIcon className="h-5 w-5" />}
+          <span className="text-xs">{busy ? "Uploading…" : "Click to upload image"}</span>
+        </button>
+      )}
+    </div>
+  );
+};
+
 const defaultsForNew = (order: number): Partial<Banner> => ({
   title: null,
   subtitle: null,

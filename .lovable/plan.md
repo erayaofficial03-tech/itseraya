@@ -1,45 +1,64 @@
-# Fix logo visibility + add section separators
+# Admin panel — align with customer view
 
-## Problem
-- Header & footer use the ivory `--background` (`36 38% 97%`). The brand wordmark is gold/champagne, so it visually disappears against the warm cream.
-- Homepage sections (Hero → Trust → Categories → Product rows → Emotional → Sale → Featured → ERAYA Girls → Reviews) all sit on the same ivory background with no visible boundary, so the page reads as one long blur.
+Bring the admin into the same soft-luxury editorial aesthetic as the storefront: dark ink chrome (matching the new header/footer), warm ivory content surfaces, Cormorant Garamond serif headings, champagne accents, and the same hairline dividers and soft card shadows.
 
-## Fix
+## Visual direction
 
-### 1. Header — dark warm-charcoal bar
-- In `src/components/header/Header.tsx`, change the `<header>` wrapper from `bg-background` to `bg-[hsl(var(--ink))]` (warm charcoal), and the bottom border to `border-[hsl(var(--ink-soft))]/40`.
-- Switch all header text/icon colors to the ivory-on-dark variants:
-  - Nav links: `text-ivory hover:text-champagne` instead of `text-foreground hover:text-gold`.
-  - Hamburger, search, bag, wishlist, user icons: `text-ivory hover:text-champagne`.
-- Use the existing `<BrandLogo onDark />` variant (already wired with a warm gold glow drop-shadow) instead of the plain `<img>` tag. This is what makes the wordmark legible on the dark bar.
-- Update `AnnouncementBar` and `StatusBar` only if their colors clash (verify after the change — they already use dark surfaces, should be fine).
+- **Sidebar (desktop) & mobile top bar** — dark `--ink` background, ivory text, champagne hover/active states, champagne hairline divider under the brand mark. Mirrors the new site header.
+- **Main content** — warm ivory `--background`, Cormorant page titles with a small eyebrow label (uppercase, tracking-[0.3em], champagne) — same pattern as homepage section heads.
+- **Cards & surfaces** — white `--card` on ivory, `shadow-card`, 14px radius, `border-border` hairlines. Section bands separated by `.section-divider`.
+- **Buttons** — primary = champagne fill on ink text; secondary = ink outline; ghost stays subtle. Destructive keeps red.
+- **Tables** — ivory header row with champagne uppercase column labels, ink rows on white, hover = `bg-muted/40`, hairline row borders.
+- **Forms** — labels in uppercase tracking, inputs with ivory-warm fill, champagne focus ring.
+- **Badges/chips** — reuse the micro-label tones from product cards (champagne / blush / ink) so admin status pills match storefront vibe.
+- **Dialogs / sheets / dropdowns** — ivory surface, serif title, champagne accent line.
 
-### 2. Footer — matching dark band
-- In `src/components/footer/Footer.tsx`, both the mobile slim footer and the desktop footer:
-  - Background: `bg-[hsl(var(--ink))]`.
-  - Top border: `border-[hsl(var(--ink-soft))]/40`.
-  - Copyright + link text: `text-ivory/70`, hover `text-champagne`.
-  - Replace the `<img>` logo with `<BrandLogo onDark className="h-7 w-auto" />` (mobile) and `h-9` (desktop).
-  - Social icon buttons: border `border-ivory/20`, hover `border-champagne text-champagne`.
+## Files to change
 
-### 3. Section separators on homepage
-- Add a single reusable hairline divider utility in `src/index.css`:
-  ```css
-  .section-divider {
-    @apply mx-auto max-w-7xl h-px bg-[hsl(var(--ink))]/8;
-  }
-  ```
-  (8% warm-ink line on ivory — visible but whisper-soft, matches the luxury aesthetic.)
-- In `src/pages/Index.tsx`, drop `<div className="section-divider" />` between each major section: after `HeroSlider`, `TrustStrip`, `CategoryRow`, each `ProductRow`, `EmotionalStrip`, `ErayaGirls`, and before `ReviewsSection`.
+```text
+Shell
+  src/pages/admin/AdminLayout.tsx       — dark ink sidebar, ivory champagne active, mobile header retone
+  src/components/BrandLogo.tsx          — verify onDark variant used in sidebar (no change if already supports)
 
-## Files touched
-- `src/components/header/Header.tsx` — header bg + icon/text colors + `BrandLogo onDark`.
-- `src/components/footer/Footer.tsx` — both footer variants → dark bg + `BrandLogo onDark`.
-- `src/index.css` — add `.section-divider` utility.
-- `src/pages/Index.tsx` — insert dividers between sections.
+Shared admin primitives (new)
+  src/components/admin/PageHeader.tsx   — eyebrow + serif title + optional actions slot
+  src/components/admin/AdminCard.tsx    — thin wrapper around Card with shadow-card + ivory tone
+  src/components/admin/AdminTable.tsx   — styled <table> wrapper (or class presets) for consistent rows
 
-## Not touched
-- Color tokens, fonts, product cards, hero, mobile bottom nav — all stay as-is.
-- Backend, queries, settings schema — untouched.
+Pages (apply PageHeader + AdminCard + table/form classes)
+  src/pages/admin/Dashboard.tsx + dashboard-widgets.tsx
+  src/pages/admin/ProductsAdmin.tsx
+  src/pages/admin/CategoriesAdmin.tsx
+  src/pages/admin/ProductTagsAdmin.tsx
+  src/pages/admin/AnnouncementAdmin.tsx
+  src/pages/admin/BannerAdmin.tsx
+  src/pages/admin/BannersAdmin.tsx
+  src/pages/admin/UspsAdmin.tsx
+  src/pages/admin/BrandAdmin.tsx
+  src/pages/admin/LabelsAdmin.tsx
+  src/pages/admin/SeoAdmin.tsx
+  src/pages/admin/PoliciesAdmin.tsx
+  src/pages/admin/EnquiriesAdmin.tsx
+  src/pages/admin/CustomersAdmin.tsx
+  src/pages/admin/AdminsAdmin.tsx
+  src/pages/admin/SettingsAdmin.tsx
+  src/pages/admin/AdminProfile.tsx
 
-Reply **"go"** to implement.
+Tokens
+  src/index.css                         — add admin-scoped utilities if needed
+                                          (.admin-eyebrow, .admin-th, .admin-card already
+                                          composable from existing tokens — only add if reused)
+```
+
+## Build order
+
+1. **Shell** — restyle `AdminLayout` sidebar + mobile header to dark ink / champagne. Verify logo legible.
+2. **Primitives** — add `PageHeader` and `AdminCard` so every page uses the same heading and surface.
+3. **Pages, in passes** — apply primitives + table/form classes page by page, starting with Dashboard, Products, Categories, ProductTags (highest-traffic), then the rest.
+4. **QA** — walk every admin route at desktop + mobile widths via preview, confirm contrast, active states, focus rings, dialog tones.
+
+## Out of scope
+
+- No changes to admin functionality, queries, or routes.
+- No changes to storefront pages.
+- No new admin features.

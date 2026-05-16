@@ -17,23 +17,31 @@ const isPreviewHost =
 if (isPreviewHost || isInIframe) {
   navigator.serviceWorker?.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
 } else if ("serviceWorker" in navigator) {
+  // Belt-and-braces: when a new SW takes control, reload once so users land
+  // on the freshly published build without any prompt.
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloaded) return;
+    reloaded = true;
+    window.location.reload();
+  });
+
   import("virtual:pwa-register").then(({ registerSW }) => {
     const updateSW = registerSW({
       immediate: true,
       // Poll for a new build every 60s so visitors auto-refresh after a publish
-      onRegisteredSW(swUrl, registration) {
+      onRegisteredSW(_swUrl, registration) {
         if (!registration) return;
         const check = () => registration.update().catch(() => {});
-        // Check immediately, then poll every 60s
         check();
         setInterval(check, 60_000);
-        // Also re-check whenever the tab regains focus
         window.addEventListener("focus", check);
         document.addEventListener("visibilitychange", () => {
           if (document.visibilityState === "visible") check();
         });
       },
-      // New build detected → wipe caches and reload silently
+      // New build detected → wipe caches and silently activate it.
+      // controllerchange (above) then triggers a single reload.
       async onNeedRefresh() {
         try {
           const names = await caches.keys();
@@ -42,7 +50,6 @@ if (isPreviewHost || isInIframe) {
         try {
           await updateSW(true);
         } catch {
-          // Fallback: nuke the SW and hard reload so visitors aren't stranded
           try {
             const regs = await navigator.serviceWorker.getRegistrations();
             await Promise.all(regs.map((r) => r.unregister()));

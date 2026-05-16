@@ -45,6 +45,13 @@ export const BannerRenderer = ({
   const isDesktop = viewport === "desktop";
   const isTablet = viewport === "tablet";
 
+  // Pick mobile image on mobile viewport when available, fall back across fields
+  const resolvedImage =
+    (viewport === "mobile" && banner.image_mobile_url) ||
+    banner.image_url ||
+    banner.image_mobile_url ||
+    "";
+
   const headingSize = isDesktop
     ? banner.heading_font_size_desktop ?? 48
     : isTablet

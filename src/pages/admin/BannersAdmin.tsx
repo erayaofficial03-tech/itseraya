@@ -591,6 +591,8 @@ const BannersAdmin = () => {
         </div>
       </div>
 
+      <BannerAnalytics banners={items} />
+
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
         {/* LEFT: list */}
         <Card>

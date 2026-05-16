@@ -507,6 +507,77 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          created_at: string
+          customer_city: string | null
+          customer_email: string | null
+          customer_name: string
+          hidden_at: string | null
+          hidden_by: string | null
+          hide_reason: string | null
+          id: string
+          is_approved: boolean
+          is_fake: boolean
+          is_featured: boolean
+          is_hidden: boolean
+          product_id: string | null
+          product_name: string | null
+          rating: number
+          review_text: string
+          reviewer_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_city?: string | null
+          customer_email?: string | null
+          customer_name: string
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hide_reason?: string | null
+          id?: string
+          is_approved?: boolean
+          is_fake?: boolean
+          is_featured?: boolean
+          is_hidden?: boolean
+          product_id?: string | null
+          product_name?: string | null
+          rating: number
+          review_text: string
+          reviewer_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_city?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hide_reason?: string | null
+          id?: string
+          is_approved?: boolean
+          is_fake?: boolean
+          is_featured?: boolean
+          is_hidden?: boolean
+          product_id?: string | null
+          product_name?: string | null
+          rating?: number
+          review_text?: string
+          reviewer_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       settings: {
         Row: {
           about_body: string | null

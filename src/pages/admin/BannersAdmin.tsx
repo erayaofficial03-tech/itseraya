@@ -614,40 +614,33 @@ const BannersAdmin = () => {
 
                   {/* SCHEDULE */}
                   <TabsContent value="schedule" className="space-y-4 pt-4">
-                    <div className="grid grid-cols-2 gap-3">
+                    <ScheduleEditor
+                      startsAt={draft.starts_at}
+                      expiresAt={draft.expires_at}
+                      isActive={!!draft.is_active}
+                      onChange={(starts, expires) => {
+                        updateDraft("starts_at", starts);
+                        updateDraft("expires_at", expires);
+                      }}
+                    />
+                    <div className="border-t pt-3 space-y-3">
+                      <RangeSlider label="Autoplay duration" value={draft.autoplay_duration ?? 5000} onChange={(v) => updateDraft("autoplay_duration", v)} min={2000} max={10000} step={500} unit="ms" />
                       <div>
-                        <Label className="text-xs">Starts at</Label>
-                        <Input
-                          type="datetime-local"
-                          value={toLocalInput(draft.starts_at)}
-                          onChange={(e) => updateDraft("starts_at", e.target.value ? new Date(e.target.value).toISOString() : null)}
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">Expires at</Label>
-                        <Input
-                          type="datetime-local"
-                          value={toLocalInput(draft.expires_at)}
-                          onChange={(e) => updateDraft("expires_at", e.target.value ? new Date(e.target.value).toISOString() : null)}
-                        />
-                      </div>
-                    </div>
-                    <RangeSlider label="Autoplay duration" value={draft.autoplay_duration ?? 5000} onChange={(v) => updateDraft("autoplay_duration", v)} min={2000} max={10000} step={500} unit="ms" />
-                    <div>
-                      <Label className="text-xs mb-1.5 block">Transition</Label>
-                      <div className="inline-flex rounded-md border border-border overflow-hidden">
-                        {["fade", "slide"].map((t) => (
-                          <button
-                            key={t}
-                            onClick={() => updateDraft("transition", t)}
-                            className={cn(
-                              "px-4 py-1.5 text-xs capitalize",
-                              (draft.transition || "fade") === t ? "bg-[#C9A84C] text-white" : "bg-background hover:bg-muted",
-                            )}
-                          >
-                            {t}
-                          </button>
-                        ))}
+                        <Label className="text-xs mb-1.5 block">Transition</Label>
+                        <div className="inline-flex rounded-md border border-border overflow-hidden">
+                          {["fade", "slide"].map((t) => (
+                            <button
+                              key={t}
+                              onClick={() => updateDraft("transition", t)}
+                              className={cn(
+                                "px-4 py-1.5 text-xs capitalize",
+                                (draft.transition || "fade") === t ? "bg-[#C9A84C] text-white" : "bg-background hover:bg-muted",
+                              )}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </TabsContent>

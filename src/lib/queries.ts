@@ -213,6 +213,47 @@ export const useThemePresets = () =>
     },
   });
 
+export type HomepageSectionType =
+  | "hero_slider"
+  | "trust_strip"
+  | "category_row"
+  | "product_row"
+  | "emotional_strip"
+  | "eraya_girls"
+  | "reviews";
+
+export type HomepageSection = {
+  id: string;
+  type: HomepageSectionType;
+  display_order: number;
+  is_visible: boolean;
+  visible_mobile: boolean;
+  visible_desktop: boolean;
+  props: {
+    eyebrow?: string;
+    title?: string;
+    text?: string;
+    source?: "new" | "bestseller" | "sale" | "featured" | "all";
+    view_all?: string;
+    category_slug?: string;
+    limit?: number;
+  };
+};
+
+export const useHomepageSections = () =>
+  useQuery({
+    queryKey: ["homepage_sections"],
+    staleTime: FIVE_MIN,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("homepage_sections" as any)
+        .select("*")
+        .order("display_order");
+      if (error) throw error;
+      return (data || []) as unknown as HomepageSection[];
+    },
+  });
+
 export const useCategories = () =>
   useQuery({
     queryKey: ["categories"],

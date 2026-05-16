@@ -7,6 +7,8 @@ import {
   type Product,
   productImage,
   withImageParams,
+  useProductLabels,
+  type ProductLabel,
 } from "@/lib/queries";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
@@ -19,21 +21,14 @@ interface Props {
 }
 
 /**
- * Map raw product tags → elegant micro-labels shown on the product image.
- * Only the first matching label is rendered to keep cards uncluttered.
+ * Pick the first matching admin-defined label for this product.
+ * Labels come from public.product_labels (managed in /admin/tags).
+ * A product matches a label when its `tags` array includes the label's slug.
  */
-const LABELS: Array<{ match: RegExp; text: string; tone: "ink" | "champagne" | "blush" }> = [
-  { match: /bestseller|best-seller|best_seller/i, text: "Bestseller", tone: "champagne" },
-  { match: /waterproof|water-proof/i, text: "Waterproof", tone: "blush" },
-  { match: /anti[-_ ]?tarnish|tarnish[-_ ]?resistant/i, text: "Anti-Tarnish", tone: "blush" },
-  { match: /hypoallergenic/i, text: "Hypoallergenic", tone: "blush" },
-  { match: /everyday/i, text: "Everyday Favorite", tone: "ink" },
-  { match: /new/i, text: "New", tone: "ink" },
-];
-
-const pickLabel = (tags: string[] = []) => {
-  for (const def of LABELS) {
-    if (tags.some((t) => def.match.test(t))) return def;
+const pickLabel = (tags: string[] = [], labels: ProductLabel[] = []) => {
+  const normalized = tags.map((t) => t.trim().toLowerCase());
+  for (const l of labels) {
+    if (normalized.includes(l.slug)) return l;
   }
   return null;
 };
@@ -53,6 +48,7 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
 const ProductCard = ({ product, showLabel = true }: Props) => {
   const { data: wishlist = [] } = useWishlist();
   const { data: ratings = {} } = useProductRatings();
+  const { data: labels = [] } = useProductLabels();
   const toggle = useToggleWishlist();
   const isSaved = wishlist.some((w) => w.product_id === product.id);
 
@@ -60,7 +56,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
     !!product.discounted_price && product.original_price > product.discounted_price;
   const current = product.discounted_price ?? product.original_price;
   const rating = ratings[product.id];
-  const label = showLabel ? pickLabel(product.tags) : null;
+  const label = showLabel ? pickLabel(product.tags, labels) : null;
 
   return (
     <Link
@@ -87,7 +83,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
                 label.tone,
               )}`}
             >
-              {label.text}
+              {label.name}
             </span>
           )}
 

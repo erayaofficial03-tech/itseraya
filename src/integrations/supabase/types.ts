@@ -554,6 +554,39 @@ export type Database = {
           },
         ]
       }
+      product_labels: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          tone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          tone?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          tone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_views: {
         Row: {
           id: string

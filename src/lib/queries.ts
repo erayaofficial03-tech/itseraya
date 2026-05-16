@@ -153,6 +153,17 @@ export type Settings = {
   // Enquiry mode: 'cart' (multi-product) or 'direct' (single product WhatsApp)
   enquiry_mode: string | null;
 
+  // Theme engine
+  active_theme_id: string | null;
+  font_heading: string | null;
+  font_body: string | null;
+  font_heading_url: string | null;
+  font_body_url: string | null;
+  radius_base: number | null;
+  container_max: number | null;
+  section_spacing: number | null;
+  font_size_base: number | null;
+
   // USP carousel (legacy, kept)
   usp_interval_ms: number;
   usp_fade_speed_ms: number;
@@ -176,6 +187,29 @@ export const useSettings = () =>
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;
       return data as Settings;
+    },
+  });
+
+export type ThemePreset = {
+  id: string;
+  name: string;
+  description: string | null;
+  tokens: Record<string, string>;
+  is_builtin: boolean;
+  display_order: number;
+};
+
+export const useThemePresets = () =>
+  useQuery({
+    queryKey: ["theme_presets"],
+    staleTime: FIVE_MIN,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("theme_presets" as any)
+        .select("*")
+        .order("display_order");
+      if (error) throw error;
+      return (data || []) as unknown as ThemePreset[];
     },
   });
 

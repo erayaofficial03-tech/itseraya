@@ -32,6 +32,7 @@ const ProductDetail = () => {
   const { data: wishlist = [] } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const [activeImg, setActiveImg] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
 
   useEffect(() => {
     if (product?.id) {

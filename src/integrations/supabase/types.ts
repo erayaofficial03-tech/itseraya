@@ -790,6 +790,7 @@ export type Database = {
           about_body: string | null
           about_image_url: string | null
           about_title: string | null
+          active_theme_id: string | null
           admin_brand_color: string | null
           admin_panel_title: string | null
           admin_welcome_message: string | null
@@ -804,9 +805,15 @@ export type Database = {
           color_background: string | null
           color_primary: string | null
           color_text: string | null
+          container_max: number | null
           enquiry_button_color: string | null
           enquiry_mode: string
           favicon_url: string | null
+          font_body: string | null
+          font_body_url: string | null
+          font_heading: string | null
+          font_heading_url: string | null
+          font_size_base: number | null
           footer_copyright: string | null
           footer_links_visible: boolean | null
           footer_show_logo: boolean | null
@@ -854,6 +861,7 @@ export type Database = {
           pwa_name: string | null
           pwa_short_name: string | null
           pwa_theme_color: string | null
+          radius_base: number | null
           section_categories_title: string | null
           section_categories_visible: boolean | null
           section_featured_title: string | null
@@ -862,6 +870,7 @@ export type Database = {
           section_new_arrivals_visible: boolean | null
           section_sale_title: string | null
           section_sale_visible: boolean | null
+          section_spacing: number | null
           section_trending_title: string | null
           section_trending_visible: boolean | null
           seo_description: string | null
@@ -887,6 +896,7 @@ export type Database = {
           about_body?: string | null
           about_image_url?: string | null
           about_title?: string | null
+          active_theme_id?: string | null
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
@@ -901,9 +911,15 @@ export type Database = {
           color_background?: string | null
           color_primary?: string | null
           color_text?: string | null
+          container_max?: number | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
           favicon_url?: string | null
+          font_body?: string | null
+          font_body_url?: string | null
+          font_heading?: string | null
+          font_heading_url?: string | null
+          font_size_base?: number | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
           footer_show_logo?: boolean | null
@@ -951,6 +967,7 @@ export type Database = {
           pwa_name?: string | null
           pwa_short_name?: string | null
           pwa_theme_color?: string | null
+          radius_base?: number | null
           section_categories_title?: string | null
           section_categories_visible?: boolean | null
           section_featured_title?: string | null
@@ -959,6 +976,7 @@ export type Database = {
           section_new_arrivals_visible?: boolean | null
           section_sale_title?: string | null
           section_sale_visible?: boolean | null
+          section_spacing?: number | null
           section_trending_title?: string | null
           section_trending_visible?: boolean | null
           seo_description?: string | null
@@ -984,6 +1002,7 @@ export type Database = {
           about_body?: string | null
           about_image_url?: string | null
           about_title?: string | null
+          active_theme_id?: string | null
           admin_brand_color?: string | null
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
@@ -998,9 +1017,15 @@ export type Database = {
           color_background?: string | null
           color_primary?: string | null
           color_text?: string | null
+          container_max?: number | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
           favicon_url?: string | null
+          font_body?: string | null
+          font_body_url?: string | null
+          font_heading?: string | null
+          font_heading_url?: string | null
+          font_size_base?: number | null
           footer_copyright?: string | null
           footer_links_visible?: boolean | null
           footer_show_logo?: boolean | null
@@ -1048,6 +1073,7 @@ export type Database = {
           pwa_name?: string | null
           pwa_short_name?: string | null
           pwa_theme_color?: string | null
+          radius_base?: number | null
           section_categories_title?: string | null
           section_categories_visible?: boolean | null
           section_featured_title?: string | null
@@ -1056,6 +1082,7 @@ export type Database = {
           section_new_arrivals_visible?: boolean | null
           section_sale_title?: string | null
           section_sale_visible?: boolean | null
+          section_spacing?: number | null
           section_trending_title?: string | null
           section_trending_visible?: boolean | null
           seo_description?: string | null
@@ -1077,7 +1104,15 @@ export type Database = {
           whatsapp_message_template?: string | null
           whatsapp_number?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "settings_active_theme_id_fkey"
+            columns: ["active_theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_presets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       social_links: {
         Row: {
@@ -1103,6 +1138,39 @@ export type Database = {
           is_visible?: boolean
           platform?: string
           url?: string
+        }
+        Relationships: []
+      }
+      theme_presets: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_builtin: boolean
+          name: string
+          tokens: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_builtin?: boolean
+          name: string
+          tokens?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_builtin?: boolean
+          name?: string
+          tokens?: Json
+          updated_at?: string
         }
         Relationships: []
       }

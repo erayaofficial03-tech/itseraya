@@ -18,6 +18,7 @@ import StorefrontPage from "./components/layout/StorefrontPage";
 
 
 import BrandProvider from "./components/providers/BrandProvider";
+import PwaUpdateHandler from "./components/PwaUpdateHandler";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";

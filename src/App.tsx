@@ -110,6 +110,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrandProvider>
+        <PwaUpdateHandler />
         <BrowserRouter>
         <EnquiryCartProvider>
         <SeoHead />

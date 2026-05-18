@@ -58,20 +58,50 @@ const PriceCalculator = ({ enabled, onToggle, onApply }: Props) => {
               />
             </div>
 
-            <div className="text-xs space-y-1 bg-muted/50 rounded p-3 font-mono max-h-56 overflow-y-auto">
-              {result.steps.map((s, i) => (
-                <div key={i} className="flex justify-between gap-3">
-                  <span className="truncate">{s.label}</span>
-                  <span className="text-muted-foreground">{s.delta}</span>
-                  <span className="text-right w-16">₹{Math.round(s.running)}</span>
+            {(() => {
+              const groups: { key: string; title: string; rows: typeof result.steps }[] = [
+                { key: "purchase", title: "Purchase", rows: result.steps.filter((s) => s.section === "purchase") },
+                { key: "packing_bom", title: "Packing BOM (flat add)", rows: result.steps.filter((s) => s.section === "packing_bom") },
+                { key: "buffer_margin", title: "Buffer Margins (compounded %)", rows: result.steps.filter((s) => s.section === "buffer_margin") },
+                { key: "shipping_charge", title: "Shipping Charges (added to MRP only)", rows: result.steps.filter((s) => s.section === "shipping_charge") },
+              ];
+              return (
+                <div className="text-xs space-y-3 bg-muted/50 rounded p-3 font-mono max-h-80 overflow-y-auto">
+                  {groups.map((g) =>
+                    g.rows.length === 0 ? null : (
+                      <div key={g.key} className="space-y-1">
+                        <div className="text-[10px] uppercase tracking-wide text-muted-foreground font-sans font-semibold">
+                          {g.title}
+                        </div>
+                        {g.rows.map((s, i) => (
+                          <div key={i} className="flex justify-between gap-3 pl-2">
+                            <span className="truncate flex-1">{s.label}</span>
+                            <span className="text-muted-foreground">{s.delta}</span>
+                            <span className="text-right w-16">
+                              {g.key === "shipping_charge" ? "" : `₹${Math.round(s.running)}`}
+                            </span>
+                          </div>
+                        ))}
+                        {g.key === "shipping_charge" && (
+                          <div className="flex justify-between pl-2 border-t pt-1">
+                            <span className="font-sans">Shipping total</span>
+                            <span></span>
+                            <span className="text-right w-16">₹{result.shipping}</span>
+                          </div>
+                        )}
+                        {g.key === "buffer_margin" && (
+                          <div className="flex justify-between pl-2 border-t pt-1">
+                            <span className="font-sans">Product Cost</span>
+                            <span></span>
+                            <span className="text-right w-16">₹{result.productCost}</span>
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
-              ))}
-              <div className="flex justify-between border-t pt-1 mt-1">
-                <span>Shipping Charge</span>
-                <span></span>
-                <span className="text-right w-16">₹{result.shipping}</span>
-              </div>
-            </div>
+              );
+            })()}
           </div>
 
           <div className="space-y-2">

@@ -558,6 +558,36 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_components: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          label: string
+          section: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          label: string
+          section: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          label?: string
+          section?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           created_at: string
@@ -886,6 +916,8 @@ export type Database = {
           policy_shipping_body: string | null
           policy_shipping_title: string | null
           policy_text_color: string | null
+          pricing_mrp_multiplier: number
+          pricing_sell_multiplier: number
           product_description_label: string | null
           product_enquiry_button_label: string | null
           product_pdf_button_label: string | null
@@ -912,6 +944,8 @@ export type Database = {
           seo_description: string | null
           seo_og_image_url: string | null
           seo_title: string | null
+          shipping_flat_cost: number
+          shipping_free_min_order: number
           store_address: string | null
           store_city: string | null
           store_email: string | null
@@ -992,6 +1026,8 @@ export type Database = {
           policy_shipping_body?: string | null
           policy_shipping_title?: string | null
           policy_text_color?: string | null
+          pricing_mrp_multiplier?: number
+          pricing_sell_multiplier?: number
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
           product_pdf_button_label?: string | null
@@ -1018,6 +1054,8 @@ export type Database = {
           seo_description?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
+          shipping_flat_cost?: number
+          shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
           store_email?: string | null
@@ -1098,6 +1136,8 @@ export type Database = {
           policy_shipping_body?: string | null
           policy_shipping_title?: string | null
           policy_text_color?: string | null
+          pricing_mrp_multiplier?: number
+          pricing_sell_multiplier?: number
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
           product_pdf_button_label?: string | null
@@ -1124,6 +1164,8 @@ export type Database = {
           seo_description?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
+          shipping_flat_cost?: number
+          shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
           store_email?: string | null

@@ -1,0 +1,202 @@
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Trash2, Save } from "lucide-react";
+import { toast } from "sonner";
+import { useSettings } from "@/lib/queries";
+import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
+
+const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
+  { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },
+  { key: "buffer_margin", title: "Buffer Margins", unit: "%", help: "Compounded on running total." },
+  { key: "shipping_charge", title: "Shipping Charges", unit: "₹", help: "Averaged into MRP formula." },
+];
+
+const SectionEditor = ({ section, title, unit, help, rows }: {
+  section: PricingSection; title: string; unit: string; help: string; rows: PricingComponent[];
+}) => {
+  const qc = useQueryClient();
+  const [draft, setDraft] = useState<PricingComponent[]>(rows);
+  useEffect(() => setDraft(rows), [rows]);
+
+  const addRow = () => {
+    setDraft((cur) => [
+      ...cur,
+      {
+        id: `new-${Date.now()}-${cur.length}`,
+        section,
+        label: "New row",
+        amount: 0,
+        sort_order: cur.length + 1,
+      },
+    ]);
+  };
+
+  const removeRow = async (r: PricingComponent) => {
+    if (!r.id.startsWith("new-")) {
+      const { error } = await supabase.from("pricing_components" as any).delete().eq("id", r.id);
+      if (error) return toast.error(error.message);
+    }
+    setDraft((cur) => cur.filter((x) => x.id !== r.id));
+    qc.invalidateQueries({ queryKey: ["pricing_components"] });
+  };
+
+  const save = async () => {
+    try {
+      const toInsert = draft.filter((r) => r.id.startsWith("new-")).map((r, i) => ({
+        section, label: r.label, amount: Number(r.amount) || 0, sort_order: i + 1,
+      }));
+      const toUpdate = draft.filter((r) => !r.id.startsWith("new-")).map((r, i) => ({
+        id: r.id, section, label: r.label, amount: Number(r.amount) || 0, sort_order: i + 1,
+      }));
+      if (toInsert.length) {
+        const { error } = await supabase.from("pricing_components" as any).insert(toInsert);
+        if (error) throw error;
+      }
+      for (const u of toUpdate) {
+        const { error } = await supabase.from("pricing_components" as any)
+          .update({ label: u.label, amount: u.amount, sort_order: u.sort_order })
+          .eq("id", u.id);
+        if (error) throw error;
+      }
+      toast.success(`${title} saved`);
+      qc.invalidateQueries({ queryKey: ["pricing_components"] });
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
+
+  return (
+    <Card className="p-4 space-y-3">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="font-semibold">{title}</h3>
+          <p className="text-xs text-muted-foreground">{help}</p>
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={addRow}><Plus className="h-3 w-3" /> Row</Button>
+          <Button size="sm" onClick={save}><Save className="h-3 w-3" /> Save</Button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        {draft.map((r, idx) => (
+          <div key={r.id} className="grid grid-cols-[1fr_120px_auto] gap-2 items-center">
+            <Input
+              value={r.label}
+              onChange={(e) =>
+                setDraft((cur) => cur.map((x, i) => (i === idx ? { ...x, label: e.target.value } : x)))
+              }
+            />
+            <div className="relative">
+              <Input
+                type="number"
+                value={r.amount}
+                onChange={(e) =>
+                  setDraft((cur) => cur.map((x, i) => (i === idx ? { ...x, amount: Number(e.target.value) } : x)))
+                }
+              />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{unit}</span>
+            </div>
+            <Button size="sm" variant="ghost" onClick={() => removeRow(r)}>
+              <Trash2 className="h-3 w-3 text-destructive" />
+            </Button>
+          </div>
+        ))}
+        {!draft.length && <p className="text-sm text-muted-foreground">No rows yet.</p>}
+      </div>
+    </Card>
+  );
+};
+
+const PricingAdmin = () => {
+  const { data: components = [] } = usePricingComponents();
+  const { data: settings } = useSettings();
+  const qc = useQueryClient();
+
+  const [mults, setMults] = useState({
+    sell: 2, mrp: 2, freeMin: 999, flatShip: 95,
+  });
+  useEffect(() => {
+    if (settings) {
+      setMults({
+        sell: Number((settings as any).pricing_sell_multiplier ?? 2),
+        mrp: Number((settings as any).pricing_mrp_multiplier ?? 2),
+        freeMin: Number((settings as any).shipping_free_min_order ?? 999),
+        flatShip: Number((settings as any).shipping_flat_cost ?? 95),
+      });
+    }
+  }, [settings]);
+
+  const saveMults = async () => {
+    const { error } = await supabase.from("settings").update({
+      pricing_sell_multiplier: mults.sell,
+      pricing_mrp_multiplier: mults.mrp,
+      shipping_free_min_order: mults.freeMin,
+      shipping_flat_cost: mults.flatShip,
+    } as any).eq("id", 1);
+    if (error) return toast.error(error.message);
+    toast.success("Multipliers & shipping rules saved");
+    qc.invalidateQueries({ queryKey: ["settings"] });
+  };
+
+  return (
+    <div className="space-y-6 max-w-4xl">
+      <div>
+        <h1 className="font-serif text-3xl">Pricing & Shipping</h1>
+        <p className="text-sm text-muted-foreground">
+          Components that feed the product Auto Price Calculator and the storefront shipping rules.
+        </p>
+      </div>
+
+      {SECTIONS.map((s) => (
+        <SectionEditor
+          key={s.key}
+          section={s.key}
+          title={s.title}
+          unit={s.unit}
+          help={s.help}
+          rows={components.filter((c) => c.section === s.key)}
+        />
+      ))}
+
+      <Card className="p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">Multipliers & Shipping Rules</h3>
+          <Button size="sm" onClick={saveMults}><Save className="h-3 w-3" /> Save</Button>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <Label>Sell-price multiplier</Label>
+            <Input type="number" step="0.1" value={mults.sell}
+              onChange={(e) => setMults({ ...mults, sell: Number(e.target.value) })} />
+            <p className="text-[11px] text-muted-foreground mt-1">Min Sell Price = product cost × this</p>
+          </div>
+          <div>
+            <Label>MRP multiplier</Label>
+            <Input type="number" step="0.1" value={mults.mrp}
+              onChange={(e) => setMults({ ...mults, mrp: Number(e.target.value) })} />
+            <p className="text-[11px] text-muted-foreground mt-1">MRP = (cost + avg shipping) × this</p>
+          </div>
+          <div>
+            <Label>Free shipping minimum order (₹)</Label>
+            <Input type="number" value={mults.freeMin}
+              onChange={(e) => setMults({ ...mults, freeMin: Number(e.target.value) })} />
+            <p className="text-[11px] text-muted-foreground mt-1">Orders ≥ this amount ship free.</p>
+          </div>
+          <div>
+            <Label>Flat shipping cost (₹)</Label>
+            <Input type="number" value={mults.flatShip}
+              onChange={(e) => setMults({ ...mults, flatShip: Number(e.target.value) })} />
+            <p className="text-[11px] text-muted-foreground mt-1">Charged when order is below free-ship minimum.</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default PricingAdmin;

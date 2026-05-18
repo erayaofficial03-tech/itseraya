@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useCategories, useProducts, formatINR, productImage, type Product } from "@/lib/queries";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage } from "@/lib/upload";
+import PriceCalculator from "@/components/admin/PriceCalculator";
 
 const empty = {
   name: "", slug: "", category_id: "", description: "", original_price: 0,
@@ -82,6 +83,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
   );
   const [tagInput, setTagInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [useCalc, setUseCalc] = useState(false);
 
   const pct = form.discounted_price && form.original_price > form.discounted_price
     ? Math.round(((form.original_price - form.discounted_price) / form.original_price) * 100)
@@ -222,9 +224,20 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
             </SelectContent>
           </Select>
         </div>
+        <PriceCalculator
+          enabled={useCalc}
+          onToggle={setUseCalc}
+          onApply={({ mrp, sell }) =>
+            setForm({ ...form, original_price: mrp, discounted_price: sell })
+          }
+        />
         <div>
-          <Label>Original Price (₹)</Label>
+          <Label>
+            MRP / Original Price (₹){" "}
+            {useCalc && <span className="text-xs text-muted-foreground">(locked by calculator)</span>}
+          </Label>
           <Input type="number" min={0} value={form.original_price}
+            readOnly={useCalc}
             onChange={(e) => setForm({ ...form, original_price: Number(e.target.value) })} />
         </div>
         <div>

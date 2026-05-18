@@ -62,13 +62,12 @@ const ProductListItem = ({ product }: Props) => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          toggle.mutate({ productId: product.id, isSaved });
+          openWhatsAppEnquiry(product, settings, "product_card");
         }}
-        aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-        disabled={toggle.isPending}
-        className="h-9 w-9 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-muted/60 active:scale-95 disabled:opacity-60"
+        aria-label="Enquire on WhatsApp"
+        className="h-9 w-9 flex-shrink-0 flex items-center justify-center rounded-full hover:bg-muted/60 active:scale-95"
       >
-        <Heart className={`h-4 w-4 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
+        <MessageCircle className="h-4 w-4 text-[#25D366]" />
       </button>
     </Link>
   );

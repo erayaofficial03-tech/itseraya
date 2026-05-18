@@ -89,7 +89,18 @@ const ProductDetail = () => {
     : [productImage(product)];
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
-  const isSaved = wishlist.some((w) => w.product_id === product.id);
+  const handleAddToCart = () => {
+    addToCart({
+      product_id: product.id,
+      product_name: product.name,
+      product_image: productImage(product),
+      price: product.discounted_price ?? product.original_price,
+      quantity: 1,
+    });
+    toast.success("Added to cart");
+    openCart();
+  };
+  const handleEnquire = () => openWhatsAppEnquiry(product, settings);
   const sameCategory = allProducts.filter(
     (p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id
   );

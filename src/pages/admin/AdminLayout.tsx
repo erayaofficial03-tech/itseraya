@@ -36,6 +36,7 @@ const navItems: { label: string; path: string; end?: boolean; icon: any; roles: 
   { label: "Customers",         path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },
   { label: "Users",             path: "/admin/users",        icon: UserCog,         roles: ["admin"] },
   { label: "Pricing & Shipping",path: "/admin/pricing",      icon: Calculator,      roles: ["admin"] },
+  { label: "Activity Log",      path: "/admin/activity",     icon: History,         roles: ["admin"] },
   { label: "Store Settings",    path: "/admin/settings",     icon: SettingsIcon,    roles: ["admin"] },
 ];
 

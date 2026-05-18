@@ -188,9 +188,6 @@ const ProductDetail = () => {
                 </button>
               </div>
             </div>
-            {false && (<></>)}
-              </div>
-            </div>
             {images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto px-4 md:px-0 scrollbar-hide">
                 {images.map((url, i) => (

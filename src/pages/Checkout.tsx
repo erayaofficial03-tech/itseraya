@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
+import { useSettings } from "@/lib/queries";
 
 const Checkout = () => {
   const [showDiscountInput, setShowDiscountInput] = useState(false);

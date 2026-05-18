@@ -195,9 +195,6 @@ const Header = () => {
                       <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Order</span>
                       </Link>
-                      <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
-                      </Link>
                       {isStaff && (
                         <button
                           onClick={() => {

@@ -266,24 +266,34 @@ const ProductDetail = () => {
             <div className="border-t border-border" />
 
             <div className="flex flex-col gap-3">
-              <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
+              {/* Enquire Now (left) + Add to Cart (right) */}
               <div className="grid grid-cols-2 gap-3">
                 <Button
+                  type="button"
                   variant="outline"
-                  onClick={() => toggleWishlist.mutate({ productId: product.id, isSaved })}
-                  disabled={toggleWishlist.isPending}
-                  className="h-11"
+                  onClick={handleEnquire}
+                  size="lg"
+                  className="h-12 text-base border-gold text-charcoal hover:bg-gold/10"
                 >
-                  <Heart className={`mr-1 h-4 w-4 ${isSaved ? "fill-gold text-gold" : ""}`} />
-                  {isSaved ? "Saved" : "Wishlist"}
+                  <MessageCircle className="mr-1 h-5 w-5 text-[#25D366]" />
+                  Enquire Now
                 </Button>
-                <ShareMenu
-                  product={product}
-                  settings={settings}
-                  buttonLabel={s(settings, "product_share_button_label")}
-                  className="h-11 w-full"
-                />
+                <Button
+                  type="button"
+                  onClick={handleAddToCart}
+                  size="lg"
+                  className="h-12 text-base bg-gold text-charcoal hover:bg-gold/90 font-medium"
+                >
+                  <ShoppingBag className="mr-1 h-5 w-5" />
+                  Add to Cart
+                </Button>
               </div>
+              <ShareMenu
+                product={product}
+                settings={settings}
+                buttonLabel={s(settings, "product_share_button_label")}
+                className="h-11 w-full"
+              />
             </div>
           </div>
         </section>

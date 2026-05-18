@@ -149,7 +149,7 @@ const App = () => (
               {/* Customer auth */}
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Public><Profile /></Public>} />
-              <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
+              
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/complete-profile" element={<CompleteProfile />} />
 

@@ -24,9 +24,11 @@ const PriceCalculator = ({ enabled, onToggle, onApply }: Props) => {
     mrp: Number((settings as any)?.pricing_mrp_multiplier ?? 2),
   };
 
+  const shippingCost = Number((settings as any)?.shipping_flat_cost ?? 95);
+
   const result = useMemo(
-    () => computeAutoPrice(purchase, components, multipliers),
-    [purchase, components, multipliers.sell, multipliers.mrp],
+    () => computeAutoPrice(purchase, components, multipliers, shippingCost),
+    [purchase, components, multipliers.sell, multipliers.mrp, shippingCost],
   );
 
   return (
@@ -65,9 +67,9 @@ const PriceCalculator = ({ enabled, onToggle, onApply }: Props) => {
                 </div>
               ))}
               <div className="flex justify-between border-t pt-1 mt-1">
-                <span>Avg Shipping</span>
+                <span>Shipping Charge</span>
                 <span></span>
-                <span className="text-right w-16">₹{result.avgShipping}</span>
+                <span className="text-right w-16">₹{result.shipping}</span>
               </div>
             </div>
           </div>

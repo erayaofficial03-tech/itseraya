@@ -2,9 +2,12 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Heart } from "lucide-react";
-import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
+import { ArrowLeft, MessageCircle, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { openWhatsAppEnquiry } from "@/lib/whatsapp";
+import { toast } from "sonner";
 import StarRating from "@/components/eraya/StarRating";
 import ReviewForm from "@/components/eraya/ReviewForm";
 import Header from "@/components/header/Header";
@@ -13,7 +16,6 @@ import SeoHead from "@/components/providers/SeoHead";
 import Breadcrumb from "@/components/eraya/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import LoveItButton from "@/components/eraya/LoveItButton";
 import ProductRow from "@/components/eraya/ProductRow";
 import ShareMenu from "@/components/product/ShareMenu";
 import ImageZoom from "@/components/product/ImageZoom";
@@ -33,8 +35,8 @@ const ProductDetail = () => {
   const { data: product, isLoading } = useProductBySlug(slug);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
-  const { data: wishlist = [] } = useWishlist();
-  const toggleWishlist = useToggleWishlist();
+  const { addToCart } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const { user, profile } = useAuth();
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
@@ -87,7 +89,18 @@ const ProductDetail = () => {
     : [productImage(product)];
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
-  const isSaved = wishlist.some((w) => w.product_id === product.id);
+  const handleAddToCart = () => {
+    addToCart({
+      product_id: product.id,
+      product_name: product.name,
+      product_image: productImage(product),
+      price: product.discounted_price ?? product.original_price,
+      quantity: 1,
+    });
+    toast.success("Added to cart");
+    openCart();
+  };
+  const handleEnquire = () => openWhatsAppEnquiry(product, settings);
   const sameCategory = allProducts.filter(
     (p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id
   );
@@ -173,15 +186,6 @@ const ProductDetail = () => {
                 >
                   <ArrowLeft className="h-5 w-5 text-charcoal" />
                 </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); toggleWishlist.mutate({ productId: product.id, isSaved }); }}
-                  aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-                  disabled={toggleWishlist.isPending}
-                  className="md:hidden absolute right-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
-                  style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}
-                >
-                  <Heart className={`h-5 w-5 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
-                </button>
               </div>
             </div>
             {images.length > 1 && (
@@ -262,24 +266,34 @@ const ProductDetail = () => {
             <div className="border-t border-border" />
 
             <div className="flex flex-col gap-3">
-              <LoveItButton product={product} size="lg" className="w-full h-12 text-base" />
+              {/* Enquire Now (left) + Add to Cart (right) */}
               <div className="grid grid-cols-2 gap-3">
                 <Button
+                  type="button"
                   variant="outline"
-                  onClick={() => toggleWishlist.mutate({ productId: product.id, isSaved })}
-                  disabled={toggleWishlist.isPending}
-                  className="h-11"
+                  onClick={handleEnquire}
+                  size="lg"
+                  className="h-12 text-base border-gold text-charcoal hover:bg-gold/10"
                 >
-                  <Heart className={`mr-1 h-4 w-4 ${isSaved ? "fill-gold text-gold" : ""}`} />
-                  {isSaved ? "Saved" : "Wishlist"}
+                  <MessageCircle className="mr-1 h-5 w-5 text-[#25D366]" />
+                  Enquire Now
                 </Button>
-                <ShareMenu
-                  product={product}
-                  settings={settings}
-                  buttonLabel={s(settings, "product_share_button_label")}
-                  className="h-11 w-full"
-                />
+                <Button
+                  type="button"
+                  onClick={handleAddToCart}
+                  size="lg"
+                  className="h-12 text-base bg-gold text-charcoal hover:bg-gold/90 font-medium"
+                >
+                  <ShoppingBag className="mr-1 h-5 w-5" />
+                  Add to Cart
+                </Button>
               </div>
+              <ShareMenu
+                product={product}
+                settings={settings}
+                buttonLabel={s(settings, "product_share_button_label")}
+                className="h-11 w-full"
+              />
             </div>
           </div>
         </section>

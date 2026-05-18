@@ -1,9 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, useLocation, useNavigate, Link } from "react-router-dom";
-import { Home, LayoutGrid, Search, Heart, X } from "lucide-react";
+import { Home, LayoutGrid, Search, ShoppingBag, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
+import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 
 
 const itemBase =
@@ -13,6 +15,8 @@ const BottomNav = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { count: cartCount } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -81,14 +85,19 @@ const BottomNav = () => {
             <Search className="h-5 w-5" />
             <span>Search</span>
           </button>
-          <NavLink
-            to="/wishlist"
-            className={linkClass}
-            aria-label="Wishlist"
+          <button
+            onClick={openCart}
+            aria-label="Cart"
+            className={`${itemBase} text-muted-foreground hover:text-foreground relative`}
           >
-            <Heart className="h-5 w-5" />
-            <span>Wishlist</span>
-          </NavLink>
+            <ShoppingBag className="h-5 w-5" />
+            <span>Cart</span>
+            {cartCount > 0 && (
+              <span className="absolute top-1 right-[28%] min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            )}
+          </button>
         </div>
       </nav>
 

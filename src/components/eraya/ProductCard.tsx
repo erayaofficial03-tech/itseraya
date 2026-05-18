@@ -1,15 +1,16 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
-import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
+import { MessageCircle } from "lucide-react";
 import { useProductRatings } from "@/hooks/useProductRatings";
 import {
   type Product,
   productImage,
   withImageParams,
   useProductLabels,
+  useSettings,
   type ProductLabel,
 } from "@/lib/queries";
+import { openWhatsAppEnquiry } from "@/lib/whatsapp";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
 
@@ -46,11 +47,9 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
 };
 
 const ProductCard = ({ product, showLabel = true }: Props) => {
-  const { data: wishlist = [] } = useWishlist();
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
-  const toggle = useToggleWishlist();
-  const isSaved = wishlist.some((w) => w.product_id === product.id);
+  const { data: settings } = useSettings();
 
   const hasDiscount =
     !!product.discounted_price && product.original_price > product.discounted_price;
@@ -87,23 +86,17 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
             </span>
           )}
 
-          {/* Wishlist */}
+          {/* Enquire Now (WhatsApp) */}
           <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              toggle.mutate({ productId: product.id, isSaved });
+              openWhatsAppEnquiry(product, settings, "product_card");
             }}
-            aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-            disabled={toggle.isPending}
-            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-ivory/85 backdrop-blur-sm flex items-center justify-center hover:bg-ivory transition-all ease-luxury active:scale-95 disabled:opacity-60 shadow-soft"
+            aria-label="Enquire on WhatsApp"
+            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-ivory/85 backdrop-blur-sm flex items-center justify-center hover:bg-ivory transition-all ease-luxury active:scale-95 shadow-soft"
           >
-            <Heart
-              className={`h-4 w-4 transition-colors ${
-                isSaved ? "fill-champagne text-champagne" : "text-ink-soft"
-              }`}
-              strokeWidth={1.6}
-            />
+            <MessageCircle className="h-4 w-4 text-[#25D366]" strokeWidth={1.8} />
           </button>
         </div>
 

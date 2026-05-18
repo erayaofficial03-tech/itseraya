@@ -8,7 +8,7 @@ import IOSInstallGuide from "@/components/IOSInstallGuide";
 import InstallTroubleshootSheet from "@/components/InstallTroubleshootSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { useWishlist } from "@/hooks/useWishlist";
+
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import BrandLogo from "@/components/BrandLogo";
@@ -48,8 +48,6 @@ const Header = () => {
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
-  const { data: wishlistItems = [] } = useWishlist();
-  const wishlistCount = wishlistItems.length;
   const { count: cartCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();
   const qc = useQueryClient();
@@ -194,11 +192,8 @@ const Header = () => {
                       <Link to="/profile" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><User className="h-4 w-4" /> My Profile</span>
                       </Link>
-                      <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
-                      </Link>
                       <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
-                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Enquiry</span>
+                        <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Order</span>
                       </Link>
                       {isStaff && (
                         <button
@@ -231,7 +226,7 @@ const Header = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-ivory">Sign In to Your Account</p>
-                          <p className="text-xs text-ivory/60 mt-0.5">Save wishlist & track your enquiries</p>
+                          <p className="text-xs text-ivory/60 mt-0.5">Track your orders & save details</p>
                         </div>
                       </div>
                       <Link

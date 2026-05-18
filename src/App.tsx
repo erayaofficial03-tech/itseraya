@@ -69,6 +69,7 @@ const PoliciesAdmin = lazyWithRetry(() => import("./pages/admin/PoliciesAdmin"),
 const UspsAdmin = lazyWithRetry(() => import("./pages/admin/UspsAdmin"), { reloadKey: "UspsAdmin" });
 const HomepageSectionsAdmin = lazyWithRetry(() => import("./pages/admin/HomepageSectionsAdmin"), { reloadKey: "HomepageSectionsAdmin" });
 const PricingAdmin = lazyWithRetry(() => import("./pages/admin/PricingAdmin"), { reloadKey: "PricingAdmin" });
+const ActivityLogAdmin = lazyWithRetry(() => import("./pages/admin/ActivityLogAdmin"), { reloadKey: "ActivityLogAdmin" });
 
 const queryClient = new QueryClient({
   defaultOptions: {

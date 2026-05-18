@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import { useSettings } from "@/lib/queries";
+import { usePricingComponents } from "@/lib/pricing";
 
 const Checkout = () => {
   const [showDiscountInput, setShowDiscountInput] = useState(false);

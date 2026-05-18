@@ -17,9 +17,7 @@ interface Props {
 }
 
 const ProductListItem = ({ product }: Props) => {
-  const { data: wishlist = [] } = useWishlist();
-  const toggle = useToggleWishlist();
-  const isSaved = wishlist.some((w) => w.product_id === product.id);
+  const { data: settings } = useSettings();
   const pct = discountPct(product);
   const price = product.discounted_price ?? product.original_price;
 

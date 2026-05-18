@@ -25,15 +25,15 @@ const CategoryRow = () => {
           </div>
         </div>
 
-        {/* Mobile: horizontal snap rail */}
+        {/* Horizontal scroll rail — all breakpoints */}
         <div
-          className="md:hidden flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-4 px-4 snap-x snap-mandatory"
+          className="flex overflow-x-auto gap-3 md:gap-4 lg:gap-6 pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory"
         >
           {visible.map((c) => (
             <Link
               key={c.id}
               to={`/collection/${c.slug}`}
-              className="group shrink-0 w-[140px] snap-start"
+              className="group shrink-0 w-[140px] md:w-[180px] lg:w-[200px] snap-start"
             >
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm lift-hover">
                 <img
@@ -41,39 +41,16 @@ const CategoryRow = () => {
                   alt={c.name}
                   loading="lazy"
                   decoding="async"
-                  width={280}
-                  height={350}
+                  width={400}
+                  height={500}
                   className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
-              </div>
-              <p className="mt-3 font-display text-base text-ink text-center">
-                {c.name}
-              </p>
-            </Link>
-          ))}
-        </div>
-
-        {/* Tablet & desktop grid */}
-        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
-          {visible.map((c) => (
-            <Link key={c.id} to={`/collection/${c.slug}`} className="group">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm lift-hover">
-                <img
-                  src={c.image_url || ""}
-                  alt={c.name}
-                  loading="lazy"
-                  decoding="async"
-                  width={500}
-                  height={625}
-                  className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4">
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4">
                   <span className="eyebrow text-ivory/80">Explore</span>
                 </div>
               </div>
-              <p className="mt-4 font-display text-xl text-ink text-center">
+              <p className="mt-3 md:mt-4 font-display text-base md:text-xl text-ink text-center">
                 {c.name}
               </p>
             </Link>

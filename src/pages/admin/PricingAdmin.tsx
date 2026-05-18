@@ -9,6 +9,7 @@ import { Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
 import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
   { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },

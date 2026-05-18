@@ -226,7 +226,7 @@ const Header = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-ivory">Sign In to Your Account</p>
-                          <p className="text-xs text-ivory/60 mt-0.5">Save wishlist & track your enquiries</p>
+                          <p className="text-xs text-ivory/60 mt-0.5">Track your orders & save details</p>
                         </div>
                       </div>
                       <Link

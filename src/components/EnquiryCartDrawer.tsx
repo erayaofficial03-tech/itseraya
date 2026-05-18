@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useSettings, formatINR } from "@/lib/queries";
+import { usePricingComponents } from "@/lib/pricing";
 import { generateEnquiryRef } from "@/lib/enquiryRef";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,17 +22,27 @@ interface Props {
 const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   const { items, removeFromCart, updateQuantity, clearCart } = useEnquiryCart();
   const { data: settings } = useSettings();
+  const { data: pricingComponents = [] } = usePricingComponents();
   const { user, profile } = useAuth();
   const [note, setNote] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const total = items.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0);
+  const subtotal = items.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0);
+
+  // Shipping = sum of all configured shipping_charge components (applied on total cart value).
+  // If a free-shipping threshold is set and met, shipping is waived.
+  const shippingRows = pricingComponents.filter((c) => c.section === "shipping_charge");
+  const flatShipping = shippingRows.reduce((s, x) => s + Number(x.amount || 0), 0);
+  const freeMin = Number(settings?.shipping_free_min_order ?? 0);
+  const freeShip = freeMin > 0 && subtotal >= freeMin;
+  const shipping = items.length === 0 ? 0 : freeShip ? 0 : flatShipping;
+  const total = subtotal + shipping;
 
   const handleSubmit = async () => {
     if (items.length === 0) {
-      toast.error("Your enquiry cart is empty.");
+      toast.error("Your cart is empty.");
       return;
     }
     setSubmitting(true);
@@ -68,7 +79,6 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
       const { error: iErr } = await supabase.from("enquiry_items").insert(itemRows);
       if (iErr) throw iErr;
 
-      // Back-compat: log a summary row in legacy enquiries
       await supabase.from("enquiries").insert({
         product_name: `[${ref}] ${items.length} item(s)`,
         product_price: total || null,
@@ -78,7 +88,6 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
         status: "open",
       });
 
-      // Build WhatsApp message
       const lines = items.map((i) => {
         const variant = [i.size, i.colour].filter(Boolean).join(", ");
         const v = variant ? ` (${variant})` : "";
@@ -87,34 +96,37 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
         return `• ${i.product_name}${v}${q}${p}`;
       });
       const msg = [
-        "Hi ERAYA! I'd like to enquire about:",
+        "Hi ERAYA! I'd like to place this order:",
         "",
-        `🆔 Enquiry ID: ${ref}`,
+        `🆔 Order Ref: ${ref}`,
         "",
         "📦 Products:",
         ...lines,
-        ...(total ? ["", `💰 Total (approx): ${formatINR(total)}`] : []),
+        "",
+        `Subtotal: ${formatINR(subtotal)}`,
+        `Shipping: ${shipping === 0 ? "FREE" : formatINR(shipping)}`,
+        `*Total: ${formatINR(total)}*`,
         ...(note.trim() ? ["", "📝 Note:", note.trim()] : []),
         "",
-        "Please share more details. Thank you! 💛",
+        "Please confirm. Thank you! 💛",
       ].join("\n");
 
       const number = settings?.whatsapp_number?.replace(/\D/g, "");
       if (number) {
         openWhatsApp(number, msg, "enquiry_drawer");
       } else {
-        toast.info("WhatsApp number not set — your enquiry is saved.");
+        toast.info("WhatsApp number not set — your order is saved.");
       }
 
-      toast.success(`Enquiry ${ref} submitted!`, {
-        description: "You can track it anytime from the Track page.",
+      toast.success(`Order ${ref} submitted!`, {
+        description: "Track it anytime from the Track page.",
       });
       clearCart();
       setNote("");
       onOpenChange(false);
     } catch (err) {
       console.error(err);
-      toast.error("Could not submit enquiry. Please try again.");
+      toast.error("Could not submit order. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -126,7 +138,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
         <SheetHeader className="px-5 py-4 border-b border-border">
           <SheetTitle className="font-serif flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-gold" />
-            Enquiry Cart
+            Your Cart
             {items.length > 0 && (
               <span className="ml-auto text-xs font-normal text-muted-foreground">
                 {items.length} item{items.length > 1 ? "s" : ""}
@@ -139,9 +151,9 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
           {items.length === 0 ? (
             <div className="py-12 text-center">
               <ShoppingBag className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="text-sm text-muted-foreground">Your enquiry cart is empty.</p>
+              <p className="text-sm text-muted-foreground">Your cart is empty.</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Tap "Add to Enquiry" on any product to start building your enquiry.
+                Tap "Add to Cart" on any product to start.
               </p>
             </div>
           ) : (
@@ -229,26 +241,56 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
               rows={2}
               className="text-sm resize-none"
             />
-            {total > 0 && (
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Approx total</span>
+
+            {/* Breakdown */}
+            <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-1.5 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Subtotal</span>
+                <span className="font-medium">{formatINR(subtotal)}</span>
+              </div>
+              {shippingRows.length > 0 && (
+                <div className="pl-1 space-y-0.5">
+                  {shippingRows.map((sh) => (
+                    <div key={sh.id} className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>· {sh.label}</span>
+                      <span>{freeShip ? "—" : formatINR(Number(sh.amount))}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  Shipping {freeShip && <span className="text-emerald-600 text-xs">(free)</span>}
+                </span>
+                <span className="font-medium">
+                  {shipping === 0 ? (freeShip ? "FREE" : formatINR(0)) : formatINR(shipping)}
+                </span>
+              </div>
+              {!freeShip && freeMin > 0 && subtotal < freeMin && (
+                <p className="text-[11px] text-muted-foreground">
+                  Add {formatINR(freeMin - subtotal)} more for free shipping.
+                </p>
+              )}
+              <div className="border-t border-border pt-1.5 mt-1.5 flex items-center justify-between">
+                <span className="font-serif">Total</span>
                 <span className="font-serif text-lg text-gold">{formatINR(total)}</span>
               </div>
-            )}
+            </div>
+
             <Button
               onClick={handleSubmit}
               disabled={submitting}
               className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium"
             >
               <Send className="h-4 w-4 mr-2" />
-              {submitting ? "Sending…" : "Send WhatsApp Enquiry"}
+              {submitting ? "Sending…" : "Order on WhatsApp"}
             </Button>
             <Link
               to="/track"
               onClick={() => onOpenChange(false)}
               className="block text-center text-xs text-muted-foreground hover:text-gold"
             >
-              Track an existing enquiry →
+              Track an existing order →
             </Link>
           </div>
         )}

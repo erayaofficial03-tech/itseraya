@@ -158,6 +158,16 @@ const PricingAdmin = () => {
     } as any).eq("id", 1);
     if (error) return toast.error(error.message);
     toast.success("Multipliers & shipping rules saved");
+    await logAdminActivity({
+      action: "pricing.rules.save",
+      entity: "settings",
+      details: {
+        pricing_sell_multiplier: mults.sell,
+        pricing_mrp_multiplier: mults.mrp,
+        shipping_free_min_order: mults.freeMin,
+        shipping_flat_cost: flatShip,
+      },
+    });
     qc.invalidateQueries({ queryKey: ["settings"] });
   };
 

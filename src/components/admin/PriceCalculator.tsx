@@ -67,9 +67,9 @@ const PriceCalculator = ({ enabled, onToggle, onApply }: Props) => {
                 </div>
               ))}
               <div className="flex justify-between border-t pt-1 mt-1">
-                <span>Avg Shipping</span>
+                <span>Shipping Charge</span>
                 <span></span>
-                <span className="text-right w-16">₹{result.avgShipping}</span>
+                <span className="text-right w-16">₹{result.shipping}</span>
               </div>
             </div>
           </div>

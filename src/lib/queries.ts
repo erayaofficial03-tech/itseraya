@@ -167,6 +167,12 @@ export type Settings = {
   // USP carousel (legacy, kept)
   usp_interval_ms: number;
   usp_fade_speed_ms: number;
+
+  // Pricing & shipping
+  pricing_sell_multiplier: number | null;
+  pricing_mrp_multiplier: number | null;
+  shipping_free_min_order: number | null;
+  shipping_flat_cost: number | null;
 };
 
 export type SocialLink = {

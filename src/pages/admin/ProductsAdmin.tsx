@@ -228,9 +228,15 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
         <PriceCalculator
           enabled={useCalc}
           onToggle={setUseCalc}
-          onApply={({ mrp, sell }) =>
-            setForm({ ...form, original_price: mrp, discounted_price: sell })
-          }
+          onApply={({ mrp, sell }) => {
+            setForm({ ...form, original_price: mrp, discounted_price: sell });
+            logAdminActivity({
+              action: "pricing.calculator.apply",
+              entity: "product",
+              entity_id: product?.id ?? null,
+              details: { product_name: form.name || product?.name, mrp, sell },
+            });
+          }}
         />
         <div>
           <Label>

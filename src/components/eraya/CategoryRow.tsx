@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useRef, useState } from "react";
 import { useCategories, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 
@@ -9,9 +10,18 @@ import { s } from "@/lib/settingsDefaults";
 const CategoryRow = () => {
   const { data: categories = [] } = useCategories();
   const { data: settings } = useSettings();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
   const visible = categories.filter((c) => c.is_visible);
   if (!s(settings, "section_categories_visible")) return null;
   if (!visible.length) return null;
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setProgress(max > 0 ? el.scrollLeft / max : 0);
+  };
 
   return (
     <section className="w-full section-y">
@@ -27,6 +37,8 @@ const CategoryRow = () => {
 
         {/* Horizontal scroll rail — all breakpoints */}
         <div
+          ref={scrollRef}
+          onScroll={handleScroll}
           className="flex overflow-x-auto gap-3 md:gap-4 lg:gap-6 pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory"
         >
           {visible.map((c) => (
@@ -55,6 +67,14 @@ const CategoryRow = () => {
               </p>
             </Link>
           ))}
+        </div>
+
+        {/* Scroll progress indicator */}
+        <div className="mt-3 h-[2px] w-full bg-ivory-warm rounded-full overflow-hidden">
+          <div
+            className="h-full bg-ink/30 rounded-full transition-transform duration-150 ease-out origin-left"
+            style={{ transform: `scaleX(${progress})` }}
+          />
         </div>
       </div>
     </section>

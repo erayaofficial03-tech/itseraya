@@ -8,7 +8,7 @@ import IOSInstallGuide from "@/components/IOSInstallGuide";
 import InstallTroubleshootSheet from "@/components/InstallTroubleshootSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { useWishlist } from "@/hooks/useWishlist";
+
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import BrandLogo from "@/components/BrandLogo";

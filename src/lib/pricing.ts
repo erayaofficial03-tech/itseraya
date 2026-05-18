@@ -70,7 +70,7 @@ export function computeAutoPrice(
 
   const productCost = r1(running);
   const minSellPrice = r1(productCost * (multipliers.sell || 2));
-  const mrp = r10((productCost + avgShipping) * (multipliers.mrp || 2));
+  const mrp = r1((productCost + avgShipping) * (multipliers.mrp || 2));
 
   return { steps, productCost, avgShipping: r1(avgShipping), minSellPrice, mrp };
 }

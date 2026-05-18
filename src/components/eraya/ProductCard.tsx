@@ -1,15 +1,16 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { Heart } from "lucide-react";
-import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
+import { MessageCircle } from "lucide-react";
 import { useProductRatings } from "@/hooks/useProductRatings";
 import {
   type Product,
   productImage,
   withImageParams,
   useProductLabels,
+  useSettings,
   type ProductLabel,
 } from "@/lib/queries";
+import { openWhatsAppEnquiry } from "@/lib/whatsapp";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
 

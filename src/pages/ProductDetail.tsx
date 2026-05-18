@@ -186,15 +186,9 @@ const ProductDetail = () => {
                 >
                   <ArrowLeft className="h-5 w-5 text-charcoal" />
                 </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); toggleWishlist.mutate({ productId: product.id, isSaved }); }}
-                  aria-label={isSaved ? "Remove from wishlist" : "Add to wishlist"}
-                  disabled={toggleWishlist.isPending}
-                  className="md:hidden absolute right-3 h-10 w-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur shadow"
-                  style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.75rem)" }}
-                >
-                  <Heart className={`h-5 w-5 ${isSaved ? "fill-gold text-gold" : "text-charcoal"}`} />
-                </button>
+              </div>
+            </div>
+            {false && (<></>)}
               </div>
             </div>
             {images.length > 1 && (

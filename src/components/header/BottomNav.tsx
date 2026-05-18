@@ -15,6 +15,8 @@ const BottomNav = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { count: cartCount } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);

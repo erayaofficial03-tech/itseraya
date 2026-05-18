@@ -71,6 +71,16 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
         if (error) throw error;
       }
       toast.success(`${title} saved`);
+      await logAdminActivity({
+        action: "pricing.section.save",
+        entity: "pricing_components",
+        details: {
+          section,
+          inserted: toInsert.length,
+          updated: toUpdate.length,
+          rows: draft.map((r) => ({ label: r.label, amount: Number(r.amount) || 0 })),
+        },
+      });
       qc.invalidateQueries({ queryKey: ["pricing_components"] });
     } catch (e: any) {
       toast.error(e.message);

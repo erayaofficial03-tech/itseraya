@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
+import { useSettings } from "@/lib/queries";
 
 const Checkout = () => {
   const [showDiscountInput, setShowDiscountInput] = useState(false);
@@ -82,17 +83,23 @@ const Checkout = () => {
     return sum + (price * item.quantity);
   }, 0);
 
+  const { data: settings } = useSettings();
+  const freeMinOrder = Number(settings?.shipping_free_min_order ?? 0);
+  const flatShippingCost = Number(settings?.shipping_flat_cost ?? 0);
+  const qualifiesForFreeShipping = freeMinOrder > 0 && subtotal >= freeMinOrder;
+  const standardShippingCost = qualifiesForFreeShipping ? 0 : flatShippingCost;
+
   const getShippingCost = () => {
     switch (shippingOption) {
       case "express":
-        return 15;
+        return standardShippingCost + 15;
       case "overnight":
-        return 35;
+        return standardShippingCost + 35;
       default:
-        return 0; // Standard shipping is free
+        return standardShippingCost;
     }
   };
-  
+
   const shipping = getShippingCost();
   const total = subtotal + shipping;
 

@@ -5,11 +5,28 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Save } from "lucide-react";
+import { Plus, Trash2, Save, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
 import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
 import { logAdminActivity } from "@/lib/adminLog";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
   { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },

@@ -5,11 +5,28 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Save } from "lucide-react";
+import { Plus, Trash2, Save, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
 import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
 import { logAdminActivity } from "@/lib/adminLog";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
   { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },
@@ -87,12 +104,28 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
     }
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    setDraft((cur) => {
+      const oldIdx = cur.findIndex((x) => x.id === active.id);
+      const newIdx = cur.findIndex((x) => x.id === over.id);
+      if (oldIdx < 0 || newIdx < 0) return cur;
+      return arrayMove(cur, oldIdx, newIdx).map((x, i) => ({ ...x, sort_order: i + 1 }));
+    });
+  };
+
   return (
     <Card className="p-4 space-y-3">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="font-semibold">{title}</h3>
-          <p className="text-xs text-muted-foreground">{help}</p>
+          <p className="text-xs text-muted-foreground">{help} Drag <GripVertical className="inline h-3 w-3" /> to reorder, then Save.</p>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={addRow}><Plus className="h-3 w-3" /> Row</Button>
@@ -100,32 +133,74 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
         </div>
       </div>
       <div className="space-y-2">
-        {draft.map((r, idx) => (
-          <div key={r.id} className="grid grid-cols-[1fr_120px_auto] gap-2 items-center">
-            <Input
-              value={r.label}
-              onChange={(e) =>
-                setDraft((cur) => cur.map((x, i) => (i === idx ? { ...x, label: e.target.value } : x)))
-              }
-            />
-            <div className="relative">
-              <Input
-                type="number"
-                value={r.amount}
-                onChange={(e) =>
-                  setDraft((cur) => cur.map((x, i) => (i === idx ? { ...x, amount: Number(e.target.value) } : x)))
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext items={draft.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+            {draft.map((r) => (
+              <SortableRow
+                key={r.id}
+                row={r}
+                unit={unit}
+                onLabel={(v) =>
+                  setDraft((cur) => cur.map((x) => (x.id === r.id ? { ...x, label: v } : x)))
                 }
+                onAmount={(v) =>
+                  setDraft((cur) => cur.map((x) => (x.id === r.id ? { ...x, amount: v } : x)))
+                }
+                onRemove={() => removeRow(r)}
               />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{unit}</span>
-            </div>
-            <Button size="sm" variant="ghost" onClick={() => removeRow(r)}>
-              <Trash2 className="h-3 w-3 text-destructive" />
-            </Button>
-          </div>
-        ))}
+            ))}
+          </SortableContext>
+        </DndContext>
         {!draft.length && <p className="text-sm text-muted-foreground">No rows yet.</p>}
       </div>
     </Card>
+  );
+};
+
+const SortableRow = ({
+  row, unit, onLabel, onAmount, onRemove,
+}: {
+  row: PricingComponent;
+  unit: string;
+  onLabel: (v: string) => void;
+  onAmount: (v: number) => void;
+  onRemove: () => void;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: row.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.7 : 1,
+    zIndex: isDragging ? 10 : "auto" as const,
+  };
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="grid grid-cols-[auto_1fr_120px_auto] gap-2 items-center bg-background rounded"
+    >
+      <button
+        type="button"
+        className="p-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground touch-none"
+        aria-label="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input value={row.label} onChange={(e) => onLabel(e.target.value)} />
+      <div className="relative">
+        <Input
+          type="number"
+          value={row.amount}
+          onChange={(e) => onAmount(Number(e.target.value))}
+        />
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">{unit}</span>
+      </div>
+      <Button size="sm" variant="ghost" onClick={onRemove}>
+        <Trash2 className="h-3 w-3 text-destructive" />
+      </Button>
+    </div>
   );
 };
 

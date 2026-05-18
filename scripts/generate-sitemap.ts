@@ -7,15 +7,18 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ||
-  process.env.VITE_SUPABASE_URL ||
-  "https://olzhholqskwtlqybrdjv.supabase.co";
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY =
   process.env.SUPABASE_PUBLISHABLE_KEY ||
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9semhob2xxc2t3dGxxeWJyZGp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1ODcyNjcsImV4cCI6MjA5NDE2MzI2N30.xiUWhEP8Wh2PSroRBi8nRldwcwyI1q3GJ_C3iND_Wkc";
+  process.env.SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error(
+    "sitemap generation skipped: missing SUPABASE_URL (or VITE_SUPABASE_URL) and/or a publishable/anon key (SUPABASE_PUBLISHABLE_KEY, VITE_SUPABASE_PUBLISHABLE_KEY, or SUPABASE_ANON_KEY).",
+  );
+  process.exit(1);
+}
 
 const BASE_URL = "https://itseraya.in";
 

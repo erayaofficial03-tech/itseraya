@@ -15,6 +15,7 @@ import { useCategories, useProducts, formatINR, productImage, type Product } fro
 import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const empty = {
   name: "", slug: "", category_id: "", description: "", original_price: 0,

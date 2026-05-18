@@ -190,9 +190,10 @@ const PricingAdmin = () => {
           </div>
           <div>
             <Label>Flat shipping cost (₹)</Label>
-            <Input type="number" value={mults.flatShip}
-              onChange={(e) => setMults({ ...mults, flatShip: Number(e.target.value) })} />
-            <p className="text-[11px] text-muted-foreground mt-1">Charged when order is below free-ship minimum.</p>
+            <Input type="number" value={flatShip} readOnly disabled />
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Auto-calculated from the total of all Shipping Charges rows above. Charged when order is below free-ship minimum.
+            </p>
           </div>
         </div>
       </Card>

@@ -37,6 +37,8 @@ const CategoryRow = () => {
 
         {/* Horizontal scroll rail — all breakpoints */}
         <div
+          ref={scrollRef}
+          onScroll={handleScroll}
           className="flex overflow-x-auto gap-3 md:gap-4 lg:gap-6 pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory"
         >
           {visible.map((c) => (
@@ -65,6 +67,14 @@ const CategoryRow = () => {
               </p>
             </Link>
           ))}
+        </div>
+
+        {/* Scroll progress indicator */}
+        <div className="mt-3 h-[2px] w-full bg-ivory-warm rounded-full overflow-hidden">
+          <div
+            className="h-full bg-ink/30 rounded-full transition-transform duration-150 ease-out origin-left"
+            style={{ transform: `scaleX(${progress})` }}
+          />
         </div>
       </div>
     </section>

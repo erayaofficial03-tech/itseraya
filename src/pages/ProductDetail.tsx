@@ -35,8 +35,8 @@ const ProductDetail = () => {
   const { data: product, isLoading } = useProductBySlug(slug);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
-  const { data: wishlist = [] } = useWishlist();
-  const toggleWishlist = useToggleWishlist();
+  const { addToCart } = useEnquiryCart();
+  const { openCart } = useEnquiryCartUI();
   const { user, profile } = useAuth();
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);

@@ -275,76 +275,41 @@
       filter 280ms cubic-bezier(0.4, 0, 0.2, 1),
       transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
     filter:
-      drop-shadow(0 -0.6px 0 hsl(45 95% 97% / 1))
-      drop-shadow(0 0.6px 0 hsl(38 75% 18% / 0.7))
-      drop-shadow(0.7px 0 0 hsl(38 60% 22% / 0.28))
-      drop-shadow(-0.7px 0 0 hsl(38 60% 22% / 0.28))
       saturate(1.22)
       contrast(1.1);
   }
   :is(a, button):hover .brand-logo:not(.brand-logo-dark) {
     filter:
-      drop-shadow(0 -0.6px 0 hsl(45 100% 99% / 1))
-      drop-shadow(0 0.6px 0 hsl(38 75% 18% / 0.78))
-      drop-shadow(0.7px 0 0 hsl(38 60% 22% / 0.34))
-      drop-shadow(-0.7px 0 0 hsl(38 60% 22% / 0.34))
       saturate(1.28)
       contrast(1.12)
       brightness(1.04);
   }
   :is(a, button):active .brand-logo:not(.brand-logo-dark) {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 96% / 0.95))
-      drop-shadow(0 0.5px 0 hsl(38 75% 18% / 0.65))
-      drop-shadow(0.6px 0 0 hsl(38 60% 22% / 0.26))
-      drop-shadow(-0.6px 0 0 hsl(38 60% 22% / 0.26))
       saturate(1.22)
       contrast(1.1)
       brightness(0.98);
   }
   .brand-logo-dark {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.65))
-      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.7))
-      drop-shadow(0 0 4px hsl(45 90% 62% / 0.45))
-      drop-shadow(0 0 14px hsl(45 85% 58% / 0.28))
-      drop-shadow(0 0 28px hsl(45 80% 55% / 0.16))
-      drop-shadow(0 2px 5px hsl(0 0% 0% / 0.6))
       saturate(1.22)
       contrast(1.08)
       brightness(1.06);
   }
   :is(a, button):hover .brand-logo-dark {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 95% / 0.8))
-      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.72))
-      drop-shadow(0 0 6px hsl(45 95% 68% / 0.55))
-      drop-shadow(0 0 18px hsl(45 90% 62% / 0.36))
-      drop-shadow(0 0 34px hsl(45 85% 58% / 0.2))
-      drop-shadow(0 3px 6px hsl(0 0% 0% / 0.62))
       saturate(1.28)
       contrast(1.1)
       brightness(1.08);
   }
   :is(a, button):active .brand-logo-dark {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.6))
-      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.68))
-      drop-shadow(0 0 3px hsl(45 90% 62% / 0.4))
-      drop-shadow(0 0 10px hsl(45 85% 58% / 0.24))
-      drop-shadow(0 1.5px 3px hsl(0 0% 0% / 0.55))
       saturate(1.2)
       contrast(1.06)
       brightness(1.02);
   }
   .dark .brand-logo:not(.brand-logo-light):not(.brand-logo-dark) {
     filter:
-      drop-shadow(0 -0.5px 0 hsl(45 95% 90% / 0.65))
-      drop-shadow(0 0.5px 0 hsl(0 0% 0% / 0.7))
-      drop-shadow(0 0 4px hsl(45 90% 62% / 0.45))
-      drop-shadow(0 0 14px hsl(45 85% 58% / 0.28))
-      drop-shadow(0 0 28px hsl(45 80% 55% / 0.16))
-      drop-shadow(0 2px 5px hsl(0 0% 0% / 0.6))
       saturate(1.22)
       contrast(1.08)
       brightness(1.06);

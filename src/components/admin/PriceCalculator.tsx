@@ -24,9 +24,11 @@ const PriceCalculator = ({ enabled, onToggle, onApply }: Props) => {
     mrp: Number((settings as any)?.pricing_mrp_multiplier ?? 2),
   };
 
+  const shippingCost = Number((settings as any)?.shipping_flat_cost ?? 95);
+
   const result = useMemo(
-    () => computeAutoPrice(purchase, components, multipliers),
-    [purchase, components, multipliers.sell, multipliers.mrp],
+    () => computeAutoPrice(purchase, components, multipliers, shippingCost),
+    [purchase, components, multipliers.sell, multipliers.mrp, shippingCost],
   );
 
   return (

@@ -71,3 +71,34 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Environment variables
+
+This project reads all Supabase credentials from environment variables — no keys are hard-coded. Create a `.env` file in the project root (it is git-ignored) with the following:
+
+### Required for local dev (browser / Vite)
+
+```
+VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<publishable-or-anon-key>
+VITE_SUPABASE_PROJECT_ID=<your-project-ref>
+```
+
+Only the **publishable / anon** key may be exposed to the browser. Never put `SUPABASE_SERVICE_ROLE_KEY` in any `VITE_*` variable or client-side code.
+
+### Required for the sitemap script (`scripts/generate-sitemap.ts`)
+
+The script runs via `predev` / `prebuild` and needs:
+
+- `SUPABASE_URL` *(or `VITE_SUPABASE_URL`)*
+- One of: `SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PUBLISHABLE_KEY`, or `SUPABASE_ANON_KEY`
+
+If these are missing the script exits with a clear error instead of using a fallback.
+
+### Server-only secrets (edge functions)
+
+Managed in Lovable Cloud — never commit these:
+
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_DB_URL`
+- `LOVABLE_API_KEY`

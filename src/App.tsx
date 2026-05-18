@@ -37,7 +37,7 @@ const AuthCallback = lazyWithRetry(() => import("./pages/AuthCallback"), { reloa
 const Login = lazyWithRetry(() => import("./pages/Login"), { reloadKey: "Login" });
 const Profile = lazyWithRetry(() => import("./pages/Profile"), { reloadKey: "Profile" });
 const ResetPassword = lazyWithRetry(() => import("./pages/ResetPassword"), { reloadKey: "ResetPassword" });
-const Wishlist = lazyWithRetry(() => import("./pages/Wishlist"), { reloadKey: "Wishlist" });
+
 const TrackEnquiry = lazyWithRetry(() => import("./pages/TrackEnquiry"), { reloadKey: "TrackEnquiry" });
 const ReturnPolicy = lazyWithRetry(() => import("./pages/ReturnPolicy"), { reloadKey: "ReturnPolicy" });
 const ShippingPolicy = lazyWithRetry(() => import("./pages/ShippingPolicy"), { reloadKey: "ShippingPolicy" });

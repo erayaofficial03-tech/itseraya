@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import { useSettings } from "@/lib/queries";
+import { usePricingComponents } from "@/lib/pricing";
 
 const Checkout = () => {
   const [showDiscountInput, setShowDiscountInput] = useState(false);
@@ -84,8 +85,11 @@ const Checkout = () => {
   }, 0);
 
   const { data: settings } = useSettings();
+  const { data: pricingComponents = [] } = usePricingComponents();
   const freeMinOrder = Number(settings?.shipping_free_min_order ?? 0);
-  const flatShippingCost = Number(settings?.shipping_flat_cost ?? 0);
+  const flatShippingCost = pricingComponents
+    .filter((c) => c.section === "shipping_charge")
+    .reduce((s, x) => s + Number(x.amount || 0), 0);
   const qualifiesForFreeShipping = freeMinOrder > 0 && subtotal >= freeMinOrder;
   const standardShippingCost = qualifiesForFreeShipping ? 0 : flatShippingCost;
 

@@ -117,16 +117,17 @@ const PricingAdmin = () => {
   const { data: settings } = useSettings();
   const qc = useQueryClient();
 
-  const [mults, setMults] = useState({
-    sell: 2, mrp: 2, freeMin: 999, flatShip: 95,
-  });
+  const flatShip = components
+    .filter((c) => c.section === "shipping_charge")
+    .reduce((s, x) => s + Number(x.amount || 0), 0);
+
+  const [mults, setMults] = useState({ sell: 2, mrp: 2, freeMin: 999 });
   useEffect(() => {
     if (settings) {
       setMults({
         sell: Number((settings as any).pricing_sell_multiplier ?? 2),
         mrp: Number((settings as any).pricing_mrp_multiplier ?? 2),
         freeMin: Number((settings as any).shipping_free_min_order ?? 999),
-        flatShip: Number((settings as any).shipping_flat_cost ?? 95),
       });
     }
   }, [settings]);
@@ -136,7 +137,7 @@ const PricingAdmin = () => {
       pricing_sell_multiplier: mults.sell,
       pricing_mrp_multiplier: mults.mrp,
       shipping_free_min_order: mults.freeMin,
-      shipping_flat_cost: mults.flatShip,
+      shipping_flat_cost: flatShip,
     } as any).eq("id", 1);
     if (error) return toast.error(error.message);
     toast.success("Multipliers & shipping rules saved");
@@ -189,9 +190,10 @@ const PricingAdmin = () => {
           </div>
           <div>
             <Label>Flat shipping cost (₹)</Label>
-            <Input type="number" value={mults.flatShip}
-              onChange={(e) => setMults({ ...mults, flatShip: Number(e.target.value) })} />
-            <p className="text-[11px] text-muted-foreground mt-1">Charged when order is below free-ship minimum.</p>
+            <Input type="number" value={flatShip} readOnly disabled />
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Auto-calculated from the total of all Shipping Charges rows above. Charged when order is below free-ship minimum.
+            </p>
           </div>
         </div>
       </Card>

@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Diamond, Tag, Tags, Megaphone, Image, Star, Monitor, Palette, Type,
   Search, FileText, MessageSquare, Users, UserCog, Settings as SettingsIcon,
-  LogOut, Menu, Eye, Calculator,
+  LogOut, Menu, Eye, Calculator, History,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ const navItems: { label: string; path: string; end?: boolean; icon: any; roles: 
   { label: "Customers",         path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },
   { label: "Users",             path: "/admin/users",        icon: UserCog,         roles: ["admin"] },
   { label: "Pricing & Shipping",path: "/admin/pricing",      icon: Calculator,      roles: ["admin"] },
+  { label: "Activity Log",      path: "/admin/activity",     icon: History,         roles: ["admin"] },
   { label: "Store Settings",    path: "/admin/settings",     icon: SettingsIcon,    roles: ["admin"] },
 ];
 

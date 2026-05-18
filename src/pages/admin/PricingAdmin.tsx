@@ -9,6 +9,7 @@ import { Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
 import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
   { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },
@@ -40,6 +41,12 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
     if (!r.id.startsWith("new-")) {
       const { error } = await supabase.from("pricing_components" as any).delete().eq("id", r.id);
       if (error) return toast.error(error.message);
+      await logAdminActivity({
+        action: "pricing.component.delete",
+        entity: "pricing_components",
+        entity_id: r.id,
+        details: { section, label: r.label, amount: r.amount },
+      });
     }
     setDraft((cur) => cur.filter((x) => x.id !== r.id));
     qc.invalidateQueries({ queryKey: ["pricing_components"] });
@@ -64,6 +71,16 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
         if (error) throw error;
       }
       toast.success(`${title} saved`);
+      await logAdminActivity({
+        action: "pricing.section.save",
+        entity: "pricing_components",
+        details: {
+          section,
+          inserted: toInsert.length,
+          updated: toUpdate.length,
+          rows: draft.map((r) => ({ label: r.label, amount: Number(r.amount) || 0 })),
+        },
+      });
       qc.invalidateQueries({ queryKey: ["pricing_components"] });
     } catch (e: any) {
       toast.error(e.message);
@@ -141,6 +158,16 @@ const PricingAdmin = () => {
     } as any).eq("id", 1);
     if (error) return toast.error(error.message);
     toast.success("Multipliers & shipping rules saved");
+    await logAdminActivity({
+      action: "pricing.rules.save",
+      entity: "settings",
+      details: {
+        pricing_sell_multiplier: mults.sell,
+        pricing_mrp_multiplier: mults.mrp,
+        shipping_free_min_order: mults.freeMin,
+        shipping_flat_cost: flatShip,
+      },
+    });
     qc.invalidateQueries({ queryKey: ["settings"] });
   };
 

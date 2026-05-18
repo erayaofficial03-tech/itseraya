@@ -48,8 +48,6 @@ const Header = () => {
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
-  const { data: wishlistItems = [] } = useWishlist();
-  const wishlistCount = wishlistItems.length;
   const { count: cartCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();
   const qc = useQueryClient();

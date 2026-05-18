@@ -41,6 +41,12 @@ const SectionEditor = ({ section, title, unit, help, rows }: {
     if (!r.id.startsWith("new-")) {
       const { error } = await supabase.from("pricing_components" as any).delete().eq("id", r.id);
       if (error) return toast.error(error.message);
+      await logAdminActivity({
+        action: "pricing.component.delete",
+        entity: "pricing_components",
+        entity_id: r.id,
+        details: { section, label: r.label, amount: r.amount },
+      });
     }
     setDraft((cur) => cur.filter((x) => x.id !== r.id));
     qc.invalidateQueries({ queryKey: ["pricing_components"] });

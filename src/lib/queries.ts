@@ -450,10 +450,6 @@ export const withImageParams = (url: string, width: number, quality = 80) => {
  */
 export const productImageSrcSet = (url: string) => {
   if (!url) return { src: url, srcSet: "", thumb: url, md: url, full: url };
-  // Lazy import to avoid pulling browser-only code into SSR paths.
-  // (imageProcessing.ts only uses pure URL string ops in deriveVariantUrls.)
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { deriveVariantUrls } = require("./imageProcessing") as typeof import("./imageProcessing");
   const v = deriveVariantUrls(url);
   return {
     src: v.md,

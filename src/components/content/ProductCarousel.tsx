@@ -86,7 +86,7 @@ const ProductCarousel = () => {
                  <Link to={`/jewellery/${product.id}`}>
                   <Card className="border-none shadow-none bg-transparent group">
                     <CardContent className="p-0">
-                      <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
+                      <div className="aspect-[4/5] mb-3 overflow-hidden bg-ivory-warm relative rounded-2xl">
                         <img
                           src={product.image}
                           alt={product.name}

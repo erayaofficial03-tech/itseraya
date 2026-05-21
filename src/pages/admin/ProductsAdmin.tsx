@@ -13,7 +13,7 @@ import { Trash2, Pencil, Plus, X, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "sonner";
 import { useCategories, useProducts, formatINR, productImage, type Product } from "@/lib/queries";
 import { confirm } from "@/components/ui/confirm-dialog";
-import { uploadImage } from "@/lib/upload";
+import { uploadImage, uploadProductImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
 import { logAdminActivity } from "@/lib/adminLog";
 
@@ -92,12 +92,19 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
+    const id = toast.loading(`Processing ${files.length} image${files.length > 1 ? "s" : ""}…`);
+    let ok = 0;
     for (const f of Array.from(files)) {
       try {
-        const url = await uploadImage(f, "product-images");
+        const url = await uploadProductImage(f);
         setImages((cur) => [...cur, { url }]);
-      } catch {}
+        ok += 1;
+      } catch {
+        // uploadProductImage already toasts the specific reason (low-res, etc.)
+      }
     }
+    toast.dismiss(id);
+    if (ok > 0) toast.success(`${ok} image${ok > 1 ? "s" : ""} ready (4:5, WEBP)`);
   };
 
   const moveImg = (i: number, dir: -1 | 1) => {
@@ -291,11 +298,14 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
         </div>
         <div className="col-span-2 space-y-2">
           <Label>Images</Label>
+          <p className="text-xs text-muted-foreground -mt-1">
+            Auto cropped to 4:5 and saved as WEBP (thumb/medium/full). Recommended source: 1600×2000+.
+          </p>
           <Input type="file" accept="image/*" multiple onChange={(e) => handleFiles(e.target.files)} />
           <div className="grid grid-cols-4 gap-2 mt-2">
             {images.map((img, i) => (
               <div key={i} className="relative group">
-                <img src={img.url} className="w-full aspect-square object-cover rounded" />
+                <img src={img.url} className="w-full aspect-[4/5] object-cover rounded bg-ivory-warm" />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1">
                   <Button size="sm" variant="secondary" onClick={() => moveImg(i, -1)}><ArrowUp className="h-3 w-3" /></Button>
                   <Button size="sm" variant="secondary" onClick={() => moveImg(i, 1)}><ArrowDown className="h-3 w-3" /></Button>

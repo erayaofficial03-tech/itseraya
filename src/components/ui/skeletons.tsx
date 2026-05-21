@@ -10,7 +10,7 @@ export const SkeletonBlock = ({ className = "" }: { className?: string }) => (
 
 export const ProductCardSkeleton = () => (
   <div className="rounded-2xl overflow-hidden bg-white border border-[#EDE8E1] shadow-sm">
-    <SkeletonBlock className="aspect-square w-full rounded-none" />
+    <SkeletonBlock className="aspect-[4/5] w-full rounded-none" />
     <div className="px-3 pt-2 pb-3 space-y-2">
       <SkeletonBlock className="h-2 w-1/3" />
       <SkeletonBlock className="h-3 w-3/4" />

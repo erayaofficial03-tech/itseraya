@@ -13,7 +13,7 @@ import { Trash2, Pencil, Plus, X, ArrowUp, ArrowDown } from "lucide-react";
 import { toast } from "sonner";
 import { useCategories, useProducts, formatINR, productImage, type Product } from "@/lib/queries";
 import { confirm } from "@/components/ui/confirm-dialog";
-import { uploadImage } from "@/lib/upload";
+import { uploadImage, uploadProductImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
 import { logAdminActivity } from "@/lib/adminLog";
 

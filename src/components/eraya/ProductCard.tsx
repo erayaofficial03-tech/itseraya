@@ -65,15 +65,22 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
       <article className="h-full flex flex-col">
         {/* Image — 4:5 editorial portrait */}
         <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm">
-          <SafeImage
-            src={withImageParams(productImage(product), 500, 80)}
-            alt={product.name}
-            loading="lazy"
-            decoding="async"
-            width={500}
-            height={625}
-            className="img-soft-zoom absolute inset-0 w-full h-full object-cover"
-          />
+          {(() => {
+            const ss = productImageSrcSet(productImage(product));
+            return (
+              <SafeImage
+                src={ss.src}
+                srcSet={ss.srcSet}
+                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                width={500}
+                height={625}
+                className="img-soft-zoom absolute inset-0 w-full h-full object-cover object-center"
+              />
+            );
+          })()}
 
           {/* Micro-label */}
           {label && (

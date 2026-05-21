@@ -6,7 +6,7 @@ import {
   formatINR,
   productImage,
   discountPct,
-  withImageParams,
+  productImageSrcSet,
   useSettings,
 } from "@/lib/queries";
 import { openWhatsAppEnquiry } from "@/lib/whatsapp";
@@ -20,19 +20,20 @@ const ProductListItem = ({ product }: Props) => {
   const { data: settings } = useSettings();
   const pct = discountPct(product);
   const price = product.discounted_price ?? product.original_price;
+  const ss = productImageSrcSet(productImage(product));
 
   return (
     <Link
       to={`/jewellery/${product.slug ?? product.id}`}
       className="group flex items-center gap-4 py-3 px-1 active:bg-muted/40 transition-colors"
     >
-      <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-muted/30">
+      <div className="relative h-24 w-[76px] flex-shrink-0 overflow-hidden rounded-md bg-ivory-warm">
         <SafeImage
-          src={withImageParams(productImage(product), 200, 80)}
+          src={ss.thumb}
           alt={product.name}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
         {pct > 0 && (
           <span className="absolute top-1 left-1 bg-charcoal/90 text-white text-[9px] tracking-wider px-1.5 py-0.5 rounded-sm">

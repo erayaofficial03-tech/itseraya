@@ -431,11 +431,36 @@ export const productImage = (p: Product) =>
 /**
  * Append width/quality params to Supabase Storage image URLs for cheaper
  * downloads. No-op for non-Supabase URLs (e.g. Unsplash fallbacks).
+ *
+ * Kept for backward compatibility — new product surfaces should prefer
+ * `productImageSrcSet` which serves the correct pre-rendered 4:5 variant.
  */
 export const withImageParams = (url: string, width: number, quality = 80) => {
   if (!url || !url.includes("/storage/v1/object/")) return url;
   const sep = url.includes("?") ? "&" : "?";
   return `${url}${sep}width=${width}&quality=${quality}`;
+};
+
+/**
+ * Build a responsive srcset for a product image URL produced by the
+ * upload pipeline (thumb 300w / md 800w / full 1600w WEBP variants).
+ * For legacy URLs that lack pipeline variants, the same URL is reused
+ * across descriptors so the browser still has a valid srcset.
+ */
+export const productImageSrcSet = (url: string) => {
+  if (!url) return { src: url, srcSet: "", thumb: url, md: url, full: url };
+  // Lazy import to avoid pulling browser-only code into SSR paths.
+  // (imageProcessing.ts only uses pure URL string ops in deriveVariantUrls.)
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { deriveVariantUrls } = require("./imageProcessing") as typeof import("./imageProcessing");
+  const v = deriveVariantUrls(url);
+  return {
+    src: v.md,
+    srcSet: `${v.thumb} 300w, ${v.md} 800w, ${v.full} 1600w`,
+    thumb: v.thumb,
+    md: v.md,
+    full: v.full,
+  };
 };
 
 export const discountPct = (p: Product) =>

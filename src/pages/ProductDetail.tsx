@@ -22,7 +22,7 @@ import ImageZoom from "@/components/product/ImageZoom";
 import SafeImage from "@/components/ui/SafeImage";
 import {
   useProductBySlug, useProducts, useSettings,
-  formatINR, productImage, discountPct, withImageParams,
+  formatINR, productImage, discountPct, withImageParams, productImageSrcSet,
 } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import {

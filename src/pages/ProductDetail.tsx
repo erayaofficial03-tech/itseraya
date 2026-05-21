@@ -201,16 +201,16 @@ const ProductDetail = () => {
                   <button
                     key={i}
                     onClick={() => setActiveImg(i)}
-                    className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 ${
+                    className={`relative flex-shrink-0 w-14 h-[70px] rounded overflow-hidden border-2 bg-ivory-warm ${
                       i === activeImg ? "border-gold" : "border-transparent"
                     }`}
                   >
                     <SafeImage
-                      src={withImageParams(url, 200, 70)}
+                      src={productImageSrcSet(url).thumb}
                       alt=""
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover object-center"
                     />
                   </button>
                 ))}

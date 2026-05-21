@@ -5,7 +5,7 @@ import { useProductRatings } from "@/hooks/useProductRatings";
 import {
   type Product,
   productImage,
-  withImageParams,
+  productImageSrcSet,
   useProductLabels,
   useSettings,
   type ProductLabel,

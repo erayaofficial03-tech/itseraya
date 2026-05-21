@@ -92,12 +92,19 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
+    const id = toast.loading(`Processing ${files.length} image${files.length > 1 ? "s" : ""}…`);
+    let ok = 0;
     for (const f of Array.from(files)) {
       try {
-        const url = await uploadImage(f, "product-images");
+        const url = await uploadProductImage(f);
         setImages((cur) => [...cur, { url }]);
-      } catch {}
+        ok += 1;
+      } catch {
+        // uploadProductImage already toasts the specific reason (low-res, etc.)
+      }
     }
+    toast.dismiss(id);
+    if (ok > 0) toast.success(`${ok} image${ok > 1 ? "s" : ""} ready (4:5, WEBP)`);
   };
 
   const moveImg = (i: number, dir: -1 | 1) => {

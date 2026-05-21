@@ -70,7 +70,7 @@ const ProductImageGallery = () => {
           {productImages.map((image, index) => (
             <div 
               key={index} 
-              className="w-full aspect-square overflow-hidden cursor-pointer group"
+              className="w-full aspect-[4/5] overflow-hidden cursor-pointer group bg-ivory-warm"
               onClick={() => handleImageClick(index)}
             >
               <img

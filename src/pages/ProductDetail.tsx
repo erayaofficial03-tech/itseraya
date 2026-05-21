@@ -165,18 +165,25 @@ const ProductDetail = () => {
               style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 0px)" }}
             >
               <div
-                className="aspect-square w-full overflow-hidden rounded-b-2xl md:rounded-lg bg-muted/30 mb-3 relative cursor-zoom-in"
+                className="aspect-[4/5] w-full overflow-hidden rounded-b-2xl md:rounded-lg bg-ivory-warm mb-3 relative cursor-zoom-in"
                 onClick={() => setIsZoomOpen(true)}
               >
-                <SafeImage
-                  src={withImageParams(images[activeImg], 900, 85)}
-                  alt={product.name}
-                  loading="eager"
-                  decoding="async"
-                  width={900}
-                  height={900}
-                  className="absolute inset-0 w-full h-full object-cover object-center mx-[10px] py-0 px-0 my-[10px] bg-[#f9f6f0]"
-                />
+                {(() => {
+                  const ss = productImageSrcSet(images[activeImg]);
+                  return (
+                    <SafeImage
+                      src={ss.md}
+                      srcSet={ss.srcSet}
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      alt={product.name}
+                      loading="eager"
+                      decoding="async"
+                      width={800}
+                      height={1000}
+                      className="absolute inset-0 w-full h-full object-cover object-center"
+                    />
+                  );
+                })()}
                 {/* Mobile overlay buttons */}
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate(-1); }}

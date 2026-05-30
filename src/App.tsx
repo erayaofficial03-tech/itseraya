@@ -153,6 +153,9 @@ const App = () => (
               <Route path="/contact" element={<Public><Contact /></Public>} />
               <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
               <Route path="/checkout" element={<Public><Checkout /></Public>} />
+              <Route path="/order-confirmed/:ref" element={<Public><OrderConfirmed /></Public>} />
+              <Route path="/orders" element={<Public><MyOrders /></Public>} />
+              <Route path="/orders/:ref" element={<Public><OrderDetail /></Public>} />
               <Route path="/domain-health" element={<DomainHealth />} />
 
               {/* Customer auth */}

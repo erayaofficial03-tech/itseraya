@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Trash2, Minus, Plus, Send, ShoppingBag } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Trash2, Minus, Plus, Send, ShoppingBag, LogIn } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";

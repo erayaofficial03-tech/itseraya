@@ -93,7 +93,14 @@ const ProductDetail = () => {
     void addToCart(product);
     toast.success("Added to cart");
   };
-  const handleEnquire = () => openWhatsAppEnquiry(product, settings);
+  const handleEnquire = () => {
+    if ((settings as any)?.enquiry_requires_login && !user) {
+      toast.error("Please sign in to enquire");
+      navigate("/login?redirect=" + window.location.pathname);
+      return;
+    }
+    openWhatsAppEnquiry(product, settings);
+  };
   const sameCategory = allProducts.filter(
     (p) => p.is_visible && p.id !== product.id && p.category_id === product.category_id
   );

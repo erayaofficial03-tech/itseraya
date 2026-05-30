@@ -47,7 +47,18 @@ const BrandProvider = ({ children }: { children: React.ReactNode }) => {
     apply("ink", palette.ink);
     apply("charcoal", palette.ink);
     apply("destructive", palette.destructive);
-  }, [palette]);
+
+    // Extended tokens from Theme Studio
+    const s2 = settings as any;
+    apply("card-border", s2?.card_border_color);
+    apply("border", s2?.card_border_color);
+    apply("btn-primary", s2?.btn_primary_bg);
+    apply("btn-primary-fg", s2?.btn_primary_text);
+    apply("btn-secondary-border", s2?.btn_secondary_border);
+    apply("btn-secondary-fg", s2?.btn_secondary_text);
+    apply("muted-foreground", s2?.color_muted);
+    apply("ink-mute", s2?.color_muted);
+  }, [palette, settings]);
 
   // Apply typography, radius, spacing
   useEffect(() => {
@@ -58,14 +69,31 @@ const BrandProvider = ({ children }: { children: React.ReactNode }) => {
     const spacing = settings?.section_spacing ?? 80;
     const baseSize = settings?.font_size_base ?? 16;
     const container = settings?.container_max ?? 1280;
+    const s2 = settings as any;
 
     root.style.setProperty("--font-heading", `'${headingFont}', Georgia, serif`);
     root.style.setProperty("--font-body", `'${bodyFont}', system-ui, sans-serif`);
     root.style.setProperty("--radius", `${radius}rem`);
     root.style.setProperty("--section-spacing", `${spacing}px`);
     root.style.setProperty("--container-max", `${container}px`);
+    root.style.setProperty("--font-size-base", `${baseSize}px`);
     root.style.fontSize = `${baseSize}px`;
+
+    // Card + button radius from Theme Studio
+    if (s2?.card_border_radius != null) {
+      root.style.setProperty("--card-radius", `${s2.card_border_radius}px`);
+    }
+    if (s2?.btn_border_radius != null) {
+      root.style.setProperty("--btn-radius", `${s2.btn_border_radius}px`);
+    }
+    if (s2?.card_border_width != null) {
+      root.style.setProperty("--card-border-width", `${s2.card_border_width}px`);
+    }
+    if (s2?.line_height_base != null) {
+      root.style.setProperty("--line-height-base", String(s2.line_height_base));
+    }
   }, [settings]);
+
 
   // Inject Google Fonts link for chosen heading + body fonts
   useEffect(() => {

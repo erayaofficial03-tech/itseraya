@@ -350,3 +350,25 @@
   height: 100dvh;
   height: -webkit-fill-available;
 }
+
+/* ============================================================
+   Theme Studio overrides — driven by CSS vars set by BrandProvider
+   ============================================================ */
+@layer base {
+  h1, h2, h3, h4, h5, h6, .font-serif, .font-display {
+    font-family: var(--font-heading, 'Playfair Display', Georgia, serif);
+  }
+  body, p, span, button, input, select, textarea, .font-body {
+    font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  }
+}
+
+@layer utilities {
+  /* Product/category card radius from Theme Studio */
+  .theme-card { border-radius: var(--card-radius, 16px); }
+  /* Pill button radius from Theme Studio */
+  .theme-btn { border-radius: var(--btn-radius, 50px); }
+  /* Section spacing helper */
+  .section-gap { margin-bottom: var(--section-spacing, 48px); }
+}
+

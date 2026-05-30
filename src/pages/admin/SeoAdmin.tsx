@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
@@ -20,16 +21,23 @@ const SeoAdmin = () => {
     seo_og_image_url: "",
     google_site_verification: "",
     google_analytics_id: "",
+    google_tag_manager_id: "",
+    seo_brand_keywords: "",
+    seo_auto_generate: true,
   });
 
   useEffect(() => {
     if (!settings) return;
+    const s2 = settings as any;
     setForm({
       seo_title: settings.seo_title || "",
       seo_description: settings.seo_description || "",
-      seo_og_image_url: (settings as any).seo_og_image_url || "",
-      google_site_verification: (settings as any).google_site_verification || "",
-      google_analytics_id: (settings as any).google_analytics_id || "",
+      seo_og_image_url: s2.seo_og_image_url || "",
+      google_site_verification: s2.google_site_verification || "",
+      google_analytics_id: s2.google_analytics_id || "",
+      google_tag_manager_id: s2.google_tag_manager_id || "",
+      seo_brand_keywords: s2.seo_brand_keywords || "",
+      seo_auto_generate: s2.seo_auto_generate !== false,
     });
   }, [settings]);
 
@@ -126,6 +134,17 @@ const SeoAdmin = () => {
               Format: G-XXXXXXXXXX — get from analytics.google.com
             </p>
           </div>
+          <div>
+            <Label>Google Tag Manager ID</Label>
+            <Input
+              value={form.google_tag_manager_id}
+              onChange={(e) => setForm({ ...form, google_tag_manager_id: e.target.value })}
+              placeholder="GTM-XXXXXXX"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Format: GTM-XXXXXXX — get from tagmanager.google.com
+            </p>
+          </div>
 
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save Google Settings"}
@@ -153,6 +172,39 @@ const SeoAdmin = () => {
               </Button>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Auto SEO & Keywords</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+              <Label>Auto-generate product SEO</Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                When ON, product titles, descriptions, and keywords are generated automatically.
+              </p>
+            </div>
+            <Switch
+              checked={form.seo_auto_generate}
+              onCheckedChange={(v) => setForm({ ...form, seo_auto_generate: v })}
+            />
+          </div>
+          <div>
+            <Label>Global SEO Keywords</Label>
+            <Textarea
+              rows={3}
+              value={form.seo_brand_keywords}
+              onChange={(e) => setForm({ ...form, seo_brand_keywords: e.target.value })}
+              placeholder="Eraya, artificial jewellery, fashion jewellery India, ..."
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Comma-separated. Added to all pages automatically.
+            </p>
+          </div>
+          <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
+            {busy ? "Saving…" : "Save Auto SEO"}
+          </Button>
         </CardContent>
       </Card>
     </div>

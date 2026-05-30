@@ -48,14 +48,17 @@ const Category = () => {
   }, [cat, filtered]);
 
   const storeName = s(settings, "store_name");
+  const brandKeywords = s(settings, "seo_brand_keywords" as any);
   const catName = cat?.name || "All Products";
-  const seoTitle = `${catName} — ${storeName} | Buy ${catName} Online`;
+  const seoTitle = cat
+    ? `${catName} — ${storeName} | Artificial ${catName}`
+    : `All Jewellery — ${storeName}`;
   const seoDesc = cat
-    ? `Shop ${catName} from ${storeName}. Handpicked artificial ${catName.toLowerCase()} for every occasion. WhatsApp enquiry available.`
-    : `Browse all jewellery from ${storeName}.`;
+    ? `Shop ${catName} from ${storeName}. Premium artificial ${catName.toLowerCase()} for every occasion. ${brandKeywords}`.trim()
+    : `Browse all jewellery from ${storeName}. ${brandKeywords}`.trim();
   const keywords = cat
-    ? `${catName}, buy ${catName} online, artificial ${catName}, ${storeName}, fashion jewellery`
-    : undefined;
+    ? `${catName}, buy ${catName} online, artificial ${catName}, ${storeName}, ${brandKeywords}`
+    : brandKeywords || undefined;
 
   return (
     <div className="min-h-screen bg-background">

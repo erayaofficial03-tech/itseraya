@@ -120,15 +120,22 @@ const ProductDetail = () => {
   }
 
   const storeName = s(settings, "store_name");
-  const seoTitle = `${product.name} — ${storeName} | Artificial Jewellery`;
-  const seoDesc = product.description
-    ? product.description.slice(0, 160)
-    : `Buy ${product.name} from ${storeName}. Premium artificial jewellery at ${formatINR(price)}. WhatsApp enquiry available.`;
+  const brandKeywords = s(settings, "seo_brand_keywords" as any);
+  const autoGen = (settings as any)?.seo_auto_generate !== false;
+  const seoTitle = autoGen
+    ? `${product.name} — ${storeName} | Buy Online`
+    : `${product.name} — ${storeName} | Artificial Jewellery`;
+  const seoDesc = autoGen
+    ? `Buy ${product.name} from ${storeName}. ${(product.description || "").slice(0, 120)} ${brandKeywords}`.trim()
+    : (product.description
+        ? product.description.slice(0, 160)
+        : `Buy ${product.name} from ${storeName}. Premium artificial jewellery at ${formatINR(price)}. WhatsApp enquiry available.`);
   const keywords = [
     product.name,
     product.categories?.name,
     ...(product.tags || []),
     storeName,
+    brandKeywords,
     "artificial jewellery",
     "imitation jewellery",
     "fashion jewellery India",

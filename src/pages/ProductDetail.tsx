@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, MessageCircle, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { useCartContext } from "@/components/providers/CartProvider";
 import { openWhatsAppEnquiry } from "@/lib/whatsapp";
 import { toast } from "sonner";
 import StarRating from "@/components/eraya/StarRating";
@@ -35,7 +35,7 @@ const ProductDetail = () => {
   const { data: product, isLoading } = useProductBySlug(slug);
   const { data: settings } = useSettings();
   const { data: allProducts = [] } = useProducts();
-  const { addToCart } = useEnquiryCart();
+  const { addToCart } = useCartContext();
   const { openCart } = useEnquiryCartUI();
   const { user, profile } = useAuth();
   const [activeImg, setActiveImg] = useState(0);
@@ -90,15 +90,8 @@ const ProductDetail = () => {
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
   const handleAddToCart = () => {
-    addToCart({
-      product_id: product.id,
-      product_name: product.name,
-      product_image: productImage(product),
-      price: product.discounted_price ?? product.original_price,
-      quantity: 1,
-    });
+    void addToCart(product);
     toast.success("Added to cart");
-    openCart();
   };
   const handleEnquire = () => openWhatsAppEnquiry(product, settings);
   const sameCategory = allProducts.filter(

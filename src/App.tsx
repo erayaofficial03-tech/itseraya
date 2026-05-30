@@ -116,6 +116,7 @@ const App = () => (
         <PwaUpdateHandler />
         <BrowserRouter>
         <EnquiryCartProvider>
+        <CartProvider>
         <SeoHead />
         <Toaster />
         <Sonner />

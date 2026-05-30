@@ -50,12 +50,14 @@ const Header = () => {
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
-  const { count: cartCount } = useEnquiryCart();
+  const { count: enquiryCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();
+  const { cartCount } = useCartContext();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();

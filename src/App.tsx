@@ -48,6 +48,8 @@ const TermsOfService = lazyWithRetry(() => import("./pages/TermsOfService"), { r
 const Faq = lazyWithRetry(() => import("./pages/Faq"), { reloadKey: "Faq" });
 const CareGuide = lazyWithRetry(() => import("./pages/CareGuide"), { reloadKey: "CareGuide" });
 const Contact = lazyWithRetry(() => import("./pages/Contact"), { reloadKey: "Contact" });
+const Wishlist = lazyWithRetry(() => import("./pages/Wishlist"), { reloadKey: "Wishlist" });
+const Checkout = lazyWithRetry(() => import("./pages/Checkout"), { reloadKey: "Checkout" });
 const DomainHealth = lazyWithRetry(() => import("./pages/DomainHealth"), { reloadKey: "DomainHealth" });
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazyWithRetry(() => import("./pages/CompleteProfile"), { reloadKey: "CompleteProfile" });
@@ -146,6 +148,8 @@ const App = () => (
               <Route path="/faq" element={<Public><Faq /></Public>} />
               <Route path="/care" element={<Public><CareGuide /></Public>} />
               <Route path="/contact" element={<Public><Contact /></Public>} />
+              <Route path="/wishlist" element={<Public><Wishlist /></Public>} />
+              <Route path="/checkout" element={<Public><Checkout /></Public>} />
               <Route path="/domain-health" element={<DomainHealth />} />
 
               {/* Customer auth */}

@@ -1112,6 +1112,9 @@ export type Database = {
           footer_show_whatsapp: boolean | null
           footer_tagline: string | null
           footer_whatsapp_label: string | null
+          google_analytics_id: string | null
+          google_site_verification: string | null
+          google_tag_manager_id: string | null
           hero_cta_label: string | null
           hero_cta_url: string | null
           hero_headline: string | null
@@ -1229,6 +1232,9 @@ export type Database = {
           footer_show_whatsapp?: boolean | null
           footer_tagline?: string | null
           footer_whatsapp_label?: string | null
+          google_analytics_id?: string | null
+          google_site_verification?: string | null
+          google_tag_manager_id?: string | null
           hero_cta_label?: string | null
           hero_cta_url?: string | null
           hero_headline?: string | null
@@ -1346,6 +1352,9 @@ export type Database = {
           footer_show_whatsapp?: boolean | null
           footer_tagline?: string | null
           footer_whatsapp_label?: string | null
+          google_analytics_id?: string | null
+          google_site_verification?: string | null
+          google_tag_manager_id?: string | null
           hero_cta_label?: string | null
           hero_cta_url?: string | null
           hero_headline?: string | null

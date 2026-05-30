@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Diamond, Tag, Tags, Megaphone, Image, Star, Monitor, Palette, Type,
   Search, FileText, MessageSquare, Users, UserCog, Settings as SettingsIcon,
-  LogOut, Menu, Eye, Calculator, History, Package,
+  LogOut, Menu, Eye, Calculator, History, Package, Globe,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";

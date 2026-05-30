@@ -174,6 +174,39 @@ const SeoAdmin = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Auto SEO & Keywords</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+              <Label>Auto-generate product SEO</Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                When ON, product titles, descriptions, and keywords are generated automatically.
+              </p>
+            </div>
+            <Switch
+              checked={form.seo_auto_generate}
+              onCheckedChange={(v) => setForm({ ...form, seo_auto_generate: v })}
+            />
+          </div>
+          <div>
+            <Label>Global SEO Keywords</Label>
+            <Textarea
+              rows={3}
+              value={form.seo_brand_keywords}
+              onChange={(e) => setForm({ ...form, seo_brand_keywords: e.target.value })}
+              placeholder="Eraya, artificial jewellery, fashion jewellery India, ..."
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Comma-separated. Added to all pages automatically.
+            </p>
+          </div>
+          <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
+            {busy ? "Saving…" : "Save Auto SEO"}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

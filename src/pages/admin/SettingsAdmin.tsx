@@ -31,6 +31,10 @@ const SettingsAdmin = () => {
     
     about_title: "", about_body: "", about_image_url: "",
     enquiry_mode: "cart" as "cart" | "direct",
+    upi_id: "", upi_name: "", upi_qr_url: "",
+    shipping_free_above: 999, shipping_charge: 99,
+    checkout_enabled: true,
+    order_confirmation_message: "",
   });
   const [busy, setBusy] = useState(false);
 

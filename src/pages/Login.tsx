@@ -30,6 +30,7 @@ const Login = () => {
   const [busy, setBusy] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from;
+  const redirectParam = new URLSearchParams(location.search).get("redirect");
 
   useEffect(() => {
     if (loading || !user) return;
@@ -38,9 +39,9 @@ const Login = () => {
       return;
     }
     const wantsAdmin = currentMode === "admin";
-    const dest = isStaff && wantsAdmin ? "/admin" : from || "/";
+    const dest = isStaff && wantsAdmin ? "/admin" : (redirectParam || from || "/");
     navigate(dest, { replace: true });
-  }, [user, profile, isStaff, currentMode, loading, navigate, from]);
+  }, [user, profile, isStaff, currentMode, loading, navigate, from, redirectParam]);
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();

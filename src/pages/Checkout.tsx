@@ -15,7 +15,7 @@ import { INDIAN_STATES } from "@/lib/indianStates";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const { data: settingsData } = useSettings();
   const settings = settingsData as any;
   const { cartItems, subtotal, updateQty, removeFromCart, clearCart, cartCount } =
@@ -35,6 +35,13 @@ const Checkout = () => {
   const [uploading, setUploading] = useState(false);
   const [upiRef, setUpiRef] = useState("");
   const [placing, setPlacing] = useState(false);
+
+  // Guest redirect to login
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login?redirect=/checkout", { replace: true });
+    }
+  }, [authLoading, user, navigate]);
 
   // Pre-fill once profile/user is available
   useEffect(() => {

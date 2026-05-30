@@ -18,6 +18,8 @@ const SeoAdmin = () => {
     seo_title: "",
     seo_description: "",
     seo_og_image_url: "",
+    google_site_verification: "",
+    google_analytics_id: "",
   });
 
   useEffect(() => {
@@ -26,6 +28,8 @@ const SeoAdmin = () => {
       seo_title: settings.seo_title || "",
       seo_description: settings.seo_description || "",
       seo_og_image_url: (settings as any).seo_og_image_url || "",
+      google_site_verification: (settings as any).google_site_verification || "",
+      google_analytics_id: (settings as any).google_analytics_id || "",
     });
   }, [settings]);
 
@@ -94,6 +98,61 @@ const SeoAdmin = () => {
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save SEO"}
           </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Google Integration</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Google Search Console Verification Code</Label>
+            <Input
+              value={form.google_site_verification}
+              onChange={(e) => setForm({ ...form, google_site_verification: e.target.value })}
+              placeholder="abc123xyz..."
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Get from search.google.com/search-console → Verify → HTML tag method. Paste only the content value, not the full tag.
+            </p>
+          </div>
+          <div>
+            <Label>Google Analytics Measurement ID</Label>
+            <Input
+              value={form.google_analytics_id}
+              onChange={(e) => setForm({ ...form, google_analytics_id: e.target.value })}
+              placeholder="G-XXXXXXXXXX"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Format: G-XXXXXXXXXX — get from analytics.google.com
+            </p>
+          </div>
+
+          <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
+            {busy ? "Saving…" : "Save Google Settings"}
+          </Button>
+
+          <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
+            <p className="text-sm">
+              After saving the verification code, go to Google Search Console and click <strong>Verify</strong>.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm">
+                <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer">
+                  Open Google Search Console ↗
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <a href="https://itseraya.in/sitemap.xml" target="_blank" rel="noopener noreferrer">
+                  Open Sitemap ↗
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <a href="https://itseraya.in/robots.txt" target="_blank" rel="noopener noreferrer">
+                  Open robots.txt ↗
+                </a>
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

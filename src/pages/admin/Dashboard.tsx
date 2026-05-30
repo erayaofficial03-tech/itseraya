@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gem, FolderTree, MessageCircle, Users as UsersIcon, Search as SearchIcon, ExternalLink } from "lucide-react";
-import { useProducts, useCategories } from "@/lib/queries";
+import { useProducts, useCategories, useSettings } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -10,6 +10,89 @@ import {
   WhatsAppClicksWidget, TopProductsWidget, BannerPerformanceWidget,
   EnquiryTrendWidget, ConversionFunnelWidget, InstallEventsWidget,
 } from "./dashboard-widgets";
+
+const GoLiveChecklist = () => {
+  const { data: settings } = useSettings();
+  const { data: products = [] } = useProducts();
+  const { data: categories = [] } = useCategories();
+  const [activeBanners, setActiveBanners] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const { count } = await supabase
+        .from("banners")
+        .select("id", { count: "exact", head: true })
+        .eq("is_active", true);
+      setActiveBanners(count ?? 0);
+    })();
+  }, []);
+
+  const s: any = settings || {};
+  const checks = [
+    { label: "Logo uploaded", done: !!s.logo_url, action: "/admin/brand", actionLabel: "Upload logo" },
+    { label: "WhatsApp number set", done: !!s.whatsapp_number, action: "/admin/settings", actionLabel: "Add number" },
+    { label: "UPI ID set for payments", done: !!s.upi_id, action: "/admin/settings", actionLabel: "Add UPI ID" },
+    { label: "UPI QR code uploaded", done: !!s.upi_qr_url, action: "/admin/settings", actionLabel: "Upload QR" },
+    { label: "Hero banner added", done: activeBanners > 0, action: "/admin/banners", actionLabel: "Add banner" },
+    { label: "Categories with images (≥3)", done: categories.filter((c: any) => c.image_url && c.is_visible).length >= 3, action: "/admin/categories", actionLabel: "Add images" },
+    { label: "Products added (min 5)", done: products.filter((p: any) => p.is_visible).length >= 5, action: "/admin/products", actionLabel: "Add products" },
+    { label: "Products have real images", done: products.filter((p: any) => (p.product_images?.length ?? 0) > 0).length >= 3, action: "/admin/products", actionLabel: "Upload photos" },
+    { label: "SEO title and description set", done: !!s.seo_title && !!s.seo_description, action: "/admin/seo", actionLabel: "Set SEO" },
+    { label: "Google Search Console verified", done: !!s.google_site_verification, action: "/admin/seo", actionLabel: "Add verification code" },
+    { label: "Tagline set", done: !!s.tagline && s.tagline !== "Adorn Your Story", action: "/admin/brand", actionLabel: "Set tagline" },
+    { label: "About page content set", done: !!s.about_body, action: "/admin/settings", actionLabel: "Write brand story" },
+  ];
+
+  const doneCount = checks.filter((c) => c.done).length;
+  const allDone = doneCount === checks.length;
+  const pct = Math.round((doneCount / checks.length) * 100);
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <CardTitle className="text-base">
+            {allDone ? "🎉 Store is Live Ready!" : "🚀 Go-Live Checklist"}
+          </CardTitle>
+          <span className="text-xs text-muted-foreground">
+            {doneCount} of {checks.length} completed
+          </span>
+        </div>
+        <div className="mt-3 h-2 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all"
+            style={{ width: `${pct}%`, background: "#C9A84C" }}
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {checks.map((check, i) => (
+          <div key={i} className="flex items-center justify-between gap-3 py-1.5 border-b border-border last:border-0">
+            <span className="flex items-center gap-2 min-w-0">
+              <span aria-hidden>{check.done ? "✅" : "🔴"}</span>
+              <span className={`text-sm truncate ${check.done ? "text-muted-foreground line-through" : ""}`}>
+                {check.label}
+              </span>
+            </span>
+            {!check.done && (
+              <Link to={check.action} className="text-xs font-medium hover:underline flex-shrink-0" style={{ color: "#C9A84C" }}>
+                {check.actionLabel} →
+              </Link>
+            )}
+          </div>
+        ))}
+        {allDone && (
+          <div className="mt-3 rounded-lg p-4 text-center" style={{ background: "#FEF3C7" }}>
+            <p className="text-sm font-medium">🎉 Eraya is ready for customers!</p>
+            <p className="text-xs text-muted-foreground mt-1">Share itseraya.in with your first customers.</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+
 
 const Stat = ({ icon: Icon, label, value, to }: { icon: any; label: string; value: string | number; to: string }) => (
   <Link to={to} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded-lg">
@@ -73,6 +156,10 @@ const Dashboard = () => {
         <h1 className="font-serif text-3xl">Dashboard</h1>
         <p className="text-sm text-muted-foreground">Welcome Back {displayName}</p>
       </div>
+
+      {isAdmin && <GoLiveChecklist />}
+
+
 
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

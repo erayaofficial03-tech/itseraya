@@ -157,7 +157,7 @@ const App = () => (
               <Route path="/order-confirmed/:ref" element={<Public><OrderConfirmed /></Public>} />
               <Route path="/orders" element={<Public><MyOrders /></Public>} />
               <Route path="/orders/:ref" element={<Public><OrderDetail /></Public>} />
-              <Route path="/domain-health" element={<DomainHealth />} />
+              
 
               {/* Customer auth */}
               <Route path="/login" element={<Login />} />

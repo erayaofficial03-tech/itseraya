@@ -28,6 +28,8 @@ const SeoAdmin = () => {
       seo_title: settings.seo_title || "",
       seo_description: settings.seo_description || "",
       seo_og_image_url: (settings as any).seo_og_image_url || "",
+      google_site_verification: (settings as any).google_site_verification || "",
+      google_analytics_id: (settings as any).google_analytics_id || "",
     });
   }, [settings]);
 

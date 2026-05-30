@@ -30,7 +30,11 @@ const Login = () => {
   const [busy, setBusy] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from;
-  const redirectParam = new URLSearchParams(location.search).get("redirect");
+  const rawRedirect = new URLSearchParams(location.search).get("redirect");
+  const ALLOWED_REDIRECT_PREFIXES = ["/checkout", "/wishlist", "/orders", "/profile", "/catalogue", "/jewellery", "/collection", "/about", "/contact"];
+  const isSafeRedirect = (r: string | null) =>
+    !!r && (r === "/" || ALLOWED_REDIRECT_PREFIXES.some((p) => r === p || r.startsWith(p + "/") || r.startsWith(p + "?")));
+  const redirectParam = isSafeRedirect(rawRedirect) ? rawRedirect! : null;
 
   useEffect(() => {
     if (loading || !user) return;

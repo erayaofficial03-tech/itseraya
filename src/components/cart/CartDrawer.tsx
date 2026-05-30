@@ -20,9 +20,9 @@ export const CartDrawer = ({ open, onClose }: Props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const freeShippingAbove = settings?.shipping_free_min_order ?? 999;
+  const freeShippingAbove = (settings as any)?.shipping_free_above ?? settings?.shipping_free_min_order ?? 999;
   const shippingCharge =
-    subtotal >= freeShippingAbove ? 0 : settings?.shipping_flat_cost ?? 99;
+    subtotal >= freeShippingAbove ? 0 : (settings as any)?.shipping_charge ?? settings?.shipping_flat_cost ?? 99;
   const total = subtotal + shippingCharge;
   const remaining = Math.max(0, freeShippingAbove - subtotal);
   const progress = Math.min(100, (subtotal / freeShippingAbove) * 100);

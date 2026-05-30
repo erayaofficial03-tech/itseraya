@@ -10,8 +10,6 @@ import { useSettings } from "@/lib/queries";
 type OrderRow = {
   id: string;
   order_ref: string;
-  customer_name: string;
-  customer_phone: string;
   total_amount: number;
   subtotal: number;
   shipping_amount: number;

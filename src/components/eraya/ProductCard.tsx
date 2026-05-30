@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import { useProductRatings } from "@/hooks/useProductRatings";
 import {
   type Product,
@@ -11,6 +11,7 @@ import {
   type ProductLabel,
 } from "@/lib/queries";
 import { openWhatsAppEnquiry } from "@/lib/whatsapp";
+import { useCartContext } from "@/components/providers/CartProvider";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
 
@@ -50,6 +51,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
   const { data: settings } = useSettings();
+  const { addToCart } = useCartContext();
 
   const hasDiscount =
     !!product.discounted_price && product.original_price > product.discounted_price;
@@ -105,7 +107,22 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
           >
             <MessageCircle className="h-4 w-4 text-[#25D366]" strokeWidth={1.8} />
           </button>
+
+          {/* Add to Cart */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              void addToCart(product);
+            }}
+            aria-label="Add to cart"
+            title="Add to Cart"
+            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center hover:scale-110 transition-transform ease-luxury active:scale-95 shadow-soft z-10"
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
+          </button>
         </div>
+
 
         {/* Meta */}
         <div className="pt-3 md:pt-4 pb-2 px-0.5 flex flex-col gap-1">

@@ -61,6 +61,13 @@ const SettingsAdmin = () => {
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",
         enquiry_mode: ((settings as any).enquiry_mode || "cart") as "cart" | "direct",
+        upi_id: (settings as any).upi_id || "",
+        upi_name: (settings as any).upi_name || "",
+        upi_qr_url: (settings as any).upi_qr_url || "",
+        shipping_free_above: Number((settings as any).shipping_free_above ?? 999),
+        shipping_charge: Number((settings as any).shipping_charge ?? 99),
+        checkout_enabled: (settings as any).checkout_enabled !== false,
+        order_confirmation_message: (settings as any).order_confirmation_message || "",
       });
     }
   }, [settings]);

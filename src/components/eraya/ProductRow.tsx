@@ -55,13 +55,14 @@ const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
         `}
       >
         <div
-          className="
-            grid grid-rows-2 grid-flow-col
+          className={`
+            grid grid-flow-col
+            ${items.length > 6 ? "grid-rows-2" : "grid-rows-1"}
             auto-cols-[31%]
             md:auto-cols-[23%]
             lg:auto-cols-[15.5%]
             gap-3 md:gap-5 lg:gap-6
-          "
+          `}
         >
           {items.map((p, i) => (
             <div key={p.id} className="snap-start">

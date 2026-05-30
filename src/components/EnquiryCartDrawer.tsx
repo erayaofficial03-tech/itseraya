@@ -286,14 +286,29 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
               </div>
             </div>
 
-            <Button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium"
-            >
-              <Send className="h-4 w-4 mr-2" />
-              {submitting ? "Sending…" : "Order on WhatsApp"}
-            </Button>
+            {blockedByLogin ? (
+              <div className="p-4 bg-muted/40 rounded-2xl text-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Sign in to send your enquiry
+                </p>
+                <Button
+                  onClick={() => { navigate("/login?redirect=/"); onOpenChange(false); }}
+                  className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium rounded-full"
+                >
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Sign In to Enquire
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                {submitting ? "Sending…" : "Order on WhatsApp"}
+              </Button>
+            )}
             <Link
               to="/track"
               onClick={() => onOpenChange(false)}

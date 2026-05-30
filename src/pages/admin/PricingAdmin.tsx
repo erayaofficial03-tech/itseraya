@@ -300,6 +300,18 @@ const PricingAdmin = () => {
               Auto-calculated from the total of all Shipping Charges rows above. Charged when order is below free-ship minimum.
             </p>
           </div>
+          <div className="sm:col-span-2 border-t pt-4">
+            <Label>Packing Cost (₹)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              value={mults.packing}
+              onChange={(e) => setMults({ ...mults, packing: Number(e.target.value) })}
+            />
+            <p className="text-[11px] text-amber-600 mt-1">
+              ⚠️ Internal only. Never shown to customers. Visible only in Admin → Orders breakdown.
+            </p>
+          </div>
         </div>
       </Card>
     </div>

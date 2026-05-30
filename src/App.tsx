@@ -50,6 +50,9 @@ const CareGuide = lazyWithRetry(() => import("./pages/CareGuide"), { reloadKey: 
 const Contact = lazyWithRetry(() => import("./pages/Contact"), { reloadKey: "Contact" });
 const Wishlist = lazyWithRetry(() => import("./pages/Wishlist"), { reloadKey: "Wishlist" });
 const Checkout = lazyWithRetry(() => import("./pages/Checkout"), { reloadKey: "Checkout" });
+const OrderConfirmed = lazyWithRetry(() => import("./pages/OrderConfirmed"), { reloadKey: "OrderConfirmed" });
+const MyOrders = lazyWithRetry(() => import("./pages/MyOrders"), { reloadKey: "MyOrders" });
+const OrderDetail = lazyWithRetry(() => import("./pages/OrderDetail"), { reloadKey: "OrderDetail" });
 const DomainHealth = lazyWithRetry(() => import("./pages/DomainHealth"), { reloadKey: "DomainHealth" });
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazyWithRetry(() => import("./pages/CompleteProfile"), { reloadKey: "CompleteProfile" });

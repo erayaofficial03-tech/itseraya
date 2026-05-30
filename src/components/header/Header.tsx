@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { useCartContext } from "@/components/providers/CartProvider";
+import CartDrawer from "@/components/cart/CartDrawer";
 import BrandLogo from "@/components/BrandLogo";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";

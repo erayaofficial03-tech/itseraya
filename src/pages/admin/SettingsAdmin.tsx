@@ -31,6 +31,10 @@ const SettingsAdmin = () => {
     
     about_title: "", about_body: "", about_image_url: "",
     enquiry_mode: "cart" as "cart" | "direct",
+    upi_id: "", upi_name: "", upi_qr_url: "",
+    shipping_free_above: 999, shipping_charge: 99,
+    checkout_enabled: true,
+    order_confirmation_message: "",
   });
   const [busy, setBusy] = useState(false);
 
@@ -57,6 +61,13 @@ const SettingsAdmin = () => {
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",
         enquiry_mode: ((settings as any).enquiry_mode || "cart") as "cart" | "direct",
+        upi_id: (settings as any).upi_id || "",
+        upi_name: (settings as any).upi_name || "",
+        upi_qr_url: (settings as any).upi_qr_url || "",
+        shipping_free_above: Number((settings as any).shipping_free_above ?? 999),
+        shipping_charge: Number((settings as any).shipping_charge ?? 99),
+        checkout_enabled: (settings as any).checkout_enabled !== false,
+        order_confirmation_message: (settings as any).order_confirmation_message || "",
       });
     }
   }, [settings]);
@@ -316,6 +327,99 @@ const SettingsAdmin = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Payment &amp; Shipping</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label>UPI ID</Label>
+              <Input
+                value={form.upi_id}
+                onChange={(e) => setForm({ ...form, upi_id: e.target.value })}
+                placeholder="yourname@upi"
+              />
+            </div>
+            <div>
+              <Label>UPI Display Name</Label>
+              <Input
+                value={form.upi_name}
+                onChange={(e) => setForm({ ...form, upi_name: e.target.value })}
+                placeholder="Eraya"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label>UPI QR Code</Label>
+            <div className="flex items-center gap-4 mt-1">
+              {form.upi_qr_url && (
+                <img src={form.upi_qr_url} alt="UPI QR" className="w-24 h-24 object-cover rounded border" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const url = await uploadImage(file, "branding", "upi-qr");
+                    setForm((f) => ({ ...f, upi_qr_url: url }));
+                    toast.success("QR uploaded");
+                  } catch {}
+                }}
+              />
+              {form.upi_qr_url && (
+                <Button variant="outline" size="sm" onClick={() => setForm({ ...form, upi_qr_url: "" })}>
+                  Remove
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label>Free Shipping Above (₹)</Label>
+              <Input
+                type="number"
+                value={form.shipping_free_above}
+                onChange={(e) => setForm({ ...form, shipping_free_above: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <Label>Shipping Charge (₹)</Label>
+              <Input
+                type="number"
+                value={form.shipping_charge}
+                onChange={(e) => setForm({ ...form, shipping_charge: Number(e.target.value) })}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between border rounded-md p-3">
+            <div>
+              <Label className="text-base">Checkout Enabled</Label>
+              <p className="text-xs text-muted-foreground">Allow customers to place orders.</p>
+            </div>
+            <Switch
+              checked={form.checkout_enabled}
+              onCheckedChange={(v) => setForm({ ...form, checkout_enabled: v })}
+            />
+          </div>
+
+          <div>
+            <Label>Order Confirmation Message</Label>
+            <Textarea
+              rows={3}
+              value={form.order_confirmation_message}
+              onChange={(e) => setForm({ ...form, order_confirmation_message: e.target.value })}
+              placeholder="Thank you! We will verify your payment and confirm your order within 2 hours."
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+
 
       <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
         {busy ? "Saving…" : "Save all settings"}

@@ -28,6 +28,7 @@ import {
   Settings as Cog,
   CheckCircle2,
   MapPin,
+  Package,
 } from "lucide-react";
 import { formatINR, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";

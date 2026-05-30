@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { useCartContext } from "@/components/providers/CartProvider";
+import CartDrawer from "@/components/cart/CartDrawer";
 import BrandLogo from "@/components/BrandLogo";
 import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
@@ -48,12 +50,14 @@ const Header = () => {
   const { data: categories = [] } = useCategories();
   const { data: products = [] } = useProducts();
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
-  const { count: cartCount } = useEnquiryCart();
+  const { count: enquiryCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();
+  const { cartCount } = useCartContext();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
@@ -482,6 +486,21 @@ const Header = () => {
               size="icon"
               aria-label="Enquiry cart"
               onClick={openCart}
+              className="relative h-9 w-9 sm:h-10 sm:w-10"
+            >
+              <MessageCircle className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
+              {enquiryCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
+                  {enquiryCount > 9 ? "9+" : enquiryCount}
+                </span>
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Shopping cart"
+              onClick={() => setCartOpen(true)}
               className="relative h-9 w-9 sm:h-10 sm:w-10 -mr-1 sm:mr-0"
             >
               <ShoppingBag className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
@@ -494,6 +513,9 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+
 
       {/* Search dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>

@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, Diamond, Tag, Tags, Megaphone, Image, Star, Monitor, Palette, Type,
   Search, FileText, MessageSquare, Users, UserCog, Settings as SettingsIcon,
-  LogOut, Menu, Eye, Calculator, History,
+  LogOut, Menu, Eye, Calculator, History, Package,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import BrandLogo from "@/components/BrandLogo";
 type NavRole = "admin" | "manager";
 const navItems: { label: string; path: string; end?: boolean; icon: any; roles: NavRole[] }[] = [
   { label: "Dashboard",         path: "/admin",              end: true, icon: LayoutDashboard, roles: ["admin","manager"] },
+  { label: "Orders",            path: "/admin/orders",       icon: Package,         roles: ["admin","manager"] },
   { label: "Products",          path: "/admin/products",     icon: Diamond,         roles: ["admin","manager"] },
   { label: "Categories",        path: "/admin/categories",   icon: Tag,             roles: ["admin","manager"] },
   { label: "Product Tags",      path: "/admin/tags",         icon: Tags,            roles: ["admin"] },

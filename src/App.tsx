@@ -65,6 +65,7 @@ const BannersAdmin = lazyWithRetry(() => import("./pages/admin/BannersAdmin"), {
 const SettingsAdmin = lazyWithRetry(() => import("./pages/admin/SettingsAdmin"), { reloadKey: "SettingsAdmin" });
 const AdminsAdmin = lazyWithRetry(() => import("./pages/admin/AdminsAdmin"), { reloadKey: "AdminsAdmin" });
 const EnquiriesAdmin = lazyWithRetry(() => import("./pages/admin/EnquiriesAdmin"), { reloadKey: "EnquiriesAdmin" });
+const OrdersAdmin = lazyWithRetry(() => import("./pages/admin/OrdersAdmin"), { reloadKey: "OrdersAdmin" });
 const AnnouncementAdmin = lazyWithRetry(() => import("./pages/admin/AnnouncementAdmin"), { reloadKey: "AnnouncementAdmin" });
 const BrandAdmin = lazyWithRetry(() => import("./pages/admin/BrandAdmin"), { reloadKey: "BrandAdmin" });
 const LabelsAdmin = lazyWithRetry(() => import("./pages/admin/LabelsAdmin"), { reloadKey: "LabelsAdmin" });
@@ -175,6 +176,7 @@ const App = () => (
               >
                 <Route index element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
                 <Route path="profile" element={<AdminProfile />} />
+                <Route path="orders" element={<OrdersAdmin />} />
                 <Route path="products" element={<ProductsAdmin />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="banner" element={<BannerAdmin />} />

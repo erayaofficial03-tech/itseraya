@@ -21,16 +21,23 @@ const SeoAdmin = () => {
     seo_og_image_url: "",
     google_site_verification: "",
     google_analytics_id: "",
+    google_tag_manager_id: "",
+    seo_brand_keywords: "",
+    seo_auto_generate: true,
   });
 
   useEffect(() => {
     if (!settings) return;
+    const s2 = settings as any;
     setForm({
       seo_title: settings.seo_title || "",
       seo_description: settings.seo_description || "",
-      seo_og_image_url: (settings as any).seo_og_image_url || "",
-      google_site_verification: (settings as any).google_site_verification || "",
-      google_analytics_id: (settings as any).google_analytics_id || "",
+      seo_og_image_url: s2.seo_og_image_url || "",
+      google_site_verification: s2.google_site_verification || "",
+      google_analytics_id: s2.google_analytics_id || "",
+      google_tag_manager_id: s2.google_tag_manager_id || "",
+      seo_brand_keywords: s2.seo_brand_keywords || "",
+      seo_auto_generate: s2.seo_auto_generate !== false,
     });
   }, [settings]);
 

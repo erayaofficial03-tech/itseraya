@@ -51,6 +51,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
   const { data: settings } = useSettings();
+  const { addToCart } = useCartContext();
 
   const hasDiscount =
     !!product.discounted_price && product.original_price > product.discounted_price;

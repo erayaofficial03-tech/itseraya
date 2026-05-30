@@ -131,6 +131,37 @@ const BrandProvider = ({ children }: { children: React.ReactNode }) => {
     meta.content = color;
   }, [settings]);
 
+  // Google Search Console verification + Google Analytics (gtag.js)
+  useEffect(() => {
+    const s2 = settings as any;
+    if (!s2) return;
+    const verification: string | null = s2.google_site_verification || null;
+    const gaId: string | null = s2.google_analytics_id || null;
+
+    if (verification) {
+      let meta = document.querySelector<HTMLMetaElement>("meta[name='google-site-verification']");
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("name", "google-site-verification");
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute("content", verification);
+    }
+
+    if (gaId && !document.getElementById("ga-script")) {
+      const s1 = document.createElement("script");
+      s1.id = "ga-script";
+      s1.async = true;
+      s1.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+      document.head.appendChild(s1);
+
+      const s2tag = document.createElement("script");
+      s2tag.id = "ga-init";
+      s2tag.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}',{page_title:document.title,page_location:window.location.href});`;
+      document.head.appendChild(s2tag);
+    }
+  }, [(settings as any)?.google_site_verification, (settings as any)?.google_analytics_id]);
+
   return <>{children}</>;
 };
 

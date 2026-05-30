@@ -157,6 +157,10 @@ const Dashboard = () => {
         <p className="text-sm text-muted-foreground">Welcome Back {displayName}</p>
       </div>
 
+      {isAdmin && <GoLiveChecklist />}
+
+
+
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Stat icon={Gem} label="Products" value={products.length} to="/admin/products" />

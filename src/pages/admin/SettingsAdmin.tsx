@@ -35,6 +35,7 @@ const SettingsAdmin = () => {
     shipping_free_above: 999, shipping_charge: 99,
     checkout_enabled: true,
     order_confirmation_message: "",
+    enquiry_requires_login: true,
   });
   const [busy, setBusy] = useState(false);
 

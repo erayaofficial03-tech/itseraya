@@ -134,6 +134,17 @@ const SeoAdmin = () => {
               Format: G-XXXXXXXXXX — get from analytics.google.com
             </p>
           </div>
+          <div>
+            <Label>Google Tag Manager ID</Label>
+            <Input
+              value={form.google_tag_manager_id}
+              onChange={(e) => setForm({ ...form, google_tag_manager_id: e.target.value })}
+              placeholder="GTM-XXXXXXX"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Format: GTM-XXXXXXX — get from tagmanager.google.com
+            </p>
+          </div>
 
           <Button onClick={save} disabled={busy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
             {busy ? "Saving…" : "Save Google Settings"}

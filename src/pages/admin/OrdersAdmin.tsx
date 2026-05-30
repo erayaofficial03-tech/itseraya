@@ -356,11 +356,28 @@ const OrdersAdmin = () => {
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Total</p>
-                        <p className="font-semibold text-base text-foreground">
-                          ₹{o.total_amount.toLocaleString("en-IN")}
-                        </p>
-                        <p className="text-muted-foreground">
+                        <p className="text-muted-foreground">Breakdown</p>
+                        <div className="space-y-0.5 text-[11px]">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Subtotal</span>
+                            <span>₹{Number(o.subtotal || 0).toLocaleString("en-IN")}</span>
+                          </div>
+                          {Number((settings as any)?.packing_cost ?? 0) > 0 && (
+                            <div className="flex justify-between text-amber-600">
+                              <span>Packing (internal)</span>
+                              <span>₹{Number((settings as any).packing_cost).toLocaleString("en-IN")}</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Shipping</span>
+                            <span>₹{Number(o.shipping_amount || 0).toLocaleString("en-IN")}</span>
+                          </div>
+                          <div className="flex justify-between font-semibold text-sm text-foreground border-t pt-1 mt-1">
+                            <span>Total</span>
+                            <span>₹{o.total_amount.toLocaleString("en-IN")}</span>
+                          </div>
+                        </div>
+                        <p className="text-muted-foreground mt-1">
                           {items.length} item{items.length !== 1 ? "s" : ""}
                           {o.payment_upi_ref && ` · UPI ${o.payment_upi_ref}`}
                         </p>

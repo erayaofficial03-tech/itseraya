@@ -213,13 +213,14 @@ const PricingAdmin = () => {
     .filter((c) => c.section === "shipping_charge")
     .reduce((s, x) => s + Number(x.amount || 0), 0);
 
-  const [mults, setMults] = useState({ sell: 2, mrp: 2, freeMin: 999 });
+  const [mults, setMults] = useState({ sell: 2, mrp: 2, freeMin: 999, packing: 0 });
   useEffect(() => {
     if (settings) {
       setMults({
         sell: Number((settings as any).pricing_sell_multiplier ?? 2),
         mrp: Number((settings as any).pricing_mrp_multiplier ?? 2),
         freeMin: Number((settings as any).shipping_free_min_order ?? 999),
+        packing: Number((settings as any).packing_cost ?? 0),
       });
     }
   }, [settings]);
@@ -230,9 +231,10 @@ const PricingAdmin = () => {
       pricing_mrp_multiplier: mults.mrp,
       shipping_free_min_order: mults.freeMin,
       shipping_flat_cost: flatShip,
+      packing_cost: mults.packing,
     } as any).eq("id", 1);
     if (error) return toast.error(error.message);
-    toast.success("Multipliers & shipping rules saved");
+    toast.success("Multipliers, shipping & packing saved");
     await logAdminActivity({
       action: "pricing.rules.save",
       entity: "settings",
@@ -241,6 +243,7 @@ const PricingAdmin = () => {
         pricing_mrp_multiplier: mults.mrp,
         shipping_free_min_order: mults.freeMin,
         shipping_flat_cost: flatShip,
+        packing_cost: mults.packing,
       },
     });
     qc.invalidateQueries({ queryKey: ["settings"] });
@@ -295,6 +298,18 @@ const PricingAdmin = () => {
             <Input type="number" value={flatShip} readOnly disabled />
             <p className="text-[11px] text-muted-foreground mt-1">
               Auto-calculated from the total of all Shipping Charges rows above. Charged when order is below free-ship minimum.
+            </p>
+          </div>
+          <div className="sm:col-span-2 border-t pt-4">
+            <Label>Packing Cost (₹)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              value={mults.packing}
+              onChange={(e) => setMults({ ...mults, packing: Number(e.target.value) })}
+            />
+            <p className="text-[11px] text-amber-600 mt-1">
+              ⚠️ Internal only. Never shown to customers. Visible only in Admin → Orders breakdown.
             </p>
           </div>
         </div>

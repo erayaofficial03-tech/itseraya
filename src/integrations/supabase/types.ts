@@ -352,6 +352,56 @@ export type Database = {
         }
         Relationships: []
       }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string | null
+          product_image_url: string | null
+          product_name: string
+          quantity: number
+          unit_price: number
+          updated_at: string
+          user_id: string
+          variant_colour: string | null
+          variant_size: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          product_image_url?: string | null
+          product_name: string
+          quantity?: number
+          unit_price: number
+          updated_at?: string
+          user_id: string
+          variant_colour?: string | null
+          variant_size?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          product_image_url?: string | null
+          product_name?: string
+          quantity?: number
+          unit_price?: number
+          updated_at?: string
+          user_id?: string
+          variant_colour?: string | null
+          variant_size?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           created_at: string
@@ -588,6 +638,147 @@ export type Database = {
           occurred_at?: string
           page_path?: string | null
           platform?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string | null
+          product_image_url: string | null
+          product_name: string
+          quantity: number
+          total_price: number
+          unit_price: number
+          variant_colour: string | null
+          variant_size: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id?: string | null
+          product_image_url?: string | null
+          product_name: string
+          quantity?: number
+          total_price: number
+          unit_price: number
+          variant_colour?: string | null
+          variant_size?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string | null
+          product_image_url?: string | null
+          product_name?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+          variant_colour?: string | null
+          variant_size?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          admin_notes: string | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          created_at: string
+          customer_address: string | null
+          customer_city: string | null
+          customer_email: string
+          customer_id: string | null
+          customer_name: string
+          customer_phone: string
+          customer_pincode: string | null
+          customer_state: string | null
+          delivered_at: string | null
+          id: string
+          order_ref: string
+          order_status: string
+          payment_screenshot_url: string | null
+          payment_status: string
+          payment_upi_ref: string | null
+          shipped_at: string | null
+          shipping_amount: number
+          subtotal: number
+          total_amount: number
+          tracking_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_city?: string | null
+          customer_email: string
+          customer_id?: string | null
+          customer_name: string
+          customer_phone: string
+          customer_pincode?: string | null
+          customer_state?: string | null
+          delivered_at?: string | null
+          id?: string
+          order_ref: string
+          order_status?: string
+          payment_screenshot_url?: string | null
+          payment_status?: string
+          payment_upi_ref?: string | null
+          shipped_at?: string | null
+          shipping_amount?: number
+          subtotal?: number
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_city?: string | null
+          customer_email?: string
+          customer_id?: string | null
+          customer_name?: string
+          customer_phone?: string
+          customer_pincode?: string | null
+          customer_state?: string | null
+          delivered_at?: string | null
+          id?: string
+          order_ref?: string
+          order_status?: string
+          payment_screenshot_url?: string | null
+          payment_status?: string
+          payment_upi_ref?: string | null
+          shipped_at?: string | null
+          shipping_amount?: number
+          subtotal?: number
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -900,6 +1091,7 @@ export type Database = {
           catalogue_whatsapp_message_template: string | null
           category_empty_message: string | null
           category_pieces_label: string | null
+          checkout_enabled: boolean | null
           color_accent: string | null
           color_background: string | null
           color_primary: string | null
@@ -934,6 +1126,7 @@ export type Database = {
           nav_catalogue_label: string | null
           nav_home_label: string | null
           nav_show_search: boolean | null
+          order_confirmation_message: string | null
           pdf_footer_text: string | null
           pdf_primary_color: string | null
           pdf_store_name: string | null
@@ -977,7 +1170,9 @@ export type Database = {
           seo_description: string | null
           seo_og_image_url: string | null
           seo_title: string | null
+          shipping_charge: number | null
           shipping_flat_cost: number
+          shipping_free_above: number | null
           shipping_free_min_order: number
           store_address: string | null
           store_city: string | null
@@ -986,6 +1181,9 @@ export type Database = {
           store_phone: string | null
           tagline: string
           updated_at: string
+          upi_id: string | null
+          upi_name: string | null
+          upi_qr_url: string | null
           usp_1: string | null
           usp_2: string | null
           usp_3: string | null
@@ -1010,6 +1208,7 @@ export type Database = {
           catalogue_whatsapp_message_template?: string | null
           category_empty_message?: string | null
           category_pieces_label?: string | null
+          checkout_enabled?: boolean | null
           color_accent?: string | null
           color_background?: string | null
           color_primary?: string | null
@@ -1044,6 +1243,7 @@ export type Database = {
           nav_catalogue_label?: string | null
           nav_home_label?: string | null
           nav_show_search?: boolean | null
+          order_confirmation_message?: string | null
           pdf_footer_text?: string | null
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
@@ -1087,7 +1287,9 @@ export type Database = {
           seo_description?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
+          shipping_charge?: number | null
           shipping_flat_cost?: number
+          shipping_free_above?: number | null
           shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
@@ -1096,6 +1298,9 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
+          upi_id?: string | null
+          upi_name?: string | null
+          upi_qr_url?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null
@@ -1120,6 +1325,7 @@ export type Database = {
           catalogue_whatsapp_message_template?: string | null
           category_empty_message?: string | null
           category_pieces_label?: string | null
+          checkout_enabled?: boolean | null
           color_accent?: string | null
           color_background?: string | null
           color_primary?: string | null
@@ -1154,6 +1360,7 @@ export type Database = {
           nav_catalogue_label?: string | null
           nav_home_label?: string | null
           nav_show_search?: boolean | null
+          order_confirmation_message?: string | null
           pdf_footer_text?: string | null
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
@@ -1197,7 +1404,9 @@ export type Database = {
           seo_description?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
+          shipping_charge?: number | null
           shipping_flat_cost?: number
+          shipping_free_above?: number | null
           shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
@@ -1206,6 +1415,9 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
+          upi_id?: string | null
+          upi_name?: string | null
+          upi_qr_url?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null

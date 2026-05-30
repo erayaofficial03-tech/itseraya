@@ -16,7 +16,8 @@ import { INDIAN_STATES } from "@/lib/indianStates";
 const Checkout = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
-  const { data: settings } = useSettings();
+  const { data: settingsData } = useSettings();
+  const settings = settingsData as any;
   const { cartItems, subtotal, updateQty, removeFromCart, clearCart, cartCount } =
     useCartContext();
 

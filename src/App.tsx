@@ -20,6 +20,7 @@ import StorefrontPage from "./components/layout/StorefrontPage";
 import BrandProvider from "./components/providers/BrandProvider";
 import PwaUpdateHandler from "./components/PwaUpdateHandler";
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
+import { CartProvider } from "./components/providers/CartProvider";
 import SeoHead from "./components/providers/SeoHead";
 import { PageLoader } from "./components/ui/skeletons";
 import { ROUTES } from "./lib/routes";
@@ -115,6 +116,7 @@ const App = () => (
         <PwaUpdateHandler />
         <BrowserRouter>
         <EnquiryCartProvider>
+        <CartProvider>
         <SeoHead />
         <Toaster />
         <Sonner />
@@ -190,6 +192,7 @@ const App = () => (
           </ChunkErrorBoundary>
           <WhatsAppFloat />
           <BottomNav />
+        </CartProvider>
         </EnquiryCartProvider>
         </BrowserRouter>
       </BrandProvider>

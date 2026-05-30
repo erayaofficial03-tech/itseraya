@@ -114,6 +114,11 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           supabase: ["@supabase/supabase-js"],
+          motion: ["framer-motion"],
+          charts: ["recharts"],
+          pdf: ["jspdf", "html2canvas"],
+          dnd: ["@dnd-kit/core", "@dnd-kit/sortable", "@dnd-kit/utilities"],
+          query: ["@tanstack/react-query"],
         },
       },
     },

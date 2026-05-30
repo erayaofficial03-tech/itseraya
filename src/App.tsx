@@ -53,7 +53,7 @@ const Checkout = lazyWithRetry(() => import("./pages/Checkout"), { reloadKey: "C
 const OrderConfirmed = lazyWithRetry(() => import("./pages/OrderConfirmed"), { reloadKey: "OrderConfirmed" });
 const MyOrders = lazyWithRetry(() => import("./pages/MyOrders"), { reloadKey: "MyOrders" });
 const OrderDetail = lazyWithRetry(() => import("./pages/OrderDetail"), { reloadKey: "OrderDetail" });
-const DomainHealth = lazyWithRetry(() => import("./pages/DomainHealth"), { reloadKey: "DomainHealth" });
+const DomainAdmin = lazyWithRetry(() => import("./pages/admin/DomainAdmin"), { reloadKey: "DomainAdmin" });
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazyWithRetry(() => import("./pages/CompleteProfile"), { reloadKey: "CompleteProfile" });
 const AdminLayout = lazyWithRetry(() => import("./pages/admin/AdminLayout"), { reloadKey: "AdminLayout" });
@@ -157,7 +157,7 @@ const App = () => (
               <Route path="/order-confirmed/:ref" element={<Public><OrderConfirmed /></Public>} />
               <Route path="/orders" element={<Public><MyOrders /></Public>} />
               <Route path="/orders/:ref" element={<Public><OrderDetail /></Public>} />
-              <Route path="/domain-health" element={<DomainHealth />} />
+              
 
               {/* Customer auth */}
               <Route path="/login" element={<Login />} />
@@ -188,6 +188,7 @@ const App = () => (
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />
                 <Route path="tags" element={<AdminOnly><ProductTagsAdmin /></AdminOnly>} />
                 <Route path="seo" element={<AdminOnly><SeoAdmin /></AdminOnly>} />
+                <Route path="domain" element={<AdminOnly><DomainAdmin /></AdminOnly>} />
                 <Route path="policies" element={<AdminOnly><PoliciesAdmin /></AdminOnly>} />
                 <Route path="settings" element={<AdminOnly><SettingsAdmin /></AdminOnly>} />
                 <Route path="pricing" element={<AdminOnly><PricingAdmin /></AdminOnly>} />

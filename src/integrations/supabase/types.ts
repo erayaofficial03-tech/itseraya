@@ -1085,6 +1085,19 @@ export type Database = {
           admin_panel_title: string | null
           admin_welcome_message: string | null
           app_icon_url: string | null
+          btn_border_radius: number | null
+          btn_font_weight: string | null
+          btn_letter_spacing: number | null
+          btn_primary_bg: string | null
+          btn_primary_text: string | null
+          btn_secondary_bg: string | null
+          btn_secondary_border: string | null
+          btn_secondary_text: string | null
+          card_border_color: string | null
+          card_border_radius: number | null
+          card_border_width: number | null
+          card_layout: string | null
+          card_shadow: string | null
           catalogue_download_label: string | null
           catalogue_heading: string | null
           catalogue_subtext: string | null
@@ -1097,8 +1110,12 @@ export type Database = {
           color_primary: string | null
           color_text: string | null
           container_max: number | null
+          custom_domain: string | null
+          domain_verification_token: string | null
+          domain_verified: boolean | null
           enquiry_button_color: string | null
           enquiry_mode: string
+          enquiry_requires_login: boolean | null
           favicon_url: string | null
           font_body: string | null
           font_body_url: string | null
@@ -1113,6 +1130,9 @@ export type Database = {
           footer_tagline: string | null
           footer_whatsapp_label: string | null
           google_analytics_id: string | null
+          google_place_id: string | null
+          google_reviews_api_key: string | null
+          google_reviews_visible: boolean | null
           google_site_verification: string | null
           google_tag_manager_id: string | null
           hero_cta_label: string | null
@@ -1125,11 +1145,14 @@ export type Database = {
           install_prompt_button_label: string | null
           install_prompt_text: string | null
           install_prompt_visible: boolean | null
+          line_height_base: number | null
           logo_url: string | null
           nav_catalogue_label: string | null
           nav_home_label: string | null
           nav_show_search: boolean | null
           order_confirmation_message: string | null
+          packing_cost: number | null
+          packing_cost_visible_to_admin: boolean | null
           pdf_footer_text: string | null
           pdf_primary_color: string | null
           pdf_store_name: string | null
@@ -1140,15 +1163,22 @@ export type Database = {
           policy_font_family: string | null
           policy_font_size: string | null
           policy_heading_color: string | null
+          policy_privacy_body: string | null
+          policy_privacy_title: string | null
           policy_return_body: string | null
           policy_return_title: string | null
           policy_shipping_body: string | null
           policy_shipping_title: string | null
+          policy_terms_body: string | null
+          policy_terms_title: string | null
           policy_text_color: string | null
           pricing_mrp_multiplier: number
           pricing_sell_multiplier: number
           product_description_label: string | null
           product_enquiry_button_label: string | null
+          product_grid_cols_desktop: number | null
+          product_grid_cols_mobile: number | null
+          product_grid_cols_tablet: number | null
           product_pdf_button_label: string | null
           product_related_title: string | null
           product_share_button_label: string | null
@@ -1170,7 +1200,10 @@ export type Database = {
           section_spacing: number | null
           section_trending_title: string | null
           section_trending_visible: boolean | null
+          seo_auto_generate: boolean | null
+          seo_brand_keywords: string | null
           seo_description: string | null
+          seo_keywords: string | null
           seo_og_image_url: string | null
           seo_title: string | null
           shipping_charge: number | null
@@ -1205,6 +1238,19 @@ export type Database = {
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
           app_icon_url?: string | null
+          btn_border_radius?: number | null
+          btn_font_weight?: string | null
+          btn_letter_spacing?: number | null
+          btn_primary_bg?: string | null
+          btn_primary_text?: string | null
+          btn_secondary_bg?: string | null
+          btn_secondary_border?: string | null
+          btn_secondary_text?: string | null
+          card_border_color?: string | null
+          card_border_radius?: number | null
+          card_border_width?: number | null
+          card_layout?: string | null
+          card_shadow?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
@@ -1217,8 +1263,12 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           container_max?: number | null
+          custom_domain?: string | null
+          domain_verification_token?: string | null
+          domain_verified?: boolean | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
+          enquiry_requires_login?: boolean | null
           favicon_url?: string | null
           font_body?: string | null
           font_body_url?: string | null
@@ -1233,6 +1283,9 @@ export type Database = {
           footer_tagline?: string | null
           footer_whatsapp_label?: string | null
           google_analytics_id?: string | null
+          google_place_id?: string | null
+          google_reviews_api_key?: string | null
+          google_reviews_visible?: boolean | null
           google_site_verification?: string | null
           google_tag_manager_id?: string | null
           hero_cta_label?: string | null
@@ -1245,11 +1298,14 @@ export type Database = {
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null
+          line_height_base?: number | null
           logo_url?: string | null
           nav_catalogue_label?: string | null
           nav_home_label?: string | null
           nav_show_search?: boolean | null
           order_confirmation_message?: string | null
+          packing_cost?: number | null
+          packing_cost_visible_to_admin?: boolean | null
           pdf_footer_text?: string | null
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
@@ -1260,15 +1316,22 @@ export type Database = {
           policy_font_family?: string | null
           policy_font_size?: string | null
           policy_heading_color?: string | null
+          policy_privacy_body?: string | null
+          policy_privacy_title?: string | null
           policy_return_body?: string | null
           policy_return_title?: string | null
           policy_shipping_body?: string | null
           policy_shipping_title?: string | null
+          policy_terms_body?: string | null
+          policy_terms_title?: string | null
           policy_text_color?: string | null
           pricing_mrp_multiplier?: number
           pricing_sell_multiplier?: number
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
+          product_grid_cols_desktop?: number | null
+          product_grid_cols_mobile?: number | null
+          product_grid_cols_tablet?: number | null
           product_pdf_button_label?: string | null
           product_related_title?: string | null
           product_share_button_label?: string | null
@@ -1290,7 +1353,10 @@ export type Database = {
           section_spacing?: number | null
           section_trending_title?: string | null
           section_trending_visible?: boolean | null
+          seo_auto_generate?: boolean | null
+          seo_brand_keywords?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
           shipping_charge?: number | null
@@ -1325,6 +1391,19 @@ export type Database = {
           admin_panel_title?: string | null
           admin_welcome_message?: string | null
           app_icon_url?: string | null
+          btn_border_radius?: number | null
+          btn_font_weight?: string | null
+          btn_letter_spacing?: number | null
+          btn_primary_bg?: string | null
+          btn_primary_text?: string | null
+          btn_secondary_bg?: string | null
+          btn_secondary_border?: string | null
+          btn_secondary_text?: string | null
+          card_border_color?: string | null
+          card_border_radius?: number | null
+          card_border_width?: number | null
+          card_layout?: string | null
+          card_shadow?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
@@ -1337,8 +1416,12 @@ export type Database = {
           color_primary?: string | null
           color_text?: string | null
           container_max?: number | null
+          custom_domain?: string | null
+          domain_verification_token?: string | null
+          domain_verified?: boolean | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
+          enquiry_requires_login?: boolean | null
           favicon_url?: string | null
           font_body?: string | null
           font_body_url?: string | null
@@ -1353,6 +1436,9 @@ export type Database = {
           footer_tagline?: string | null
           footer_whatsapp_label?: string | null
           google_analytics_id?: string | null
+          google_place_id?: string | null
+          google_reviews_api_key?: string | null
+          google_reviews_visible?: boolean | null
           google_site_verification?: string | null
           google_tag_manager_id?: string | null
           hero_cta_label?: string | null
@@ -1365,11 +1451,14 @@ export type Database = {
           install_prompt_button_label?: string | null
           install_prompt_text?: string | null
           install_prompt_visible?: boolean | null
+          line_height_base?: number | null
           logo_url?: string | null
           nav_catalogue_label?: string | null
           nav_home_label?: string | null
           nav_show_search?: boolean | null
           order_confirmation_message?: string | null
+          packing_cost?: number | null
+          packing_cost_visible_to_admin?: boolean | null
           pdf_footer_text?: string | null
           pdf_primary_color?: string | null
           pdf_store_name?: string | null
@@ -1380,15 +1469,22 @@ export type Database = {
           policy_font_family?: string | null
           policy_font_size?: string | null
           policy_heading_color?: string | null
+          policy_privacy_body?: string | null
+          policy_privacy_title?: string | null
           policy_return_body?: string | null
           policy_return_title?: string | null
           policy_shipping_body?: string | null
           policy_shipping_title?: string | null
+          policy_terms_body?: string | null
+          policy_terms_title?: string | null
           policy_text_color?: string | null
           pricing_mrp_multiplier?: number
           pricing_sell_multiplier?: number
           product_description_label?: string | null
           product_enquiry_button_label?: string | null
+          product_grid_cols_desktop?: number | null
+          product_grid_cols_mobile?: number | null
+          product_grid_cols_tablet?: number | null
           product_pdf_button_label?: string | null
           product_related_title?: string | null
           product_share_button_label?: string | null
@@ -1410,7 +1506,10 @@ export type Database = {
           section_spacing?: number | null
           section_trending_title?: string | null
           section_trending_visible?: boolean | null
+          seo_auto_generate?: boolean | null
+          seo_brand_keywords?: string | null
           seo_description?: string | null
+          seo_keywords?: string | null
           seo_og_image_url?: string | null
           seo_title?: string | null
           shipping_charge?: number | null

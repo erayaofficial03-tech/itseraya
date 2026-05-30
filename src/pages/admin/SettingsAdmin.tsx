@@ -35,6 +35,7 @@ const SettingsAdmin = () => {
     shipping_free_above: 999, shipping_charge: 99,
     checkout_enabled: true,
     order_confirmation_message: "",
+    enquiry_requires_login: true,
   });
   const [busy, setBusy] = useState(false);
 
@@ -68,6 +69,7 @@ const SettingsAdmin = () => {
         shipping_charge: Number((settings as any).shipping_charge ?? 99),
         checkout_enabled: (settings as any).checkout_enabled !== false,
         order_confirmation_message: (settings as any).order_confirmation_message || "",
+        enquiry_requires_login: (settings as any).enquiry_requires_login !== false,
       });
     }
   }, [settings]);
@@ -231,6 +233,18 @@ const SettingsAdmin = () => {
             <Label>Catalogue share message</Label>
             <Textarea rows={6} value={form.catalogue_whatsapp_message_template} onChange={(e) => setForm({ ...form, catalogue_whatsapp_message_template: e.target.value })} />
             <p className="text-xs text-muted-foreground">Sent when sharing the catalogue PDF on WhatsApp. Available placeholders: store name, tagline, URL, WhatsApp number.</p>
+          </div>
+          <div className="flex items-start justify-between gap-4 border-t pt-4">
+            <div className="space-y-1">
+              <Label className="text-sm">Require sign-in to enquire</Label>
+              <p className="text-xs text-muted-foreground">
+                When ON, customers must sign in before sending WhatsApp enquiries. Recommended.
+              </p>
+            </div>
+            <Switch
+              checked={form.enquiry_requires_login}
+              onCheckedChange={(v) => setForm({ ...form, enquiry_requires_login: v })}
+            />
           </div>
         </CardContent>
       </Card>

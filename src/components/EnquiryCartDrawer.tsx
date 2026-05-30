@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Trash2, Minus, Plus, Send, ShoppingBag } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Trash2, Minus, Plus, Send, ShoppingBag, LogIn } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,10 +24,13 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   const { data: settings } = useSettings();
   const { data: pricingComponents = [] } = usePricingComponents();
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [note, setNote] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const requireLogin = !!(settings as any)?.enquiry_requires_login;
+  const blockedByLogin = requireLogin && !user;
 
   const subtotal = items.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0);
 
@@ -43,6 +46,12 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   const handleSubmit = async () => {
     if (items.length === 0) {
       toast.error("Your cart is empty.");
+      return;
+    }
+    if (blockedByLogin) {
+      toast.error("Please sign in to send an enquiry");
+      navigate("/login?redirect=/");
+      onOpenChange(false);
       return;
     }
     setSubmitting(true);
@@ -277,14 +286,29 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
               </div>
             </div>
 
-            <Button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium"
-            >
-              <Send className="h-4 w-4 mr-2" />
-              {submitting ? "Sending…" : "Order on WhatsApp"}
-            </Button>
+            {blockedByLogin ? (
+              <div className="p-4 bg-muted/40 rounded-2xl text-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Sign in to send your enquiry
+                </p>
+                <Button
+                  onClick={() => { navigate("/login?redirect=/"); onOpenChange(false); }}
+                  className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium rounded-full"
+                >
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Sign In to Enquire
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                {submitting ? "Sending…" : "Order on WhatsApp"}
+              </Button>
+            )}
             <Link
               to="/track"
               onClick={() => onOpenChange(false)}

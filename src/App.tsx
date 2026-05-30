@@ -192,6 +192,7 @@ const App = () => (
           </ChunkErrorBoundary>
           <WhatsAppFloat />
           <BottomNav />
+        </CartProvider>
         </EnquiryCartProvider>
         </BrowserRouter>
       </BrandProvider>

@@ -199,6 +199,9 @@ const Header = () => {
                       <Link to="/track" onClick={closeMenu} className={drawerLinkClass}>
                         <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Track Order</span>
                       </Link>
+                      <Link to="/wishlist" onClick={closeMenu} className={drawerLinkClass}>
+                        <span className="flex items-center gap-2"><Heart className="h-4 w-4" /> My Wishlist</span>
+                      </Link>
                       {isStaff && (
                         <button
                           onClick={() => {

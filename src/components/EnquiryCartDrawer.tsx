@@ -48,6 +48,12 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
       toast.error("Your cart is empty.");
       return;
     }
+    if (blockedByLogin) {
+      toast.error("Please sign in to send an enquiry");
+      navigate("/login?redirect=/");
+      onOpenChange(false);
+      return;
+    }
     setSubmitting(true);
     const ref = generateEnquiryRef();
     const customerName = name.trim() || profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;

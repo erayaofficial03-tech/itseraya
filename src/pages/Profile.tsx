@@ -223,6 +223,18 @@ const Profile = () => {
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>
+          <Link to="/wishlist" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
+            <span className="flex items-center gap-3 text-sm font-medium">
+              <Heart className="h-5 w-5 text-gold" /> My Wishlist
+            </span>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Link>
+          <Link to="/orders" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
+            <span className="flex items-center gap-3 text-sm font-medium">
+              <Package className="h-5 w-5 text-gold" /> My Orders
+            </span>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Link>
           <details className="bg-white rounded-xl border" style={{ borderColor: "#EDE8E1" }}>
             <summary className={`${rowClass} list-none cursor-pointer`} style={{ borderColor: "#EDE8E1" }}>
               <span className="flex items-center gap-3 text-sm font-medium">

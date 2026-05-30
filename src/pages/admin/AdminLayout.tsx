@@ -119,7 +119,7 @@ const SidebarBody = ({
     </nav>
 
     {/* Footer actions */}
-    <div className="shrink-0 mt-auto p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-[hsl(var(--ivory))]/10 space-y-1">
+    <div className="sticky bottom-0 shrink-0 mt-auto p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] border-t border-[hsl(var(--ivory))]/10 space-y-1 bg-[hsl(var(--ink))]">
       <Button
         variant="outline"
         className="w-full justify-start gap-2 bg-transparent border-[hsl(var(--champagne))]/40 text-[hsl(var(--ivory))] hover:bg-[hsl(var(--champagne))]/10 hover:text-[hsl(var(--champagne))]"

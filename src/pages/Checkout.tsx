@@ -62,8 +62,8 @@ const Checkout = () => {
     }
   }, [cartCount, placing]);
 
-  const freeMin = Number(settings?.shipping_free_min_order ?? 999);
-  const flatShipping = Number(settings?.shipping_flat_cost ?? 95);
+  const freeMin = Number(settings?.shipping_free_above ?? settings?.shipping_free_min_order ?? 999);
+  const flatShipping = Number(settings?.shipping_charge ?? settings?.shipping_flat_cost ?? 95);
   const shippingCharge = subtotal >= freeMin || subtotal === 0 ? 0 : flatShipping;
   const total = subtotal + shippingCharge;
 

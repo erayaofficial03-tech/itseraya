@@ -74,6 +74,7 @@ const OrderDetail = () => {
         .from("orders")
         .select("*")
         .eq("order_ref", ref!)
+        .eq("customer_id", user.id)
         .maybeSingle();
       if (o) {
         setOrder(o as OrderRow);

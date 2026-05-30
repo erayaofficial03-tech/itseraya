@@ -219,7 +219,7 @@ const PricingAdmin = () => {
       setMults({
         sell: Number((settings as any).pricing_sell_multiplier ?? 2),
         mrp: Number((settings as any).pricing_mrp_multiplier ?? 2),
-        freeMin: Number((settings as any).shipping_free_min_order ?? 999),
+        freeMin: Number((settings as any).shipping_free_above ?? (settings as any).shipping_free_min_order ?? 999),
         packing: Number((settings as any).packing_cost ?? 0),
       });
     }
@@ -229,8 +229,8 @@ const PricingAdmin = () => {
     const { error } = await supabase.from("settings").update({
       pricing_sell_multiplier: mults.sell,
       pricing_mrp_multiplier: mults.mrp,
-      shipping_free_min_order: mults.freeMin,
-      shipping_flat_cost: flatShip,
+      shipping_free_above: mults.freeMin,
+      shipping_charge: flatShip,
       packing_cost: mults.packing,
     } as any).eq("id", 1);
     if (error) return toast.error(error.message);
@@ -241,8 +241,8 @@ const PricingAdmin = () => {
       details: {
         pricing_sell_multiplier: mults.sell,
         pricing_mrp_multiplier: mults.mrp,
-        shipping_free_min_order: mults.freeMin,
-        shipping_flat_cost: flatShip,
+        shipping_free_above: mults.freeMin,
+        shipping_charge: flatShip,
         packing_cost: mults.packing,
       },
     });

@@ -45,11 +45,16 @@ const ProductDetail = () => {
     queryKey: ["reviews", product?.id, user?.id],
     enabled: !!product?.id,
     queryFn: async () => {
-      const { data } = await supabase
-        .from("reviews")
-        .select("*")
-        .eq("product_id", product!.id)
-        .order("created_at", { ascending: false });
+      let query = supabase.from("reviews").select("*").eq("product_id", product!.id);
+      if (user?.id) {
+        // Approved & visible OR own review
+        query = query.or(
+          `and(is_approved.eq.true,is_hidden.eq.false),reviewer_user_id.eq.${user.id}`
+        );
+      } else {
+        query = query.eq("is_approved", true).eq("is_hidden", false);
+      }
+      const { data } = await query.order("created_at", { ascending: false });
       return data || [];
     },
   });

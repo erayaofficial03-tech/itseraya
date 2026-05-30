@@ -1208,9 +1208,7 @@ export type Database = {
           seo_og_image_url: string | null
           seo_title: string | null
           shipping_charge: number | null
-          shipping_flat_cost: number
           shipping_free_above: number | null
-          shipping_free_min_order: number
           store_address: string | null
           store_city: string | null
           store_email: string | null
@@ -1362,9 +1360,7 @@ export type Database = {
           seo_og_image_url?: string | null
           seo_title?: string | null
           shipping_charge?: number | null
-          shipping_flat_cost?: number
           shipping_free_above?: number | null
-          shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
           store_email?: string | null
@@ -1516,9 +1512,7 @@ export type Database = {
           seo_og_image_url?: string | null
           seo_title?: string | null
           shipping_charge?: number | null
-          shipping_flat_cost?: number
           shipping_free_above?: number | null
-          shipping_free_min_order?: number
           store_address?: string | null
           store_city?: string | null
           store_email?: string | null

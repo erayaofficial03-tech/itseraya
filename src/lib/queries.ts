@@ -172,8 +172,11 @@ export type Settings = {
   // Pricing & shipping
   pricing_sell_multiplier: number | null;
   pricing_mrp_multiplier: number | null;
-  shipping_free_min_order: number | null;
-  shipping_flat_cost: number | null;
+  shipping_free_above: number | null;
+  shipping_charge: number | null;
+  // Legacy aliases (kept optional for backward compat)
+  shipping_free_min_order?: number | null;
+  shipping_flat_cost?: number | null;
 };
 
 export type SocialLink = {

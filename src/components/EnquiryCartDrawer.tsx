@@ -38,7 +38,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   // If a free-shipping threshold is set and met, shipping is waived.
   const shippingRows = pricingComponents.filter((c) => c.section === "shipping_charge");
   const flatShipping = shippingRows.reduce((s, x) => s + Number(x.amount || 0), 0);
-  const freeMin = Number(settings?.shipping_free_min_order ?? 0);
+  const freeMin = Number((settings as any)?.shipping_free_above ?? settings?.shipping_free_min_order ?? 0);
   const freeShip = freeMin > 0 && subtotal >= freeMin;
   const shipping = items.length === 0 ? 0 : freeShip ? 0 : flatShipping;
   const total = subtotal + shipping;

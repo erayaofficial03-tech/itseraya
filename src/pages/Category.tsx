@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
@@ -15,7 +15,7 @@ import {
 
 const Category = () => {
   const { category: slug } = useParams();
-  const { data: categories = [] } = useCategories();
+  const { data: categories = [], isLoading: catsLoading } = useCategories();
   const { data: products = [] } = useProducts();
   const { data: settings } = useSettings();
   const cat = categories.find((c) => c.slug === slug);
@@ -23,6 +23,10 @@ const Category = () => {
     (p) => p.is_visible && (cat ? p.category_id === cat.id : true),
   );
   const [view, setView] = useViewMode();
+
+  if (!catsLoading && slug && !cat) {
+    return <Navigate to="/404" replace />;
+  }
 
   useEffect(() => {
     if (!cat) return;

@@ -18,6 +18,8 @@ const SeoAdmin = () => {
     seo_title: "",
     seo_description: "",
     seo_og_image_url: "",
+    google_site_verification: "",
+    google_analytics_id: "",
   });
 
   useEffect(() => {

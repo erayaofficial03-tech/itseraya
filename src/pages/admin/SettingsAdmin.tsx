@@ -69,6 +69,7 @@ const SettingsAdmin = () => {
         shipping_charge: Number((settings as any).shipping_charge ?? 99),
         checkout_enabled: (settings as any).checkout_enabled !== false,
         order_confirmation_message: (settings as any).order_confirmation_message || "",
+        enquiry_requires_login: (settings as any).enquiry_requires_login !== false,
       });
     }
   }, [settings]);

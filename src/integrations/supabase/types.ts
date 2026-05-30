@@ -1107,6 +1107,7 @@ export type Database = {
           checkout_enabled: boolean | null
           color_accent: string | null
           color_background: string | null
+          color_muted: string | null
           color_primary: string | null
           color_text: string | null
           container_max: number | null
@@ -1260,6 +1261,7 @@ export type Database = {
           checkout_enabled?: boolean | null
           color_accent?: string | null
           color_background?: string | null
+          color_muted?: string | null
           color_primary?: string | null
           color_text?: string | null
           container_max?: number | null
@@ -1413,6 +1415,7 @@ export type Database = {
           checkout_enabled?: boolean | null
           color_accent?: string | null
           color_background?: string | null
+          color_muted?: string | null
           color_primary?: string | null
           color_text?: string | null
           container_max?: number | null

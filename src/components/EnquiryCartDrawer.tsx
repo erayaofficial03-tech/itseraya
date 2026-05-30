@@ -24,10 +24,13 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   const { data: settings } = useSettings();
   const { data: pricingComponents = [] } = usePricingComponents();
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [note, setNote] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const requireLogin = !!settings?.enquiry_requires_login;
+  const blockedByLogin = requireLogin && !user;
 
   const subtotal = items.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0);
 

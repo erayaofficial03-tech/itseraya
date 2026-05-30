@@ -36,6 +36,13 @@ const Checkout = () => {
   const [upiRef, setUpiRef] = useState("");
   const [placing, setPlacing] = useState(false);
 
+  // Guest redirect to login
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/login?redirect=/checkout", { replace: true });
+    }
+  }, [authLoading, user, navigate]);
+
   // Pre-fill once profile/user is available
   useEffect(() => {
     setForm((f) => ({

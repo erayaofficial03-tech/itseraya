@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import { useProductRatings } from "@/hooks/useProductRatings";
 import {
   type Product,
@@ -11,6 +11,7 @@ import {
   type ProductLabel,
 } from "@/lib/queries";
 import { openWhatsAppEnquiry } from "@/lib/whatsapp";
+import { useCartContext } from "@/components/providers/CartProvider";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
 

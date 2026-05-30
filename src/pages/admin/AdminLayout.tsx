@@ -32,6 +32,7 @@ const navItems: { label: string; path: string; end?: boolean; icon: any; roles: 
   { label: "Brand & Colors",    path: "/admin/brand",        icon: Palette,         roles: ["admin"] },
   { label: "Labels & Text",     path: "/admin/labels",       icon: Type,            roles: ["admin"] },
   { label: "SEO & Meta",        path: "/admin/seo",          icon: Search,          roles: ["admin"] },
+  { label: "Domain",            path: "/admin/domain",       icon: Globe,           roles: ["admin"] },
   { label: "Policies",          path: "/admin/policies",     icon: FileText,        roles: ["admin"] },
   { label: "Enquiries",         path: "/admin/enquiries",    icon: MessageSquare,   roles: ["admin","manager"] },
   { label: "Customers",         path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },

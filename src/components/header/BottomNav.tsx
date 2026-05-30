@@ -4,7 +4,7 @@ import { Home, LayoutGrid, Search, ShoppingBag, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
-import { useEnquiryCart } from "@/hooks/useEnquiryCart";
+import { useCartContext } from "@/components/providers/CartProvider";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 
 

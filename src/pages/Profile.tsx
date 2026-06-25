@@ -73,6 +73,36 @@ const Profile = () => {
     },
   });
 
+  const { data: ordersSummary } = useQuery({
+    queryKey: ["profile-orders-summary", user?.id],
+    enabled: !!user?.id,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("orders")
+        .select("id, order_status")
+        .eq("customer_id", user!.id);
+      const rows = data || [];
+      const pending = rows.filter(
+        (r: any) => !["delivered", "cancelled"].includes(r.order_status),
+      ).length;
+      return { total: rows.length, pending };
+    },
+  });
+
+  const { data: wishlistCount = 0 } = useQuery({
+    queryKey: ["profile-wishlist-count", user?.id],
+    enabled: !!user?.id,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("wishlist_items")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user!.id);
+      return count || 0;
+    },
+  });
+
   const handleSignOut = async () => {
     await signOut();
     toast.success("Signed out.");
@@ -226,12 +256,26 @@ const Profile = () => {
           <Link to="/wishlist" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
             <span className="flex items-center gap-3 text-sm font-medium">
               <Heart className="h-5 w-5 text-gold" /> My Wishlist
+              {wishlistCount > 0 && (
+                <span className="text-xs bg-gold/15 text-gold rounded-full px-2 py-0.5 font-semibold">
+                  {wishlistCount}
+                </span>
+              )}
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>
           <Link to="/orders" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
             <span className="flex items-center gap-3 text-sm font-medium">
               <Package className="h-5 w-5 text-gold" /> My Orders
+              {ordersSummary?.pending ? (
+                <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 font-semibold">
+                  {ordersSummary.pending} pending
+                </span>
+              ) : ordersSummary?.total ? (
+                <span className="text-xs bg-muted text-muted-foreground rounded-full px-2 py-0.5">
+                  {ordersSummary.total}
+                </span>
+              ) : null}
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>

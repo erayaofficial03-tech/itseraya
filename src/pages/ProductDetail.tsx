@@ -265,6 +265,26 @@ const ProductDetail = () => {
                 </span>
               )}
               <h1 className="font-serif text-[22px] md:text-4xl text-foreground mb-2">{product.name}</h1>
+              {(() => {
+                const visible = productReviews.filter((r: any) => !r.is_hidden && r.is_approved);
+                if (visible.length === 0) return null;
+                const avg = visible.reduce((a: number, r: any) => a + r.rating, 0) / visible.length;
+                return (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById("reviews");
+                      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <StarRating rating={avg} size="sm" showCount={false} />
+                    <span>
+                      {avg.toFixed(1)} · {visible.length} review{visible.length > 1 ? "s" : ""}
+                    </span>
+                  </button>
+                );
+              })()}
               <div className="flex items-center gap-3 flex-wrap mt-2">
                 <span className="text-2xl font-bold text-[#C9A84C]">
                   ₹{price.toLocaleString("en-IN")}
@@ -333,6 +353,13 @@ const ProductDetail = () => {
                 buttonLabel={s(settings, "product_share_button_label")}
                 className="h-11 w-full"
               />
+
+              {/* Reassurance strip */}
+              <div className="flex items-center justify-between gap-2 text-[11px] md:text-xs text-muted-foreground border-t border-border pt-3">
+                <span className="flex items-center gap-1">🚚 Free shipping ₹999+</span>
+                <span className="flex items-center gap-1">✅ Easy returns</span>
+                <span className="flex items-center gap-1">💛 Handcrafted</span>
+              </div>
             </div>
           </div>
         </section>
@@ -344,8 +371,8 @@ const ProductDetail = () => {
         )}
 
         {/* Reviews section */}
-        <section className="mt-14 md:mt-20 px-4 md:px-6">
-          <h2 className="font-serif text-2xl mb-4">Reviews</h2>
+        <section id="reviews" className="mt-14 md:mt-20 px-4 md:px-6">
+          <h2 className="font-serif text-2xl md:text-3xl mb-4">What customers say</h2>
           {(() => {
             const visible = productReviews.filter((r: any) => !r.is_hidden && r.is_approved);
             const avg = visible.length

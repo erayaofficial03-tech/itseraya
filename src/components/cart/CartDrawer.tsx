@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
+import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { useCartContext } from '@/components/providers/CartProvider';
-import { useSettings } from '@/lib/queries';
+import { useSettings, useProducts, productImage } from '@/lib/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +18,7 @@ const formatPrice = (n: number) =>
 export const CartDrawer = ({ open, onClose }: Props) => {
   const { cartItems, subtotal, updateQty, removeFromCart } = useCartContext();
   const { data: settings } = useSettings();
+  const { data: allProducts = [] } = useProducts();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -26,6 +28,16 @@ export const CartDrawer = ({ open, onClose }: Props) => {
   const total = subtotal + shippingCharge;
   const remaining = Math.max(0, freeShippingAbove - subtotal);
   const progress = Math.min(100, (subtotal / freeShippingAbove) * 100);
+
+  // People also liked — bestsellers/visible products not already in cart
+  const relatedProducts = useMemo(() => {
+    const inCartIds = new Set(cartItems.map((c) => c.product_id));
+    const pool = (allProducts || []).filter(
+      (p: any) => p.is_visible && !inCartIds.has(p.id),
+    );
+    const bestsellers = pool.filter((p: any) => (p.tags || []).includes('bestseller'));
+    return (bestsellers.length >= 2 ? bestsellers : pool).slice(0, 2);
+  }, [allProducts, cartItems]);
 
   const goTo = (path: string) => {
     onClose();
@@ -67,13 +79,13 @@ export const CartDrawer = ({ open, onClose }: Props) => {
             <div className="border-b bg-muted/30 px-5 py-3">
               {shippingCharge === 0 ? (
                 <p className="text-sm font-medium text-primary">
-                  🎉 You've unlocked free shipping!
+                  🎉 You've unlocked free delivery!
                 </p>
               ) : (
                 <p className="text-sm">
                   Add{' '}
                   <span className="font-semibold">{formatPrice(remaining)}</span>{' '}
-                  more for free shipping
+                  more for free delivery! 🎉
                 </p>
               )}
               <Progress value={progress} className="mt-2 h-1.5" />
@@ -130,20 +142,20 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                         <div className="flex items-center rounded-md border">
                           <button
                             onClick={() => updateQty(item.id, item.quantity - 1)}
-                            className="p-1.5 transition hover:bg-muted"
+                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
                             aria-label="Decrease quantity"
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-4 w-4" />
                           </button>
-                          <span className="min-w-[2rem] text-center text-sm">
+                          <span className="min-w-[2.5rem] text-center text-sm font-medium">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQty(item.id, item.quantity + 1)}
-                            className="p-1.5 transition hover:bg-muted"
+                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
                             aria-label="Increase quantity"
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-4 w-4" />
                           </button>
                         </div>
                         <p className="text-sm font-semibold">
@@ -154,6 +166,39 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                   </li>
                 ))}
               </ul>
+
+              {/* People also liked */}
+              {relatedProducts.length > 0 && (
+                <div className="mt-6 pt-4 border-t">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
+                    People also liked
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {relatedProducts.map((p: any) => {
+                      const price = p.discounted_price ?? p.original_price;
+                      return (
+                        <Link
+                          key={p.id}
+                          to={`/jewellery/${p.slug ?? p.id}`}
+                          onClick={onClose}
+                          className="block group"
+                        >
+                          <div className="aspect-square rounded-md overflow-hidden bg-muted mb-1.5">
+                            <img
+                              src={productImage(p)}
+                              alt={p.name}
+                              loading="lazy"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          </div>
+                          <p className="text-xs font-medium line-clamp-1">{p.name}</p>
+                          <p className="text-xs text-[#C9A84C] font-semibold">{formatPrice(price)}</p>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Footer */}

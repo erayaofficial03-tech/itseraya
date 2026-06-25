@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Minus, Plus, Copy, Upload, Check, Loader2 } from "lucide-react";
+import { Minus, Plus, Copy, Upload, Check, Loader2, ArrowLeft, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import CheckoutHeader from "../components/header/CheckoutHeader";
 import Footer from "../components/footer/Footer";
@@ -264,8 +264,16 @@ const Checkout = () => {
 
       <main className="pt-6 pb-12">
         <div className="max-w-7xl mx-auto px-6">
+          {/* Back to cart */}
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to cart
+          </button>
+
           {/* Stepper */}
-          <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="flex items-center justify-center gap-4 mb-6">
             {[1, 2].map((n) => (
               <div key={n} className="flex items-center gap-2">
                 <div
@@ -286,6 +294,34 @@ const Checkout = () => {
               </div>
             ))}
           </div>
+
+          {/* Free shipping progress */}
+          {subtotal > 0 && (
+            <div className="max-w-2xl mx-auto mb-6 px-4 py-3 rounded-lg bg-muted/30 border border-border">
+              {shippingCharge === 0 ? (
+                <p className="text-sm font-medium text-[#C9A84C] text-center">
+                  🎉 You've unlocked free shipping!
+                </p>
+              ) : (
+                <>
+                  <p className="text-xs text-center text-muted-foreground mb-2">
+                    Add{" "}
+                    <span className="font-semibold text-foreground">
+                      ₹{(freeMin - subtotal).toLocaleString("en-IN")}
+                    </span>{" "}
+                    more for free shipping
+                  </p>
+                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#C9A84C] transition-all"
+                      style={{ width: `${Math.min(100, (subtotal / freeMin) * 100)}%` }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Order Summary */}
@@ -543,6 +579,15 @@ const Checkout = () => {
                       placeholder="e.g. 1234567890XX"
                     />
                   </div>
+
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-green-50 border border-green-200 text-xs text-green-800">
+                    <ShieldCheck className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Your order is safe.</strong> We verify every payment manually before processing.
+                    </span>
+                  </div>
+
+
 
                   <Button
                     onClick={handlePlaceOrder}

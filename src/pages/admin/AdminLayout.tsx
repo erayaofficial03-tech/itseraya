@@ -44,6 +44,7 @@ const navItems: NavItem[] = [
   // GROWTH
   { label: "Google & SEO",       description: "Search ranking, Google setup",       path: "/admin/seo",          icon: Search,          roles: ["admin"] },
   { label: "My Domain",          description: "Connect your custom domain",         path: "/admin/domain",       icon: Globe,           roles: ["admin"] },
+  { label: "Analytics",          description: "Visitor stats, clicks, conversions", path: "/admin/analytics",    icon: BarChart3,       roles: ["admin","manager"] },
 
   // STORE
   { label: "Pricing & Costs",    description: "Shipping rates, packing, UPI",       path: "/admin/pricing",      icon: Calculator,      roles: ["admin"] },

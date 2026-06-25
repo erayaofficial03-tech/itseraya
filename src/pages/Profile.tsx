@@ -25,7 +25,7 @@ import {
   MessageCircle,
   Shield,
   ChevronRight,
-  Settings as Cog,
+  
   CheckCircle2,
   MapPin,
   Package,

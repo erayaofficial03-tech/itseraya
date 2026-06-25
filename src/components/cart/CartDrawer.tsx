@@ -18,6 +18,7 @@ const formatPrice = (n: number) =>
 export const CartDrawer = ({ open, onClose }: Props) => {
   const { cartItems, subtotal, updateQty, removeFromCart } = useCartContext();
   const { data: settings } = useSettings();
+  const { data: allProducts = [] } = useProducts();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -27,6 +28,16 @@ export const CartDrawer = ({ open, onClose }: Props) => {
   const total = subtotal + shippingCharge;
   const remaining = Math.max(0, freeShippingAbove - subtotal);
   const progress = Math.min(100, (subtotal / freeShippingAbove) * 100);
+
+  // People also liked — bestsellers/visible products not already in cart
+  const relatedProducts = useMemo(() => {
+    const inCartIds = new Set(cartItems.map((c) => c.product_id));
+    const pool = (allProducts || []).filter(
+      (p: any) => p.is_visible && !inCartIds.has(p.id),
+    );
+    const bestsellers = pool.filter((p: any) => (p.tags || []).includes('bestseller'));
+    return (bestsellers.length >= 2 ? bestsellers : pool).slice(0, 2);
+  }, [allProducts, cartItems]);
 
   const goTo = (path: string) => {
     onClose();

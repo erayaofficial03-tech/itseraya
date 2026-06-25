@@ -121,7 +121,7 @@ const QuickStat = ({
 );
 
 type RecentOrder = {
-  id: string; ref_no: string | null; total: number | null; status: string | null;
+  id: string; order_ref: string | null; total_amount: number | null; order_status: string | null;
   payment_status: string | null; created_at: string; customer_name: string | null;
 };
 

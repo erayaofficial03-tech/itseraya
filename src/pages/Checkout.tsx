@@ -18,6 +18,7 @@ const Checkout = () => {
   const { user, profile, loading: authLoading } = useAuth();
   const { data: settingsData } = useSettings();
   const settings = settingsData as any;
+  const [payment, setPayment] = useState<{ upi_id: string | null; upi_name: string | null; upi_qr_url: string | null } | null>(null);
   const { cartItems, subtotal, updateQty, removeFromCart, clearCart, cartCount } =
     useCartContext();
 

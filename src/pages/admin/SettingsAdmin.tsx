@@ -105,13 +105,24 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const cleanWa = local ? `91${local}` : "";
+    // Separate UPI/payment fields (live in protected payment_settings table)
+    const { upi_id, upi_name, upi_qr_url, ...settingsForm } = form;
     const { error } = await supabase.from("settings").update({
-      ...form,
+      ...settingsForm,
       whatsapp_number: cleanWa || null,
       about_image_url: form.about_image_url || null,
     } as any).eq("id", 1);
+    if (error) { setBusy(false); toast.error(error.message); return; }
+
+    const { error: payErr } = await (supabase as any).from("payment_settings").upsert({
+      id: 1,
+      upi_id: upi_id || null,
+      upi_name: upi_name || null,
+      upi_qr_url: upi_qr_url || null,
+      updated_at: new Date().toISOString(),
+    });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (payErr) toast.error(payErr.message);
     else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
   };
 

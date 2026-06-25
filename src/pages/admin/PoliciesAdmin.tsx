@@ -24,6 +24,10 @@ interface PolicyFormState {
   shipping_body: string;
   cancellation_title: string;
   cancellation_body: string;
+  privacy_title: string;
+  privacy_body: string;
+  terms_title: string;
+  terms_body: string;
   font_family: string;
   font_size: string;
   text_color: string;
@@ -38,6 +42,10 @@ const blank: PolicyFormState = {
   shipping_body: "",
   cancellation_title: "",
   cancellation_body: "",
+  privacy_title: "",
+  privacy_body: "",
+  terms_title: "",
+  terms_body: "",
   font_family: "Inter",
   font_size: "16",
   text_color: "#2C2C2C",
@@ -61,6 +69,10 @@ const PoliciesAdmin = () => {
       shipping_body: sx.policy_shipping_body || "",
       cancellation_title: sx.policy_cancellation_title || "Cancellation Policy",
       cancellation_body: sx.policy_cancellation_body || "",
+      privacy_title: sx.policy_privacy_title || "Privacy Policy",
+      privacy_body: sx.policy_privacy_body || "",
+      terms_title: sx.policy_terms_title || "Terms of Service",
+      terms_body: sx.policy_terms_body || "",
       font_family: sx.policy_font_family || "Inter",
       font_size: sx.policy_font_size || "16",
       text_color: sx.policy_text_color || "#2C2C2C",
@@ -82,6 +94,10 @@ const PoliciesAdmin = () => {
       policy_shipping_body: form.shipping_body,
       policy_cancellation_title: form.cancellation_title,
       policy_cancellation_body: form.cancellation_body,
+      policy_privacy_title: form.privacy_title,
+      policy_privacy_body: form.privacy_body,
+      policy_terms_title: form.terms_title,
+      policy_terms_body: form.terms_body,
       policy_font_family: form.font_family,
       policy_font_size: form.font_size,
       policy_text_color: form.text_color,
@@ -175,6 +191,8 @@ const PoliciesAdmin = () => {
               "cancellation_body",
               "/cancellation-policy",
             )}
+            {policyEditor("Privacy Policy", "privacy_title", "privacy_body", "/privacy-policy")}
+            {policyEditor("Terms of Service", "terms_title", "terms_body", "/terms-of-service")}
           </Accordion>
         </CardContent>
       </Card>

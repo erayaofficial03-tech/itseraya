@@ -163,26 +163,26 @@ const Dashboard = () => {
         customersRes, customersNewRes, wishlistRes,
         pendingPayRes, recentOrdersRes,
       ] = await Promise.all([
-        supabase.from("orders").select("total").gte("created_at", todayISO),
+        supabase.from("orders").select("total_amount").gte("created_at", todayISO),
         supabase.from("enquiry_sessions").select("id", { count: "exact", head: true }).gte("created_at", todayISO),
         supabase.from("enquiry_sessions").select("id", { count: "exact", head: true }).eq("status", "open"),
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", todayISO),
         (supabase as any).from("wishlists").select("id", { count: "exact", head: true }).gte("created_at", weekISO),
         supabase.from("orders").select("id", { count: "exact", head: true }).eq("payment_status", "pending_review"),
-        supabase.from("orders").select("id, ref_no, total, status, payment_status, created_at, customer_name").order("created_at", { ascending: false }).limit(5),
+        supabase.from("orders").select("id, order_ref, total_amount, order_status, payment_status, created_at, customer_name").order("created_at", { ascending: false }).limit(5),
       ]);
 
-      const todayRows = (ordersTodayRes.data || []) as { total: number | null }[];
+      const todayRows = (ordersTodayRes.data || []) as any[];
       setOrdersToday(todayRows.length);
-      setRevenueToday(todayRows.reduce((s, r) => s + (Number(r.total) || 0), 0));
+      setRevenueToday(todayRows.reduce((s, r) => s + (Number(r?.total_amount) || 0), 0));
       setEnquiriesNew(enquiriesNewRes.count ?? 0);
       setEnquiriesPending(enquiriesPendingRes.count ?? 0);
       setCustomerCount(customersRes.count ?? 0);
       setCustomersNewToday(customersNewRes.count ?? 0);
       setWishlistWeek(wishlistRes.count ?? 0);
       setPendingPayments(pendingPayRes.count ?? 0);
-      setRecentOrders((recentOrdersRes.data || []) as RecentOrder[]);
+      setRecentOrders(((recentOrdersRes.data || []) as unknown) as RecentOrder[]);
     })().catch(() => {});
   }, []);
 

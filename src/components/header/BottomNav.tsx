@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useCartContext } from "@/components/providers/CartProvider";
-import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 
 const itemBase =
@@ -16,10 +16,10 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cartCount } = useCartContext();
-  const { openCart } = useEnquiryCartUI();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [q, setQ] = useState("");
 
   const results = useMemo(() => {
@@ -86,7 +86,7 @@ const BottomNav = () => {
             <span>Search</span>
           </button>
           <button
-            onClick={openCart}
+            onClick={() => setCartDrawerOpen(true)}
             aria-label="Cart"
             className={`${itemBase} text-muted-foreground hover:text-foreground relative`}
           >
@@ -98,6 +98,7 @@ const BottomNav = () => {
               </span>
             )}
           </button>
+          <CartDrawer open={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
         </div>
       </nav>
 

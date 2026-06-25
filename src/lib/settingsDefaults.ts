@@ -88,6 +88,12 @@ export const SETTINGS_DEFAULTS = {
   about_body:
     "Eraya was born from a love of beautiful, wearable jewellery crafted for every woman.",
   about_image_url: "",
+
+  policy_privacy_title: "Privacy Policy",
+  policy_privacy_body:
+    "We respect your privacy. Your personal information is never shared with third parties.",
+  policy_terms_title: "Terms of Service",
+  policy_terms_body: "By using Eraya, you agree to our terms of service.",
 } as const;
 
 type Defaults = typeof SETTINGS_DEFAULTS;

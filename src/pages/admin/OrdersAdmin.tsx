@@ -71,13 +71,30 @@ type OrderItem = {
 };
 
 const ORDER_STATUS_OPTIONS = [
-  { value: "placed", label: "Placed", color: "bg-gray-100 text-gray-800 border-gray-300" },
-  { value: "confirmed", label: "Confirmed", color: "bg-amber-100 text-amber-800 border-amber-300" },
-  { value: "processing", label: "Processing", color: "bg-blue-100 text-blue-800 border-blue-300" },
-  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800 border-purple-300" },
-  { value: "delivered", label: "Delivered", color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
-  { value: "cancelled", label: "Cancelled", color: "bg-rose-100 text-rose-800 border-rose-300" },
+  { value: "placed",    label: "Order placed",     color: "bg-amber-100 text-amber-800 border-amber-300" },
+  { value: "confirmed", label: "Confirmed",        color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { value: "processing",label: "Being packed",     color: "bg-blue-100 text-blue-800 border-blue-300" },
+  { value: "shipped",   label: "Out for delivery", color: "bg-purple-100 text-purple-800 border-purple-300" },
+  { value: "delivered", label: "Delivered",        color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { value: "cancelled", label: "Cancelled",        color: "bg-rose-100 text-rose-800 border-rose-300" },
 ];
+
+const PAYMENT_STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
+  pending:             { label: "Waiting for payment",    color: "#92400E", bg: "#FEF3C7" },
+  screenshot_uploaded: { label: "Screenshot received ✓", color: "#1E40AF", bg: "#DBEAFE" },
+  confirmed:           { label: "Payment confirmed ✓",  color: "#065F46", bg: "#D1FAE5" },
+  rejected:            { label: "Payment rejected",       color: "#991B1B", bg: "#FEE2E2" },
+  refunded:            { label: "Refunded",               color: "#6B21A8", bg: "#F3E8FF" },
+};
+
+const ORDER_STATUS_LABELS: Record<string, { label: string; color: string; bg: string; icon: string }> = {
+  placed:    { label: "Order placed",     color: "#92400E", bg: "#FEF3C7", icon: "📋" },
+  confirmed: { label: "Confirmed",        color: "#065F46", bg: "#D1FAE5", icon: "✅" },
+  processing:{ label: "Being packed",     color: "#1E40AF", bg: "#DBEAFE", icon: "📦" },
+  shipped:   { label: "Out for delivery", color: "#6B21A8", bg: "#F3E8FF", icon: "🚚" },
+  delivered: { label: "Delivered",        color: "#065F46", bg: "#D1FAE5", icon: "🎉" },
+  cancelled: { label: "Cancelled",        color: "#991B1B", bg: "#FEE2E2", icon: "❌" },
+};
 
 const statusMeta = (s: string) =>
   ORDER_STATUS_OPTIONS.find((o) => o.value === s) || ORDER_STATUS_OPTIONS[0];
@@ -325,15 +342,14 @@ const OrdersAdmin = () => {
                       </Badge>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${
-                          o.payment_status === "confirmed"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-300"
-                            : o.payment_status === "rejected"
-                              ? "bg-rose-50 text-rose-700 border-rose-300"
-                              : "bg-amber-50 text-amber-700 border-amber-300"
-                        }`}
+                        className="text-[10px]"
+                        style={{
+                          backgroundColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
+                          color: PAYMENT_STATUS_LABELS[o.payment_status]?.color || "#92400E",
+                          borderColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
+                        }}
                       >
-                        Payment: {o.payment_status.replace(/_/g, " ")}
+                        {PAYMENT_STATUS_LABELS[o.payment_status]?.label || o.payment_status}
                       </Badge>
                       <span className="text-xs text-muted-foreground ml-auto">
                         {formatTime(o.created_at)}
@@ -399,7 +415,7 @@ const OrdersAdmin = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                       <div>
                         <label className="text-xs text-muted-foreground">
-                          Order Status
+                          Update Order Status
                         </label>
                         <Select
                           value={o.order_status}
@@ -452,7 +468,7 @@ const OrdersAdmin = () => {
                         onClick={() => viewScreenshot(o)}
                         disabled={!o.payment_screenshot_url}
                       >
-                        <Eye className="h-3.5 w-3.5 mr-1" /> Screenshot
+                        <Eye className="h-3.5 w-3.5 mr-1" /> View Payment Photo
                       </Button>
                       {o.payment_status !== "confirmed" && (
                         <Button
@@ -460,7 +476,7 @@ const OrdersAdmin = () => {
                           onClick={() => confirmPayment(o)}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
-                          <Check className="h-3.5 w-3.5 mr-1" /> Confirm Payment
+                          <Check className="h-3.5 w-3.5 mr-1" /> ✅ Yes, Payment Received
                         </Button>
                       )}
                       {o.payment_status !== "rejected" &&
@@ -471,7 +487,7 @@ const OrdersAdmin = () => {
                             onClick={() => rejectPayment(o)}
                             className="text-rose-600 border-rose-300 hover:bg-rose-50"
                           >
-                            <X className="h-3.5 w-3.5 mr-1" /> Reject
+                            <X className="h-3.5 w-3.5 mr-1" /> ❌ Payment Not Found
                           </Button>
                         )}
                       <Button
@@ -503,7 +519,7 @@ const OrdersAdmin = () => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              Payment Screenshot — {screenshotOrder?.order_ref}
+              Payment Photo — {screenshotOrder?.order_ref}
             </DialogTitle>
           </DialogHeader>
           <div className="flex justify-center">
@@ -512,11 +528,11 @@ const OrdersAdmin = () => {
             ) : screenshotUrl ? (
               <img
                 src={screenshotUrl}
-                alt="Payment screenshot"
+                alt="Payment photo"
                 className="max-h-[70vh] rounded-lg"
               />
             ) : (
-              <p className="text-sm text-muted-foreground py-12">No screenshot</p>
+              <p className="text-sm text-muted-foreground py-12">No payment photo uploaded</p>
             )}
           </div>
         </DialogContent>

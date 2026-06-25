@@ -14,7 +14,7 @@ import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import { useCartContext } from "@/components/providers/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import BrandLogo from "@/components/BrandLogo";
-import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
+import { useSettings, useCategories, prefetchCategory } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsApp } from "@/lib/whatsapp";
 import AnnouncementBar from "@/components/AnnouncementBar";

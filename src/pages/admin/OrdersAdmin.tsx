@@ -342,15 +342,14 @@ const OrdersAdmin = () => {
                       </Badge>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${
-                          o.payment_status === "confirmed"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-300"
-                            : o.payment_status === "rejected"
-                              ? "bg-rose-50 text-rose-700 border-rose-300"
-                              : "bg-amber-50 text-amber-700 border-amber-300"
-                        }`}
+                        className="text-[10px]"
+                        style={{
+                          backgroundColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
+                          color: PAYMENT_STATUS_LABELS[o.payment_status]?.color || "#92400E",
+                          borderColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
+                        }}
                       >
-                        Payment: {o.payment_status.replace(/_/g, " ")}
+                        {PAYMENT_STATUS_LABELS[o.payment_status]?.label || o.payment_status}
                       </Badge>
                       <span className="text-xs text-muted-foreground ml-auto">
                         {formatTime(o.created_at)}

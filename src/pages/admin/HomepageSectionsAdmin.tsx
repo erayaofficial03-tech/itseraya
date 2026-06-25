@@ -25,8 +25,10 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
-import { useHomepageSections, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+import { useHomepageSections, useSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+
 
 // ─── Catalog of section types ────────────────────────────────────────────
 const SECTION_CATALOG: {
@@ -245,14 +247,43 @@ const AddDialog = ({ onAdd }: { onAdd: (type: HomepageSectionType) => void }) =>
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────
+const HEADING_FIELDS = [
+  { titleKey: "section_categories_title", visKey: "section_categories_visible", label: "Categories" },
+  { titleKey: "section_new_arrivals_title", visKey: "section_new_arrivals_visible", label: "New Arrivals" },
+  { titleKey: "section_trending_title", visKey: "section_trending_visible", label: "Trending Now" },
+  { titleKey: "section_sale_title", visKey: "section_sale_visible", label: "On Sale" },
+  { titleKey: "section_featured_title", visKey: "section_featured_visible", label: "Featured" },
+] as const;
+
 const HomepageSectionsAdmin = () => {
   const { data: sections = [] } = useHomepageSections();
+  const { data: settings } = useSettings();
   const qc = useQueryClient();
   const [items, setItems] = useState<HomepageSection[]>([]);
   const [editing, setEditing] = useState<HomepageSection | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [headings, setHeadings] = useState<Record<string, unknown>>({});
+  const [savingHeadings, setSavingHeadings] = useState(false);
 
   useEffect(() => { setItems(sections); }, [sections]);
+  useEffect(() => {
+    if (!settings) return;
+    const next: Record<string, unknown> = {};
+    HEADING_FIELDS.forEach((s) => {
+      next[s.titleKey] = (settings as Record<string, unknown>)[s.titleKey] || "";
+      next[s.visKey] = (settings as Record<string, unknown>)[s.visKey] ?? true;
+    });
+    setHeadings(next);
+  }, [settings]);
+
+  const saveHeadings = async () => {
+    setSavingHeadings(true);
+    const { error } = await supabase.from("settings").update(headings as never).eq("id", 1);
+    setSavingHeadings(false);
+    if (error) toast.error(error.message);
+    else { toast.success("Headings saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+  };
+
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -305,13 +336,42 @@ const HomepageSectionsAdmin = () => {
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl">Homepage Sections</h1>
+          <h1 className="font-serif text-3xl">Homepage &amp; Sections</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Drag to reorder · toggle visibility · edit each block. Changes go live instantly.
+            Edit section headings, drag to reorder blocks, toggle visibility, and edit each block. Changes go live instantly.
           </p>
         </div>
         <AddDialog onAdd={addSection} />
       </div>
+
+      <Card>
+        <CardHeader><CardTitle>Section headings &amp; visibility</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          {HEADING_FIELDS.map((s) => (
+            <div key={s.titleKey} className="flex items-center gap-3">
+              <Switch
+                checked={!!headings[s.visKey]}
+                onCheckedChange={(v) => setHeadings({ ...headings, [s.visKey]: v })}
+              />
+              <div className="flex-1">
+                <Label className="text-xs text-muted-foreground">{s.label}</Label>
+                <Input
+                  value={(headings[s.titleKey] as string) || ""}
+                  onChange={(e) => setHeadings({ ...headings, [s.titleKey]: e.target.value })}
+                />
+              </div>
+            </div>
+          ))}
+          <Button
+            onClick={saveHeadings}
+            disabled={savingHeadings}
+            style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}
+          >
+            {savingHeadings ? "Saving…" : "Save headings"}
+          </Button>
+        </CardContent>
+      </Card>
+
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>

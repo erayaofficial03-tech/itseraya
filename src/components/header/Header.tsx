@@ -49,7 +49,7 @@ const Header = () => {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  
   const [cartOpen, setCartOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useProducts, useCategories, productImage, withImageParams, formatINR } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { useCartContext } from "@/components/providers/CartProvider";
-import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 
 const itemBase =

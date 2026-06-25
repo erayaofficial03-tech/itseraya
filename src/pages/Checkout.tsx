@@ -68,9 +68,9 @@ const Checkout = () => {
   const shippingCharge = subtotal >= freeMin || subtotal === 0 ? 0 : flatShipping;
   const total = subtotal + shippingCharge;
 
-  const upiId = settings?.upi_id || "";
-  const upiQr = settings?.upi_qr_url || "";
-  const upiName = settings?.upi_name || "Eraya";
+  const upiId = payment?.upi_id || "";
+  const upiQr = payment?.upi_qr_url || "";
+  const upiName = payment?.upi_name || "Eraya";
 
   const updateField = (k: keyof typeof form, v: string) =>
     setForm((p) => ({ ...p, [k]: v }));

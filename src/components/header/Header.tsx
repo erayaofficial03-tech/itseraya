@@ -41,7 +41,7 @@ import StatusBar from "@/components/header/StatusBar";
 const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
-  const { data: products = [] } = useProducts();
+  
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
   const { count: enquiryCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();

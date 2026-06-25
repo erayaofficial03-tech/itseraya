@@ -247,14 +247,43 @@ const AddDialog = ({ onAdd }: { onAdd: (type: HomepageSectionType) => void }) =>
 };
 
 // ─── Page ─────────────────────────────────────────────────────────────────
+const HEADING_FIELDS = [
+  { titleKey: "section_categories_title", visKey: "section_categories_visible", label: "Categories" },
+  { titleKey: "section_new_arrivals_title", visKey: "section_new_arrivals_visible", label: "New Arrivals" },
+  { titleKey: "section_trending_title", visKey: "section_trending_visible", label: "Trending Now" },
+  { titleKey: "section_sale_title", visKey: "section_sale_visible", label: "On Sale" },
+  { titleKey: "section_featured_title", visKey: "section_featured_visible", label: "Featured" },
+] as const;
+
 const HomepageSectionsAdmin = () => {
   const { data: sections = [] } = useHomepageSections();
+  const { data: settings } = useSettings();
   const qc = useQueryClient();
   const [items, setItems] = useState<HomepageSection[]>([]);
   const [editing, setEditing] = useState<HomepageSection | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [headings, setHeadings] = useState<Record<string, unknown>>({});
+  const [savingHeadings, setSavingHeadings] = useState(false);
 
   useEffect(() => { setItems(sections); }, [sections]);
+  useEffect(() => {
+    if (!settings) return;
+    const next: Record<string, unknown> = {};
+    HEADING_FIELDS.forEach((s) => {
+      next[s.titleKey] = (settings as Record<string, unknown>)[s.titleKey] || "";
+      next[s.visKey] = (settings as Record<string, unknown>)[s.visKey] ?? true;
+    });
+    setHeadings(next);
+  }, [settings]);
+
+  const saveHeadings = async () => {
+    setSavingHeadings(true);
+    const { error } = await supabase.from("settings").update(headings as never).eq("id", 1);
+    setSavingHeadings(false);
+    if (error) toast.error(error.message);
+    else { toast.success("Headings saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+  };
+
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),

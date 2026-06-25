@@ -3,6 +3,7 @@ import { MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import JsonLd from "@/components/providers/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

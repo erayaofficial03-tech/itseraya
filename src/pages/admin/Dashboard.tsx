@@ -272,16 +272,16 @@ const Dashboard = () => {
                 <li key={o.id} className="flex items-center gap-3 py-3">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium truncate">
-                      #{o.ref_no || o.id.slice(0, 6)} · {o.customer_name || "—"}
+                      #{o.order_ref || o.id.slice(0, 6)} · {o.customer_name || "—"}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {format(new Date(o.created_at), "dd MMM, HH:mm")} · {formatINR(Number(o.total) || 0)}
+                      {format(new Date(o.created_at), "dd MMM, HH:mm")} · {formatINR(Number(o.total_amount) || 0)}
                     </p>
                   </div>
-                  <span className={`text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full ${STATUS_BADGE[o.status || "pending"] || "bg-muted text-muted-foreground"}`}>
-                    {o.status || "pending"}
+                  <span className={`text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full ${STATUS_BADGE[o.order_status || "pending"] || "bg-muted text-muted-foreground"}`}>
+                    {o.order_status || "pending"}
                   </span>
-                  <Link to={`/admin/orders?ref=${o.ref_no || ""}`}>
+                  <Link to={`/admin/orders?ref=${o.order_ref || ""}`}>
                     <Button size="sm" variant="outline" className="h-7 text-xs">Open</Button>
                   </Link>
                 </li>

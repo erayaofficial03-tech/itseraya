@@ -86,7 +86,7 @@ const BottomNav = () => {
             <span>Search</span>
           </button>
           <button
-            onClick={openCart}
+            onClick={() => setCartDrawerOpen(true)}
             aria-label="Cart"
             className={`${itemBase} text-muted-foreground hover:text-foreground relative`}
           >
@@ -98,6 +98,7 @@ const BottomNav = () => {
               </span>
             )}
           </button>
+          <CartDrawer open={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
         </div>
       </nav>
 

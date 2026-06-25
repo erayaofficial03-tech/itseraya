@@ -65,13 +65,6 @@ const Header = () => {
     { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
   ];
 
-  const results = useMemo(() => {
-    if (!q.trim()) return [];
-    const term = q.toLowerCase();
-    return products
-      .filter((p) => p.name.toLowerCase().includes(term))
-      .slice(0, 8);
-  }, [q, products]);
 
   const focusRing =
     "rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background";

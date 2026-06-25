@@ -47,6 +47,27 @@ const Wishlist = () => {
               {products.length}
             </span>
           )}
+          {user && products.length > 0 && (
+            <button
+              onClick={async () => {
+                const url = window.location.href;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ title: "My Eraya Wishlist", url });
+                  } else {
+                    await navigator.clipboard.writeText(url);
+                    toast.success("Link copied!");
+                  }
+                } catch {
+                  /* user cancelled share */
+                }
+              }}
+              className="ml-auto text-sm text-gold flex items-center gap-1 hover:underline"
+              aria-label="Share wishlist"
+            >
+              <Share2 className="h-4 w-4" /> Share
+            </button>
+          )}
         </div>
 
         {authLoading || (user && isLoading) ? (

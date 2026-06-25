@@ -152,7 +152,7 @@ const Header = () => {
                 <div className="flex-1 overflow-y-auto px-6 py-4">
                   {/* Search inside drawer */}
                   <button
-                    onClick={() => { closeMenu(); setSearchOpen(true); }}
+                    onClick={() => { closeMenu(); window.dispatchEvent(new CustomEvent('eraya:open-search')); }}
                     className="w-full flex items-center gap-2 mb-5 px-3 py-2.5 rounded-md bg-ivory/10 text-ivory/70 text-sm hover:bg-ivory/15 transition-colors"
                   >
                     <Search className="h-4 w-4" />

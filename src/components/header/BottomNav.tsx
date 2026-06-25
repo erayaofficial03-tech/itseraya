@@ -16,10 +16,10 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { cartCount } = useCartContext();
-  const { openCart } = useEnquiryCartUI();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [q, setQ] = useState("");
 
   const results = useMemo(() => {

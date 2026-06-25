@@ -519,7 +519,7 @@ const OrdersAdmin = () => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
-              Payment Screenshot — {screenshotOrder?.order_ref}
+              Payment Photo — {screenshotOrder?.order_ref}
             </DialogTitle>
           </DialogHeader>
           <div className="flex justify-center">
@@ -528,11 +528,11 @@ const OrdersAdmin = () => {
             ) : screenshotUrl ? (
               <img
                 src={screenshotUrl}
-                alt="Payment screenshot"
+                alt="Payment photo"
                 className="max-h-[70vh] rounded-lg"
               />
             ) : (
-              <p className="text-sm text-muted-foreground py-12">No screenshot</p>
+              <p className="text-sm text-muted-foreground py-12">No payment photo uploaded</p>
             )}
           </div>
         </DialogContent>

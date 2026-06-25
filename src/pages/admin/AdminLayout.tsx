@@ -18,31 +18,47 @@ import { useAuth } from "@/hooks/useAuth";
 import BrandLogo from "@/components/BrandLogo";
 
 type NavRole = "admin" | "manager";
-const navItems: { label: string; path: string; end?: boolean; icon: any; roles: NavRole[] }[] = [
-  { label: "Dashboard",         path: "/admin",              end: true, icon: LayoutDashboard, roles: ["admin","manager"] },
-  { label: "Orders",            path: "/admin/orders",       icon: Package,         roles: ["admin","manager"] },
-  { label: "Products",          path: "/admin/products",     icon: Diamond,         roles: ["admin","manager"] },
-  { label: "Categories",        path: "/admin/categories",   icon: Tag,             roles: ["admin","manager"] },
-  { label: "Product Tags",      path: "/admin/tags",         icon: Tags,            roles: ["admin"] },
-  { label: "Announcements",     path: "/admin/announcement", icon: Megaphone,       roles: ["admin","manager"] },
-  { label: "Banners",           path: "/admin/banners",      icon: Image,           roles: ["admin","manager"] },
-  { label: "USPs & Reviews",    path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },
-  { label: "Homepage & Sections", path: "/admin/sections",     icon: Monitor,         roles: ["admin","manager"] },
+type NavItem = { label: string; description: string; path: string; end?: boolean; icon: any; roles: NavRole[] };
 
-  { label: "Brand & Colors",    path: "/admin/brand",        icon: Palette,         roles: ["admin"] },
-  { label: "Labels & Text",     path: "/admin/labels",       icon: Type,            roles: ["admin"] },
-  { label: "SEO & Meta",        path: "/admin/seo",          icon: Search,          roles: ["admin"] },
-  { label: "Domain",            path: "/admin/domain",       icon: Globe,           roles: ["admin"] },
-  { label: "Policies",          path: "/admin/policies",     icon: FileText,        roles: ["admin"] },
-  { label: "Enquiries",         path: "/admin/enquiries",    icon: MessageSquare,   roles: ["admin","manager"] },
-  { label: "Customers",         path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },
-  { label: "Users",             path: "/admin/users",        icon: UserCog,         roles: ["admin"] },
-  { label: "Pricing & Shipping",path: "/admin/pricing",      icon: Calculator,      roles: ["admin"] },
-  { label: "Activity Log",      path: "/admin/activity",     icon: History,         roles: ["admin"] },
-  { label: "Store Settings",    path: "/admin/settings",     icon: SettingsIcon,    roles: ["admin"] },
+const navItems: NavItem[] = [
+  // SELLING
+  { label: "Home",               description: "Sales overview & daily tasks",       path: "/admin",              end: true, icon: LayoutDashboard, roles: ["admin","manager"] },
+  { label: "Orders & Payments",  description: "View orders, confirm UPI payments",  path: "/admin/orders",       icon: Package,         roles: ["admin","manager"] },
+  { label: "Customer Enquiries", description: "WhatsApp enquiries & follow-ups",    path: "/admin/enquiries",    icon: MessageSquare,   roles: ["admin","manager"] },
+  { label: "My Customers",       description: "View and manage customer accounts",  path: "/admin/customers",    icon: Users,           roles: ["admin","manager"] },
+
+  // PRODUCTS
+  { label: "My Products",        description: "Add, edit, hide products",           path: "/admin/products",     icon: Diamond,         roles: ["admin","manager"] },
+  { label: "Product Categories", description: "Group products by type",             path: "/admin/categories",   icon: Tag,             roles: ["admin","manager"] },
+  { label: "Labels & Badges",    description: "Tags shown on product cards",        path: "/admin/tags",         icon: Tags,            roles: ["admin"] },
+
+  // WEBSITE
+  { label: "Homepage Banners",   description: "Hero images customers see first",    path: "/admin/banners",      icon: Image,           roles: ["admin","manager"] },
+  { label: "Homepage Layout",    description: "Show/hide/reorder homepage blocks",  path: "/admin/sections",     icon: Monitor,         roles: ["admin","manager"] },
+  { label: "Top Bar Messages",   description: "Scrolling announcement text",        path: "/admin/announcement", icon: Megaphone,       roles: ["admin","manager"] },
+  { label: "Reviews & Trust",    description: "Customer reviews, USPs, FAQ",        path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },
+  { label: "Website Design",     description: "Colors, fonts, card shapes",         path: "/admin/brand",        icon: Palette,         roles: ["admin"] },
+  { label: "Button & Text",      description: "Wording on buttons and labels",      path: "/admin/labels",       icon: Type,            roles: ["admin"] },
+  { label: "Store Policies",     description: "Return, shipping, privacy rules",    path: "/admin/policies",     icon: FileText,        roles: ["admin"] },
+
+  // GROWTH
+  { label: "Google & SEO",       description: "Search ranking, Google setup",       path: "/admin/seo",          icon: Search,          roles: ["admin"] },
+  { label: "My Domain",          description: "Connect your custom domain",         path: "/admin/domain",       icon: Globe,           roles: ["admin"] },
+
+  // STORE
+  { label: "Pricing & Costs",    description: "Shipping rates, packing, UPI",       path: "/admin/pricing",      icon: Calculator,      roles: ["admin"] },
+  { label: "Store Setup",        description: "WhatsApp, about, PWA, social",       path: "/admin/settings",     icon: SettingsIcon,    roles: ["admin"] },
+  { label: "Team & Access",      description: "Add team members, set roles",        path: "/admin/users",        icon: UserCog,         roles: ["admin"] },
+  { label: "Change History",     description: "See who changed what and when",      path: "/admin/activity",     icon: History,         roles: ["admin"] },
 ];
 
-type NavItem = typeof navItems[number];
+const SECTION_LABELS: Record<string, string> = {
+  "/admin":          "SELLING",
+  "/admin/products": "PRODUCTS",
+  "/admin/banners":  "WEBSITE",
+  "/admin/seo":      "GROWTH",
+  "/admin/pricing":  "STORE",
+};
 
 const SidebarBody = ({
   visibleItems,
@@ -89,34 +105,49 @@ const SidebarBody = ({
 
     {/* Nav */}
     <nav className="flex-1 p-3 space-y-0.5 overflow-auto">
-      {visibleItems.map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          end={item.end}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            `relative flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-[hsl(var(--ivory))]/10 text-[hsl(var(--champagne))]"
-                : "text-[hsl(var(--ivory))]/75 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
-            }`
-          }
-        >
-          {({ isActive }) => (
-            <>
-              {isActive && (
-                <span
-                  className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-[hsl(var(--champagne))]"
-                  aria-hidden
-                />
+      {visibleItems.map((item) => {
+        const sectionLabel = SECTION_LABELS[item.path];
+        return (
+          <div key={item.path}>
+            {sectionLabel && (
+              <div className="px-3 pt-4 pb-1.5 first:pt-1">
+                <p className="text-[10px] font-semibold tracking-[0.25em] text-[hsl(var(--ivory))]/40">
+                  {sectionLabel}
+                </p>
+              </div>
+            )}
+            <NavLink
+              to={item.path}
+              end={item.end}
+              onClick={onNavigate}
+              title={item.description}
+              className={({ isActive }) =>
+                `relative flex items-start gap-3 px-3 py-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-[hsl(var(--ivory))]/10 text-[hsl(var(--champagne))]"
+                    : "text-[hsl(var(--ivory))]/75 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <span
+                      className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-[hsl(var(--champagne))]"
+                      aria-hidden
+                    />
+                  )}
+                  <item.icon className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span className="min-w-0 flex-1 flex flex-col">
+                    <span className="truncate text-sm font-medium leading-tight">{item.label}</span>
+                    <span className="truncate text-[10px] opacity-50 leading-tight mt-0.5">{item.description}</span>
+                  </span>
+                </>
               )}
-              <item.icon className="h-4 w-4 shrink-0" />
-              <span className="truncate">{item.label}</span>
-            </>
-          )}
-        </NavLink>
-      ))}
+            </NavLink>
+          </div>
+        );
+      })}
     </nav>
 
     {/* Footer actions */}

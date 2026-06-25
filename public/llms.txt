@@ -1,0 +1,22 @@
+# Eraya
+
+> Handcrafted jewellery for women — rings, earrings, necklaces, bangles and more. Adorn your story.
+
+Eraya is an online jewellery boutique offering handcrafted pieces designed for everyday elegance and special occasions.
+
+## Pages
+
+- [Home](/): Featured collections, new arrivals, and brand story.
+- [Catalogue](/catalogue): Browse the full jewellery collection.
+- [About](/about): The Eraya story and craftsmanship philosophy.
+- [Contact](/contact): Get in touch with the Eraya team.
+- [FAQ](/faq): Frequently asked questions about products, orders, and care.
+- [Care Guide](/care): How to care for your jewellery.
+
+## Policies
+
+- [Shipping Policy](/shipping-policy): Shipping methods, timelines, and charges.
+- [Return Policy](/return-policy): Returns and exchanges.
+- [Cancellation Policy](/cancellation-policy): Order cancellation terms.
+- [Privacy Policy](/privacy-policy): How we handle your data.
+- [Terms of Service](/terms-of-service): Terms governing use of the site.

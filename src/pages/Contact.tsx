@@ -3,6 +3,7 @@ import { MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import JsonLd from "@/components/providers/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,6 +65,18 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-background">
       <SeoHead title={`Contact — ${storeName}`} description={`Get in touch with ${storeName} for orders, custom pieces and styling advice.`} />
+      <JsonLd
+        id="contact-localbusiness"
+        data={{
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: storeName,
+          url: "https://itseraya.in/contact",
+          ...(email ? { email } : {}),
+          ...(phone ? { telephone: phone } : {}),
+          ...(address ? { address: { "@type": "PostalAddress", streetAddress: address } } : {}),
+        }}
+      />
       <Header />
       <main className="max-w-3xl mx-auto px-5 md:px-6 py-10 pb-24">
         <h1 className="font-serif text-3xl md:text-5xl text-foreground text-center">Contact Us</h1>

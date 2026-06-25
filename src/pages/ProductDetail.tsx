@@ -13,6 +13,7 @@ import ReviewForm from "@/components/eraya/ReviewForm";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import JsonLd from "@/components/providers/JsonLd";
 import Breadcrumb from "@/components/eraya/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -152,6 +153,25 @@ const ProductDetail = () => {
         ogType="product"
         canonical={`${SITE_URL}/jewellery/${product.slug ?? ""}`}
         keywords={keywords}
+      />
+      <JsonLd
+        id={`product-${product.id}`}
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          description: product.description || seoDesc,
+          image: images.length ? images : undefined,
+          sku: product.slug ?? product.id,
+          brand: { "@type": "Brand", name: storeName },
+          offers: {
+            "@type": "Offer",
+            url: `${SITE_URL}/jewellery/${product.slug ?? ""}`,
+            priceCurrency: "INR",
+            price: String(price ?? 0),
+            availability: "https://schema.org/InStock",
+          },
+        }}
       />
       {/* Hide header on mobile in favor of overlay back arrow */}
       <div className="hidden md:block">

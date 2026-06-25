@@ -1,6 +1,7 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
+import JsonLd from "@/components/providers/JsonLd";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const FAQS = [
@@ -45,6 +46,18 @@ const FAQS = [
 const Faq = () => (
   <div className="min-h-screen bg-background">
     <SeoHead title="FAQ — Eraya" description="Answers to common questions about Eraya jewellery, shipping, returns and care." />
+    <JsonLd
+      id="faq"
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: FAQS.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }}
+    />
     <Header />
     <main className="max-w-3xl mx-auto px-5 md:px-6 py-10 pb-24">
       <h1 className="font-serif text-3xl md:text-5xl text-foreground text-center">Frequently Asked</h1>

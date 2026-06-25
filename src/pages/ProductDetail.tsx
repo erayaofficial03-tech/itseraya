@@ -265,6 +265,26 @@ const ProductDetail = () => {
                 </span>
               )}
               <h1 className="font-serif text-[22px] md:text-4xl text-foreground mb-2">{product.name}</h1>
+              {(() => {
+                const visible = productReviews.filter((r: any) => !r.is_hidden && r.is_approved);
+                if (visible.length === 0) return null;
+                const avg = visible.reduce((a: number, r: any) => a + r.rating, 0) / visible.length;
+                return (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById("reviews");
+                      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <StarRating rating={avg} size="sm" showCount={false} />
+                    <span>
+                      {avg.toFixed(1)} · {visible.length} review{visible.length > 1 ? "s" : ""}
+                    </span>
+                  </button>
+                );
+              })()}
               <div className="flex items-center gap-3 flex-wrap mt-2">
                 <span className="text-2xl font-bold text-[#C9A84C]">
                   ₹{price.toLocaleString("en-IN")}

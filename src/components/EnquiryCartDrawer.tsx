@@ -59,24 +59,27 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
     const customerName = name.trim() || profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;
     const customerEmail = email.trim() || user?.email || null;
     const sessionId = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    // Pre-generate the row id so we never need to SELECT the inserted row back
+    // (enquiry_sessions has no guest SELECT policy by design — guests look up
+    // their session via the secure lookup_enquiry_by_ref RPC instead).
+    const sessionRowId = crypto.randomUUID();
 
     try {
-      const { data: session, error: sErr } = await supabase
+      const { error: sErr } = await supabase
         .from("enquiry_sessions")
         .insert({
+          id: sessionRowId,
           session_id: sessionId,
           enquiry_ref: ref,
           customer_email: customerEmail,
           customer_name: customerName,
           notes: note.trim() || null,
           status: "open",
-        })
-        .select("id")
-        .single();
+        });
       if (sErr) throw sErr;
 
       const itemRows = items.map((i) => ({
-        session_id: session.id,
+        session_id: sessionRowId,
         product_id: i.product_id,
         product_name: i.product_name,
         product_price: i.price,

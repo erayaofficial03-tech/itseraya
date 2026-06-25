@@ -79,13 +79,13 @@ export const CartDrawer = ({ open, onClose }: Props) => {
             <div className="border-b bg-muted/30 px-5 py-3">
               {shippingCharge === 0 ? (
                 <p className="text-sm font-medium text-primary">
-                  🎉 You've unlocked free shipping!
+                  🎉 You've unlocked free delivery!
                 </p>
               ) : (
                 <p className="text-sm">
                   Add{' '}
                   <span className="font-semibold">{formatPrice(remaining)}</span>{' '}
-                  more for free shipping
+                  more for free delivery! 🎉
                 </p>
               )}
               <Progress value={progress} className="mt-2 h-1.5" />

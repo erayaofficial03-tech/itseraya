@@ -16,6 +16,7 @@ const GoLiveChecklist = () => {
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [activeBanners, setActiveBanners] = useState(0);
+  const [payment, setPayment] = useState<{ upi_id: string | null; upi_qr_url: string | null } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -24,6 +25,12 @@ const GoLiveChecklist = () => {
         .select("id", { count: "exact", head: true })
         .eq("is_active", true);
       setActiveBanners(count ?? 0);
+      const { data } = await (supabase as any)
+        .from("payment_settings")
+        .select("upi_id, upi_qr_url")
+        .eq("id", 1)
+        .maybeSingle();
+      if (data) setPayment(data);
     })();
   }, []);
 
@@ -31,8 +38,8 @@ const GoLiveChecklist = () => {
   const checks = [
     { label: "Logo uploaded", done: !!s.logo_url, action: "/admin/brand", actionLabel: "Upload logo" },
     { label: "WhatsApp number set", done: !!s.whatsapp_number, action: "/admin/settings", actionLabel: "Add number" },
-    { label: "UPI ID set for payments", done: !!s.upi_id, action: "/admin/settings", actionLabel: "Add UPI ID" },
-    { label: "UPI QR code uploaded", done: !!s.upi_qr_url, action: "/admin/settings", actionLabel: "Upload QR" },
+    { label: "UPI ID set for payments", done: !!payment?.upi_id, action: "/admin/settings", actionLabel: "Add UPI ID" },
+    { label: "UPI QR code uploaded", done: !!payment?.upi_qr_url, action: "/admin/settings", actionLabel: "Upload QR" },
     { label: "Hero banner added", done: activeBanners > 0, action: "/admin/banners", actionLabel: "Add banner" },
     { label: "Categories with images (≥3)", done: categories.filter((c: any) => c.image_url && c.is_visible).length >= 3, action: "/admin/categories", actionLabel: "Add images" },
     { label: "Products added (min 5)", done: products.filter((p: any) => p.is_visible).length >= 5, action: "/admin/products", actionLabel: "Add products" },

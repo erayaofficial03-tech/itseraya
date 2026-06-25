@@ -41,7 +41,8 @@ const SettingsAdmin = () => {
 
   useEffect(() => {
     if (settings) {
-      setForm({
+      setForm((prev) => ({
+        ...prev,
         whatsapp_number: (() => {
           const d = (settings.whatsapp_number || "").replace(/\D/g, "");
           return d.startsWith("91") ? d.slice(2) : d;
@@ -62,17 +63,33 @@ const SettingsAdmin = () => {
         about_body: (settings as any).about_body || "",
         about_image_url: (settings as any).about_image_url || "",
         enquiry_mode: ((settings as any).enquiry_mode || "cart") as "cart" | "direct",
-        upi_id: (settings as any).upi_id || "",
-        upi_name: (settings as any).upi_name || "",
-        upi_qr_url: (settings as any).upi_qr_url || "",
         shipping_free_above: Number((settings as any).shipping_free_above ?? 999),
         shipping_charge: Number((settings as any).shipping_charge ?? 99),
         checkout_enabled: (settings as any).checkout_enabled !== false,
         order_confirmation_message: (settings as any).order_confirmation_message || "",
         enquiry_requires_login: (settings as any).enquiry_requires_login !== false,
-      });
+      }));
     }
   }, [settings]);
+
+  // Load UPI fields from the protected payment_settings table
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("payment_settings")
+        .select("upi_id, upi_name, upi_qr_url")
+        .eq("id", 1)
+        .maybeSingle();
+      if (data) {
+        setForm((f) => ({
+          ...f,
+          upi_id: data.upi_id || "",
+          upi_name: data.upi_name || "",
+          upi_qr_url: data.upi_qr_url || "",
+        }));
+      }
+    })();
+  }, []);
 
   const save = async () => {
     setBusy(true);
@@ -88,13 +105,24 @@ const SettingsAdmin = () => {
       setBusy(false); return;
     }
     const cleanWa = local ? `91${local}` : "";
+    // Separate UPI/payment fields (live in protected payment_settings table)
+    const { upi_id, upi_name, upi_qr_url, ...settingsForm } = form;
     const { error } = await supabase.from("settings").update({
-      ...form,
+      ...settingsForm,
       whatsapp_number: cleanWa || null,
       about_image_url: form.about_image_url || null,
     } as any).eq("id", 1);
+    if (error) { setBusy(false); toast.error(error.message); return; }
+
+    const { error: payErr } = await (supabase as any).from("payment_settings").upsert({
+      id: 1,
+      upi_id: upi_id || null,
+      upi_name: upi_name || null,
+      upi_qr_url: upi_qr_url || null,
+      updated_at: new Date().toISOString(),
+    });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (payErr) toast.error(payErr.message);
     else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
   };
 

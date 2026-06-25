@@ -782,6 +782,30 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_settings: {
+        Row: {
+          id: number
+          updated_at: string
+          upi_id: string | null
+          upi_name: string | null
+          upi_qr_url: string | null
+        }
+        Insert: {
+          id?: number
+          updated_at?: string
+          upi_id?: string | null
+          upi_name?: string | null
+          upi_qr_url?: string | null
+        }
+        Update: {
+          id?: number
+          updated_at?: string
+          upi_id?: string | null
+          upi_name?: string | null
+          upi_qr_url?: string | null
+        }
+        Relationships: []
+      }
       pricing_components: {
         Row: {
           amount: number
@@ -1112,7 +1136,6 @@ export type Database = {
           color_text: string | null
           container_max: number | null
           custom_domain: string | null
-          domain_verification_token: string | null
           domain_verified: boolean | null
           enquiry_button_color: string | null
           enquiry_mode: string
@@ -1132,7 +1155,6 @@ export type Database = {
           footer_whatsapp_label: string | null
           google_analytics_id: string | null
           google_place_id: string | null
-          google_reviews_api_key: string | null
           google_reviews_visible: boolean | null
           google_site_verification: string | null
           google_tag_manager_id: string | null
@@ -1216,9 +1238,6 @@ export type Database = {
           store_phone: string | null
           tagline: string
           updated_at: string
-          upi_id: string | null
-          upi_name: string | null
-          upi_qr_url: string | null
           usp_1: string | null
           usp_2: string | null
           usp_3: string | null
@@ -1264,7 +1283,6 @@ export type Database = {
           color_text?: string | null
           container_max?: number | null
           custom_domain?: string | null
-          domain_verification_token?: string | null
           domain_verified?: boolean | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
@@ -1284,7 +1302,6 @@ export type Database = {
           footer_whatsapp_label?: string | null
           google_analytics_id?: string | null
           google_place_id?: string | null
-          google_reviews_api_key?: string | null
           google_reviews_visible?: boolean | null
           google_site_verification?: string | null
           google_tag_manager_id?: string | null
@@ -1368,9 +1385,6 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
-          upi_id?: string | null
-          upi_name?: string | null
-          upi_qr_url?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null
@@ -1416,7 +1430,6 @@ export type Database = {
           color_text?: string | null
           container_max?: number | null
           custom_domain?: string | null
-          domain_verification_token?: string | null
           domain_verified?: boolean | null
           enquiry_button_color?: string | null
           enquiry_mode?: string
@@ -1436,7 +1449,6 @@ export type Database = {
           footer_whatsapp_label?: string | null
           google_analytics_id?: string | null
           google_place_id?: string | null
-          google_reviews_api_key?: string | null
           google_reviews_visible?: boolean | null
           google_site_verification?: string | null
           google_tag_manager_id?: string | null
@@ -1520,9 +1532,6 @@ export type Database = {
           store_phone?: string | null
           tagline?: string
           updated_at?: string
-          upi_id?: string | null
-          upi_name?: string | null
-          upi_qr_url?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null

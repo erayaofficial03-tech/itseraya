@@ -73,6 +73,36 @@ const Profile = () => {
     },
   });
 
+  const { data: ordersSummary } = useQuery({
+    queryKey: ["profile-orders-summary", user?.id],
+    enabled: !!user?.id,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("orders")
+        .select("id, order_status")
+        .eq("customer_id", user!.id);
+      const rows = data || [];
+      const pending = rows.filter(
+        (r: any) => !["delivered", "cancelled"].includes(r.order_status),
+      ).length;
+      return { total: rows.length, pending };
+    },
+  });
+
+  const { data: wishlistCount = 0 } = useQuery({
+    queryKey: ["profile-wishlist-count", user?.id],
+    enabled: !!user?.id,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("wishlist_items")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user!.id);
+      return count || 0;
+    },
+  });
+
   const handleSignOut = async () => {
     await signOut();
     toast.success("Signed out.");

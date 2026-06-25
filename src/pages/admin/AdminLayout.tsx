@@ -105,34 +105,49 @@ const SidebarBody = ({
 
     {/* Nav */}
     <nav className="flex-1 p-3 space-y-0.5 overflow-auto">
-      {visibleItems.map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          end={item.end}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            `relative flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-[hsl(var(--ivory))]/10 text-[hsl(var(--champagne))]"
-                : "text-[hsl(var(--ivory))]/75 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
-            }`
-          }
-        >
-          {({ isActive }) => (
-            <>
-              {isActive && (
-                <span
-                  className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-[hsl(var(--champagne))]"
-                  aria-hidden
-                />
+      {visibleItems.map((item) => {
+        const sectionLabel = SECTION_LABELS[item.path];
+        return (
+          <div key={item.path}>
+            {sectionLabel && (
+              <div className="px-3 pt-4 pb-1.5 first:pt-1">
+                <p className="text-[10px] font-semibold tracking-[0.25em] text-[hsl(var(--ivory))]/40">
+                  {sectionLabel}
+                </p>
+              </div>
+            )}
+            <NavLink
+              to={item.path}
+              end={item.end}
+              onClick={onNavigate}
+              title={item.description}
+              className={({ isActive }) =>
+                `relative flex items-start gap-3 px-3 py-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-[hsl(var(--ivory))]/10 text-[hsl(var(--champagne))]"
+                    : "text-[hsl(var(--ivory))]/75 hover:text-[hsl(var(--ivory))] hover:bg-[hsl(var(--ivory))]/5"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <span
+                      className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-[hsl(var(--champagne))]"
+                      aria-hidden
+                    />
+                  )}
+                  <item.icon className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span className="min-w-0 flex-1 flex flex-col">
+                    <span className="truncate text-sm font-medium leading-tight">{item.label}</span>
+                    <span className="truncate text-[10px] opacity-50 leading-tight mt-0.5">{item.description}</span>
+                  </span>
+                </>
               )}
-              <item.icon className="h-4 w-4 shrink-0" />
-              <span className="truncate">{item.label}</span>
-            </>
-          )}
-        </NavLink>
-      ))}
+            </NavLink>
+          </div>
+        );
+      })}
     </nav>
 
     {/* Footer actions */}

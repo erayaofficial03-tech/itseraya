@@ -63,6 +63,19 @@ const Checkout = () => {
     }
   }, [cartCount, placing]);
 
+  // Fetch payment settings (UPI) — restricted to authenticated users
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("payment_settings")
+        .select("upi_id, upi_name, upi_qr_url")
+        .eq("id", 1)
+        .maybeSingle();
+      if (data) setPayment(data);
+    })();
+  }, [user]);
+
   const freeMin = Number(settings?.shipping_free_above ?? settings?.shipping_free_min_order ?? 999);
   const flatShipping = Number(settings?.shipping_charge ?? settings?.shipping_flat_cost ?? 95);
   const shippingCharge = subtotal >= freeMin || subtotal === 0 ? 0 : flatShipping;

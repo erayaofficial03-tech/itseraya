@@ -102,7 +102,8 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
               e.stopPropagation();
               openWhatsAppEnquiry(product, settings, "product_card");
             }}
-            aria-label="Enquire on WhatsApp"
+            aria-label="Quick enquire on WhatsApp"
+            title="Enquire on WhatsApp"
             className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-ivory/85 backdrop-blur-sm flex items-center justify-center hover:bg-ivory transition-all ease-luxury active:scale-95 shadow-soft"
           >
             <MessageCircle className="h-4 w-4 text-[#25D366]" strokeWidth={1.8} />

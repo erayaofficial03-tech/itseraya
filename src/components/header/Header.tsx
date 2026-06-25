@@ -378,7 +378,7 @@ const Header = () => {
                   );
                 })}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/contact")}>
+                <DropdownMenuItem onClick={handleWhatsAppClick}>
                   <MessageCircle className="h-4 w-4 mr-2 text-gold" />
                   Support
                 </DropdownMenuItem>

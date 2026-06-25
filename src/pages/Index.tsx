@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { Star } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
 import HomepageSectionRenderer from "@/components/eraya/HomepageSectionRenderer";
 import { useProducts, useSettings, useSocialLinks, useHomepageSections } from "@/lib/queries";
+import { useProductRatings } from "@/hooks/useProductRatings";
 import { s } from "@/lib/settingsDefaults";
 import { ProductRowSkeleton } from "@/components/ui/skeletons";
 import {
@@ -15,6 +17,16 @@ const Index = () => {
   const { data: settings } = useSettings();
   const { data: socials = [] } = useSocialLinks();
   const { data: sections = [], isLoading: sectionsLoading } = useHomepageSections();
+  const { data: allRatings = {} } = useProductRatings();
+
+  const { overallAvg, totalCount } = useMemo(() => {
+    const values = Object.values(allRatings) as { avg: number; count: number }[];
+    const total = values.reduce((a, r) => a + r.count, 0);
+    const avg = total
+      ? values.reduce((a, r) => a + r.avg * r.count, 0) / total
+      : 0;
+    return { overallAvg: avg, totalCount: total };
+  }, [allRatings]);
 
   useEffect(() => {
     const social = (socials || []).filter((l: any) => l.is_visible).map((l: any) => l.url);
@@ -42,6 +54,15 @@ const Index = () => {
       />
       <Header />
       <main className="pb-20 md:pb-0">
+        {totalCount >= 3 && (
+          <div className="border-y border-border bg-ivory-warm/50">
+            <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-ink">
+              <Star className="h-4 w-4 fill-champagne-deep text-champagne-deep" />
+              <span className="font-display text-base">{overallAvg.toFixed(1)}</span>
+              <span className="text-ink-mute">— Trusted by {totalCount}+ customers</span>
+            </div>
+          </div>
+        )}
         {isLoading ? (
           <>
             <ProductRowSkeleton count={6} />

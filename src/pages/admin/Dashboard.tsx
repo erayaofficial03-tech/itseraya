@@ -16,6 +16,7 @@ const GoLiveChecklist = () => {
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [activeBanners, setActiveBanners] = useState(0);
+  const [payment, setPayment] = useState<{ upi_id: string | null; upi_qr_url: string | null } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -24,6 +25,12 @@ const GoLiveChecklist = () => {
         .select("id", { count: "exact", head: true })
         .eq("is_active", true);
       setActiveBanners(count ?? 0);
+      const { data } = await (supabase as any)
+        .from("payment_settings")
+        .select("upi_id, upi_qr_url")
+        .eq("id", 1)
+        .maybeSingle();
+      if (data) setPayment(data);
     })();
   }, []);
 

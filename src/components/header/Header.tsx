@@ -54,7 +54,7 @@ const Header = () => {
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
-  const [q, setQ] = useState("");
+  
 
   const visibleCategories = categories.filter((c) => c.is_visible);
 

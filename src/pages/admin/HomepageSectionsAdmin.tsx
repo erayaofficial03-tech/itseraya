@@ -25,8 +25,11 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
-import { useHomepageSections, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+import { useHomepageSections, useSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 // ─── Catalog of section types ────────────────────────────────────────────
 const SECTION_CATALOG: {

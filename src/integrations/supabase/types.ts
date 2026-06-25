@@ -1099,6 +1099,24 @@ export type Database = {
           },
         ]
       }
+      secure_settings: {
+        Row: {
+          google_reviews_api_key: string | null
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          google_reviews_api_key?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          google_reviews_api_key?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           about_body: string | null

@@ -513,38 +513,6 @@ const Header = () => {
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
 
-      {/* Search dialog */}
-      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-lg" aria-describedby="search-dialog-desc">
-          <DialogHeader>
-            <DialogTitle className="font-serif">Search Eraya</DialogTitle>
-            <DialogDescription id="search-dialog-desc">
-              Search for products by name
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            autoFocus
-            placeholder="Search rings, earrings, necklaces…"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-          <div className="max-h-72 overflow-auto -mx-2">
-            {q && results.length === 0 && (
-              <p className="text-sm text-muted-foreground px-2 py-4 text-center">No matches yet.</p>
-            )}
-            {results.map((p) => (
-              <button
-                key={p.id}
-                onMouseEnter={() => prefetchProduct(qc, p.id)}
-                onClick={() => { setSearchOpen(false); setQ(""); navigate(`/jewellery/${p.slug ?? p.id}`); }}
-                className="w-full text-left px-2 py-2 rounded hover:bg-muted text-sm"
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

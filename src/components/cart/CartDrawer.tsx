@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
+import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { useCartContext } from '@/components/providers/CartProvider';
-import { useSettings } from '@/lib/queries';
+import { useSettings, useProducts, productImage } from '@/lib/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 

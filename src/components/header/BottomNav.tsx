@@ -51,6 +51,13 @@ const BottomNav = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen]);
 
+  // Listen for global search open event from Header
+  useEffect(() => {
+    const handler = () => setSearchOpen(true);
+    window.addEventListener('eraya:open-search', handler);
+    return () => window.removeEventListener('eraya:open-search', handler);
+  }, []);
+
   if (pathname.startsWith("/admin")) return null;
   if (pathname.startsWith("/auth/")) return null;
   if (pathname.startsWith("/reset-password")) return null;

@@ -256,12 +256,26 @@ const Profile = () => {
           <Link to="/wishlist" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
             <span className="flex items-center gap-3 text-sm font-medium">
               <Heart className="h-5 w-5 text-gold" /> My Wishlist
+              {wishlistCount > 0 && (
+                <span className="text-xs bg-gold/15 text-gold rounded-full px-2 py-0.5 font-semibold">
+                  {wishlistCount}
+                </span>
+              )}
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>
           <Link to="/orders" className={rowClass} style={{ borderColor: "#EDE8E1" }}>
             <span className="flex items-center gap-3 text-sm font-medium">
               <Package className="h-5 w-5 text-gold" /> My Orders
+              {ordersSummary?.pending ? (
+                <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 font-semibold">
+                  {ordersSummary.pending} pending
+                </span>
+              ) : ordersSummary?.total ? (
+                <span className="text-xs bg-muted text-muted-foreground rounded-full px-2 py-0.5">
+                  {ordersSummary.total}
+                </span>
+              ) : null}
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </Link>

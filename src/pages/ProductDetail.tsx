@@ -153,6 +153,25 @@ const ProductDetail = () => {
         canonical={`${SITE_URL}/jewellery/${product.slug ?? ""}`}
         keywords={keywords}
       />
+      <JsonLd
+        id={`product-${product.id}`}
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          description: product.description || seoDesc,
+          image: images.length ? images : undefined,
+          sku: product.slug ?? product.id,
+          brand: { "@type": "Brand", name: storeName },
+          offers: {
+            "@type": "Offer",
+            url: `${SITE_URL}/jewellery/${product.slug ?? ""}`,
+            priceCurrency: "INR",
+            price: String(price ?? 0),
+            availability: "https://schema.org/InStock",
+          },
+        }}
+      />
       {/* Hide header on mobile in favor of overlay back arrow */}
       <div className="hidden md:block">
         <Header />

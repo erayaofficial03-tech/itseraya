@@ -435,7 +435,7 @@ const Header = () => {
                 variant="ghost"
                 size="icon"
                 aria-label="Search"
-                onClick={() => setSearchOpen(true)}
+                onClick={() => window.dispatchEvent(new CustomEvent('eraya:open-search'))}
                 className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Search className="h-[18px] w-[18px] sm:h-5 sm:w-5" />

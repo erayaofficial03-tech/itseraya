@@ -71,13 +71,30 @@ type OrderItem = {
 };
 
 const ORDER_STATUS_OPTIONS = [
-  { value: "placed", label: "Placed", color: "bg-gray-100 text-gray-800 border-gray-300" },
-  { value: "confirmed", label: "Confirmed", color: "bg-amber-100 text-amber-800 border-amber-300" },
-  { value: "processing", label: "Processing", color: "bg-blue-100 text-blue-800 border-blue-300" },
-  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800 border-purple-300" },
-  { value: "delivered", label: "Delivered", color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
-  { value: "cancelled", label: "Cancelled", color: "bg-rose-100 text-rose-800 border-rose-300" },
+  { value: "placed",    label: "Order placed",     color: "bg-amber-100 text-amber-800 border-amber-300" },
+  { value: "confirmed", label: "Confirmed",        color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { value: "processing",label: "Being packed",     color: "bg-blue-100 text-blue-800 border-blue-300" },
+  { value: "shipped",   label: "Out for delivery", color: "bg-purple-100 text-purple-800 border-purple-300" },
+  { value: "delivered", label: "Delivered",        color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { value: "cancelled", label: "Cancelled",        color: "bg-rose-100 text-rose-800 border-rose-300" },
 ];
+
+const PAYMENT_STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
+  pending:             { label: "Waiting for payment",    color: "#92400E", bg: "#FEF3C7" },
+  screenshot_uploaded: { label: "Screenshot received ✓", color: "#1E40AF", bg: "#DBEAFE" },
+  confirmed:           { label: "Payment confirmed ✓",  color: "#065F46", bg: "#D1FAE5" },
+  rejected:            { label: "Payment rejected",       color: "#991B1B", bg: "#FEE2E2" },
+  refunded:            { label: "Refunded",               color: "#6B21A8", bg: "#F3E8FF" },
+};
+
+const ORDER_STATUS_LABELS: Record<string, { label: string; color: string; bg: string; icon: string }> = {
+  placed:    { label: "Order placed",     color: "#92400E", bg: "#FEF3C7", icon: "📋" },
+  confirmed: { label: "Confirmed",        color: "#065F46", bg: "#D1FAE5", icon: "✅" },
+  processing:{ label: "Being packed",     color: "#1E40AF", bg: "#DBEAFE", icon: "📦" },
+  shipped:   { label: "Out for delivery", color: "#6B21A8", bg: "#F3E8FF", icon: "🚚" },
+  delivered: { label: "Delivered",        color: "#065F46", bg: "#D1FAE5", icon: "🎉" },
+  cancelled: { label: "Cancelled",        color: "#991B1B", bg: "#FEE2E2", icon: "❌" },
+};
 
 const statusMeta = (s: string) =>
   ORDER_STATUS_OPTIONS.find((o) => o.value === s) || ORDER_STATUS_OPTIONS[0];

@@ -142,20 +142,20 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                         <div className="flex items-center rounded-md border">
                           <button
                             onClick={() => updateQty(item.id, item.quantity - 1)}
-                            className="p-1.5 transition hover:bg-muted"
+                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
                             aria-label="Decrease quantity"
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-4 w-4" />
                           </button>
-                          <span className="min-w-[2rem] text-center text-sm">
+                          <span className="min-w-[2.5rem] text-center text-sm font-medium">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQty(item.id, item.quantity + 1)}
-                            className="p-1.5 transition hover:bg-muted"
+                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
                             aria-label="Increase quantity"
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-4 w-4" />
                           </button>
                         </div>
                         <p className="text-sm font-semibold">
@@ -166,6 +166,39 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                   </li>
                 ))}
               </ul>
+
+              {/* People also liked */}
+              {relatedProducts.length > 0 && (
+                <div className="mt-6 pt-4 border-t">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
+                    People also liked
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {relatedProducts.map((p: any) => {
+                      const price = p.discounted_price ?? p.original_price;
+                      return (
+                        <Link
+                          key={p.id}
+                          to={`/jewellery/${p.slug ?? p.id}`}
+                          onClick={onClose}
+                          className="block group"
+                        >
+                          <div className="aspect-square rounded-md overflow-hidden bg-muted mb-1.5">
+                            <img
+                              src={productImage(p)}
+                              alt={p.name}
+                              loading="lazy"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          </div>
+                          <p className="text-xs font-medium line-clamp-1">{p.name}</p>
+                          <p className="text-xs text-[#C9A84C] font-semibold">{formatPrice(price)}</p>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Footer */}

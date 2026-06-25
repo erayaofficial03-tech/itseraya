@@ -276,25 +276,16 @@ const Profile = () => {
         </div>
 
         {isStaff && (
-          <>
-            <Link
-              to="/admin"
-              onClick={(e) => {
-                e.preventDefault();
-                goAdmin();
-              }}
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-charcoal text-ivory text-sm font-medium hover:opacity-90"
-            >
-              <Shield className="h-4 w-4" /> Admin Panel →
-            </Link>
-            <Button
-              variant="outline"
-              onClick={goAdmin}
-              className="w-full border-gold text-gold hover:bg-gold/10"
-            >
-              <Cog className="h-4 w-4 mr-2" /> Switch to Admin Mode
-            </Button>
-          </>
+          <Link
+            to="/admin"
+            onClick={(e) => {
+              e.preventDefault();
+              goAdmin();
+            }}
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-charcoal text-ivory text-sm font-medium hover:opacity-90"
+          >
+            <Shield className="h-4 w-4" /> Admin Panel →
+          </Link>
         )}
 
         <Button

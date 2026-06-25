@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
@@ -14,13 +14,13 @@ import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
 import { useCartContext } from "@/components/providers/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import BrandLogo from "@/components/BrandLogo";
-import { useSettings, useCategories, useProducts, prefetchCategory, prefetchProduct } from "@/lib/queries";
+import { useSettings, useCategories, prefetchCategory } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsApp } from "@/lib/whatsapp";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,13 +28,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Sheet,
   SheetContent,
@@ -48,7 +41,7 @@ import StatusBar from "@/components/header/StatusBar";
 const Header = () => {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
-  const { data: products = [] } = useProducts();
+  
   const { user, profile, isStaff, signOut, switchMode } = useAuth();
   const { count: enquiryCount } = useEnquiryCart();
   const { openCart } = useEnquiryCartUI();
@@ -56,12 +49,12 @@ const Header = () => {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  
   const [cartOpen, setCartOpen] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [showTroubleshoot, setShowTroubleshoot] = useState(false);
   const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
-  const [q, setQ] = useState("");
+  
 
   const visibleCategories = categories.filter((c) => c.is_visible);
 
@@ -72,13 +65,6 @@ const Header = () => {
     { label: "On Sale", to: "/catalogue?filter=sale", icon: Tag },
   ];
 
-  const results = useMemo(() => {
-    if (!q.trim()) return [];
-    const term = q.toLowerCase();
-    return products
-      .filter((p) => p.name.toLowerCase().includes(term))
-      .slice(0, 8);
-  }, [q, products]);
 
   const focusRing =
     "rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -166,7 +152,7 @@ const Header = () => {
                 <div className="flex-1 overflow-y-auto px-6 py-4">
                   {/* Search inside drawer */}
                   <button
-                    onClick={() => { closeMenu(); setSearchOpen(true); }}
+                    onClick={() => { closeMenu(); window.dispatchEvent(new CustomEvent('eraya:open-search')); }}
                     className="w-full flex items-center gap-2 mb-5 px-3 py-2.5 rounded-md bg-ivory/10 text-ivory/70 text-sm hover:bg-ivory/15 transition-colors"
                   >
                     <Search className="h-4 w-4" />
@@ -449,7 +435,7 @@ const Header = () => {
                 variant="ghost"
                 size="icon"
                 aria-label="Search"
-                onClick={() => setSearchOpen(true)}
+                onClick={() => window.dispatchEvent(new CustomEvent('eraya:open-search'))}
                 className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Search className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
@@ -520,38 +506,6 @@ const Header = () => {
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
 
-      {/* Search dialog */}
-      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="sm:max-w-lg" aria-describedby="search-dialog-desc">
-          <DialogHeader>
-            <DialogTitle className="font-serif">Search Eraya</DialogTitle>
-            <DialogDescription id="search-dialog-desc">
-              Search for products by name
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            autoFocus
-            placeholder="Search rings, earrings, necklaces…"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-          <div className="max-h-72 overflow-auto -mx-2">
-            {q && results.length === 0 && (
-              <p className="text-sm text-muted-foreground px-2 py-4 text-center">No matches yet.</p>
-            )}
-            {results.map((p) => (
-              <button
-                key={p.id}
-                onMouseEnter={() => prefetchProduct(qc, p.id)}
-                onClick={() => { setSearchOpen(false); setQ(""); navigate(`/jewellery/${p.slug ?? p.id}`); }}
-                className="w-full text-left px-2 py-2 rounded hover:bg-muted text-sm"
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

@@ -51,6 +51,13 @@ const BottomNav = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen]);
 
+  // Listen for global search open event from Header
+  useEffect(() => {
+    const handler = () => setSearchOpen(true);
+    window.addEventListener('eraya:open-search', handler);
+    return () => window.removeEventListener('eraya:open-search', handler);
+  }, []);
+
   if (pathname.startsWith("/admin")) return null;
   if (pathname.startsWith("/auth/")) return null;
   if (pathname.startsWith("/reset-password")) return null;
@@ -110,7 +117,7 @@ const BottomNav = () => {
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="md:hidden fixed inset-0 z-[60] bg-white flex flex-col ios-fill-screen"
+          className="fixed inset-0 z-[60] bg-white flex flex-col ios-fill-screen"
         >
           <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: "#EDE8E1" }}>
             <Search className="h-5 w-5 text-muted-foreground shrink-0" />

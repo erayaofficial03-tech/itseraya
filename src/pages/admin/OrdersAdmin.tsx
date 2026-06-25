@@ -415,7 +415,7 @@ const OrdersAdmin = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                       <div>
                         <label className="text-xs text-muted-foreground">
-                          Order Status
+                          Update Order Status
                         </label>
                         <Select
                           value={o.order_status}
@@ -468,7 +468,7 @@ const OrdersAdmin = () => {
                         onClick={() => viewScreenshot(o)}
                         disabled={!o.payment_screenshot_url}
                       >
-                        <Eye className="h-3.5 w-3.5 mr-1" /> Screenshot
+                        <Eye className="h-3.5 w-3.5 mr-1" /> View Payment Photo
                       </Button>
                       {o.payment_status !== "confirmed" && (
                         <Button
@@ -476,7 +476,7 @@ const OrdersAdmin = () => {
                           onClick={() => confirmPayment(o)}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
-                          <Check className="h-3.5 w-3.5 mr-1" /> Confirm Payment
+                          <Check className="h-3.5 w-3.5 mr-1" /> ✅ Yes, Payment Received
                         </Button>
                       )}
                       {o.payment_status !== "rejected" &&
@@ -487,7 +487,7 @@ const OrdersAdmin = () => {
                             onClick={() => rejectPayment(o)}
                             className="text-rose-600 border-rose-300 hover:bg-rose-50"
                           >
-                            <X className="h-3.5 w-3.5 mr-1" /> Reject
+                            <X className="h-3.5 w-3.5 mr-1" /> ❌ Payment Not Found
                           </Button>
                         )}
                       <Button

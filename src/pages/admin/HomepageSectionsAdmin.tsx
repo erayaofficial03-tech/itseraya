@@ -336,13 +336,42 @@ const HomepageSectionsAdmin = () => {
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-serif text-3xl">Homepage Sections</h1>
+          <h1 className="font-serif text-3xl">Homepage &amp; Sections</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Drag to reorder · toggle visibility · edit each block. Changes go live instantly.
+            Edit section headings, drag to reorder blocks, toggle visibility, and edit each block. Changes go live instantly.
           </p>
         </div>
         <AddDialog onAdd={addSection} />
       </div>
+
+      <Card>
+        <CardHeader><CardTitle>Section headings &amp; visibility</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          {HEADING_FIELDS.map((s) => (
+            <div key={s.titleKey} className="flex items-center gap-3">
+              <Switch
+                checked={!!headings[s.visKey]}
+                onCheckedChange={(v) => setHeadings({ ...headings, [s.visKey]: v })}
+              />
+              <div className="flex-1">
+                <Label className="text-xs text-muted-foreground">{s.label}</Label>
+                <Input
+                  value={(headings[s.titleKey] as string) || ""}
+                  onChange={(e) => setHeadings({ ...headings, [s.titleKey]: e.target.value })}
+                />
+              </div>
+            </div>
+          ))}
+          <Button
+            onClick={saveHeadings}
+            disabled={savingHeadings}
+            style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}
+          >
+            {savingHeadings ? "Saving…" : "Save headings"}
+          </Button>
+        </CardContent>
+      </Card>
+
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>

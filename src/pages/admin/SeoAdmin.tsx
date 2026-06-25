@@ -227,6 +227,63 @@ const SeoAdmin = () => {
       </Card>
 
       <Card>
+        <CardHeader><CardTitle>Google Reviews</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Google Place ID</Label>
+            <Input
+              value={form.google_place_id}
+              onChange={(e) => setForm({ ...form, google_place_id: e.target.value })}
+              placeholder="ChIJ..."
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Find at: maps.google.com → search your business → Share → copy Place ID
+            </p>
+          </div>
+          <div>
+            <Label>Google Reviews API Key</Label>
+            <Input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="AIza..."
+              autoComplete="new-password"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Create at console.cloud.google.com → Enable Places API → Create API Key
+            </p>
+            <p className="text-xs text-amber-600 mt-1">
+              Restrict this key to your domain for security.
+            </p>
+          </div>
+          <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+              <Label>Show Google Reviews</Label>
+              <p className="text-xs text-muted-foreground mt-1">Display Google reviews on storefront.</p>
+            </div>
+            <Switch
+              checked={form.google_reviews_visible}
+              onCheckedChange={(v) => setForm({ ...form, google_reviews_visible: v })}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={testConnection} disabled={testBusy} variant="outline">
+              {testBusy ? "Testing…" : "Test Connection"}
+            </Button>
+            <Button onClick={saveReviews} disabled={reviewsBusy} style={{ background: "var(--gradient-gold)", color: "hsl(var(--charcoal))" }}>
+              {reviewsBusy ? "Saving…" : "Save Google Reviews"}
+            </Button>
+          </div>
+          <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+            Once connected, Google Reviews will appear on your homepage and product pages.
+            Your Eraya reviews are also shown in Google Search via structured data.
+          </div>
+        </CardContent>
+      </Card>
+
+
+
+      <Card>
         <CardHeader><CardTitle>Auto SEO & Keywords</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between rounded-lg border p-3">

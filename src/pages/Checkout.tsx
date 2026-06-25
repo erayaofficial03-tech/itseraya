@@ -580,6 +580,15 @@ const Checkout = () => {
                     />
                   </div>
 
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-green-50 border border-green-200 text-xs text-green-800">
+                    <ShieldCheck className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Your order is safe.</strong> We verify every payment manually before processing.
+                    </span>
+                  </div>
+
+
+
                   <Button
                     onClick={handlePlaceOrder}
                     disabled={placing || uploading || !screenshotUrl}

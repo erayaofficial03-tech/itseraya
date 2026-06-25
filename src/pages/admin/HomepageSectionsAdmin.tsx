@@ -28,7 +28,6 @@ import {
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { useHomepageSections, useSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
-import { useQueryClient } from "@tanstack/react-query";
 
 
 // ─── Catalog of section types ────────────────────────────────────────────

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CustomerRowSkeleton } from "@/components/ui/skeletons";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Search, Phone, MessageCircle, Heart, Eye, Package, MessagesSquare, Mail, MapPin, Calendar } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
@@ -301,18 +302,9 @@ const CustomersAdmin = () => {
           </div>
 
           {loading ? (
-            <ul className="divide-y divide-border rounded-md border border-border">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <li key={i} className="flex items-center gap-3 p-4">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-1/3" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                  <Skeleton className="h-5 w-20 rounded-full" />
-                </li>
-              ))}
-            </ul>
+            <div className="rounded-md border border-border overflow-hidden">
+              {[1,2,3,4,5].map(i => <CustomerRowSkeleton key={i} />)}
+            </div>
           ) : filtered.length === 0 ? (
             <p className="text-sm text-muted-foreground py-12 text-center">
               No customers yet. They'll appear here after their first Google login.

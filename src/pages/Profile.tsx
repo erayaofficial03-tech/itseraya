@@ -20,17 +20,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import {
-  Loader2,
   LogOut,
   Heart,
   MessageCircle,
   Shield,
   ChevronRight,
-  
   CheckCircle2,
   MapPin,
   Package,
 } from "lucide-react";
+import { ProfileSkeleton } from "@/components/ui/skeletons";
 import { formatINR, useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { INDIAN_STATES } from "@/lib/indianStates";
@@ -141,8 +140,12 @@ const Profile = () => {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-gold" />
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header />
+        <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6"><PageTransition>
+          <ProfileSkeleton />
+        </PageTransition></main>
+        <Footer />
       </div>
     );
   }

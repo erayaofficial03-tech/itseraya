@@ -178,101 +178,103 @@ const EnquiriesAdmin = () => {
         </TabsList>
       </Tabs>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
-          <div>
-            <CardTitle>Pipeline</CardTitle>
-            <CardDescription>Most recent first.</CardDescription>
-          </div>
-          <Button onClick={exportExcel} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" /> Export Excel
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search ref, product, name, or email"
-              className="pl-9"
-            />
-          </div>
-
-          {isLoading ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">Loading enquiries…</p>
-          ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">No enquiries match.</p>
-          ) : (
-            <div className="space-y-2">
-              {filtered.map((e) => (
-                <div key={e.id} className="border border-border rounded-md p-3 hover:bg-muted/20">
-                  <div className="flex items-center gap-2 flex-wrap mb-2">
-                    {e.priority === "high" && <Star className="h-4 w-4 fill-amber-400 text-amber-500" />}
-                    <span className="font-medium text-sm">{e.product_name}</span>
-                    {e.enquiry_ref && (
-                      <Badge variant="outline" className="font-mono text-[10px]">{e.enquiry_ref}</Badge>
-                    )}
-                    <Badge variant="outline" className={`${statusColor(e.status)} text-[10px]`}>
-                      {statusLabel(e.status)}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground ml-auto">{formatTime(e.created_at)}</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-                    <div className="text-xs">
-                      <p className="text-muted-foreground">Customer</p>
-                      <p className="font-medium">{e.customer_name || "Guest"}</p>
-                      {e.customer_email && <p className="text-muted-foreground">{e.customer_email}</p>}
-                    </div>
-                    <div>
-                      <label className="text-xs text-muted-foreground">Status</label>
-                      <Select value={e.status || "open"} onValueChange={(v) => updateField(e.id, { status: v })}>
-                        <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          {STATUS_OPTIONS.map((s) => (
-                            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-xs text-muted-foreground">Follow-up</label>
-                      <Input
-                        type="date"
-                        defaultValue={e.follow_up_at ? new Date(e.follow_up_at).toISOString().slice(0, 10) : ""}
-                        onBlur={(ev) => updateField(e.id, { follow_up_at: ev.target.value ? new Date(ev.target.value).toISOString() : null })}
-                        className="h-8 text-xs"
-                      />
-                    </div>
-                    <div className="flex gap-1.5 justify-end">
-                      <Button size="sm" variant="outline" onClick={() => togglePriority(e)} title="Toggle priority">
-                        <Star className={`h-3.5 w-3.5 ${e.priority === "high" ? "fill-amber-400 text-amber-500" : ""}`} />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => replyOnWhatsApp(e)} title="Reply on WhatsApp">
-                        <MessageCircle className="h-3.5 w-3.5 text-green-600" />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => openView(e)} title="View">
-                        <Eye className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                  <Textarea
-                    placeholder="Admin notes…"
-                    defaultValue={e.admin_notes || ""}
-                    onBlur={(ev) => {
-                      if ((ev.target.value || "") !== (e.admin_notes || "")) {
-                        updateField(e.id, { admin_notes: ev.target.value || null });
-                      }
-                    }}
-                    rows={1}
-                    className="mt-2 text-xs resize-none"
-                  />
-                </div>
-              ))}
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle>Pipeline</CardTitle>
+              <CardDescription>Most recent first.</CardDescription>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <Button onClick={exportExcel} variant="outline" className="gap-2">
+              <Download className="h-4 w-4" /> Export Excel
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search ref, product, name, or email"
+                className="pl-9"
+              />
+            </div>
+
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">Loading enquiries…</p>
+            ) : filtered.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">No enquiries match.</p>
+            ) : (
+              <div className="space-y-2">
+                {filtered.map((e) => (
+                  <div key={e.id} className="border border-border rounded-md p-3 hover:bg-muted/20">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
+                      {e.priority === "high" && <Star className="h-4 w-4 fill-amber-400 text-amber-500" />}
+                      <span className="font-medium text-sm">{e.product_name}</span>
+                      {e.enquiry_ref && (
+                        <Badge variant="outline" className="font-mono text-[10px]">{e.enquiry_ref}</Badge>
+                      )}
+                      <Badge variant="outline" className={`${statusColor(e.status)} text-[10px]`}>
+                        {statusLabel(e.status)}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground ml-auto">{formatTime(e.created_at)}</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                      <div className="text-xs">
+                        <p className="text-muted-foreground">Customer</p>
+                        <p className="font-medium">{e.customer_name || "Guest"}</p>
+                        {e.customer_email && <p className="text-muted-foreground">{e.customer_email}</p>}
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground">Status</label>
+                        <Select value={e.status || "open"} onValueChange={(v) => updateField(e.id, { status: v })}>
+                          <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {STATUS_OPTIONS.map((s) => (
+                              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground">Follow-up</label>
+                        <Input
+                          type="date"
+                          defaultValue={e.follow_up_at ? new Date(e.follow_up_at).toISOString().slice(0, 10) : ""}
+                          onBlur={(ev) => updateField(e.id, { follow_up_at: ev.target.value ? new Date(ev.target.value).toISOString() : null })}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <div className="flex gap-1.5 justify-end">
+                        <Button size="sm" variant="outline" onClick={() => togglePriority(e)} title="Toggle priority">
+                          <Star className={`h-3.5 w-3.5 ${e.priority === "high" ? "fill-amber-400 text-amber-500" : ""}`} />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => replyOnWhatsApp(e)} title="Reply on WhatsApp">
+                          <MessageCircle className="h-3.5 w-3.5 text-green-600" />
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => openView(e)} title="View">
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                    <Textarea
+                      placeholder="Admin notes…"
+                      defaultValue={e.admin_notes || ""}
+                      onBlur={(ev) => {
+                        if ((ev.target.value || "") !== (e.admin_notes || "")) {
+                          updateField(e.id, { admin_notes: ev.target.value || null });
+                        }
+                      }}
+                      rows={1}
+                      className="mt-2 text-xs resize-none"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
         <DialogContent>

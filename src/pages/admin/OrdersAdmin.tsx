@@ -296,216 +296,218 @@ const OrdersAdmin = () => {
         </TabsList>
       </Tabs>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
-          <div>
-            <CardTitle>Orders</CardTitle>
-            <CardDescription>Most recent first.</CardDescription>
-          </div>
-          <Button onClick={exportExcel} variant="outline" className="gap-2">
-            <Download className="h-4 w-4" /> Export Excel
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search ref, name, phone, or email"
-              className="pl-9"
-            />
-          </div>
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
+            <div>
+              <CardTitle>Orders</CardTitle>
+              <CardDescription>Most recent first.</CardDescription>
+            </div>
+            <Button onClick={exportExcel} variant="outline" className="gap-2">
+              <Download className="h-4 w-4" /> Export Excel
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search ref, name, phone, or email"
+                className="pl-9"
+              />
+            </div>
 
-          {isLoading ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">Loading orders…</p>
-          ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">
-              No orders match.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {filtered.map((o) => {
-                const meta = statusMeta(o.order_status);
-                const items = itemsByOrder[o.id] || [];
-                return (
-                  <div
-                    key={o.id}
-                    className="border border-border rounded-md p-3 hover:bg-muted/20"
-                  >
-                    <div className="flex items-center gap-2 flex-wrap mb-2">
-                      <Badge variant="outline" className="font-mono text-[10px]">
-                        {o.order_ref}
-                      </Badge>
-                      <Badge variant="outline" className={`${meta.color} text-[10px]`}>
-                        {meta.label}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-[10px]"
-                        style={{
-                          backgroundColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
-                          color: PAYMENT_STATUS_LABELS[o.payment_status]?.color || "#92400E",
-                          borderColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
-                        }}
-                      >
-                        {PAYMENT_STATUS_LABELS[o.payment_status]?.label || o.payment_status}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {formatTime(o.created_at)}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-3">
-                      <div>
-                        <p className="text-muted-foreground">Customer</p>
-                        <p className="font-medium">{o.customer_name}</p>
-                        <p className="text-muted-foreground">{o.customer_phone}</p>
-                        <p className="text-muted-foreground truncate">{o.customer_email}</p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground">Address</p>
-                        <p>
-                          {o.customer_address}
-                          <br />
-                          {o.customer_city}, {o.customer_state} {o.customer_pincode}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground">Breakdown</p>
-                        <div className="space-y-0.5 text-[11px]">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Subtotal</span>
-                            <span>₹{Number(o.subtotal || 0).toLocaleString("en-IN")}</span>
-                          </div>
-                          {Number((settings as any)?.packing_cost ?? 0) > 0 && (
-                            <div className="flex justify-between text-amber-600">
-                              <span>Packing (internal)</span>
-                              <span>₹{Number((settings as any).packing_cost).toLocaleString("en-IN")}</span>
-                            </div>
-                          )}
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Shipping</span>
-                            <span>₹{Number(o.shipping_amount || 0).toLocaleString("en-IN")}</span>
-                          </div>
-                          <div className="flex justify-between font-semibold text-sm text-foreground border-t pt-1 mt-1">
-                            <span>Total</span>
-                            <span>₹{o.total_amount.toLocaleString("en-IN")}</span>
-                          </div>
-                        </div>
-                        <p className="text-muted-foreground mt-1">
-                          {items.length} item{items.length !== 1 ? "s" : ""}
-                          {o.payment_upi_ref && ` · UPI ${o.payment_upi_ref}`}
-                        </p>
-                      </div>
-                    </div>
-
-                    {items.length > 0 && (
-                      <div className="text-xs text-muted-foreground mb-3 border-l-2 border-muted pl-2 space-y-0.5">
-                        {items.map((i) => (
-                          <p key={i.id}>
-                            • {i.product_name}
-                            {i.variant_size && ` (${i.variant_size})`} ×{i.quantity} —
-                            ₹{i.total_price.toLocaleString("en-IN")}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                      <div>
-                        <label className="text-xs text-muted-foreground">
-                          Update Order Status
-                        </label>
-                        <Select
-                          value={o.order_status}
-                          onValueChange={(v) => updateOrder(o.id, { order_status: v })}
-                        >
-                          <SelectTrigger className="h-8 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ORDER_STATUS_OPTIONS.map((s) => (
-                              <SelectItem key={s.value} value={s.value}>
-                                {s.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <label className="text-xs text-muted-foreground">
-                          Tracking Number
-                        </label>
-                        <Input
-                          defaultValue={o.tracking_number || ""}
-                          onBlur={(e) => {
-                            const v = e.target.value.trim();
-                            if (v !== (o.tracking_number || ""))
-                              updateOrder(o.id, { tracking_number: v || null });
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">Loading orders…</p>
+            ) : filtered.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-8 text-center">
+                No orders match.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {filtered.map((o) => {
+                  const meta = statusMeta(o.order_status);
+                  const items = itemsByOrder[o.id] || [];
+                  return (
+                    <div
+                      key={o.id}
+                      className="border border-border rounded-md p-3 hover:bg-muted/20"
+                    >
+                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                        <Badge variant="outline" className="font-mono text-[10px]">
+                          {o.order_ref}
+                        </Badge>
+                        <Badge variant="outline" className={`${meta.color} text-[10px]`}>
+                          {meta.label}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-[10px]"
+                          style={{
+                            backgroundColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
+                            color: PAYMENT_STATUS_LABELS[o.payment_status]?.color || "#92400E",
+                            borderColor: PAYMENT_STATUS_LABELS[o.payment_status]?.bg || "#FEF3C7",
                           }}
-                          placeholder="e.g. DTDC1234567"
-                          className="h-8 text-xs"
-                        />
+                        >
+                          {PAYMENT_STATUS_LABELS[o.payment_status]?.label || o.payment_status}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground ml-auto">
+                          {formatTime(o.created_at)}
+                        </span>
                       </div>
-                    </div>
 
-                    <Textarea
-                      placeholder="Admin notes…"
-                      defaultValue={o.admin_notes || ""}
-                      onBlur={(e) => {
-                        if ((e.target.value || "") !== (o.admin_notes || ""))
-                          updateOrder(o.id, { admin_notes: e.target.value || null });
-                      }}
-                      rows={1}
-                      className="text-xs resize-none mb-2"
-                    />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-3">
+                        <div>
+                          <p className="text-muted-foreground">Customer</p>
+                          <p className="font-medium">{o.customer_name}</p>
+                          <p className="text-muted-foreground">{o.customer_phone}</p>
+                          <p className="text-muted-foreground truncate">{o.customer_email}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Address</p>
+                          <p>
+                            {o.customer_address}
+                            <br />
+                            {o.customer_city}, {o.customer_state} {o.customer_pincode}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">Breakdown</p>
+                          <div className="space-y-0.5 text-[11px]">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Subtotal</span>
+                              <span>₹{Number(o.subtotal || 0).toLocaleString("en-IN")}</span>
+                            </div>
+                            {Number((settings as any)?.packing_cost ?? 0) > 0 && (
+                              <div className="flex justify-between text-amber-600">
+                                <span>Packing (internal)</span>
+                                <span>₹{Number((settings as any).packing_cost).toLocaleString("en-IN")}</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Shipping</span>
+                              <span>₹{Number(o.shipping_amount || 0).toLocaleString("en-IN")}</span>
+                            </div>
+                            <div className="flex justify-between font-semibold text-sm text-foreground border-t pt-1 mt-1">
+                              <span>Total</span>
+                              <span>₹{o.total_amount.toLocaleString("en-IN")}</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mt-1">
+                            {items.length} item{items.length !== 1 ? "s" : ""}
+                            {o.payment_upi_ref && ` · UPI ${o.payment_upi_ref}`}
+                          </p>
+                        </div>
+                      </div>
 
-                    <div className="flex flex-wrap gap-1.5">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => viewScreenshot(o)}
-                        disabled={!o.payment_screenshot_url}
-                      >
-                        <Eye className="h-3.5 w-3.5 mr-1" /> View Payment Photo
-                      </Button>
-                      {o.payment_status !== "confirmed" && (
+                      {items.length > 0 && (
+                        <div className="text-xs text-muted-foreground mb-3 border-l-2 border-muted pl-2 space-y-0.5">
+                          {items.map((i) => (
+                            <p key={i.id}>
+                              • {i.product_name}
+                              {i.variant_size && ` (${i.variant_size})`} ×{i.quantity} —
+                              ₹{i.total_price.toLocaleString("en-IN")}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+                        <div>
+                          <label className="text-xs text-muted-foreground">
+                            Update Order Status
+                          </label>
+                          <Select
+                            value={o.order_status}
+                            onValueChange={(v) => updateOrder(o.id, { order_status: v })}
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ORDER_STATUS_OPTIONS.map((s) => (
+                                <SelectItem key={s.value} value={s.value}>
+                                  {s.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">
+                            Tracking Number
+                          </label>
+                          <Input
+                            defaultValue={o.tracking_number || ""}
+                            onBlur={(e) => {
+                              const v = e.target.value.trim();
+                              if (v !== (o.tracking_number || ""))
+                                updateOrder(o.id, { tracking_number: v || null });
+                            }}
+                            placeholder="e.g. DTDC1234567"
+                            className="h-8 text-xs"
+                          />
+                        </div>
+                      </div>
+
+                      <Textarea
+                        placeholder="Admin notes…"
+                        defaultValue={o.admin_notes || ""}
+                        onBlur={(e) => {
+                          if ((e.target.value || "") !== (o.admin_notes || ""))
+                            updateOrder(o.id, { admin_notes: e.target.value || null });
+                        }}
+                        rows={1}
+                        className="text-xs resize-none mb-2"
+                      />
+
+                      <div className="flex flex-wrap gap-1.5">
                         <Button
                           size="sm"
-                          onClick={() => confirmPayment(o)}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                          variant="outline"
+                          onClick={() => viewScreenshot(o)}
+                          disabled={!o.payment_screenshot_url}
                         >
-                          <Check className="h-3.5 w-3.5 mr-1" /> ✅ Yes, Payment Received
+                          <Eye className="h-3.5 w-3.5 mr-1" /> View Payment Photo
                         </Button>
-                      )}
-                      {o.payment_status !== "rejected" &&
-                        o.payment_status !== "confirmed" && (
+                        {o.payment_status !== "confirmed" && (
                           <Button
                             size="sm"
-                            variant="outline"
-                            onClick={() => rejectPayment(o)}
-                            className="text-rose-600 border-rose-300 hover:bg-rose-50"
+                            onClick={() => confirmPayment(o)}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
                           >
-                            <X className="h-3.5 w-3.5 mr-1" /> ❌ Payment Not Found
+                            <Check className="h-3.5 w-3.5 mr-1" /> ✅ Yes, Payment Received
                           </Button>
                         )}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => whatsAppCustomer(o)}
-                      >
-                        <MessageCircle className="h-3.5 w-3.5 mr-1 text-green-600" />{" "}
-                        WhatsApp
-                      </Button>
+                        {o.payment_status !== "rejected" &&
+                          o.payment_status !== "confirmed" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => rejectPayment(o)}
+                              className="text-rose-600 border-rose-300 hover:bg-rose-50"
+                            >
+                              <X className="h-3.5 w-3.5 mr-1" /> ❌ Payment Not Found
+                            </Button>
+                          )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => whatsAppCustomer(o)}
+                        >
+                          <MessageCircle className="h-3.5 w-3.5 mr-1 text-green-600" />{" "}
+                          WhatsApp
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       <Dialog
         open={!!screenshotOrder}

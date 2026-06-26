@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Trash2, Minus, Plus, Send, ShoppingBag, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Trash2, Minus, Plus, Send, ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useSettings, formatINR } from "@/lib/queries";
 import { usePricingComponents } from "@/lib/pricing";
 import { generateEnquiryRef } from "@/lib/enquiryRef";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 

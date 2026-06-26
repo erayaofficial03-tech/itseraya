@@ -186,6 +186,15 @@ const OrdersAdmin = () => {
     const { error } = await supabase.from("orders").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Updated");
+    const ref = orders.find((o) => o.id === id)?.order_ref ?? id;
+    void logAdminActivity({
+      action: patch.payment_status
+        ? `payment_${patch.payment_status}`
+        : `order_${patch.order_status ?? "updated"}`,
+      entity: "order",
+      entity_id: id,
+      details: { order_ref: ref, ...patch },
+    });
     qc.invalidateQueries({ queryKey: ["admin-orders"] });
   };
 

@@ -123,7 +123,7 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             }}
             aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
             title={isSaved ? "Remove from wishlist" : "Save for later"}
-            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-95"
+            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-90"
           >
             <Heart
               className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-charcoal"}`}

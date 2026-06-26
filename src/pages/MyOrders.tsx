@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronRight, ArrowLeft } from "lucide-react";
 import { OrderCardSkeleton } from "@/components/ui/skeletons";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -44,8 +44,14 @@ const MyOrders = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
+      <div className="flex items-center gap-3 px-4 md:px-6 pt-4 md:hidden">
+        <button onClick={() => navigate(-1)} className="h-9 w-9 flex items-center justify-center rounded-full border border-[#EDE8E1]">
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <h1 className="font-serif text-xl">My Orders</h1>
+      </div>
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8 pb-24 md:pb-10"><PageTransition>
-        <h1 className="text-2xl font-light text-foreground mb-6">My Orders</h1>
+        <h1 className="text-2xl font-light text-foreground mb-6 hidden md:block">My Orders</h1>
 
         {(authLoading || isLoading) ? (
           <div className="space-y-3">

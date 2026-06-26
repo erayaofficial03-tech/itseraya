@@ -133,10 +133,16 @@ const OrderDetail = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
+      <div className="flex items-center gap-3 px-4 md:px-6 pt-4 md:hidden">
+        <button onClick={() => navigate(-1)} className="h-9 w-9 flex items-center justify-center rounded-full border border-[#EDE8E1]">
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <h1 className="font-serif text-xl">Order Details</h1>
+      </div>
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
         <Link
           to="/orders"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4"
+          className="hidden md:inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4"
         >
           <ArrowLeft className="h-4 w-4" /> My Orders
         </Link>

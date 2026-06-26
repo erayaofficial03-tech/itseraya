@@ -424,7 +424,7 @@ const Checkout = () => {
                       <Input
                         value={form.name}
                         onChange={(e) => updateField("name", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                       />
                     </div>
                     <div>
@@ -433,7 +433,7 @@ const Checkout = () => {
                         type="email"
                         value={form.email}
                         onChange={(e) => updateField("email", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                       />
                     </div>
                     <div>
@@ -442,7 +442,7 @@ const Checkout = () => {
                         type="tel"
                         value={form.phone}
                         onChange={(e) => updateField("phone", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                         placeholder="10-digit mobile"
                       />
                     </div>
@@ -451,7 +451,7 @@ const Checkout = () => {
                       <Input
                         value={form.pincode}
                         onChange={(e) => updateField("pincode", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                         maxLength={6}
                       />
                     </div>
@@ -460,7 +460,7 @@ const Checkout = () => {
                       <Input
                         value={form.address}
                         onChange={(e) => updateField("address", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                         placeholder="House no, street, area, landmark"
                       />
                     </div>
@@ -469,7 +469,7 @@ const Checkout = () => {
                       <Input
                         value={form.city}
                         onChange={(e) => updateField("city", e.target.value)}
-                        className="mt-2"
+                        className="mt-2 h-12 text-base"
                       />
                     </div>
                     <div>
@@ -583,7 +583,7 @@ const Checkout = () => {
                     <Input
                       value={upiRef}
                       onChange={(e) => setUpiRef(e.target.value)}
-                      className="mt-2"
+                      className="mt-2 h-12 text-base"
                       placeholder="e.g. 1234567890XX"
                     />
                   </div>

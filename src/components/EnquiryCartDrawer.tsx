@@ -224,23 +224,6 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
 
         {items.length > 0 && (
           <div className="border-t border-border px-5 py-4 space-y-3 bg-background">
-            {!user && (
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-9 text-sm"
-                />
-                <Input
-                  type="email"
-                  placeholder="Email (optional)"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-9 text-sm"
-                />
-              </div>
-            )}
             <Textarea
               placeholder="Add a note (size preference, customisation, occasion…)"
               value={note}

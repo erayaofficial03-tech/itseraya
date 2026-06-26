@@ -375,6 +375,42 @@ const AnalyticsAdmin = () => {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Heart className="h-4 w-4 text-gold" /> Most wishlisted products
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="text-xs text-muted-foreground border-b">
+                  <tr>
+                    <th className="text-left py-2">Product</th>
+                    <th className="text-right">Saved by</th>
+                    <th className="text-right">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!wishlistStats?.length && (
+                    <tr><td colSpan={3} className="py-4 text-center text-muted-foreground">No wishlist data yet</td></tr>
+                  )}
+                  {wishlistStats?.map(([id, stat]: any) => (
+                    <tr key={id} className="border-b last:border-0">
+                      <td className="py-2">
+                        <Link to={`/admin/products?id=${id}`} className="hover:underline">{stat.name}</Link>
+                      </td>
+                      <td className="text-right">{stat.count} customers</td>
+                      <td className="text-right">₹{stat.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="text-xs text-muted-foreground mt-3">
+                Products with high wishlist saves but low orders = opportunity to run a promotion or restock.
+              </p>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader><CardTitle className="text-base">Top enquired</CardTitle></CardHeader>

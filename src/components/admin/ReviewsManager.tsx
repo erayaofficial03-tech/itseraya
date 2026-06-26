@@ -141,7 +141,6 @@ const ReviewsManager = () => {
     setForm({
       product_id: "",
       customer_name: "",
-      customer_email: "",
       customer_city: "",
       rating: 5,
       review_text: "",

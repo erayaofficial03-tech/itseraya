@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Trash2, Minus, Plus, Send, ShoppingBag, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Trash2, Minus, Plus, Send, ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { useEnquiryCart } from "@/hooks/useEnquiryCart";
 import { useSettings, formatINR } from "@/lib/queries";
 import { usePricingComponents } from "@/lib/pricing";
 import { generateEnquiryRef } from "@/lib/enquiryRef";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
@@ -24,10 +24,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   const { data: settings } = useSettings();
   const { data: pricingComponents = [] } = usePricingComponents();
   const { user, profile } = useAuth();
-  const navigate = useNavigate();
   const [note, setNote] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const requireLogin = !!(settings as any)?.enquiry_requires_login;
   const blockedByLogin = requireLogin && !user;
@@ -50,14 +47,12 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
     }
     if (blockedByLogin) {
       toast.error("Please sign in to send an enquiry");
-      navigate("/login?redirect=/");
-      onOpenChange(false);
       return;
     }
     setSubmitting(true);
     const ref = generateEnquiryRef();
-    const customerName = name.trim() || profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;
-    const customerEmail = email.trim() || user?.email || null;
+    const customerName = profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;
+    const customerEmail = user?.email || null;
     const sessionId = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     // Pre-generate the row id so we never need to SELECT the inserted row back
     // (enquiry_sessions has no guest SELECT policy by design — guests look up
@@ -71,6 +66,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
           id: sessionRowId,
           session_id: sessionId,
           enquiry_ref: ref,
+          user_id: user?.id || null,
           customer_email: customerEmail,
           customer_name: customerName,
           notes: note.trim() || null,
@@ -229,23 +225,6 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
 
         {items.length > 0 && (
           <div className="border-t border-border px-5 py-4 space-y-3 bg-background">
-            {!user && (
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-9 text-sm"
-                />
-                <Input
-                  type="email"
-                  placeholder="Email (optional)"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-9 text-sm"
-                />
-              </div>
-            )}
             <Textarea
               placeholder="Add a note (size preference, customisation, occasion…)"
               value={note}
@@ -294,13 +273,28 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
                 <p className="text-sm text-muted-foreground">
                   Sign in to send your enquiry
                 </p>
-                <Button
-                  onClick={() => { navigate("/login?redirect=/"); onOpenChange(false); }}
-                  className="w-full h-11 bg-gold text-charcoal hover:bg-gold/90 font-medium rounded-full"
+                <button
+                  onClick={async () => {
+                    const result = await lovable.auth.signInWithOAuth("google", {
+                      redirect_uri: `${window.location.origin}/auth/callback`,
+                    });
+                    if (result.error) {
+                      toast.error("Google sign-in failed.");
+                    }
+                  }}
+                  className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-white border-2 border-[#EDE8E1] text-[15px] font-semibold hover:border-[#C9A84C] hover:shadow-md transition-all"
                 >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In to Enquire
-                </Button>
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+                <p className="text-xs text-muted-foreground">
+                  Your orders and wishlist will be saved automatically
+                </p>
               </div>
             ) : (
               <Button

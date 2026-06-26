@@ -40,6 +40,9 @@ const ProductDetail = () => {
   const { addToCart } = useCartContext();
   const { openCart } = useEnquiryCartUI();
   const { user, profile } = useAuth();
+  const { data: wishlistItems = [] } = useWishlist();
+  const toggleWishlist = useToggleWishlist();
+  const isSaved = !!product && wishlistItems.some((w) => w.product_id === product.id);
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
 

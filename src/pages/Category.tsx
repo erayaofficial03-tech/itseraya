@@ -69,7 +69,7 @@ const Category = () => {
         keywords={keywords}
       />
       <Header />
-      <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-24">
+      <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-[76px]">
         <Breadcrumb
           items={[
             { name: "Home", href: "/" },

@@ -78,7 +78,7 @@ const Contact = () => {
         }}
       />
       <Header />
-      <main className="max-w-3xl mx-auto px-5 md:px-6 py-10 pb-24">
+      <main className="max-w-3xl mx-auto px-5 md:px-6 py-10 pb-[76px]">
         <h1 className="font-serif text-3xl md:text-5xl text-foreground text-center">Contact Us</h1>
         <p className="text-sm text-muted-foreground text-center mt-2 mb-8">
           We'd love to hear from you. Choose the channel that suits you best.

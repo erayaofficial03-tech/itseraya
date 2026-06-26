@@ -192,7 +192,7 @@ const ProductDetail = () => {
         <Header />
       </div>
 
-      <main className="md:pt-6 max-w-7xl mx-auto pb-24 md:pb-16"><PageTransition>
+      <main className="md:pt-6 max-w-7xl mx-auto pb-[160px] md:pb-16"><PageTransition>
         <div className="hidden md:block px-6 mb-4">
           <Breadcrumb
             items={[

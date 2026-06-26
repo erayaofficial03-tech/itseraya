@@ -270,7 +270,7 @@ const Checkout = () => {
     <div className="min-h-screen bg-background">
       <CheckoutHeader />
 
-      <main className="pt-6 pb-12">
+      <main className="pt-6 pb-[76px] md:pb-12">
         <div className="max-w-7xl mx-auto px-6">
           {/* Back to cart */}
           <button

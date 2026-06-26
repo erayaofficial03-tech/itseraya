@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -16,30 +15,22 @@ const WhatsAppIcon = ({ className = "" }: { className?: string }) => (
 const WhatsAppFloat = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSettings();
-  const [bounced, setBounced] = useState(true);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY)) {
-      setBounced(false);
-    }
-  }, []);
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
   const wa = settings?.whatsapp_number?.replace(/\D/g, "") ?? "";
-  // Must be valid Indian number: 91 + 10 digits starting with 6-9.
   if (!/^91[6-9]\d{9}$/.test(wa)) return null;
   if ((settings as any)?.whatsapp_float_visible === false) return null;
 
   const handleClick = () => {
-    localStorage.setItem(STORAGE_KEY, "1");
-    setBounced(false);
-    const wa = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!wa) {
+    if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, "1");
+    const num = settings?.whatsapp_number?.replace(/\D/g, "");
+    if (!num) {
       toast("WhatsApp coming soon!");
       return;
     }
-    openWhatsApp(wa, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
+    openWhatsApp(num, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
   };
+
 
   return (
     <motion.button

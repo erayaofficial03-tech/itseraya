@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Trash2, Save, GripVertical } from "lucide-react";
 import { toast } from "sonner";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import { usePricingComponents, type PricingComponent, type PricingSection } from "@/lib/pricing";
 import { logAdminActivity } from "@/lib/adminLog";
 import {
@@ -206,7 +206,7 @@ const SortableRow = ({
 
 const PricingAdmin = () => {
   const { data: components = [] } = usePricingComponents();
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
 
   const flatShip = components

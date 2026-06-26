@@ -6,7 +6,7 @@ import {
   ShoppingBag, MessageSquare, Users as UsersIcon, Heart,
   Search as SearchIcon, ExternalLink, AlertCircle, Clock,
 } from "lucide-react";
-import { useProducts, useCategories, useSettings } from "@/lib/queries";
+import { useProducts, useCategories, useAdminSettings } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -19,7 +19,7 @@ const formatINR = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n || 0);
 
 const GoLiveChecklist = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
   const [activeBanners, setActiveBanners] = useState(0);

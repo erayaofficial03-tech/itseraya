@@ -8,11 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 
 const SeoAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
   const [reviewsBusy, setReviewsBusy] = useState(false);

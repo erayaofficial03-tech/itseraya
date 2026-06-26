@@ -10,13 +10,13 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { useSettings, useSocialLinks, type SocialLink } from "@/lib/queries";
+import { useAdminSettings, useSocialLinks, type SocialLink } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 
 const PLATFORMS = ["Instagram", "Facebook", "Pinterest", "YouTube", "Twitter/X", "Other"];
 
 const SettingsAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const { data: socials = [] } = useSocialLinks();
   const qc = useQueryClient();
 

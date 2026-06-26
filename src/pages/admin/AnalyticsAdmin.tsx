@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useSettings, useProducts, useCategories } from "@/lib/queries";
+import { useAdminSettings, useProducts, useCategories } from "@/lib/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ const AnalyticsAdmin = () => {
   const days = Number(range);
   const startISO = useMemo(() => startOfDay(subDays(new Date(), days - 1)).toISOString(), [days]);
 
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const { data: products = [] } = useProducts();
   const { data: categories = [] } = useCategories();
 

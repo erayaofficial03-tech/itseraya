@@ -31,7 +31,7 @@ import {
   X,
   Loader2,
 } from "lucide-react";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 
@@ -110,7 +110,7 @@ const formatTime = (iso: string) =>
 
 const OrdersAdmin = () => {
   const qc = useQueryClient();
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<string>("all");
   const [screenshotOrder, setScreenshotOrder] = useState<Order | null>(null);

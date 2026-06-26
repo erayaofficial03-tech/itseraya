@@ -191,10 +191,30 @@ const FIVE_MIN = 5 * 60 * 1000;
 const TEN_MIN = 10 * 60 * 1000;
 const ONE_HOUR = 60 * 60 * 1000;
 
+// Public-safe settings (reads from the `public_settings` view — internal pricing,
+// packing costs, analytics keys, and admin labels are NOT included).
 export const useSettings = () =>
   useQuery({
     queryKey: ["settings"],
     staleTime: ONE_HOUR,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("public_settings")
+        .select("*")
+        .eq("id", 1)
+        .single();
+      if (error) throw error;
+      return data as Settings;
+    },
+  });
+
+// Admin-only settings (reads the full `settings` row — requires admin/manager role).
+// Use this in admin pages that need private columns like packing_cost,
+// pricing multipliers, or Google API keys.
+export const useAdminSettings = () =>
+  useQuery({
+    queryKey: ["settings", "admin"],
+    staleTime: FIVE_MIN,
     queryFn: async () => {
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;

@@ -123,7 +123,7 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             }}
             aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
             title={isSaved ? "Remove from wishlist" : "Save for later"}
-            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-95"
+            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-90"
           >
             <Heart
               className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-charcoal"}`}
@@ -144,7 +144,7 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             }}
             aria-label="Add to cart"
             title="Add to Cart"
-            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center hover:scale-110 transition-transform ease-luxury active:scale-95 shadow-soft z-10"
+            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center transition-transform active:scale-90 shadow-soft z-10"
           >
             <Plus className="h-4 w-4" strokeWidth={2.5} />
           </button>

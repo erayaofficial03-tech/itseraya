@@ -428,75 +428,65 @@ const Header = () => {
 
           {/* Right: action icons */}
           <div className="flex items-center justify-end gap-0 sm:gap-0.5 lg:gap-1">
-            {s(settings, "nav_show_search") && (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Search"
+
+            {/* Search — desktop only (mobile has it in bottom nav) */}
+            {s(settings, 'nav_show_search') && (
+              <Button variant="ghost" size="icon" aria-label="Search"
                 onClick={() => window.dispatchEvent(new CustomEvent('eraya:open-search'))}
-                className="h-9 w-9 sm:h-10 sm:w-10"
+                className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Search className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>
             )}
 
-            {/* Account: avatar when signed in, login icon otherwise (hidden on mobile — lives in bottom nav) */}
+            {/* Wishlist — desktop only (mobile has it in bottom nav) */}
+            <Button variant="ghost" size="icon" aria-label="Wishlist"
+              onClick={() => navigate('/wishlist')}
+              className="hidden md:inline-flex relative h-9 w-9 sm:h-10 sm:w-10"
+            >
+              <Heart className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
+              {wishlistItems.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
+                </span>
+              )}
+            </Button>
+
+            {/* User/Profile — desktop only */}
             {user ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Profile"
-                onClick={() => navigate("/profile")}
+              <Button variant="ghost" size="icon" aria-label="Profile"
+                onClick={() => navigate('/profile')}
                 className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border border-gold">
                   <AvatarImage src={profile?.avatar_url || undefined} />
                   <AvatarFallback className="bg-charcoal text-ivory text-[10px]">
-                    {(profile?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
+                    {(profile?.full_name || user.email || 'U').slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Log in"
-                onClick={() => navigate("/login")}
+              <Button variant="ghost" size="icon" aria-label="Sign in"
+                onClick={() => navigate('/login')}
                 className="hidden md:inline-flex h-9 w-9 sm:h-10 sm:w-10"
               >
                 <User className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
               </Button>
             )}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Enquiry cart"
-              onClick={openCart}
-              className="relative h-9 w-9 sm:h-10 sm:w-10"
+            {/* Cart — visible on ALL screen sizes */}
+            <Button variant="ghost" size="icon" aria-label="Shopping cart"
+              onClick={() => setCartOpen(true)}
+              className="relative h-10 w-10 sm:h-10 sm:w-10"
             >
-              <MessageCircle className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
-              {enquiryCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
-                  {enquiryCount > 9 ? "9+" : enquiryCount}
+              <ShoppingBag className="h-5 w-5 sm:h-5 sm:w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#C9A84C] text-white text-[9px] font-bold flex items-center justify-center">
+                  {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
             </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Shopping cart"
-              onClick={() => setCartOpen(true)}
-              className="relative h-9 w-9 sm:h-10 sm:w-10 -mr-1 sm:mr-0"
-            >
-              <ShoppingBag className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
-              {cartCount > 0 && (
-                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full bg-gold text-white text-[9px] font-bold flex items-center justify-center">
-                  {cartCount > 9 ? "9+" : cartCount}
-                </span>
-              )}
-            </Button>
           </div>
         </div>
       </header>

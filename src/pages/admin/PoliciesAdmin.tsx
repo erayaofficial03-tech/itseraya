@@ -48,6 +48,8 @@ const blank: PolicyFormState = {
   privacy_body: "",
   terms_title: "",
   terms_body: "",
+  care_guide_title: "",
+  care_guide_body: "",
   font_family: "Inter",
   font_size: "16",
   text_color: "#2C2C2C",

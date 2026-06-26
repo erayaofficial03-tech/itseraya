@@ -66,9 +66,18 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (product?.id) {
-      void supabase.from("product_views").insert({ product_id: product.id });
+      void supabase.from("product_views").insert({
+        product_id: product.id,
+        user_id: user?.id || null,
+        session_id: sessionStorage.getItem("eraya_session") || (() => {
+          const id = crypto.randomUUID();
+          sessionStorage.setItem("eraya_session", id);
+          return id;
+        })(),
+        viewed_at: new Date().toISOString(),
+      });
     }
-  }, [product?.id]);
+  }, [product?.id, user?.id]);
 
   // Inject Product + Breadcrumb JSON-LD
   useEffect(() => {

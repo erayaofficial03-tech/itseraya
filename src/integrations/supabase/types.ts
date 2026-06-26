@@ -584,6 +584,36 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          display_order: number
+          id: string
+          is_visible: boolean
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          question?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       homepage_sections: {
         Row: {
           created_at: string
@@ -1261,6 +1291,14 @@ export type Database = {
           store_name: string
           store_phone: string | null
           tagline: string
+          trust_1_icon: string | null
+          trust_1_label: string | null
+          trust_2_icon: string | null
+          trust_2_label: string | null
+          trust_3_icon: string | null
+          trust_3_label: string | null
+          trust_4_icon: string | null
+          trust_4_label: string | null
           updated_at: string
           usp_1: string | null
           usp_2: string | null
@@ -1408,6 +1446,14 @@ export type Database = {
           store_name?: string
           store_phone?: string | null
           tagline?: string
+          trust_1_icon?: string | null
+          trust_1_label?: string | null
+          trust_2_icon?: string | null
+          trust_2_label?: string | null
+          trust_3_icon?: string | null
+          trust_3_label?: string | null
+          trust_4_icon?: string | null
+          trust_4_label?: string | null
           updated_at?: string
           usp_1?: string | null
           usp_2?: string | null
@@ -1555,6 +1601,14 @@ export type Database = {
           store_name?: string
           store_phone?: string | null
           tagline?: string
+          trust_1_icon?: string | null
+          trust_1_label?: string | null
+          trust_2_icon?: string | null
+          trust_2_label?: string | null
+          trust_3_icon?: string | null
+          trust_3_label?: string | null
+          trust_4_icon?: string | null
+          trust_4_label?: string | null
           updated_at?: string
           usp_1?: string | null
           usp_2?: string | null
@@ -1780,6 +1834,14 @@ export type Database = {
           shipping_free_above: number | null
           store_name: string | null
           tagline: string | null
+          trust_1_icon: string | null
+          trust_1_label: string | null
+          trust_2_icon: string | null
+          trust_2_label: string | null
+          trust_3_icon: string | null
+          trust_3_label: string | null
+          trust_4_icon: string | null
+          trust_4_label: string | null
           usp_1: string | null
           usp_2: string | null
           usp_3: string | null
@@ -1848,6 +1910,14 @@ export type Database = {
           shipping_free_above?: number | null
           store_name?: string | null
           tagline?: string | null
+          trust_1_icon?: string | null
+          trust_1_label?: string | null
+          trust_2_icon?: string | null
+          trust_2_label?: string | null
+          trust_3_icon?: string | null
+          trust_3_label?: string | null
+          trust_4_icon?: string | null
+          trust_4_label?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null
@@ -1916,6 +1986,14 @@ export type Database = {
           shipping_free_above?: number | null
           store_name?: string | null
           tagline?: string | null
+          trust_1_icon?: string | null
+          trust_1_label?: string | null
+          trust_2_icon?: string | null
+          trust_2_label?: string | null
+          trust_3_icon?: string | null
+          trust_3_label?: string | null
+          trust_4_icon?: string | null
+          trust_4_label?: string | null
           usp_1?: string | null
           usp_2?: string | null
           usp_3?: string | null

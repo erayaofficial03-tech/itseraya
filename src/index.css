@@ -372,6 +372,20 @@
   .section-gap { margin-bottom: var(--section-spacing, 48px); }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* iOS input zoom fix — all inputs 16px minimum */
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Button press feedback */
+button:not(:disabled) {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ============================================================
    Micro-interactions — button press, card lift, toast slide-in
    ============================================================ */
@@ -382,12 +396,16 @@ button:active:not(:disabled) {
   transform: scale(0.96);
 }
 
-.card-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Product card hover lift — desktop only */
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+  }
 }
-.card-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+.card-lift {
+  transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 [data-sonner-toast] {

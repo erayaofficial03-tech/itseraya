@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "authenticated read payment settings" ON public.payment_settings;

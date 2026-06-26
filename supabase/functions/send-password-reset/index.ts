@@ -39,9 +39,11 @@ Deno.serve(async (req) => {
       return json({ error: "Invalid email" }, 400);
     }
 
-    // Send recovery email via the regular API (uses templates)
+    // Send recovery email via the regular API (uses templates).
+    // Use a trusted, server-controlled URL — never derive from the Origin header.
+    const SITE_URL = Deno.env.get("SITE_URL") || "https://itseraya.in";
     const { error } = await admin.auth.resetPasswordForEmail(email, {
-      redirectTo: `${req.headers.get("origin") || ""}/reset-password`,
+      redirectTo: `${SITE_URL}/reset-password`,
     });
     if (error) return json({ error: error.message }, 400);
 

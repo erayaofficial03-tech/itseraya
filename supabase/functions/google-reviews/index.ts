@@ -56,7 +56,8 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("google-reviews error:", e);
+    return new Response(JSON.stringify({ error: "Failed to fetch reviews" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -71,16 +71,18 @@ const Checkout = () => {
     }
   }, [cartCount, placing]);
 
-  // Fetch payment settings (UPI) — restricted to authenticated users
+  // Fetch payment settings (UPI) via secure Edge Function — staff-only table
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await (supabase as any)
-        .from("payment_settings")
-        .select("upi_id, upi_name, upi_qr_url")
-        .eq("id", 1)
-        .maybeSingle();
-      if (data) setPayment(data);
+      const { data, error } = await supabase.functions.invoke("get-payment-info");
+      if (!error && data) {
+        setPayment({
+          upi_id: data.upi_id,
+          upi_name: data.upi_name,
+          upi_qr_url: data.upi_qr_url,
+        });
+      }
     })();
   }, [user]);
 

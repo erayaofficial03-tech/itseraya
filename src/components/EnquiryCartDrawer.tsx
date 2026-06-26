@@ -47,14 +47,12 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
     }
     if (blockedByLogin) {
       toast.error("Please sign in to send an enquiry");
-      navigate("/login?redirect=/");
-      onOpenChange(false);
       return;
     }
     setSubmitting(true);
     const ref = generateEnquiryRef();
-    const customerName = name.trim() || profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;
-    const customerEmail = email.trim() || user?.email || null;
+    const customerName = profile?.full_name || (user?.user_metadata as { full_name?: string } | undefined)?.full_name || null;
+    const customerEmail = user?.email || null;
     const sessionId = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
     // Pre-generate the row id so we never need to SELECT the inserted row back
     // (enquiry_sessions has no guest SELECT policy by design — guests look up

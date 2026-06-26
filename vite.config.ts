@@ -109,6 +109,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    target: "esnext",
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -119,6 +121,10 @@ export default defineConfig(({ mode }) => ({
           pdf: ["jspdf", "html2canvas"],
           dnd: ["@dnd-kit/core", "@dnd-kit/sortable", "@dnd-kit/utilities"],
           query: ["@tanstack/react-query"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+          ],
         },
       },
     },

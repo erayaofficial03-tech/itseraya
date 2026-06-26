@@ -167,6 +167,23 @@ const AnalyticsAdmin = () => {
     return Object.entries(stats).map(([id, s]) => ({ id, ...s })).sort((a, b) => b.views - a.views).slice(0, 20);
   }, [views, wishlists, waClicks, productMap]);
 
+  const { data: wishlistStats } = useQuery({
+    queryKey: ['wishlist-stats'],
+    queryFn: async () => {
+      const { data } = await (supabase as any)
+        .from('wishlist_items')
+        .select('product_id, products(name, original_price)')
+        .order('created_at', { ascending: false });
+      const counts: Record<string, { name: string; count: number; price: number }> = {};
+      (data || []).forEach((item: any) => {
+        const id = item.product_id;
+        if (!counts[id]) counts[id] = { name: item.products?.name || 'Unknown', count: 0, price: item.products?.original_price || 0 };
+        counts[id].count++;
+      });
+      return Object.entries(counts).sort((a, b) => b[1].count - a[1].count).slice(0, 10);
+    }
+  });
+
   const topEnquiredProducts = useMemo(() => {
     const t: Record<string, { name: string; count: number }> = {};
     enquiryItems.forEach((i) => {

@@ -69,3 +69,49 @@ export const PageLoader = () => (
     <span className="h-7 w-7 rounded-full border-2 border-gold border-t-transparent animate-spin" />
   </div>
 );
+
+export const OrderCardSkeleton = () => (
+  <div className="rounded-2xl border border-[#EDE8E1] p-4 space-y-3 animate-pulse">
+    <div className="flex justify-between items-center">
+      <SkeletonBlock className="h-4 w-28" />
+      <SkeletonBlock className="h-6 w-20 rounded-full" />
+    </div>
+    <div className="flex gap-2">
+      {[1,2,3].map(i => <SkeletonBlock key={i} className="h-12 w-12 rounded-lg" />)}
+    </div>
+    <div className="flex justify-between">
+      <SkeletonBlock className="h-4 w-24" />
+      <SkeletonBlock className="h-9 w-28 rounded-full" />
+    </div>
+  </div>
+);
+
+export const CustomerRowSkeleton = () => (
+  <div className="flex items-center gap-3 p-4 border-b animate-pulse">
+    <SkeletonBlock className="h-10 w-10 rounded-full shrink-0" />
+    <div className="flex-1 space-y-2">
+      <SkeletonBlock className="h-3 w-32" />
+      <SkeletonBlock className="h-3 w-48" />
+    </div>
+    <SkeletonBlock className="h-6 w-16 rounded-full" />
+  </div>
+);
+
+export const WishlistSkeleton = ({ count = 4 }: { count?: number }) => (
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {Array.from({ length: count }).map((_, i) => <ProductCardSkeleton key={i} />)}
+  </div>
+);
+
+export const ProfileSkeleton = () => (
+  <div className="space-y-3 p-4 animate-pulse">
+    <div className="flex items-center gap-4 pb-4">
+      <SkeletonBlock className="h-16 w-16 rounded-full" />
+      <div className="space-y-2">
+        <SkeletonBlock className="h-4 w-32" />
+        <SkeletonBlock className="h-3 w-48" />
+      </div>
+    </div>
+    {[1,2,3,4,5].map(i => <SkeletonBlock key={i} className="h-14 w-full rounded-xl" />)}
+  </div>
+);

@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronRight } from "lucide-react";
+import { OrderCardSkeleton } from "@/components/ui/skeletons";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { Button } from "@/components/ui/button";
@@ -47,8 +48,8 @@ const MyOrders = () => {
         <h1 className="text-2xl font-light text-foreground mb-6">My Orders</h1>
 
         {(authLoading || isLoading) ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <div className="space-y-3">
+            {[1,2,3].map(i => <OrderCardSkeleton key={i} />)}
           </div>
         ) : orders.length === 0 ? (
           <div className="text-center py-16 max-w-sm mx-auto">

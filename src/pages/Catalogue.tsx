@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { useSearchParams, Link } from "react-router-dom";
 import { Share2, MessageCircle, PackageSearch, ArrowLeft } from "lucide-react";
 import Header from "@/components/header/Header";
@@ -80,7 +81,7 @@ const Catalogue = () => {
     <div className="min-h-screen bg-background">
       <SeoHead title={`Our Catalogue — ${s(settings, "store_name")} | All Jewellery Collections`} description={`Browse the complete ${s(settings, "store_name")} jewellery catalogue. Rings, earrings, necklaces, bangles, pendants and more. Artificial jewellery for every occasion.`} canonical="https://itseraya.in/catalogue" />
       <Header />
-      <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-24 md:pb-16">
+      <main className="pt-6 max-w-7xl mx-auto px-4 md:px-6 pb-24 md:pb-16"><PageTransition>
         <div className="text-center mb-6 md:mb-8">
           <h1 className="font-serif text-[28px] md:text-5xl text-foreground">{heading}</h1>
           <p className="text-sm text-muted-foreground mt-2">
@@ -226,7 +227,7 @@ const Catalogue = () => {
             {filtered.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         )}
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

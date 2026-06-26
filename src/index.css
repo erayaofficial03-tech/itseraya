@@ -372,3 +372,30 @@
   .section-gap { margin-bottom: var(--section-spacing, 48px); }
 }
 
+/* ============================================================
+   Micro-interactions — button press, card lift, toast slide-in
+   ============================================================ */
+button {
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+[data-sonner-toast] {
+  animation: slideInRight 0.2s ease;
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+

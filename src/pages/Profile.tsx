@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -158,7 +159,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <SeoHead title={`My Profile — ${s(settings, "store_name")}`} />
       <Header />
-      <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6">
+      <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6"><PageTransition>
         {user && profile && !profile.phone && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between">
             <span className="text-sm text-amber-700">
@@ -353,7 +354,7 @@ const Profile = () => {
         >
           <LogOut className="h-4 w-4 mr-2" /> Sign Out
         </Button>
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

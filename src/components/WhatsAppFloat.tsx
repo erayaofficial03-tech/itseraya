@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -16,30 +15,22 @@ const WhatsAppIcon = ({ className = "" }: { className?: string }) => (
 const WhatsAppFloat = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSettings();
-  const [bounced, setBounced] = useState(true);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY)) {
-      setBounced(false);
-    }
-  }, []);
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
   const wa = settings?.whatsapp_number?.replace(/\D/g, "") ?? "";
-  // Must be valid Indian number: 91 + 10 digits starting with 6-9.
   if (!/^91[6-9]\d{9}$/.test(wa)) return null;
   if ((settings as any)?.whatsapp_float_visible === false) return null;
 
   const handleClick = () => {
-    localStorage.setItem(STORAGE_KEY, "1");
-    setBounced(false);
-    const wa = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!wa) {
+    if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, "1");
+    const num = settings?.whatsapp_number?.replace(/\D/g, "");
+    if (!num) {
       toast("WhatsApp coming soon!");
       return;
     }
-    openWhatsApp(wa, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
+    openWhatsApp(num, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
   };
+
 
   return (
     <motion.button
@@ -47,12 +38,16 @@ const WhatsAppFloat = () => {
       onClick={handleClick}
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
-      animate={bounced ? { y: [0, -8, 0] } : { y: 0 }}
-      transition={bounced ? { repeat: 4, duration: 0.9, ease: "easeInOut" } : { duration: 0.2 }}
-      className="fixed bottom-20 right-4 md:bottom-6 z-40 w-[52px] h-[52px] rounded-full text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.94 }}
+      className="group fixed bottom-20 right-4 md:bottom-8 md:right-6 z-40 w-[54px] h-[54px] rounded-full text-white flex items-center justify-center shadow-lg"
       style={{ backgroundColor: "#25D366" }}
     >
-      <WhatsAppIcon className="h-7 w-7" />
+      <WhatsAppIcon className="h-7 w-7 relative z-10" />
+      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
+      <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden group-hover:md:block bg-charcoal text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none">
+        Chat on WhatsApp
+      </span>
     </motion.button>
   );
 };

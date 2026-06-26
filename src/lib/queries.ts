@@ -254,8 +254,6 @@ export type HomepageSection = {
 
 export const useHomepageSections = () =>
   useQuery({
-export const useHomepageSections = () =>
-  useQuery({
     queryKey: ["homepage_sections"],
     staleTime: TEN_MIN,
     queryFn: async () => {

@@ -56,6 +56,14 @@ const Checkout = () => {
     }));
   }, [user, profile]);
 
+  // Phone required before checkout
+  useEffect(() => {
+    if (!authLoading && user && profile && !profile.phone) {
+      toast.info("Please add your mobile number first");
+      navigate("/complete-profile");
+    }
+  }, [user, profile, authLoading, navigate]);
+
   // Redirect away if cart empty (only after mount; allow brief loading)
   useEffect(() => {
     if (cartCount === 0 && !placing) {

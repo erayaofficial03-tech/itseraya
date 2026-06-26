@@ -10,6 +10,7 @@ import ReviewsSection from "./ReviewsSection";
 interface Props {
   section: HomepageSection;
   products: Product[];
+  isFirstProductRow?: boolean;
 }
 
 /**
@@ -17,7 +18,7 @@ interface Props {
  * to the matching customer-facing component and feeds `props` + filtered
  * products as needed.
  */
-const HomepageSectionRenderer = ({ section, products }: Props) => {
+const HomepageSectionRenderer = ({ section, products, isFirstProductRow = false }: Props) => {
   const { type, props = {} } = section;
 
   const filterProducts = (): Product[] => {

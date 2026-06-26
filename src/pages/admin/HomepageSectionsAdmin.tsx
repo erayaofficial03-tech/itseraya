@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
-import { useHomepageSections, useSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+import { useHomepageSections, useAdminSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
 
 
 // ─── Catalog of section types ────────────────────────────────────────────
@@ -257,7 +257,7 @@ const HEADING_FIELDS = [
 
 const HomepageSectionsAdmin = () => {
   const { data: sections = [] } = useHomepageSections();
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [items, setItems] = useState<HomepageSection[]>([]);
   const [editing, setEditing] = useState<HomepageSection | null>(null);

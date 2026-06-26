@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 
 const TEXT_KEYS = [
   "nav_home_label", "nav_catalogue_label",
@@ -30,7 +30,7 @@ const BOOL_KEYS = [
 type FormState = Record<string, string | boolean>;
 
 const LabelsAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState<FormState>({});

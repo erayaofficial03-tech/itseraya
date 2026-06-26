@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ShoppingBag, ChevronRight } from "lucide-react";
+import { ShoppingBag, ChevronRight, ArrowLeft } from "lucide-react";
 import { OrderCardSkeleton } from "@/components/ui/skeletons";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";

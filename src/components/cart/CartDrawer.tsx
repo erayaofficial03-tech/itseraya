@@ -221,12 +221,14 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                 </div>
               </div>
               <Button
-                size="lg"
-                className="mt-4 w-full"
                 onClick={() => goTo('/checkout')}
+                className="w-full h-14 text-base font-semibold rounded-2xl bg-[#C9A84C] hover:bg-[#B8963E] text-white mt-4"
               >
-                Proceed to Checkout
+                Checkout — {formatPrice(total)}
               </Button>
+              <button onClick={onClose} className="w-full text-sm text-muted-foreground text-center py-3 hover:text-foreground transition-colors">
+                ← Continue Shopping
+              </button>
             </div>
           </>
         )}

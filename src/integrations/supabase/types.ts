@@ -1041,7 +1041,6 @@ export type Database = {
         Row: {
           created_at: string
           customer_city: string | null
-          customer_email: string | null
           customer_name: string
           hidden_at: string | null
           hidden_by: string | null
@@ -1061,7 +1060,6 @@ export type Database = {
         Insert: {
           created_at?: string
           customer_city?: string | null
-          customer_email?: string | null
           customer_name: string
           hidden_at?: string | null
           hidden_by?: string | null
@@ -1081,7 +1079,6 @@ export type Database = {
         Update: {
           created_at?: string
           customer_city?: string | null
-          customer_email?: string | null
           customer_name?: string
           hidden_at?: string | null
           hidden_by?: string | null

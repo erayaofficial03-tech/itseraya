@@ -123,7 +123,11 @@ const SettingsAdmin = () => {
     });
     setBusy(false);
     if (payErr) toast.error(payErr.message);
-    else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else {
+      toast.success("Saved");
+      void logAdminActivity({ action: "settings_updated", entity: "settings" });
+      qc.invalidateQueries({ queryKey: ["settings"] });
+    }
   };
 
   // Social links state

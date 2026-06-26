@@ -170,8 +170,13 @@ const BrandProvider = ({ children }: { children: React.ReactNode }) => {
       if (cancelled || error || !data || !data.length) return;
       const row = data[0] || {};
       const verification: string | null = row.google_site_verification || null;
-      const gaId: string | null = row.google_analytics_id || null;
-      const gtmId: string | null = row.google_tag_manager_id || null;
+      const rawGaId: string | null = row.google_analytics_id || null;
+      const rawGtmId: string | null = row.google_tag_manager_id || null;
+
+      // Strict format validation — these values are interpolated into <script> bodies,
+      // so any unexpected character could enable stored XSS.
+      const gaId = rawGaId && /^(G-[A-Z0-9]{4,20}|UA-\d{4,12}-\d{1,4})$/.test(rawGaId) ? rawGaId : null;
+      const gtmId = rawGtmId && /^GTM-[A-Z0-9]{4,10}$/.test(rawGtmId) ? rawGtmId : null;
 
       if (verification) {
         let meta = document.querySelector<HTMLMetaElement>("meta[name='google-site-verification']");

@@ -69,7 +69,7 @@ const ProductRow = ({ title, products, viewAllHref, eyebrow, isFirstRow = false 
           {items.map((p, i) => (
             <div key={p.id} className="snap-start">
               {/* Only the first 3 cards per row show a micro-label to keep the grid calm */}
-              <ProductCard product={p} showLabel={i < 3} />
+              <ProductCard product={p} showLabel={i < 3} priority={isFirstRow && i < 4} />
             </div>
           ))}
         </div>

@@ -104,6 +104,8 @@ const PoliciesAdmin = () => {
       policy_privacy_body: form.privacy_body,
       policy_terms_title: form.terms_title,
       policy_terms_body: form.terms_body,
+      care_guide_title: form.care_guide_title,
+      care_guide_body: form.care_guide_body,
       policy_font_family: form.font_family,
       policy_font_size: form.font_size,
       policy_text_color: form.text_color,

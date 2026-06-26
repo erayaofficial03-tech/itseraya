@@ -201,6 +201,7 @@ const PoliciesAdmin = () => {
             )}
             {policyEditor("Privacy Policy", "privacy_title", "privacy_body", "/privacy-policy")}
             {policyEditor("Terms of Service", "terms_title", "terms_body", "/terms-of-service")}
+            {policyEditor("Care Guide", "care_guide_title", "care_guide_body", "/care-guide")}
           </Accordion>
         </CardContent>
       </Card>

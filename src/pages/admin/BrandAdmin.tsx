@@ -141,6 +141,7 @@ const BrandAdmin = () => {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Theme saved — applied site-wide");
+    void logAdminActivity({ action: "brand_updated", entity: "settings" });
     qc.invalidateQueries({ queryKey: ["settings"] });
   };
 

@@ -84,6 +84,15 @@ export const SETTINGS_DEFAULTS = {
   usp_2: "Free shipping on orders over ₹999",
   usp_3: "Easy WhatsApp enquiries",
 
+  trust_1_label: "Waterproof",
+  trust_1_icon: "Droplets",
+  trust_2_label: "Tarnish Resistant",
+  trust_2_icon: "Sparkles",
+  trust_3_label: "Hypoallergenic",
+  trust_3_icon: "Leaf",
+  trust_4_label: "PAN India Shipping",
+  trust_4_icon: "Truck",
+
   about_title: "Our Story",
   about_body:
     "Eraya was born from a love of beautiful, wearable jewellery crafted for every woman.",

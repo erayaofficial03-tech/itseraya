@@ -12,7 +12,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import {
-  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, Smartphone, ExternalLink,
+  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, Smartphone, ExternalLink, Heart,
 } from "lucide-react";
 
 type RangeKey = "1" | "7" | "30" | "90";

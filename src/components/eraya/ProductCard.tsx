@@ -88,8 +88,9 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
                 srcSet={ss.srcSet}
                 sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
                 alt={product.name}
-                loading="lazy"
-                decoding="async"
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
+                decoding={priority ? "sync" : "async"}
                 width={500}
                 height={625}
                 className="img-soft-zoom absolute inset-0 w-full h-full object-cover object-center"

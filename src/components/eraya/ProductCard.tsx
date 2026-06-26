@@ -51,8 +51,18 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
 const ProductCard = ({ product, showLabel = true }: Props) => {
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
-  const { data: settings } = useSettings();
   const { addToCart } = useCartContext();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { data: wishlistItems = [] } = useWishlist();
+  const toggleWishlist = useToggleWishlist();
+  const isSaved = wishlistItems.some((w) => w.product_id === product.id);
+
+  const requireLogin = (msg: string) => {
+    toast(msg, {
+      action: { label: "Sign In", onClick: () => navigate("/login") },
+    });
+  };
 
   const hasDiscount =
     !!product.discounted_price && product.original_price > product.discounted_price;
@@ -96,18 +106,25 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
             </span>
           )}
 
-          {/* Enquire Now (WhatsApp) */}
+          {/* Wishlist (Heart) */}
           <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              openWhatsAppEnquiry(product, settings, "product_card");
+              if (!user) {
+                requireLogin("Sign in to save favourites");
+                return;
+              }
+              toggleWishlist.mutate({ productId: product.id, isSaved });
             }}
-            aria-label="Quick enquire on WhatsApp"
-            title="Enquire on WhatsApp"
-            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-ivory/85 backdrop-blur-sm flex items-center justify-center hover:bg-ivory transition-all ease-luxury active:scale-95 shadow-soft"
+            aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
+            title={isSaved ? "Remove from wishlist" : "Save for later"}
+            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-95"
           >
-            <MessageCircle className="h-4 w-4 text-[#25D366]" strokeWidth={1.8} />
+            <Heart
+              className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-charcoal"}`}
+              strokeWidth={1.8}
+            />
           </button>
 
           {/* Add to Cart */}
@@ -115,6 +132,10 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              if (!user) {
+                requireLogin("Sign in to add to cart");
+                return;
+              }
               void addToCart(product);
             }}
             aria-label="Add to cart"
@@ -124,6 +145,7 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
             <Plus className="h-4 w-4" strokeWidth={2.5} />
           </button>
         </div>
+
 
 
         {/* Meta */}

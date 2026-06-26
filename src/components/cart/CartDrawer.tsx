@@ -139,10 +139,10 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                         </p>
                       )}
                       <div className="mt-auto flex items-center justify-between pt-2">
-                        <div className="flex items-center rounded-md border">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => updateQty(item.id, item.quantity - 1)}
-                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
+                            className="h-10 w-10 rounded-full border border-[#EDE8E1] flex items-center justify-center active:scale-90 transition-transform hover:border-[#C9A84C]"
                             aria-label="Decrease quantity"
                           >
                             <Minus className="h-4 w-4" />
@@ -152,7 +152,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                           </span>
                           <button
                             onClick={() => updateQty(item.id, item.quantity + 1)}
-                            className="h-11 w-11 flex items-center justify-center transition hover:bg-muted"
+                            className="h-10 w-10 rounded-full border border-[#EDE8E1] flex items-center justify-center active:scale-90 transition-transform hover:border-[#C9A84C]"
                             aria-label="Increase quantity"
                           >
                             <Plus className="h-4 w-4" />

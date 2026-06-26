@@ -337,12 +337,6 @@ const ReviewsManager = () => {
                 />
               </div>
             </div>
-            <div>
-              <Label>Email (optional)</Label>
-              <Input
-                value={form.customer_email}
-                onChange={(e) => setForm({ ...form, customer_email: e.target.value })}
-              />
             </div>
             <div>
               <Label>Rating</Label>

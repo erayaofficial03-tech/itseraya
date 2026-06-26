@@ -124,7 +124,6 @@ const ReviewsManager = () => {
       product_id: form.product_id,
       product_name: product?.name ?? null,
       customer_name: form.customer_name.trim(),
-      customer_email: form.customer_email.trim() || null,
       customer_city: form.customer_city.trim() || null,
       rating: form.rating,
       review_text: form.review_text.trim(),

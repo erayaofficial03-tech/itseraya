@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
   { label: "Homepage Banners",   description: "Hero images customers see first",    path: "/admin/banners",      icon: Image,           roles: ["admin","manager"] },
   { label: "Homepage Layout",    description: "Show/hide/reorder homepage blocks",  path: "/admin/sections",     icon: Monitor,         roles: ["admin","manager"] },
   { label: "Top Bar Messages",   description: "Scrolling announcement text",        path: "/admin/announcement", icon: Megaphone,       roles: ["admin","manager"] },
-  { label: "Reviews & Trust",    description: "Customer reviews, USPs, FAQ",        path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },
+  { label: "Reviews, Trust & FAQ",    description: "Reviews, USPs, trust badges, FAQ questions",        path: "/admin/usps",         icon: Star,            roles: ["admin","manager"] },
   { label: "Website Design",     description: "Colors, fonts, card shapes",         path: "/admin/brand",        icon: Palette,         roles: ["admin"] },
   { label: "Button & Text",      description: "Wording on buttons and labels",      path: "/admin/labels",       icon: Type,            roles: ["admin"] },
   { label: "Store Policies",     description: "Return, shipping, privacy rules",    path: "/admin/policies",     icon: FileText,        roles: ["admin"] },

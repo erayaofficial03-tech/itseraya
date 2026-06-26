@@ -1,8 +1,8 @@
-import { Droplets, Sparkles, Leaf, Truck, Shield, Star, Heart, Package, Gift, Zap, Award, Clock } from "lucide-react";
+import { Droplets, Sparkles, Leaf, Truck, Shield, Star, Heart, Package, Gift, Zap, Award, Clock, type LucideIcon } from "lucide-react";
 import { useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   Droplets, Sparkles, Leaf, Truck, Shield, Star, Heart, Package, Gift, Zap, Award, Clock,
 };
 

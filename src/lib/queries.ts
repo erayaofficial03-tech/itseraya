@@ -441,10 +441,10 @@ export const productImage = (p: Product) =>
  * Kept for backward compatibility — new product surfaces should prefer
  * `productImageSrcSet` which serves the correct pre-rendered 4:5 variant.
  */
-export const withImageParams = (url: string, width: number, quality = 80) => {
-  if (!url || !url.includes("/storage/v1/object/")) return url;
+export const withImageParams = (url: string, width: number, quality = 75) => {
+  if (!url || !url.includes("supabase")) return url;
   const sep = url.includes("?") ? "&" : "?";
-  return `${url}${sep}width=${width}&quality=${quality}`;
+  return `${url}${sep}width=${width}&quality=${quality}&format=webp`;
 };
 
 /**

@@ -7,9 +7,11 @@ interface Props {
   products: Product[];
   viewAllHref?: string;
   eyebrow?: string;
+  /** First product row on the page — eagerly load first 4 images for LCP. */
+  isFirstRow?: boolean;
 }
 
-const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
+const ProductRow = ({ title, products, viewAllHref, eyebrow, isFirstRow = false }: Props) => {
   if (!products.length) return null;
 
   // Cap every section at 12 products (6×2 desktop / 4×2 tablet / 3×2 mobile)

@@ -21,7 +21,7 @@ const useBanners = () =>
       if (error) throw error;
       return (data || []) as unknown as Banner[];
     },
-    staleTime: 60_000,
+    staleTime: 5 * 60 * 1000,
   });
 
 const HeroSlider = () => {
@@ -78,7 +78,8 @@ const HeroSlider = () => {
               <img
                 src={settings.hero_image_url}
                 alt={s(settings, "hero_headline")}
-                decoding="async"
+                loading="eager"
+                decoding="sync"
                 fetchPriority="high"
                 className="absolute inset-0 w-full h-full object-cover animate-soft-zoom"
               />

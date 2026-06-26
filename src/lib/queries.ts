@@ -188,11 +188,13 @@ export type SocialLink = {
 };
 
 const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
+const ONE_HOUR = 60 * 60 * 1000;
 
 export const useSettings = () =>
   useQuery({
     queryKey: ["settings"],
-    staleTime: FIVE_MIN,
+    staleTime: ONE_HOUR,
     queryFn: async () => {
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;
@@ -253,7 +255,7 @@ export type HomepageSection = {
 export const useHomepageSections = () =>
   useQuery({
     queryKey: ["homepage_sections"],
-    staleTime: FIVE_MIN,
+    staleTime: TEN_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("homepage_sections" as any)
@@ -267,7 +269,7 @@ export const useHomepageSections = () =>
 export const useCategories = () =>
   useQuery({
     queryKey: ["categories"],
-    staleTime: FIVE_MIN,
+    staleTime: TEN_MIN,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
@@ -290,7 +292,7 @@ export type ProductLabel = {
 export const useProductLabels = (opts: { includeInactive?: boolean } = {}) =>
   useQuery({
     queryKey: ["product_labels", opts.includeInactive ? "all" : "active"],
-    staleTime: FIVE_MIN,
+    staleTime: TEN_MIN,
     queryFn: async () => {
       let q = supabase.from("product_labels").select("*").order("display_order");
       if (!opts.includeInactive) q = q.eq("is_active", true);
@@ -307,7 +309,7 @@ export const useProducts = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*, product_images(*), categories(name, slug)")
+        .select("id,name,slug,sku,description,original_price,discounted_price,is_visible,is_featured,tags,sizes,colours,created_at,category_id,categories(name,slug),product_images(id,image_url,sort_order)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data as Product[]).map((p) => ({
@@ -439,10 +441,10 @@ export const productImage = (p: Product) =>
  * Kept for backward compatibility — new product surfaces should prefer
  * `productImageSrcSet` which serves the correct pre-rendered 4:5 variant.
  */
-export const withImageParams = (url: string, width: number, quality = 80) => {
-  if (!url || !url.includes("/storage/v1/object/")) return url;
+export const withImageParams = (url: string, width: number, quality = 75) => {
+  if (!url || !url.includes("supabase")) return url;
   const sep = url.includes("?") ? "&" : "?";
-  return `${url}${sep}width=${width}&quality=${quality}`;
+  return `${url}${sep}width=${width}&quality=${quality}&format=webp`;
 };
 
 /**

@@ -126,6 +126,9 @@ export const BannerRenderer = ({
           key={animKey || banner.id}
           src={resolvedImage}
           alt={banner.heading_text || banner.title || "Banner"}
+          loading="eager"
+          decoding="sync"
+          fetchPriority="high"
           className="absolute inset-0 w-full h-full"
           style={{
             objectFit: "cover",

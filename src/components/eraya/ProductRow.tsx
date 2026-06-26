@@ -7,9 +7,11 @@ interface Props {
   products: Product[];
   viewAllHref?: string;
   eyebrow?: string;
+  /** First product row on the page — eagerly load first 4 images for LCP. */
+  isFirstRow?: boolean;
 }
 
-const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
+const ProductRow = ({ title, products, viewAllHref, eyebrow, isFirstRow = false }: Props) => {
   if (!products.length) return null;
 
   // Cap every section at 12 products (6×2 desktop / 4×2 tablet / 3×2 mobile)
@@ -67,7 +69,7 @@ const ProductRow = ({ title, products, viewAllHref, eyebrow }: Props) => {
           {items.map((p, i) => (
             <div key={p.id} className="snap-start">
               {/* Only the first 3 cards per row show a micro-label to keep the grid calm */}
-              <ProductCard product={p} showLabel={i < 3} />
+              <ProductCard product={p} showLabel={i < 3} priority={isFirstRow && i < 4} />
             </div>
           ))}
         </div>

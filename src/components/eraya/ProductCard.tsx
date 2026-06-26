@@ -21,6 +21,8 @@ interface Props {
   showWhatsAppIcon?: boolean;
   /** When false, suppress the corner micro-label even if the product is tagged. */
   showLabel?: boolean;
+  /** Above-the-fold image — load eagerly with high fetch priority. */
+  priority?: boolean;
 }
 
 /**
@@ -48,7 +50,7 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
   }
 };
 
-const ProductCard = ({ product, showLabel = true }: Props) => {
+const ProductCard = ({ product, showLabel = true, priority = false }: Props) => {
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
   const { addToCart } = useCartContext();
@@ -86,8 +88,9 @@ const ProductCard = ({ product, showLabel = true }: Props) => {
                 srcSet={ss.srcSet}
                 sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
                 alt={product.name}
-                loading="lazy"
-                decoding="async"
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
+                decoding={priority ? "sync" : "async"}
                 width={500}
                 height={625}
                 className="img-soft-zoom absolute inset-0 w-full h-full object-cover object-center"

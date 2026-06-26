@@ -69,22 +69,28 @@ const Index = () => {
             <ProductRowSkeleton count={6} />
           </>
         ) : (
-          visibleSections.map((section, idx) => {
-            // Per-device visibility via Tailwind responsive classes
-            const visibilityClass = [
-              section.visible_mobile ? "" : "hidden md:block",
-              section.visible_desktop ? "" : "md:hidden",
-            ]
-              .filter(Boolean)
-              .join(" ");
+          (() => {
+            const firstProductRowIdx = visibleSections.findIndex((sec) => sec.type === "product_row");
+            return visibleSections.map((section, idx) => {
+              const visibilityClass = [
+                section.visible_mobile ? "" : "hidden md:block",
+                section.visible_desktop ? "" : "md:hidden",
+              ]
+                .filter(Boolean)
+                .join(" ");
 
-            return (
-              <div key={section.id} className={visibilityClass || undefined}>
-                <HomepageSectionRenderer section={section} products={products} />
-                {idx < visibleSections.length - 1 && <div className="section-divider" />}
-              </div>
-            );
-          })
+              return (
+                <div key={section.id} className={visibilityClass || undefined}>
+                  <HomepageSectionRenderer
+                    section={section}
+                    products={products}
+                    isFirstProductRow={idx === firstProductRowIdx}
+                  />
+                  {idx < visibleSections.length - 1 && <div className="section-divider" />}
+                </div>
+              );
+            });
+          })()
         )}
       </main>
       <Footer />

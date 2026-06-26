@@ -282,85 +282,87 @@ const CustomersAdmin = () => {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            All customers
-            <Badge variant="outline">{rows.length}</Badge>
-          </CardTitle>
-          <CardDescription>Manage roles and blocks under Users.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="relative max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name or email"
-              className="pl-9"
-            />
-          </div>
-
-          {loading ? (
-            <div className="rounded-md border border-border overflow-hidden">
-              {[1,2,3,4,5].map(i => <CustomerRowSkeleton key={i} />)}
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              All customers
+              <Badge variant="outline">{rows.length}</Badge>
+            </CardTitle>
+            <CardDescription>Manage roles and blocks under Users.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by name or email"
+                className="pl-9"
+              />
             </div>
-          ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">
-              No customers yet. They'll appear here after their first Google login.
-            </p>
-          ) : (
-            <>
-              <p className="text-xs text-muted-foreground">
-                Showing {Math.min(visibleCount, filtered.length)} of {filtered.length}
+
+            {loading ? (
+              <div className="rounded-md border border-border overflow-hidden">
+                {[1,2,3,4,5].map(i => <CustomerRowSkeleton key={i} />)}
+              </div>
+            ) : filtered.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-12 text-center">
+                No customers yet. They'll appear here after their first Google login.
               </p>
-              <ul className="divide-y divide-border rounded-md border border-border">
-                {filtered.slice(0, visibleCount).map((u) => (
-                  <li key={u.id}>
-                    <button
-                      type="button"
-                      onClick={() => setSelected(u)}
-                      className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/50 transition-colors"
-                    >
-                      {u.avatar_url ? (
-                        <img src={u.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover border" />
-                      ) : (
-                        <span className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
-                          {(u.full_name ?? u.email).charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{u.full_name || u.email.split("@")[0]}</p>
-                        <p className="text-xs text-muted-foreground truncate">{u.email}</p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={
-                          u.is_blocked
-                            ? "bg-red-100 text-red-700 border-red-300"
-                            : "bg-green-100 text-green-700 border-green-300"
-                        }
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground">
+                  Showing {Math.min(visibleCount, filtered.length)} of {filtered.length}
+                </p>
+                <ul className="divide-y divide-border rounded-md border border-border">
+                  {filtered.slice(0, visibleCount).map((u) => (
+                    <li key={u.id}>
+                      <button
+                        type="button"
+                        onClick={() => setSelected(u)}
+                        className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/50 transition-colors"
                       >
-                        {u.is_blocked ? "Blocked" : "Active"}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground hidden sm:inline">
-                        {format(new Date(u.created_at), "dd MMM yyyy")}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {visibleCount < filtered.length && (
-                <div className="flex justify-center pt-2">
-                  <Button variant="outline" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
-                    Load more ({filtered.length - visibleCount} remaining)
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+                        {u.avatar_url ? (
+                          <img src={u.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover border" />
+                        ) : (
+                          <span className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                            {(u.full_name ?? u.email).charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{u.full_name || u.email.split("@")[0]}</p>
+                          <p className="text-xs text-muted-foreground truncate">{u.email}</p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={
+                            u.is_blocked
+                              ? "bg-red-100 text-red-700 border-red-300"
+                              : "bg-green-100 text-green-700 border-green-300"
+                          }
+                        >
+                          {u.is_blocked ? "Blocked" : "Active"}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground hidden sm:inline">
+                          {format(new Date(u.created_at), "dd MMM yyyy")}
+                          </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                {visibleCount < filtered.length && (
+                  <div className="flex justify-center pt-2">
+                    <Button variant="outline" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                      Load more ({filtered.length - visibleCount} remaining)
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       <CustomerDetail
         customer={selected}

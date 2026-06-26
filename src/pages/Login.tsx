@@ -182,6 +182,7 @@ const Login = () => {
                   id="si-email"
                   type="email"
                   autoComplete="email"
+                  autoFocus
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

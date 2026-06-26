@@ -66,6 +66,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
           id: sessionRowId,
           session_id: sessionId,
           enquiry_ref: ref,
+          user_id: user?.id || null,
           customer_email: customerEmail,
           customer_name: customerName,
           notes: note.trim() || null,

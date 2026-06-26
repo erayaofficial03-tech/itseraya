@@ -45,7 +45,7 @@ const WhatsAppFloat = () => {
     >
       <WhatsAppIcon className="h-7 w-7 relative z-10" />
       <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
-      <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden group-hover:md:block bg-charcoal text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none">
+      <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden md:group-hover:block bg-charcoal text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none">
         Chat on WhatsApp
       </span>
     </motion.button>

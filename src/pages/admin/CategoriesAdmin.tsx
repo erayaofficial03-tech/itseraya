@@ -99,7 +99,11 @@ const CategoriesAdmin = () => {
     if (!(await confirm({ title: "Delete this category?", description: "Products will become uncategorised." }))) return;
     const { error } = await supabase.from("categories").delete().eq("id", id);
     if (error) toast.error(error.message);
-    else { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["categories"] }); }
+    else {
+      toast.success("Deleted");
+      void logAdminActivity({ action: "category_deleted", entity: "category", entity_id: id });
+      qc.invalidateQueries({ queryKey: ["categories"] });
+    }
   };
 
   return (

@@ -28,6 +28,8 @@ interface PolicyFormState {
   privacy_body: string;
   terms_title: string;
   terms_body: string;
+  care_guide_title: string;
+  care_guide_body: string;
   font_family: string;
   font_size: string;
   text_color: string;

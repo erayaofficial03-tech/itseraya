@@ -79,11 +79,16 @@ const SidebarBody = ({
   <div className="flex flex-col h-full bg-[hsl(var(--ink))] text-[hsl(var(--ivory))]">
     {/* Brand block */}
     <div className="px-5 py-6 border-b border-[hsl(var(--ivory))]/10 flex flex-col items-center gap-2">
-      <Link to="/admin" onClick={onNavigate} aria-label="Go to admin home" className="inline-flex">
+      <Link to="/" aria-label="Go to store home" className="inline-flex">
         <BrandLogo className="h-10 w-auto" onDark />
       </Link>
-      <span className="h-px w-10 bg-[hsl(var(--champagne))]/70" />
-      <p className="text-[10px] font-medium tracking-[0.4em] uppercase text-[hsl(var(--champagne))]">Admin</p>
+      <Link
+        to="/admin"
+        onClick={onNavigate}
+        className="text-[10px] font-medium tracking-[0.3em] uppercase text-[hsl(var(--champagne))]/60 hover:text-[hsl(var(--champagne))] transition-colors mt-1"
+      >
+        Admin Panel
+      </Link>
     </div>
 
     {/* Profile chip */}
@@ -245,13 +250,18 @@ const AdminLayout = () => {
               />
             </SheetContent>
           </Sheet>
-          <Link to="/admin" aria-label="Go to admin home" className="flex flex-col items-center justify-center gap-0.5">
+          <Link to="/" aria-label="Go to store home" className="flex flex-col items-center justify-center gap-0.5">
             <BrandLogo className="h-7 w-auto" onDark />
             <span className="text-[9px] font-medium tracking-[0.35em] uppercase text-[hsl(var(--champagne))] leading-none">
               Admin
             </span>
           </Link>
-          <div className="w-10 h-10" aria-hidden />
+          <Link
+            to="/"
+            className="text-[11px] text-[hsl(var(--champagne))]/70 hover:text-[hsl(var(--champagne))] px-2 py-1 rounded border border-[hsl(var(--champagne))]/20 transition-colors"
+          >
+            Store ↗
+          </Link>
         </header>
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto bg-background">

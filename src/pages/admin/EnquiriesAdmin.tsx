@@ -12,7 +12,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { Download, Inbox, Search, MessageCircle, Star, Eye } from "lucide-react";
-import { formatINR, useSettings } from "@/lib/queries";
+import { formatINR, useAdminSettings } from "@/lib/queries";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
@@ -79,7 +79,7 @@ const formatTime = (iso: string) =>
 
 const EnquiriesAdmin = () => {
   const { data: enquiries = [], isLoading } = useEnquiries();
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<string>("all");

@@ -10,7 +10,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -54,7 +54,7 @@ const blank: PolicyFormState = {
 };
 
 const PoliciesAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const sx = (settings as unknown as Record<string, string | undefined>) ?? {};
   const qc = useQueryClient();
   const [form, setForm] = useState<PolicyFormState>(blank);

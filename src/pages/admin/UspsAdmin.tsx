@@ -6,11 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import ReviewsManager from "@/components/admin/ReviewsManager";
 
 const UspsAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState({

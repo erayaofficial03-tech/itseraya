@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { useSettings } from "@/lib/queries";
+import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 import { RotateCcw } from "lucide-react";
 import HomepageSectionsAdmin from "./HomepageSectionsAdmin";
@@ -76,7 +76,7 @@ const ColorRow = ({ label, value, onChange }: { label: string; value: string; on
 
 // ─── Page ─────────────────────────────────────────────────────────────────
 const BrandAdmin = () => {
-  const { data: settings } = useSettings();
+  const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
 

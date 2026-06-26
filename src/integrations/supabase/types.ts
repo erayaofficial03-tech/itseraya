@@ -1722,9 +1722,223 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_settings: {
+        Row: {
+          about_body: string | null
+          about_image_url: string | null
+          about_title: string | null
+          app_icon_url: string | null
+          btn_border_radius: number | null
+          card_border_radius: number | null
+          card_shadow: string | null
+          catalogue_whatsapp_message_template: string | null
+          checkout_enabled: boolean | null
+          color_accent: string | null
+          color_background: string | null
+          color_primary: string | null
+          color_text: string | null
+          enquiry_mode: string | null
+          enquiry_requires_login: boolean | null
+          favicon_url: string | null
+          font_body: string | null
+          font_body_url: string | null
+          font_heading: string | null
+          font_heading_url: string | null
+          font_size_base: number | null
+          footer_show_logo: boolean | null
+          google_place_id: string | null
+          google_reviews_visible: boolean | null
+          id: number | null
+          install_prompt_button_label: string | null
+          install_prompt_text: string | null
+          install_prompt_visible: boolean | null
+          logo_url: string | null
+          nav_catalogue_label: string | null
+          nav_home_label: string | null
+          nav_show_search: boolean | null
+          order_confirmation_message: string | null
+          pdf_store_name: string | null
+          pdf_tagline: string | null
+          policy_cancellation_body: string | null
+          policy_cancellation_title: string | null
+          policy_privacy_body: string | null
+          policy_privacy_title: string | null
+          policy_return_body: string | null
+          policy_return_title: string | null
+          policy_shipping_body: string | null
+          policy_shipping_title: string | null
+          policy_terms_body: string | null
+          policy_terms_title: string | null
+          product_grid_cols_desktop: number | null
+          product_grid_cols_mobile: number | null
+          radius_base: number | null
+          section_spacing: number | null
+          seo_auto_generate: boolean | null
+          seo_brand_keywords: string | null
+          seo_description: string | null
+          seo_keywords: string | null
+          seo_og_image_url: string | null
+          seo_title: string | null
+          shipping_charge: number | null
+          shipping_free_above: number | null
+          store_name: string | null
+          tagline: string | null
+          usp_1: string | null
+          usp_2: string | null
+          usp_3: string | null
+          usp_interval_ms: number | null
+          whatsapp_float_visible: boolean | null
+          whatsapp_message_template: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          about_body?: string | null
+          about_image_url?: string | null
+          about_title?: string | null
+          app_icon_url?: string | null
+          btn_border_radius?: number | null
+          card_border_radius?: number | null
+          card_shadow?: string | null
+          catalogue_whatsapp_message_template?: string | null
+          checkout_enabled?: boolean | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_primary?: string | null
+          color_text?: string | null
+          enquiry_mode?: string | null
+          enquiry_requires_login?: boolean | null
+          favicon_url?: string | null
+          font_body?: string | null
+          font_body_url?: string | null
+          font_heading?: string | null
+          font_heading_url?: string | null
+          font_size_base?: number | null
+          footer_show_logo?: boolean | null
+          google_place_id?: string | null
+          google_reviews_visible?: boolean | null
+          id?: number | null
+          install_prompt_button_label?: string | null
+          install_prompt_text?: string | null
+          install_prompt_visible?: boolean | null
+          logo_url?: string | null
+          nav_catalogue_label?: string | null
+          nav_home_label?: string | null
+          nav_show_search?: boolean | null
+          order_confirmation_message?: string | null
+          pdf_store_name?: string | null
+          pdf_tagline?: string | null
+          policy_cancellation_body?: string | null
+          policy_cancellation_title?: string | null
+          policy_privacy_body?: string | null
+          policy_privacy_title?: string | null
+          policy_return_body?: string | null
+          policy_return_title?: string | null
+          policy_shipping_body?: string | null
+          policy_shipping_title?: string | null
+          policy_terms_body?: string | null
+          policy_terms_title?: string | null
+          product_grid_cols_desktop?: number | null
+          product_grid_cols_mobile?: number | null
+          radius_base?: number | null
+          section_spacing?: number | null
+          seo_auto_generate?: boolean | null
+          seo_brand_keywords?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_og_image_url?: string | null
+          seo_title?: string | null
+          shipping_charge?: number | null
+          shipping_free_above?: number | null
+          store_name?: string | null
+          tagline?: string | null
+          usp_1?: string | null
+          usp_2?: string | null
+          usp_3?: string | null
+          usp_interval_ms?: number | null
+          whatsapp_float_visible?: boolean | null
+          whatsapp_message_template?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          about_body?: string | null
+          about_image_url?: string | null
+          about_title?: string | null
+          app_icon_url?: string | null
+          btn_border_radius?: number | null
+          card_border_radius?: number | null
+          card_shadow?: string | null
+          catalogue_whatsapp_message_template?: string | null
+          checkout_enabled?: boolean | null
+          color_accent?: string | null
+          color_background?: string | null
+          color_primary?: string | null
+          color_text?: string | null
+          enquiry_mode?: string | null
+          enquiry_requires_login?: boolean | null
+          favicon_url?: string | null
+          font_body?: string | null
+          font_body_url?: string | null
+          font_heading?: string | null
+          font_heading_url?: string | null
+          font_size_base?: number | null
+          footer_show_logo?: boolean | null
+          google_place_id?: string | null
+          google_reviews_visible?: boolean | null
+          id?: number | null
+          install_prompt_button_label?: string | null
+          install_prompt_text?: string | null
+          install_prompt_visible?: boolean | null
+          logo_url?: string | null
+          nav_catalogue_label?: string | null
+          nav_home_label?: string | null
+          nav_show_search?: boolean | null
+          order_confirmation_message?: string | null
+          pdf_store_name?: string | null
+          pdf_tagline?: string | null
+          policy_cancellation_body?: string | null
+          policy_cancellation_title?: string | null
+          policy_privacy_body?: string | null
+          policy_privacy_title?: string | null
+          policy_return_body?: string | null
+          policy_return_title?: string | null
+          policy_shipping_body?: string | null
+          policy_shipping_title?: string | null
+          policy_terms_body?: string | null
+          policy_terms_title?: string | null
+          product_grid_cols_desktop?: number | null
+          product_grid_cols_mobile?: number | null
+          radius_base?: number | null
+          section_spacing?: number | null
+          seo_auto_generate?: boolean | null
+          seo_brand_keywords?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_og_image_url?: string | null
+          seo_title?: string | null
+          shipping_charge?: number | null
+          shipping_free_above?: number | null
+          store_name?: string | null
+          tagline?: string | null
+          usp_1?: string | null
+          usp_2?: string | null
+          usp_3?: string | null
+          usp_interval_ms?: number | null
+          whatsapp_float_visible?: boolean | null
+          whatsapp_message_template?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      get_public_tracking_ids: {
+        Args: never
+        Returns: {
+          google_analytics_id: string
+          google_site_verification: string
+          google_tag_manager_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

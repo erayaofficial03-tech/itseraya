@@ -39,6 +39,12 @@ const CategoryForm = ({ cat, onClose }: { cat?: Category; onClose: () => void })
         if (error) throw error;
       }
       toast.success("Saved");
+      void logAdminActivity({
+        action: cat ? "category_updated" : "category_created",
+        entity: "category",
+        entity_id: cat?.id,
+        details: { name: payload.name },
+      });
       qc.invalidateQueries({ queryKey: ["categories"] });
       onClose();
     } catch (e: any) {

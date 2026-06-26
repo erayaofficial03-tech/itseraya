@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -191,7 +192,7 @@ const ProductDetail = () => {
         <Header />
       </div>
 
-      <main className="md:pt-6 max-w-7xl mx-auto pb-24 md:pb-16">
+      <main className="md:pt-6 max-w-7xl mx-auto pb-24 md:pb-16"><PageTransition>
         <div className="hidden md:block px-6 mb-4">
           <Breadcrumb
             items={[
@@ -477,7 +478,7 @@ const ProductDetail = () => {
             </div>
           )}
         </section>
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

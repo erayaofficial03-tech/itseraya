@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { Star } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -53,7 +54,7 @@ const Index = () => {
         keywords={`${storeName}, artificial jewellery, imitation jewellery, fashion jewellery India, jewellery for women, buy jewellery online, rings, earrings, necklaces, bangles`}
       />
       <Header />
-      <main className="pb-20 md:pb-0">
+      <main className="pb-20 md:pb-0"><PageTransition>
         {totalCount >= 3 && (
           <div className="border-y border-border bg-ivory-warm/50">
             <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-center gap-2 text-sm text-ink">
@@ -92,7 +93,7 @@ const Index = () => {
             });
           })()
         )}
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

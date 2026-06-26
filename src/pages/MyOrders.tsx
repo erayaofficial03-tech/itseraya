@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, ShoppingBag, ChevronRight } from "lucide-react";
@@ -42,7 +43,7 @@ const MyOrders = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8 pb-24 md:pb-10">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8 pb-24 md:pb-10"><PageTransition>
         <h1 className="text-2xl font-light text-foreground mb-6">My Orders</h1>
 
         {(authLoading || isLoading) ? (
@@ -107,7 +108,7 @@ const MyOrders = () => {
             })}
           </div>
         )}
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

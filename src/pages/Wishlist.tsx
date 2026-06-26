@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { Heart, Loader2, ArrowLeft, Share2 } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -30,7 +31,7 @@ const Wishlist = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <SeoHead title={`My Wishlist — ${s(settings, "store_name")}`} />
       <Header />
-      <main className="flex-1 px-4 md:px-6 py-6 pb-24 md:pb-16 max-w-6xl mx-auto w-full">
+      <main className="flex-1 px-4 md:px-6 py-6 pb-24 md:pb-16 max-w-6xl mx-auto w-full"><PageTransition>
         <div className="flex items-center gap-3 mb-6">
           <button
             onClick={() => navigate(-1)}
@@ -109,7 +110,7 @@ const Wishlist = () => {
             ))}
           </div>
         )}
-      </main>
+      </PageTransition></main>
       <Footer />
     </div>
   );

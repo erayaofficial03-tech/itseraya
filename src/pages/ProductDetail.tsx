@@ -329,8 +329,23 @@ const ProductDetail = () => {
             <div className="border-t border-border" />
 
             <div className="flex flex-col gap-3">
-              {/* Enquire Now (left) + Add to Cart (right) */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Save (wishlist) + Enquire + Add to Cart */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!user) {
+                      navigate("/login?redirect=" + encodeURIComponent(window.location.pathname));
+                      return;
+                    }
+                    if (product) toggleWishlist.mutate({ productId: product.id, isSaved });
+                  }}
+                  aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
+                  className="flex items-center justify-center gap-2 h-12 px-4 rounded-md border border-border hover:border-red-300 transition-colors text-base"
+                >
+                  <Heart className={`h-5 w-5 ${isSaved ? "fill-red-500 text-red-500" : "text-muted-foreground"}`} />
+                  <span>{isSaved ? "Saved" : "Save"}</span>
+                </button>
                 <Button
                   type="button"
                   variant="outline"

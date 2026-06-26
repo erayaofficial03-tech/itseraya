@@ -337,7 +337,6 @@ const ReviewsManager = () => {
                 />
               </div>
             </div>
-            </div>
             <div>
               <Label>Rating</Label>
               <StarPick value={form.rating} onChange={(n) => setForm({ ...form, rating: n })} />

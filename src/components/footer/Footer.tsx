@@ -33,7 +33,7 @@ const Footer = () => {
   return (
     <>
       {/* Mobile slim copyright bar */}
-      <footer className="md:hidden w-full bg-[hsl(var(--ink))] text-ivory border-t border-[hsl(var(--ink-soft))]/40 mt-12 px-4 py-5 pb-24 flex flex-col items-center gap-3 text-center">
+      <footer className="md:hidden w-full bg-[hsl(var(--ink))] text-ivory border-t border-[hsl(var(--ink-soft))]/40 mt-12 px-4 py-5 pb-[76px] flex flex-col items-center gap-3 text-center">
         {showLogo && (
           <Link to="/" aria-label="Go to home" className="inline-flex">
             <BrandLogo onDark className="h-7 w-auto object-contain" />

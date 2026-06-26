@@ -114,7 +114,7 @@ const TrackEnquiry = () => {
     <div className="min-h-screen bg-background">
       <SeoHead title={`Track Enquiry — ${settings?.store_name || "Eraya"}`} description="Track your ERAYA enquiry status and details." />
       <Header />
-      <main className="max-w-2xl mx-auto px-4 md:px-6 pt-8 pb-24">
+      <main className="max-w-2xl mx-auto px-4 md:px-6 pt-8 pb-[76px]">
         <div className="text-center mb-6">
           <h1 className="font-serif text-3xl md:text-4xl text-foreground">Track Your Enquiry</h1>
           <p className="text-sm text-muted-foreground mt-2">

@@ -514,9 +514,11 @@ const BannersAdmin = () => {
       .single();
     if (error) return toast.error(error.message);
     toast.success("Banner created");
+    const created = data as { id: string };
+    void logAdminActivity({ action: "banner_created", entity: "banner", entity_id: created.id });
     await refetch();
     invalidate();
-    setSelectedId((data as { id: string }).id);
+    setSelectedId(created.id);
   };
 
   const remove = async (id: string) => {
@@ -525,6 +527,7 @@ const BannersAdmin = () => {
     if (error) return toast.error(error.message);
     if (selectedId === id) setSelectedId(null);
     toast.success("Deleted");
+    void logAdminActivity({ action: "banner_deleted", entity: "banner", entity_id: id });
     await refetch();
     invalidate();
   };

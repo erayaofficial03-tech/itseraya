@@ -554,6 +554,7 @@ export type Database = {
           session_id: string
           status: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -566,6 +567,7 @@ export type Database = {
           session_id: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -578,6 +580,7 @@ export type Database = {
           session_id?: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -905,16 +908,22 @@ export type Database = {
         Row: {
           id: string
           product_id: string | null
+          session_id: string | null
+          user_id: string | null
           viewed_at: string | null
         }
         Insert: {
           id?: string
           product_id?: string | null
+          session_id?: string | null
+          user_id?: string | null
           viewed_at?: string | null
         }
         Update: {
           id?: string
           product_id?: string | null
+          session_id?: string | null
+          user_id?: string | null
           viewed_at?: string | null
         }
         Relationships: [
@@ -1683,18 +1692,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          note: string | null
           product_id: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          note?: string | null
           product_id: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          note?: string | null
           product_id?: string
           user_id?: string
         }

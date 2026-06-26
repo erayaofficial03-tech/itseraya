@@ -126,7 +126,7 @@ const App = () => (
         <CartProvider>
         <SeoHead />
         <Toaster />
-        <Sonner />
+        <Sonner position="top-center" richColors closeButton />
         <WhatsAppFallbackDialog />
         <ConfirmDialogRoot />
           <ScrollToTop />

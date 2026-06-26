@@ -62,6 +62,7 @@ const HomepageSectionRenderer = ({ section, products, isFirstProductRow = false 
           title={props.title || "Products"}
           products={filterProducts()}
           viewAllHref={props.view_all}
+          isFirstRow={isFirstProductRow}
         />
       );
     default:

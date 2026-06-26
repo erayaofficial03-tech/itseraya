@@ -187,6 +187,43 @@ export type SocialLink = {
   display_order: number;
 };
 
+export type Faq = {
+  id: string;
+  question: string;
+  answer: string;
+  display_order: number;
+  is_visible: boolean;
+};
+
+export const useFaqs = () =>
+  useQuery<Faq[]>({
+    queryKey: ["faqs"],
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("faqs")
+        .select("id, question, answer, display_order, is_visible")
+        .eq("is_visible", true)
+        .order("display_order");
+      if (error) throw error;
+      return (data || []) as Faq[];
+    },
+  });
+
+export const useAdminFaqs = () =>
+  useQuery<Faq[]>({
+    queryKey: ["admin-faqs"],
+    staleTime: 0,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("faqs")
+        .select("*")
+        .order("display_order");
+      if (error) throw error;
+      return (data || []) as Faq[];
+    },
+  });
+
 const FIVE_MIN = 5 * 60 * 1000;
 const TEN_MIN = 10 * 60 * 1000;
 const ONE_HOUR = 60 * 60 * 1000;

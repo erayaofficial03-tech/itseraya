@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSettings, useProducts, useCategories } from "@/lib/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import {
-  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, Smartphone, ExternalLink,
+  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, Smartphone, ExternalLink, Heart,
 } from "lucide-react";
 
 type RangeKey = "1" | "7" | "30" | "90";
@@ -165,6 +166,23 @@ const AnalyticsAdmin = () => {
     waClicks.forEach((w) => bump(w.product_id, "wa"));
     return Object.entries(stats).map(([id, s]) => ({ id, ...s })).sort((a, b) => b.views - a.views).slice(0, 20);
   }, [views, wishlists, waClicks, productMap]);
+
+  const { data: wishlistStats } = useQuery({
+    queryKey: ['wishlist-stats'],
+    queryFn: async () => {
+      const { data } = await (supabase as any)
+        .from('wishlist_items')
+        .select('product_id, products(name, original_price)')
+        .order('created_at', { ascending: false });
+      const counts: Record<string, { name: string; count: number; price: number }> = {};
+      (data || []).forEach((item: any) => {
+        const id = item.product_id;
+        if (!counts[id]) counts[id] = { name: item.products?.name || 'Unknown', count: 0, price: item.products?.original_price || 0 };
+        counts[id].count++;
+      });
+      return Object.entries(counts).sort((a, b) => b[1].count - a[1].count).slice(0, 10);
+    }
+  });
 
   const topEnquiredProducts = useMemo(() => {
     const t: Record<string, { name: string; count: number }> = {};
@@ -354,6 +372,42 @@ const AnalyticsAdmin = () => {
                   ))}
                 </tbody>
               </table>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Heart className="h-4 w-4 text-gold" /> Most wishlisted products
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="text-xs text-muted-foreground border-b">
+                  <tr>
+                    <th className="text-left py-2">Product</th>
+                    <th className="text-right">Saved by</th>
+                    <th className="text-right">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!wishlistStats?.length && (
+                    <tr><td colSpan={3} className="py-4 text-center text-muted-foreground">No wishlist data yet</td></tr>
+                  )}
+                  {wishlistStats?.map(([id, stat]: any) => (
+                    <tr key={id} className="border-b last:border-0">
+                      <td className="py-2">
+                        <Link to={`/admin/products?id=${id}`} className="hover:underline">{stat.name}</Link>
+                      </td>
+                      <td className="text-right">{stat.count} customers</td>
+                      <td className="text-right">₹{stat.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="text-xs text-muted-foreground mt-3">
+                Products with high wishlist saves but low orders = opportunity to run a promotion or restock.
+              </p>
             </CardContent>
           </Card>
 

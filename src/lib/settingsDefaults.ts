@@ -103,6 +103,10 @@ export const SETTINGS_DEFAULTS = {
     "We respect your privacy. Your personal information is never shared with third parties.",
   policy_terms_title: "Terms of Service",
   policy_terms_body: "By using Eraya, you agree to our terms of service.",
+
+  care_guide_title: "Jewellery Care Guide",
+  care_guide_body:
+    "Daily Wear\nPut your jewellery on last — after perfume, lotion and hairspray have dried. Take it off before sleeping, swimming, exercising or showering.\n\nCleaning\nSoak in warm water with mild dish soap for 10 minutes, gently brush, rinse and pat dry.\n\nStorage\nStore each piece separately in a soft pouch or box to prevent scratches.\n\nWhat to Avoid\nChlorine, saltwater, perfume, sanitiser and lotions can dull plating. Remove jewellery before contact.",
 } as const;
 
 type Defaults = typeof SETTINGS_DEFAULTS;

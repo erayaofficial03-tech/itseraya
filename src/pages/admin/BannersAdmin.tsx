@@ -10,6 +10,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/adminLog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -513,9 +514,11 @@ const BannersAdmin = () => {
       .single();
     if (error) return toast.error(error.message);
     toast.success("Banner created");
+    const created = data as { id: string };
+    void logAdminActivity({ action: "banner_created", entity: "banner", entity_id: created.id });
     await refetch();
     invalidate();
-    setSelectedId((data as { id: string }).id);
+    setSelectedId(created.id);
   };
 
   const remove = async (id: string) => {
@@ -524,6 +527,7 @@ const BannersAdmin = () => {
     if (error) return toast.error(error.message);
     if (selectedId === id) setSelectedId(null);
     toast.success("Deleted");
+    void logAdminActivity({ action: "banner_deleted", entity: "banner", entity_id: id });
     await refetch();
     invalidate();
   };

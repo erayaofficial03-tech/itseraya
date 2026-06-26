@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/adminLog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -140,6 +141,7 @@ const BrandAdmin = () => {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Theme saved — applied site-wide");
+    void logAdminActivity({ action: "brand_updated", entity: "settings" });
     qc.invalidateQueries({ queryKey: ["settings"] });
   };
 

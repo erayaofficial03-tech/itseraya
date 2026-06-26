@@ -46,7 +46,8 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
       return;
     }
     if (blockedByLogin) {
-      toast.error("Please sign in to send an enquiry");
+      // UI replaces the send button with a Google sign-in card,
+      // so this guard should never trigger — kept as a safety net.
       return;
     }
     setSubmitting(true);

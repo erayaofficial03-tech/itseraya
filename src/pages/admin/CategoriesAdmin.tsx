@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/adminLog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,6 +39,12 @@ const CategoryForm = ({ cat, onClose }: { cat?: Category; onClose: () => void })
         if (error) throw error;
       }
       toast.success("Saved");
+      void logAdminActivity({
+        action: cat ? "category_updated" : "category_created",
+        entity: "category",
+        entity_id: cat?.id,
+        details: { name: payload.name },
+      });
       qc.invalidateQueries({ queryKey: ["categories"] });
       onClose();
     } catch (e: any) {
@@ -92,7 +99,11 @@ const CategoriesAdmin = () => {
     if (!(await confirm({ title: "Delete this category?", description: "Products will become uncategorised." }))) return;
     const { error } = await supabase.from("categories").delete().eq("id", id);
     if (error) toast.error(error.message);
-    else { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["categories"] }); }
+    else {
+      toast.success("Deleted");
+      void logAdminActivity({ action: "category_deleted", entity: "category", entity_id: id });
+      qc.invalidateQueries({ queryKey: ["categories"] });
+    }
   };
 
   return (

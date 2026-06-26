@@ -40,7 +40,7 @@ const WhatsAppFloat = () => {
       title="Chat on WhatsApp"
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.94 }}
-      className="group fixed bottom-[72px] right-4 md:bottom-8 md:right-6 z-40 w-[54px] h-[54px] rounded-full text-white flex items-center justify-center shadow-lg"
+      className="group fixed bottom-[72px] right-4 md:bottom-8 md:right-6 z-[45] w-[54px] h-[54px] rounded-full text-white flex items-center justify-center shadow-lg"
       style={{ backgroundColor: "#25D366" }}
     >
       <WhatsAppIcon className="h-7 w-7 relative z-10" />

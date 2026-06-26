@@ -1176,6 +1176,8 @@ export type Database = {
           card_border_width: number | null
           card_layout: string | null
           card_shadow: string | null
+          care_guide_body: string | null
+          care_guide_title: string | null
           catalogue_download_label: string | null
           catalogue_heading: string | null
           catalogue_subtext: string | null
@@ -1331,6 +1333,8 @@ export type Database = {
           card_border_width?: number | null
           card_layout?: string | null
           card_shadow?: string | null
+          care_guide_body?: string | null
+          care_guide_title?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
@@ -1486,6 +1490,8 @@ export type Database = {
           card_border_width?: number | null
           card_layout?: string | null
           card_shadow?: string | null
+          care_guide_body?: string | null
+          care_guide_title?: string | null
           catalogue_download_label?: string | null
           catalogue_heading?: string | null
           catalogue_subtext?: string | null
@@ -1782,6 +1788,8 @@ export type Database = {
           btn_border_radius: number | null
           card_border_radius: number | null
           card_shadow: string | null
+          care_guide_body: string | null
+          care_guide_title: string | null
           catalogue_whatsapp_message_template: string | null
           checkout_enabled: boolean | null
           color_accent: string | null
@@ -1858,6 +1866,8 @@ export type Database = {
           btn_border_radius?: number | null
           card_border_radius?: number | null
           card_shadow?: string | null
+          care_guide_body?: string | null
+          care_guide_title?: string | null
           catalogue_whatsapp_message_template?: string | null
           checkout_enabled?: boolean | null
           color_accent?: string | null
@@ -1934,6 +1944,8 @@ export type Database = {
           btn_border_radius?: number | null
           card_border_radius?: number | null
           card_shadow?: string | null
+          care_guide_body?: string | null
+          care_guide_title?: string | null
           catalogue_whatsapp_message_template?: string | null
           checkout_enabled?: boolean | null
           color_accent?: string | null

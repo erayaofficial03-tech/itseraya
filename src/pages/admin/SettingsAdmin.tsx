@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/adminLog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,7 +124,11 @@ const SettingsAdmin = () => {
     });
     setBusy(false);
     if (payErr) toast.error(payErr.message);
-    else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else {
+      toast.success("Saved");
+      void logAdminActivity({ action: "settings_updated", entity: "settings" });
+      qc.invalidateQueries({ queryKey: ["settings"] });
+    }
   };
 
   // Social links state

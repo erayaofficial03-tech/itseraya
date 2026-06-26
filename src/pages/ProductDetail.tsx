@@ -480,6 +480,27 @@ const ProductDetail = () => {
         </section>
       </PageTransition></main>
       <Footer />
+
+      {/* Mobile sticky action bar — sits above bottom nav */}
+      <div
+        className="md:hidden fixed bottom-[60px] inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-[#EDE8E1] px-4 py-3 flex gap-3"
+        style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}
+      >
+        <button
+          onClick={handleEnquire}
+          className="flex-1 h-12 rounded-full border-2 border-[#C9A84C] text-[#C9A84C] font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Enquire
+        </button>
+        <button
+          onClick={handleAddToCart}
+          className="flex-[2] h-12 rounded-full bg-[#C9A84C] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform"
+        >
+          <ShoppingBag className="h-4 w-4" />
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 };

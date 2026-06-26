@@ -77,7 +77,8 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
       to={`/jewellery/${product.slug ?? product.id}`}
       className="block group h-full"
     >
-      <article className="h-full flex flex-col">
+      <article className="card-lift h-full flex flex-col">
+
         {/* Image — 4:5 editorial portrait */}
         <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-warm">
           {(() => {

@@ -47,12 +47,16 @@ const WhatsAppFloat = () => {
       onClick={handleClick}
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
-      animate={bounced ? { y: [0, -8, 0] } : { y: 0 }}
-      transition={bounced ? { repeat: 4, duration: 0.9, ease: "easeInOut" } : { duration: 0.2 }}
-      className="fixed bottom-20 right-4 md:bottom-6 z-40 w-[52px] h-[52px] rounded-full text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.94 }}
+      className="group fixed bottom-20 right-4 md:bottom-8 md:right-6 z-40 w-[54px] h-[54px] rounded-full text-white flex items-center justify-center shadow-lg"
       style={{ backgroundColor: "#25D366" }}
     >
-      <WhatsAppIcon className="h-7 w-7" />
+      <WhatsAppIcon className="h-7 w-7 relative z-10" />
+      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
+      <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden group-hover:md:block bg-charcoal text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none">
+        Chat on WhatsApp
+      </span>
     </motion.button>
   );
 };

@@ -51,7 +51,7 @@ const ProductDetail = () => {
     queryKey: ["reviews", product?.id, user?.id],
     enabled: !!product?.id,
     queryFn: async () => {
-      const reviewColumns = "id, product_id, customer_name, customer_city, rating, review_text, photos, is_approved, is_hidden, is_featured, reviewer_user_id, created_at";
+      const reviewColumns = "id, product_id, customer_name, customer_city, rating, review_text, is_approved, is_hidden, is_featured, reviewer_user_id, created_at";
       let query = supabase.from("reviews").select(reviewColumns).eq("product_id", product!.id);
       if (user?.id) {
         // Approved & visible OR own review

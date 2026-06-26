@@ -1931,6 +1931,14 @@ export type Database = {
       }
     }
     Functions: {
+      get_public_tracking_ids: {
+        Args: never
+        Returns: {
+          google_analytics_id: string
+          google_site_verification: string
+          google_tag_manager_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

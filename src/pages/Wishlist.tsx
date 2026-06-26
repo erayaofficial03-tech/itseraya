@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { PageTransition } from "@/components/layout/PageTransition";
-import { Heart, Loader2, ArrowLeft, Share2 } from "lucide-react";
+import { Heart, ArrowLeft, Share2 } from "lucide-react";
+import { WishlistSkeleton } from "@/components/ui/skeletons";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import SeoHead from "@/components/providers/SeoHead";
@@ -72,9 +73,7 @@ const Wishlist = () => {
         </div>
 
         {authLoading || (user && isLoading) ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-6 w-6 animate-spin text-gold" />
-          </div>
+          <WishlistSkeleton />
         ) : !user ? (
           <div className="text-center py-12 max-w-sm mx-auto">
             <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-12 mx-auto mb-5 object-contain" />

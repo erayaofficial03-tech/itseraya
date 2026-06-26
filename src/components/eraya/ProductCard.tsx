@@ -144,7 +144,7 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             }}
             aria-label="Add to cart"
             title="Add to Cart"
-            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-8 w-8 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center hover:scale-110 transition-transform ease-luxury active:scale-95 shadow-soft z-10"
+            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center transition-transform active:scale-90 shadow-soft z-10"
           >
             <Plus className="h-4 w-4" strokeWidth={2.5} />
           </button>

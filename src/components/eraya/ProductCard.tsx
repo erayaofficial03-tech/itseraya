@@ -21,6 +21,8 @@ interface Props {
   showWhatsAppIcon?: boolean;
   /** When false, suppress the corner micro-label even if the product is tagged. */
   showLabel?: boolean;
+  /** Above-the-fold image — load eagerly with high fetch priority. */
+  priority?: boolean;
 }
 
 /**

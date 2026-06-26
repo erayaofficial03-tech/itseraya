@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useSettings, useThemePresets } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 import { s } from "@/lib/settingsDefaults";
 import { hexToHsl, isValidHex } from "@/lib/colors";
 

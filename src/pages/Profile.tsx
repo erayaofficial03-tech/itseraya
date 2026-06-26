@@ -159,6 +159,20 @@ const Profile = () => {
       <SeoHead title={`My Profile — ${s(settings, "store_name")}`} />
       <Header />
       <main className="flex-1 px-5 py-6 pb-24 lg:pb-10 max-w-xl mx-auto w-full space-y-6">
+        {user && profile && !profile.phone && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between">
+            <span className="text-sm text-amber-700">
+              📱 Add your mobile number so we can contact you
+            </span>
+            <Link
+              to="/complete-profile"
+              className="text-xs font-semibold text-amber-700 underline"
+            >
+              Add now
+            </Link>
+          </div>
+        )}
+
         <div
           className="bg-white rounded-2xl border p-6 flex flex-col items-center text-center"
           style={{ borderColor: "#EDE8E1" }}

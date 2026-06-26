@@ -50,7 +50,7 @@ const toneClass = (tone: "ink" | "champagne" | "blush") => {
   }
 };
 
-const ProductCard = ({ product, showLabel = true }: Props) => {
+const ProductCard = ({ product, showLabel = true, priority = false }: Props) => {
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
   const { addToCart } = useCartContext();

@@ -188,11 +188,13 @@ export type SocialLink = {
 };
 
 const FIVE_MIN = 5 * 60 * 1000;
+const TEN_MIN = 10 * 60 * 1000;
+const ONE_HOUR = 60 * 60 * 1000;
 
 export const useSettings = () =>
   useQuery({
     queryKey: ["settings"],
-    staleTime: FIVE_MIN,
+    staleTime: ONE_HOUR,
     queryFn: async () => {
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;

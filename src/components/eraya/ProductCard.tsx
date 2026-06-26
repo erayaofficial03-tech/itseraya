@@ -1,16 +1,17 @@
 import { memo } from "react";
-import { Link } from "react-router-dom";
-import { MessageCircle, Plus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Heart, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { useProductRatings } from "@/hooks/useProductRatings";
+import { useAuth } from "@/hooks/useAuth";
+import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import {
   type Product,
   productImage,
   productImageSrcSet,
   useProductLabels,
-  useSettings,
   type ProductLabel,
 } from "@/lib/queries";
-import { openWhatsAppEnquiry } from "@/lib/whatsapp";
 import { useCartContext } from "@/components/providers/CartProvider";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";

@@ -77,6 +77,8 @@ const PoliciesAdmin = () => {
       privacy_body: sx.policy_privacy_body || "",
       terms_title: sx.policy_terms_title || "Terms of Service",
       terms_body: sx.policy_terms_body || "",
+      care_guide_title: sx.care_guide_title || "Jewellery Care Guide",
+      care_guide_body: sx.care_guide_body || "",
       font_family: sx.policy_font_family || "Inter",
       font_size: sx.policy_font_size || "16",
       text_color: sx.policy_text_color || "#2C2C2C",

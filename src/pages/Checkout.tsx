@@ -252,6 +252,35 @@ const Checkout = () => {
     }
   };
 
+  if (settings && settings.checkout_enabled === false) {
+    const waUrl = buildWhatsAppUrl(
+      settings?.whatsapp_number,
+      "Hi Eraya, I'd like to place an order.",
+    );
+    return (
+      <div className="min-h-screen bg-background">
+        <CheckoutHeader />
+        <main className="max-w-xl mx-auto px-6 py-24 text-center">
+          <h1 className="text-2xl font-light text-foreground mb-3">
+            Checkout temporarily unavailable
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            We've paused online orders for a moment. Please reach out on WhatsApp
+            and we'll personally help you complete your order.
+          </p>
+          {settings?.whatsapp_number && (
+            <a href={waUrl} target="_blank" rel="noopener noreferrer">
+              <Button className="rounded-full bg-green-600 hover:bg-green-700 text-white">
+                <MessageCircle className="h-4 w-4 mr-2" /> Chat with us on WhatsApp
+              </Button>
+            </a>
+          )}
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (cartCount === 0 && !placing) {
     return (
       <div className="min-h-screen bg-background">

@@ -184,7 +184,7 @@ const App = () => (
                 
                 <Route path="sections" element={<HomepageSectionsAdmin />} />
                 <Route path="banners" element={<BannersAdmin />} />
-                <Route path="usps" element={<Admin><UspsAdmin /></Admin>} />
+                <Route path="usps" element={<UspsAdmin />} />
                 <Route path="announcement" element={<AnnouncementAdmin />} />
                 <Route path="brand" element={<AdminOnly><BrandAdmin /></AdminOnly>} />
                 <Route path="labels" element={<AdminOnly><LabelsAdmin /></AdminOnly>} />

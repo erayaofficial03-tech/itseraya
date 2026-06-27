@@ -275,12 +275,27 @@ const OrderDetail = () => {
                 <img
                   src={screenshotUrl}
                   alt="Payment screenshot"
-                  className="w-full h-full object-cover blur-md hover:blur-none transition-all duration-300"
+                  className={`w-full h-full object-cover transition-all duration-300 ${revealed ? "" : "blur-md"}`}
                 />
+                {!revealed && (
+                  <button
+                    type="button"
+                    onClick={() => setRevealed(true)}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-medium hover:bg-black/40 transition-colors"
+                  >
+                    Tap to reveal
+                  </button>
+                )}
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                Hover to reveal
-              </p>
+              {revealed && (
+                <button
+                  type="button"
+                  onClick={() => setRevealed(false)}
+                  className="text-[10px] text-muted-foreground mt-1 underline"
+                >
+                  Hide
+                </button>
+              )}
             </div>
           )}
         </section>

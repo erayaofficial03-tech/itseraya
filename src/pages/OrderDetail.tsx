@@ -97,13 +97,11 @@ const OrderDetail = () => {
   }, [ref, user, authLoading, navigate]);
 
   const contactAdmin = () => {
-    const number = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!number || !order) return;
+    if (!order) return;
+    const number = settings?.whatsapp_number;
+    if (!number) return;
     const text = `Hi Eraya, I have a question about my order *${order.order_ref}*`;
-    window.open(
-      `https://wa.me/${number}?text=${encodeURIComponent(text)}`,
-      "_blank",
-    );
+    window.open(buildWhatsAppUrl(number, text), "_blank", "noopener,noreferrer");
   };
 
   if (loading || authLoading) {

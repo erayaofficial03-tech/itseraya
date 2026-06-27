@@ -60,9 +60,14 @@ export const useInstallPrompt = () => {
   > => {
     if (isInstalled) return "installed";
     if (isIOS) return "ios";
-    if (!deferredPrompt) return "unavailable";
+    if (!deferredPrompt) {
+      logInstallEvent("unavailable", "android");
+      return "unavailable";
+    }
+    logInstallEvent("prompt_shown", "android");
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
+    logInstallEvent(outcome === "accepted" ? "accepted" : "dismissed", "android");
     setDeferredPrompt(null);
     setIsInstallable(false);
     return outcome;

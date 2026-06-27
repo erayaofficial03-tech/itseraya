@@ -27,6 +27,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const SECTIONS: { key: PricingSection; title: string; unit: string; help: string }[] = [
   { key: "packing_bom", title: "Packing BOM", unit: "₹", help: "Flat add per unit." },
@@ -246,7 +247,7 @@ const PricingAdmin = () => {
         packing_cost: mults.packing,
       },
     });
-    qc.invalidateQueries({ queryKey: ["settings"] });
+    invalidateSettings(qc);
   };
 
   return (

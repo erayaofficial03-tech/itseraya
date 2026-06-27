@@ -16,6 +16,7 @@ import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage, uploadProductImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
 import { logAdminActivity } from "@/lib/adminLog";
+import { useAuth } from "@/hooks/useAuth";
 
 const empty = {
   name: "", slug: "", category_id: "", description: "", original_price: 0,
@@ -334,6 +335,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
 
 const ProductsAdmin = () => {
   const { data: products = [] } = useProducts();
+  const { isAdmin } = useAuth();
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
@@ -388,9 +390,11 @@ const ProductsAdmin = () => {
                 <Button size="sm" variant="ghost" onClick={() => { setEditing(p); setOpen(true); }}>
                   <Pencil className="h-3 w-3" />
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
-                  <Trash2 className="h-3 w-3 text-destructive" />
-                </Button>
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
+                    <Trash2 className="h-3 w-3 text-destructive" />
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

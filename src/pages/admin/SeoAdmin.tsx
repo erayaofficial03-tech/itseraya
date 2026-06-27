@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const SeoAdmin = () => {
   const { data: settings } = useAdminSettings();
@@ -64,7 +65,7 @@ const SeoAdmin = () => {
     const { error } = await supabase.from("settings").update(form).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else { toast.success("Saved"); invalidateSettings(qc); }
   };
 
   const saveReviews = async () => {
@@ -80,7 +81,7 @@ const SeoAdmin = () => {
     });
     setReviewsBusy(false);
     if (e1 || e2) toast.error((e1 || e2)!.message);
-    else { toast.success("Google Reviews settings saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else { toast.success("Google Reviews settings saved"); invalidateSettings(qc); }
   };
 
   const testConnection = async () => {

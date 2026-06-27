@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const TEXT_KEYS = [
   "nav_home_label", "nav_catalogue_label",
@@ -48,7 +49,7 @@ const LabelsAdmin = () => {
     const { error } = await supabase.from("settings").update(form as any).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Labels saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else { toast.success("Labels saved"); invalidateSettings(qc); }
   };
 
   const text = (key: typeof TEXT_KEYS[number], label: string, multiline = false, hint?: string) => (

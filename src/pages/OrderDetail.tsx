@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useSettings } from "@/lib/queries";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 type OrderRow = {
   id: string;
@@ -61,6 +62,7 @@ const OrderDetail = () => {
   const [order, setOrder] = useState<OrderRow | null>(null);
   const [items, setItems] = useState<ItemRow[]>([]);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -95,13 +97,11 @@ const OrderDetail = () => {
   }, [ref, user, authLoading, navigate]);
 
   const contactAdmin = () => {
-    const number = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!number || !order) return;
+    if (!order) return;
+    const number = settings?.whatsapp_number;
+    if (!number) return;
     const text = `Hi Eraya, I have a question about my order *${order.order_ref}*`;
-    window.open(
-      `https://wa.me/${number}?text=${encodeURIComponent(text)}`,
-      "_blank",
-    );
+    window.open(buildWhatsAppUrl(number, text), "_blank", "noopener,noreferrer");
   };
 
   if (loading || authLoading) {
@@ -275,12 +275,27 @@ const OrderDetail = () => {
                 <img
                   src={screenshotUrl}
                   alt="Payment screenshot"
-                  className="w-full h-full object-cover blur-md hover:blur-none transition-all duration-300"
+                  className={`w-full h-full object-cover transition-all duration-300 ${revealed ? "" : "blur-md"}`}
                 />
+                {!revealed && (
+                  <button
+                    type="button"
+                    onClick={() => setRevealed(true)}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-medium hover:bg-black/40 transition-colors"
+                  >
+                    Tap to reveal
+                  </button>
+                )}
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                Hover to reveal
-              </p>
+              {revealed && (
+                <button
+                  type="button"
+                  onClick={() => setRevealed(false)}
+                  className="text-[10px] text-muted-foreground mt-1 underline"
+                >
+                  Hide
+                </button>
+              )}
             </div>
           )}
         </section>

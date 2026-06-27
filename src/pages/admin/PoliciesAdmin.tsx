@@ -14,6 +14,7 @@ import { useAdminSettings } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const FONTS = ["Inter", "Playfair Display", "Georgia", "Arial", "Times New Roman"];
 
@@ -122,7 +123,7 @@ const PoliciesAdmin = () => {
       toast.error("Failed to save policies");
       return;
     }
-    qc.invalidateQueries({ queryKey: ["settings"] });
+    invalidateSettings(qc);
     toast.success("Policies saved");
   };
 

@@ -13,6 +13,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSettings, useSocialLinks, type SocialLink } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const PLATFORMS = ["Instagram", "Facebook", "Pinterest", "YouTube", "Twitter/X", "Other"];
 
@@ -127,7 +128,7 @@ const SettingsAdmin = () => {
     else {
       toast.success("Saved");
       void logAdminActivity({ action: "settings_updated", entity: "settings" });
-      qc.invalidateQueries({ queryKey: ["settings"] });
+      invalidateSettings(qc);
     }
   };
 

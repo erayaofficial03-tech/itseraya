@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -85,6 +86,26 @@ const EnquiriesAdmin = () => {
   const [tab, setTab] = useState<string>("all");
   const [viewing, setViewing] = useState<Enquiry | null>(null);
   const [items, setItems] = useState<SessionItem[]>([]);
+  const [identityMap, setIdentityMap] = useState<Record<string, string | null>>({});
+
+  // Map enquiry_ref -> user_id (null if anonymous WhatsApp guest)
+  useEffect(() => {
+    const refs = enquiries
+      .map((e) => e.enquiry_ref)
+      .filter((r): r is string => !!r);
+    if (refs.length === 0) return;
+    (async () => {
+      const { data } = await supabase
+        .from("enquiry_sessions")
+        .select("enquiry_ref, user_id")
+        .in("enquiry_ref", refs);
+      const map: Record<string, string | null> = {};
+      (data || []).forEach((row: any) => {
+        if (row.enquiry_ref) map[row.enquiry_ref] = row.user_id ?? null;
+      });
+      setIdentityMap(map);
+    })();
+  }, [enquiries]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -217,6 +238,23 @@ const EnquiriesAdmin = () => {
                       <Badge variant="outline" className={`${statusColor(e.status)} text-[10px]`}>
                         {statusLabel(e.status)}
                       </Badge>
+                      {(() => {
+                        const uid = e.enquiry_ref ? identityMap[e.enquiry_ref] : null;
+                        return uid ? (
+                          <Link
+                            to={`/admin/customers?highlight=${uid}`}
+                            className="inline-flex"
+                          >
+                            <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 text-[10px] hover:bg-emerald-200">
+                              ✓ Identified Customer
+                            </Badge>
+                          </Link>
+                        ) : (
+                          <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-300 text-[10px]">
+                            WhatsApp Guest
+                          </Badge>
+                        );
+                      })()}
                       <span className="text-xs text-muted-foreground ml-auto">{formatTime(e.created_at)}</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">

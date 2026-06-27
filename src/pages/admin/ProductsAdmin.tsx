@@ -390,9 +390,11 @@ const ProductsAdmin = () => {
                 <Button size="sm" variant="ghost" onClick={() => { setEditing(p); setOpen(true); }}>
                   <Pencil className="h-3 w-3" />
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
-                  <Trash2 className="h-3 w-3 text-destructive" />
-                </Button>
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
+                    <Trash2 className="h-3 w-3 text-destructive" />
+                  </Button>
+                )}
               </div>
             </div>
           </Card>

@@ -86,6 +86,26 @@ const EnquiriesAdmin = () => {
   const [tab, setTab] = useState<string>("all");
   const [viewing, setViewing] = useState<Enquiry | null>(null);
   const [items, setItems] = useState<SessionItem[]>([]);
+  const [identityMap, setIdentityMap] = useState<Record<string, string | null>>({});
+
+  // Map enquiry_ref -> user_id (null if anonymous WhatsApp guest)
+  useEffect(() => {
+    const refs = enquiries
+      .map((e) => e.enquiry_ref)
+      .filter((r): r is string => !!r);
+    if (refs.length === 0) return;
+    (async () => {
+      const { data } = await supabase
+        .from("enquiry_sessions")
+        .select("enquiry_ref, user_id")
+        .in("enquiry_ref", refs);
+      const map: Record<string, string | null> = {};
+      (data || []).forEach((row: any) => {
+        if (row.enquiry_ref) map[row.enquiry_ref] = row.user_id ?? null;
+      });
+      setIdentityMap(map);
+    })();
+  }, [enquiries]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();

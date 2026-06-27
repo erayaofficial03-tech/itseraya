@@ -14,6 +14,7 @@ import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 import { RotateCcw } from "lucide-react";
 import HomepageSectionsAdmin from "./HomepageSectionsAdmin";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 // ─── Font catalogues ──────────────────────────────────────────────────────
 const HEADING_FONTS = [
@@ -142,7 +143,7 @@ const BrandAdmin = () => {
     if (error) { toast.error(error.message); return; }
     toast.success("Theme saved — applied site-wide");
     void logAdminActivity({ action: "brand_updated", entity: "settings" });
-    qc.invalidateQueries({ queryKey: ["settings"] });
+    invalidateSettings(qc);
   };
 
   const upload = async (file: File, key: "logo_url" | "favicon_url" | "app_icon_url") => {

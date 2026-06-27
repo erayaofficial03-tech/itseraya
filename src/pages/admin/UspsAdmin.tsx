@@ -11,6 +11,7 @@ import { Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminSettings, useAdminFaqs, type Faq } from "@/lib/queries";
 import ReviewsManager from "@/components/admin/ReviewsManager";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 const ICON_OPTIONS = ["Droplets", "Sparkles", "Leaf", "Truck", "Shield", "Star", "Heart", "Package", "Gift", "Zap", "Award", "Clock"];
 
@@ -62,7 +63,7 @@ const UspsAdmin = () => {
       toast.error(error.message);
     } else {
       toast.success("Saved");
-      qc.invalidateQueries({ queryKey: ["settings"] });
+      invalidateSettings(qc);
     }
   };
 

@@ -28,6 +28,7 @@ import {
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { useHomepageSections, useAdminSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
+import { invalidateSettings } from "@/lib/invalidateSettings";
 
 
 // ─── Catalog of section types ────────────────────────────────────────────
@@ -281,7 +282,7 @@ const HomepageSectionsAdmin = () => {
     const { error } = await supabase.from("settings").update(headings as never).eq("id", 1);
     setSavingHeadings(false);
     if (error) toast.error(error.message);
-    else { toast.success("Headings saved"); qc.invalidateQueries({ queryKey: ["settings"] }); }
+    else { toast.success("Headings saved"); invalidateSettings(qc); }
   };
 
 

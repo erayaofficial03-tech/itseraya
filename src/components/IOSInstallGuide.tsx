@@ -24,6 +24,7 @@ const IOSInstallGuide = ({ open, onClose }: IOSInstallGuideProps) => {
   // Esc to close + body scroll lock
   useEffect(() => {
     if (!open) return;
+    logInstallEvent("ios_guide_opened", "ios");
     previouslyFocused.current = document.activeElement as HTMLElement | null;
 
     const onKey = (e: KeyboardEvent) => {

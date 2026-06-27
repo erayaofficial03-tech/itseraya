@@ -19,7 +19,7 @@ import AdminPreviewBanner from "./components/admin/AdminPreviewBanner";
 
 
 import BrandProvider from "./components/providers/BrandProvider";
-import PwaUpdateHandler from "./components/PwaUpdateHandler";
+
 import { EnquiryCartProvider } from "./components/EnquiryCartProvider";
 import { CartProvider } from "./components/providers/CartProvider";
 import SeoHead from "./components/providers/SeoHead";
@@ -121,7 +121,6 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrandProvider>
-        <PwaUpdateHandler />
         <BrowserRouter>
         <EnquiryCartProvider>
         <CartProvider>

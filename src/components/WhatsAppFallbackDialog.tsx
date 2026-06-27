@@ -66,22 +66,24 @@ const WhatsAppFallbackDialog = () => {
             <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               WhatsApp link
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <a
                 href={detail.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 truncate rounded-md border bg-muted/30 px-3 py-2 text-sm text-primary underline-offset-2 hover:underline"
+                className="flex-1 break-all rounded-md border bg-muted/30 px-3 py-2 text-sm text-primary underline-offset-2 hover:underline"
               >
                 {detail.url}
               </a>
               <Button
-                size="icon"
+                size="sm"
                 variant="outline"
                 onClick={() => copy("link", detail.url)}
                 aria-label="Copy link"
+                className="sm:w-auto sm:px-3"
               >
-                {copiedKey === "link" ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copiedKey === "link" ? <Check className="h-4 w-4 sm:mr-0 mr-2" /> : <Copy className="h-4 w-4 sm:mr-0 mr-2" />}
+                <span className="sm:hidden">Copy link</span>
               </Button>
             </div>
           </div>

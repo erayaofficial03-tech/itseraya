@@ -16,14 +16,42 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
-      // Manifest-only PWA: evict any old service worker + caches from prior installs.
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});}).catch(function(){});
-      }
-      if (window.caches) {
-        caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});}).catch(function(){});
-      }
+      // Manifest-only PWA. If a stale service worker from the old PWA is still
+      // controlling this page, the HTML we just received may itself be cached.
+      // Unregister all SWs + wipe Cache Storage, then do a ONE-TIME hard reload
+      // so the next request comes straight from the network. Guarded with
+      // sessionStorage to prevent reload loops.
+      (function(){
+        try {
+          var hasSW = 'serviceWorker' in navigator;
+          var controlled = hasSW && !!navigator.serviceWorker.controller;
+          var reloadedKey = '__eraya_sw_evicted__';
+          var alreadyReloaded = sessionStorage.getItem(reloadedKey) === '1';
+          var promises = [];
+          if (hasSW) {
+            promises.push(
+              navigator.serviceWorker.getRegistrations().then(function(rs){
+                return Promise.all(rs.map(function(r){ return r.unregister(); }));
+              }).catch(function(){})
+            );
+          }
+          if (window.caches) {
+            promises.push(
+              caches.keys().then(function(ks){
+                return Promise.all(ks.map(function(k){ return caches.delete(k); }));
+              }).catch(function(){})
+            );
+          }
+          if (controlled && !alreadyReloaded) {
+            Promise.all(promises).then(function(){
+              sessionStorage.setItem(reloadedKey, '1');
+              window.location.reload();
+            });
+          }
+        } catch (e) { /* noop */ }
+      })();
     </script>
+
     <link rel="canonical" href="https://itseraya.in/" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 

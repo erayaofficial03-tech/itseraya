@@ -238,6 +238,23 @@ const EnquiriesAdmin = () => {
                       <Badge variant="outline" className={`${statusColor(e.status)} text-[10px]`}>
                         {statusLabel(e.status)}
                       </Badge>
+                      {(() => {
+                        const uid = e.enquiry_ref ? identityMap[e.enquiry_ref] : null;
+                        return uid ? (
+                          <Link
+                            to={`/admin/customers?highlight=${uid}`}
+                            className="inline-flex"
+                          >
+                            <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 text-[10px] hover:bg-emerald-200">
+                              ✓ Identified Customer
+                            </Badge>
+                          </Link>
+                        ) : (
+                          <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-300 text-[10px]">
+                            WhatsApp Guest
+                          </Badge>
+                        );
+                      })()}
                       <span className="text-xs text-muted-foreground ml-auto">{formatTime(e.created_at)}</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">

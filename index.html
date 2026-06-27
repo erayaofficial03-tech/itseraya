@@ -16,6 +16,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <script>
+      // Manifest-only PWA: evict any old service worker + caches from prior installs.
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});}).catch(function(){});
+      }
+      if (window.caches) {
+        caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});}).catch(function(){});
+      }
+    </script>
     <link rel="canonical" href="https://itseraya.in/" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 

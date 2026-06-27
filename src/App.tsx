@@ -15,6 +15,7 @@ import { lazyWithRetry } from "./lib/lazyWithRetry";
 import BottomNav from "./components/header/BottomNav";
 import WhatsAppFloat from "./components/WhatsAppFloat";
 import StorefrontPage from "./components/layout/StorefrontPage";
+import AdminPreviewBanner from "./components/admin/AdminPreviewBanner";
 
 
 import BrandProvider from "./components/providers/BrandProvider";
@@ -130,6 +131,7 @@ const App = () => (
         <WhatsAppFallbackDialog />
         <ConfirmDialogRoot />
           <ScrollToTop />
+          <AdminPreviewBanner />
           
           <ChunkErrorBoundary>
           <Suspense fallback={<PageLoader />}>

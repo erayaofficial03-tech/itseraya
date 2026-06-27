@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 import { openWhatsApp } from "@/lib/whatsapp";
 
 const STORAGE_KEY = "eraya:wa-float-tapped";

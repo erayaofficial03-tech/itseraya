@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useSettings } from "@/lib/queries";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 type OrderRow = {
   id: string;

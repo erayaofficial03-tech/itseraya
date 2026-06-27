@@ -12,6 +12,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSettings } from "@/lib/queries";
 import { supabase } from "@/integrations/supabase/client";
 import { INDIAN_STATES } from "@/lib/indianStates";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { MessageCircle } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();

@@ -335,6 +335,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
 
 const ProductsAdmin = () => {
   const { data: products = [] } = useProducts();
+  const { isAdmin } = useAuth();
   const qc = useQueryClient();
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);

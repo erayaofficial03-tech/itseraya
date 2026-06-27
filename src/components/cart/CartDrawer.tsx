@@ -9,6 +9,7 @@ import { useCartContext } from '@/components/providers/CartProvider';
 import { useSettings, useProducts, productImage } from '@/lib/queries';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type Props = { open: boolean; onClose: () => void };
 

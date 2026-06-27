@@ -81,7 +81,7 @@ const AnalyticsAdmin = () => {
       const [
         vRes, wRes, eRes, eiRes, oRes, oiRes, iRes, bcRes, biRes, bRes, sRes, wlRes,
       ] = await Promise.all([
-        supabase.from("product_views").select("viewed_at, product_id").gte("viewed_at", startISO),
+        supabase.from("product_views").select("viewed_at, product_id, session_id, user_id").gte("viewed_at", startISO),
         supabase.from("whatsapp_clicks").select("clicked_at, source, product_id").gte("clicked_at", startISO),
         supabase.from("enquiry_sessions").select("created_at, id").gte("created_at", startISO),
         supabase.from("enquiry_items").select("product_id, product_name").gte("created_at", startISO),
@@ -116,10 +116,18 @@ const AnalyticsAdmin = () => {
 
   // KPIs
   const totalVisitors = views.length;
+  const uniqueVisitors = useMemo(() => {
+    const seen = new Set<string>();
+    views.forEach((v: any) => {
+      const key = v.user_id || v.session_id;
+      if (key) seen.add(String(key));
+    });
+    return seen.size || totalVisitors; // fallback to raw views if older rows lack session
+  }, [views, totalVisitors]);
   const totalWA = waClicks.length;
   const totalEnq = enquiries.length;
   const totalOrders = orders.length;
-  const convRate = totalVisitors > 0 ? ((totalOrders / totalVisitors) * 100).toFixed(2) + "%" : "—";
+  const convRate = uniqueVisitors > 0 ? ((totalOrders / uniqueVisitors) * 100).toFixed(2) + "%" : "—";
 
   // Trend chart data
   const trend = useMemo(() => {
@@ -292,12 +300,13 @@ const AnalyticsAdmin = () => {
 
         {/* OVERVIEW */}
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <StatCard icon={Eye} label="Visitors" value={totalVisitors} />
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <StatCard icon={Eye} label="Page views" value={totalVisitors} />
+            <StatCard icon={Eye} label="Unique visitors" value={uniqueVisitors} hint="By session / user" />
             <StatCard icon={MessageCircle} label="WhatsApp clicks" value={totalWA} />
             <StatCard icon={MessageCircle} label="Enquiries" value={totalEnq} />
             <StatCard icon={ShoppingBag} label="Orders" value={totalOrders} />
-            <StatCard icon={TrendingUp} label="Conversion" value={convRate} hint="Orders ÷ Visitors" />
+            <StatCard icon={TrendingUp} label="Conversion" value={convRate} hint="Orders ÷ Unique" />
           </div>
 
           <Card>

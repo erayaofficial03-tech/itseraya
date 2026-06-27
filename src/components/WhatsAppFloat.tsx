@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useSettings } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 import { openWhatsApp } from "@/lib/whatsapp";
 
 const STORAGE_KEY = "eraya:wa-float-tapped";
@@ -12,23 +13,34 @@ const WhatsAppIcon = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+/** Accept any reasonable phone shape: strip non-digits, auto-prefix 91 for 10-digit Indian mobiles. */
+const normaliseWa = (raw?: string | null): string => {
+  const digits = (raw ?? "").replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.length === 10 && /^[6-9]/.test(digits)) return "91" + digits;
+  if (digits.length >= 10) return digits; // already has country code or international
+  return "";
+};
+
 const WhatsAppFloat = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSettings();
+  const { isStaff, currentMode } = useAuth();
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
-  const wa = settings?.whatsapp_number?.replace(/\D/g, "") ?? "";
-  if (!/^91[6-9]\d{9}$/.test(wa)) return null;
+  // Hide for admins previewing the storefront — reduces clutter, keeps preview clean.
+  if (isStaff && currentMode === "customer") return null;
+  const wa = normaliseWa(settings?.whatsapp_number);
+  if (!wa) return null;
   if ((settings as any)?.whatsapp_float_visible === false) return null;
 
   const handleClick = () => {
     if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, "1");
-    const num = settings?.whatsapp_number?.replace(/\D/g, "");
-    if (!num) {
+    if (!wa) {
       toast("WhatsApp coming soon!");
       return;
     }
-    openWhatsApp(num, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
+    openWhatsApp(wa, "Hi Eraya! I'd like to know more about your jewellery collection 💛", "float_button");
   };
 
 

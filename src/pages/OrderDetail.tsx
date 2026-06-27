@@ -62,6 +62,7 @@ const OrderDetail = () => {
   const [order, setOrder] = useState<OrderRow | null>(null);
   const [items, setItems] = useState<ItemRow[]>([]);
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

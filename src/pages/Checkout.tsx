@@ -170,7 +170,7 @@ const Checkout = () => {
   };
 
   const notifyAdmin = (orderRef: string) => {
-    const number = settings?.whatsapp_number?.replace(/\D/g, "");
+    const number = settings?.whatsapp_number;
     if (!number) return;
     const lines = [
       `🛒 *New Order Received*`,
@@ -185,7 +185,7 @@ const Checkout = () => {
           `• ${i.product_name}${i.variant_size ? ` (${i.variant_size})` : ""} x${i.quantity}`,
       ),
     ];
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = buildWhatsAppUrl(number, lines.join("\n"));
     window.open(url, "_blank", "noopener,noreferrer");
   };
 

@@ -20,7 +20,11 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: "auto",
-      devOptions: { enabled: false },
+      devOptions: {
+        enabled: true,
+        type: "module",
+        navigateFallback: "index.html",
+      },
       includeAssets: [
         "eraya-logo.png",
         "apple-touch-icon.png",
@@ -49,6 +53,7 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         skipWaiting: true,
         clientsClaim: true,
+        additionalManifestEntries: [],
         cleanupOutdatedCaches: true,
         globPatterns: ["**/*.{js,css,html,png,svg,ico,woff,woff2}"],
         navigateFallback: "/index.html",

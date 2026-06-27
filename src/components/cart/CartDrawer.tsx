@@ -203,7 +203,13 @@ export const CartDrawer = ({ open, onClose }: Props) => {
             </div>
 
             {/* Footer */}
-            <div className="border-t bg-background px-5 py-4">
+            <div
+              className="border-t bg-background px-5 pt-4 pb-[88px] md:pb-6"
+              style={{
+                paddingBottom:
+                  'max(88px, calc(60px + env(safe-area-inset-bottom) + 16px))',
+              }}
+            >
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-muted-foreground">
                   <span>Subtotal</span>
@@ -221,12 +227,25 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
-              <Button
-                onClick={() => goTo('/checkout')}
-                className="w-full h-14 text-base font-semibold rounded-2xl bg-[#C9A84C] hover:bg-[#B8963E] text-white mt-4"
-              >
-                Checkout — {formatPrice(total)}
-              </Button>
+              {(settings as any)?.checkout_enabled === false ? (
+                <Button
+                  onClick={() =>
+                    toast.error(
+                      'Orders are temporarily paused. Please contact us on WhatsApp.',
+                    )
+                  }
+                  className="w-full h-14 text-base font-semibold rounded-2xl bg-muted text-muted-foreground hover:bg-muted mt-4 cursor-not-allowed"
+                >
+                  Orders Paused
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => goTo('/checkout')}
+                  className="w-full h-14 text-base font-semibold rounded-2xl bg-[#C9A84C] hover:bg-[#B8963E] text-white mt-4"
+                >
+                  Checkout — {formatPrice(total)}
+                </Button>
+              )}
               <button onClick={onClose} className="w-full text-sm text-muted-foreground text-center py-3 hover:text-foreground transition-colors">
                 ← Continue Shopping
               </button>

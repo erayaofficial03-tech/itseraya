@@ -45,7 +45,13 @@ export const WHATSAPP_BLOCKED_EVENT = "whatsapp:blocked";
  */
 export const buildWhatsAppUrl = (number: string | null | undefined, message: string): string => {
   const cleaned = (number ?? "").replace(/\D/g, "");
-  const target = cleaned ? `https://wa.me/${cleaned}` : "https://wa.me/";
+  let normalised = cleaned;
+  if (cleaned.length === 10) {
+    normalised = `91${cleaned}`;
+  } else if (cleaned.length === 12 && cleaned.startsWith("91")) {
+    normalised = cleaned;
+  }
+  const target = normalised ? `https://wa.me/${normalised}` : "https://wa.me/";
   return `${target}?text=${encodeURIComponent(message)}`;
 };
 

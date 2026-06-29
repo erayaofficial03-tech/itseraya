@@ -3,7 +3,8 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, MessageCircle, ShoppingBag, Heart } from "lucide-react";
+import { ArrowLeft, MessageCircle, ShoppingBag, Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
 import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
 import { useEnquiryCartUI } from "@/components/EnquiryCartProvider";
@@ -48,6 +49,7 @@ const ProductDetail = () => {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColour, setSelectedColour] = useState<string | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     if (!product) return;
@@ -235,8 +237,16 @@ const ProductDetail = () => {
               style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 0px)" }}
             >
               <div
-                className="aspect-[4/5] w-full overflow-hidden rounded-b-2xl md:rounded-lg bg-ivory-warm mb-3 relative cursor-zoom-in"
+                className="aspect-[4/5] w-full overflow-hidden rounded-b-2xl md:rounded-lg bg-ivory-warm mb-3 relative cursor-zoom-in group"
                 onClick={() => setIsZoomOpen(true)}
+                onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                onTouchEnd={(e) => {
+                  if (touchStartX.current == null || images.length < 2) return;
+                  const dx = e.changedTouches[0].clientX - touchStartX.current;
+                  touchStartX.current = null;
+                  if (dx <= -50) setActiveImg((i) => Math.min(i + 1, images.length - 1));
+                  else if (dx >= 50) setActiveImg((i) => Math.max(i - 1, 0));
+                }}
               >
                 {(() => {
                   const ss = productImageSrcSet(images[activeImg]);
@@ -254,6 +264,27 @@ const ProductDetail = () => {
                     />
                   );
                 })()}
+                {/* Desktop chevron controls */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      aria-label="Previous image"
+                      onClick={(e) => { e.stopPropagation(); setActiveImg((i) => Math.max(i - 1, 0)); }}
+                      className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronLeft className="h-5 w-5 text-charcoal" />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Next image"
+                      onClick={(e) => { e.stopPropagation(); setActiveImg((i) => Math.min(i + 1, images.length - 1)); }}
+                      className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight className="h-5 w-5 text-charcoal" />
+                    </button>
+                  </>
+                )}
                 {/* Mobile overlay buttons */}
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate(-1); }}
@@ -264,6 +295,7 @@ const ProductDetail = () => {
                   <ArrowLeft className="h-5 w-5 text-charcoal" />
                 </button>
               </div>
+
             </div>
             {images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto px-4 md:px-0 scrollbar-hide">

@@ -19,14 +19,13 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
-      // Aggressive eviction: unregister every service worker and wipe Cache
-      // Storage on every page load. One-time hard reload (guarded by
-      // localStorage 'eraya_cache_cleared_v3') ensures returning browsers
-      // controlled by a stale SW get a fresh HTML from the network.
+      // Aggressive eviction of any legacy service worker + caches that may be
+      // serving stale HTML. Runs synchronously before React loads. One-time
+      // hard reload guarded by localStorage 'eraya_cache_v3'.
       (function(){
         try {
           if (!('serviceWorker' in navigator)) return;
-          var RELOAD_KEY = 'eraya_cache_cleared_v3';
+          var RELOAD_KEY = 'eraya_cache_v3';
           var ops = [];
           ops.push(
             navigator.serviceWorker.getRegistrations().then(function(rs){

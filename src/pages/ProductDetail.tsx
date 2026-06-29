@@ -49,6 +49,7 @@ const ProductDetail = () => {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColour, setSelectedColour] = useState<string | null>(null);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     if (!product) return;

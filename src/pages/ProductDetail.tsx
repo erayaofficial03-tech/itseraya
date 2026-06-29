@@ -46,6 +46,16 @@ const ProductDetail = () => {
   const isSaved = !!product && wishlistItems.some((w) => w.product_id === product.id);
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColour, setSelectedColour] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!product) return;
+    const sizes = (product as any).sizes as string[] | null | undefined;
+    const colours = (product as any).colours as string[] | null | undefined;
+    if (sizes?.length) setSelectedSize((prev) => prev ?? sizes[0]);
+    if (colours?.length) setSelectedColour((prev) => prev ?? colours[0]);
+  }, [product]);
 
   const { data: productReviews = [], refetch: refetchReviews } = useQuery({
     queryKey: ["reviews", product?.id, user?.id],
@@ -111,7 +121,20 @@ const ProductDetail = () => {
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
   const handleAddToCart = () => {
-    void addToCart(product);
+    const sizes = (product as any).sizes as string[] | null | undefined;
+    const colours = (product as any).colours as string[] | null | undefined;
+    if (sizes?.length && !selectedSize) {
+      toast.error("Please select a size");
+      return;
+    }
+    if (colours?.length && !selectedColour) {
+      toast.error("Please select a colour");
+      return;
+    }
+    void addToCart(product, {
+      size: selectedSize ?? undefined,
+      colour: selectedColour ?? undefined,
+    });
     toast.success("Added to cart");
   };
   const handleEnquire = () => {
@@ -337,7 +360,67 @@ const ProductDetail = () => {
               </div>
             )}
 
+            {(() => {
+              const sizes = ((product as any).sizes as string[] | null | undefined) ?? [];
+              const colours = ((product as any).colours as string[] | null | undefined) ?? [];
+              return (
+                <>
+                  {sizes.length > 0 && (
+                    <div>
+                      <h3 className="font-serif text-sm mb-2">Size</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {sizes.map((sz) => {
+                          const active = selectedSize === sz;
+                          return (
+                            <button
+                              key={sz}
+                              type="button"
+                              onClick={() => setSelectedSize(sz)}
+                              aria-pressed={active}
+                              className={`min-h-[44px] min-w-[44px] px-4 rounded-md border text-sm transition-colors ${
+                                active
+                                  ? "border-gold text-gold"
+                                  : "border-border text-muted-foreground hover:border-foreground/40"
+                              }`}
+                            >
+                              {sz}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {colours.length > 0 && (
+                    <div>
+                      <h3 className="font-serif text-sm mb-2">Colour</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {colours.map((c) => {
+                          const active = selectedColour === c;
+                          return (
+                            <button
+                              key={c}
+                              type="button"
+                              onClick={() => setSelectedColour(c)}
+                              aria-pressed={active}
+                              className={`min-h-[44px] min-w-[44px] px-4 rounded-md border text-sm capitalize transition-colors ${
+                                active
+                                  ? "border-gold text-gold"
+                                  : "border-border text-muted-foreground hover:border-foreground/40"
+                              }`}
+                            >
+                              {c}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+
             <div className="border-t border-border" />
+
 
             <div className="flex flex-col gap-3">
               {/* Save (wishlist) + Enquire + Add to Cart */}

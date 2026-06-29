@@ -283,7 +283,11 @@ const HomepageSectionsAdmin = () => {
     const { error } = await supabase.from("settings").update(headings as never).eq("id", 1);
     setSavingHeadings(false);
     if (error) toast.error(error.message);
-    else { toast.success("Headings saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Headings saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "homepage_updated", entity: "settings", details: { headings: true } });
+    }
   };
 
 

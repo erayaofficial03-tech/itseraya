@@ -66,7 +66,11 @@ const SeoAdmin = () => {
     const { error } = await supabase.from("settings").update(form).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "seo_updated", entity: "settings" });
+    }
   };
 
   const saveReviews = async () => {

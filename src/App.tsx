@@ -56,6 +56,7 @@ const Checkout = lazyWithRetry(() => import("./pages/Checkout"), { reloadKey: "C
 const OrderConfirmed = lazyWithRetry(() => import("./pages/OrderConfirmed"), { reloadKey: "OrderConfirmed" });
 const MyOrders = lazyWithRetry(() => import("./pages/MyOrders"), { reloadKey: "MyOrders" });
 const OrderDetail = lazyWithRetry(() => import("./pages/OrderDetail"), { reloadKey: "OrderDetail" });
+const OxidisedJewelleryStylingGuide = lazyWithRetry(() => import("./pages/blog/OxidisedJewelleryStylingGuide"), { reloadKey: "OxidisedJewelleryStylingGuide" });
 const DomainAdmin = lazyWithRetry(() => import("./pages/admin/DomainAdmin"), { reloadKey: "DomainAdmin" });
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazyWithRetry(() => import("./pages/CompleteProfile"), { reloadKey: "CompleteProfile" });
@@ -164,6 +165,7 @@ const App = () => (
               <Route path="/order-confirmed/:ref" element={<Public><OrderConfirmed /></Public>} />
               <Route path="/orders" element={<Public><MyOrders /></Public>} />
               <Route path="/orders/:ref" element={<Public><OrderDetail /></Public>} />
+              <Route path="/blog/oxidised-jewellery-styling-guide" element={<Public><OxidisedJewelleryStylingGuide /></Public>} />
               
 
               {/* Customer auth */}

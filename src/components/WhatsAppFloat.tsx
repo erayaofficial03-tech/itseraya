@@ -25,11 +25,9 @@ const normaliseWa = (raw?: string | null): string => {
 const WhatsAppFloat = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSettings();
-  const { isStaff, currentMode } = useAuth();
+  useAuth(); // session subscription kept for hook ordering
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/auth/")) return null;
-  // Hide for admins previewing the storefront — reduces clutter, keeps preview clean.
-  if (isStaff && currentMode === "customer") return null;
   const wa = normaliseWa(settings?.whatsapp_number);
   if (!wa) return null;
   if ((settings as any)?.whatsapp_float_visible === false) return null;

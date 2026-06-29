@@ -308,7 +308,14 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
           <p className="text-xs text-muted-foreground -mt-1">
             Auto cropped to 4:5 and saved as WEBP (thumb/medium/full). Recommended source: 1600×2000+.
           </p>
-          <Input type="file" accept="image/*" multiple onChange={(e) => handleFiles(e.target.files)} />
+          <Input type="file" accept="image/*" multiple onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+          <ImageEditorSheet
+            file={editQueue[0] ?? null}
+            open={editQueue.length > 0}
+            onConfirm={handleEditorConfirm}
+            onCancel={handleEditorCancel}
+            aspectRatio={4 / 5}
+          />
           <div className="grid grid-cols-4 gap-2 mt-2">
             {images.map((img, i) => (
               <div key={i} className="relative group">

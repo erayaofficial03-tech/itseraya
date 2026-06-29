@@ -371,7 +371,7 @@ const ProductsAdmin = () => {
       </div>
 
       <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-[640px] md:min-w-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((p) => (
             <Card key={p.id} className="p-4 flex gap-3">
               <img src={productImage(p)} className="w-20 h-20 object-cover rounded" />

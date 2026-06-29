@@ -41,6 +41,7 @@ const staticPages: Entry[] = [
   { loc: "/checkout", changefreq: "monthly", priority: "0.4" },
   { loc: "/faq", changefreq: "monthly", priority: "0.4" },
   { loc: "/care", changefreq: "monthly", priority: "0.4" },
+  { loc: "/blog/oxidised-jewellery-styling-guide", changefreq: "monthly", priority: "0.6" },
   { loc: "/return-policy", changefreq: "monthly", priority: "0.3" },
   { loc: "/shipping-policy", changefreq: "monthly", priority: "0.3" },
   { loc: "/cancellation-policy", changefreq: "monthly", priority: "0.3" },

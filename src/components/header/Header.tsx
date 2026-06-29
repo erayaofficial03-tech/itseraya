@@ -285,8 +285,6 @@ const Header = () => {
 
               </SheetContent>
             </Sheet>
-            <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
-            <InstallTroubleshootSheet open={showTroubleshoot} onClose={() => setShowTroubleshoot(false)} />
 
             {/* Mobile/tablet primary dropdown — quick access to Shop, Support, About */}
             <DropdownMenu>

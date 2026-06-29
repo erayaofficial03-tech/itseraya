@@ -1,11 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useInstallPrompt } from "@/hooks/useInstallPrompt";
-import { logInstallEvent } from "@/lib/installAnalytics";
-import IOSInstallGuide from "@/components/IOSInstallGuide";
-import InstallTroubleshootSheet from "@/components/InstallTroubleshootSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";

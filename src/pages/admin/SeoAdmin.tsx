@@ -86,7 +86,11 @@ const SeoAdmin = () => {
     });
     setReviewsBusy(false);
     if (e1 || e2) toast.error((e1 || e2)!.message);
-    else { toast.success("Google Reviews settings saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Google Reviews settings saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "seo_updated", entity: "settings", details: { google_reviews: true } });
+    }
   };
 
   const testConnection = async () => {

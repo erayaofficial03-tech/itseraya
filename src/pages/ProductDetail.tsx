@@ -586,7 +586,7 @@ const ProductDetail = () => {
           ) : (
             <div className="mt-4 p-4 bg-[#FAF8F5] rounded-2xl border border-[#EDE8E1] text-center">
               <p className="text-sm text-[#9A8F85]">
-                <Link to="/login" className="text-[#C9A84C] underline">
+                <Link to="/login" className="text-champagne-deep underline">
                   Sign in
                 </Link>{" "}
                 to write a review

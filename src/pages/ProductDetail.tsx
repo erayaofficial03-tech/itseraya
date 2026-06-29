@@ -46,6 +46,16 @@ const ProductDetail = () => {
   const isSaved = !!product && wishlistItems.some((w) => w.product_id === product.id);
   const [activeImg, setActiveImg] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColour, setSelectedColour] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!product) return;
+    const sizes = (product as any).sizes as string[] | null | undefined;
+    const colours = (product as any).colours as string[] | null | undefined;
+    if (sizes?.length) setSelectedSize((prev) => prev ?? sizes[0]);
+    if (colours?.length) setSelectedColour((prev) => prev ?? colours[0]);
+  }, [product]);
 
   const { data: productReviews = [], refetch: refetchReviews } = useQuery({
     queryKey: ["reviews", product?.id, user?.id],

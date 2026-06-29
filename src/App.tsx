@@ -129,9 +129,11 @@ const App = () => (
         <Toaster />
         <Sonner position="top-center" richColors closeButton />
         <WhatsAppFallbackDialog />
+        <QuickEditProductDrawer />
         <ConfirmDialogRoot />
           <ScrollToTop />
           <AdminPreviewBanner />
+          
           
           <ChunkErrorBoundary>
           <Suspense fallback={<PageLoader />}>

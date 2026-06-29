@@ -82,6 +82,9 @@ const BrandAdmin = () => {
   const { data: settings } = useAdminSettings();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
+  type BrandImgKey = "logo_url" | "favicon_url" | "app_icon_url";
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [pendingKey, setPendingKey] = useState<BrandImgKey | null>(null);
 
   const [form, setForm] = useState<any>({
     // identity

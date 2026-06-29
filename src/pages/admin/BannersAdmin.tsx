@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import ImageEditorSheet from "@/components/admin/ImageEditorSheet";
 import { uploadImage } from "@/lib/upload";
 import { cn } from "@/lib/utils";
 import { type Banner } from "@/components/eraya/banner-types";

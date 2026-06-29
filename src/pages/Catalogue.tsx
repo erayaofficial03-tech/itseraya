@@ -196,7 +196,7 @@ const Catalogue = () => {
             </div>
           ) : (
             <div className="text-center py-16 max-w-sm mx-auto">
-              <img src={erayaLogo} alt="Eraya" draggable={false} className="brand-logo h-10 mx-auto mb-5 object-contain opacity-90" />
+              <img src={erayaLogo} alt="Eraya Jewellery Logo" draggable={false} className="brand-logo h-10 mx-auto mb-5 object-contain opacity-90" />
               <p className="font-medium text-foreground mb-2">Our collection is coming soon</p>
               <p className="text-sm text-muted-foreground mb-6">
                 Check back shortly for new arrivals.

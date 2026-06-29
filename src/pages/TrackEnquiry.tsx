@@ -194,7 +194,7 @@ const TrackEnquiry = () => {
                 {items.map((it) => (
                   <div key={it.id} className="flex gap-3 items-center">
                     {it.product_image ? (
-                      <img src={it.product_image} alt="" className="h-12 w-12 rounded object-cover bg-muted" />
+                      <img src={it.product_image} alt={it.product_name || "Eraya jewellery product"} className="h-12 w-12 rounded object-cover bg-muted" />
                     ) : (
                       <div className="h-12 w-12 rounded bg-muted" />
                     )}

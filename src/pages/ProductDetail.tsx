@@ -387,7 +387,7 @@ const ProductDetail = () => {
 
             {product.description && (
               <div>
-                <h3 className="font-serif text-lg mb-2">{s(settings, "product_description_label")}</h3>
+                <h2 className="font-serif text-lg mb-2">{s(settings, "product_description_label")}</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
               </div>
             )}

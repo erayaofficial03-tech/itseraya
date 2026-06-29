@@ -30,16 +30,10 @@ const OxidisedJewelleryStylingGuide = () => {
         title={`${TITLE} — ${storeName}`}
         description={DESCRIPTION}
         canonical={canonical}
-        keywords={[
-          "oxidised jewellery",
-          "fashion jewellery",
-          "oxidised jewellery styling",
-          "oxidised silver jewellery care",
-          "german silver jewellery",
-          "boho jewellery india",
-        ]}
+        keywords="oxidised jewellery, fashion jewellery, oxidised jewellery styling, oxidised silver jewellery care, german silver jewellery, boho jewellery india"
       />
       <JsonLd
+        id="oxidised-jewellery-styling-guide"
         data={{
           "@context": "https://schema.org",
           "@type": "Article",

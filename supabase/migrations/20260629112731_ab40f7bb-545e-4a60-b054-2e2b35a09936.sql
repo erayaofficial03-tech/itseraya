@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public read safe settings columns" ON public.settings;

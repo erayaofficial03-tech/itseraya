@@ -19,41 +19,39 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
-      // Manifest-only PWA. If a stale service worker from the old PWA is still
-      // controlling this page, the HTML we just received may itself be cached.
-      // Unregister all SWs + wipe Cache Storage, then do a ONE-TIME hard reload
-      // so the next request comes straight from the network. Guarded with
-      // sessionStorage to prevent reload loops.
+      // Aggressive eviction: unregister every service worker and wipe Cache
+      // Storage on every page load. One-time hard reload (guarded by
+      // localStorage 'eraya_cache_cleared_v3') ensures returning browsers
+      // controlled by a stale SW get a fresh HTML from the network.
       (function(){
         try {
-          var hasSW = 'serviceWorker' in navigator;
-          var controlled = hasSW && !!navigator.serviceWorker.controller;
-          var reloadedKey = '__eraya_sw_evicted__';
-          var alreadyReloaded = sessionStorage.getItem(reloadedKey) === '1';
-          var promises = [];
-          if (hasSW) {
-            promises.push(
-              navigator.serviceWorker.getRegistrations().then(function(rs){
-                return Promise.all(rs.map(function(r){ return r.unregister(); }));
-              }).catch(function(){})
-            );
-          }
+          if (!('serviceWorker' in navigator)) return;
+          var RELOAD_KEY = 'eraya_cache_cleared_v3';
+          var ops = [];
+          ops.push(
+            navigator.serviceWorker.getRegistrations().then(function(rs){
+              return Promise.all(rs.map(function(r){ return r.unregister(); }));
+            }).catch(function(){})
+          );
           if (window.caches) {
-            promises.push(
+            ops.push(
               caches.keys().then(function(ks){
                 return Promise.all(ks.map(function(k){ return caches.delete(k); }));
               }).catch(function(){})
             );
           }
-          if (controlled && !alreadyReloaded) {
-            Promise.all(promises).then(function(){
-              sessionStorage.setItem(reloadedKey, '1');
-              window.location.reload();
-            });
-          }
+          Promise.all(ops).then(function(){
+            try {
+              if (!localStorage.getItem(RELOAD_KEY)) {
+                localStorage.setItem(RELOAD_KEY, '1');
+                location.reload();
+              }
+            } catch (e) {}
+          });
         } catch (e) { /* noop */ }
       })();
     </script>
+
 
     <link rel="canonical" href="https://itseraya.in/" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />

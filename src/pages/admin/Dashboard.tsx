@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import {
   WhatsAppClicksWidget, TopProductsWidget, BannerPerformanceWidget,
-  EnquiryTrendWidget, ConversionFunnelWidget, InstallEventsWidget,
+  EnquiryTrendWidget, ConversionFunnelWidget,
 } from "./dashboard-widgets";
 
 const formatINR = (n: number) =>
@@ -298,7 +298,7 @@ const Dashboard = () => {
         <EnquiryTrendWidget />
         <ConversionFunnelWidget />
         <BannerPerformanceWidget />
-        <InstallEventsWidget />
+        
       </div>
 
       {isAdmin && (

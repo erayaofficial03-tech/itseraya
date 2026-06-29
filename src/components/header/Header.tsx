@@ -1,11 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Download, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
+import { Menu, Search, MessageCircle, ChevronRight, ChevronDown, User, Heart, Shield, ShoppingBag, Sparkles, Crown, Tag, Flame, MapPin, Settings as Cog, LogOut, LayoutGrid, FileText } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useInstallPrompt } from "@/hooks/useInstallPrompt";
-import { logInstallEvent } from "@/lib/installAnalytics";
-import IOSInstallGuide from "@/components/IOSInstallGuide";
-import InstallTroubleshootSheet from "@/components/InstallTroubleshootSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -49,9 +45,6 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   
   const [cartOpen, setCartOpen] = useState(false);
-  const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [showTroubleshoot, setShowTroubleshoot] = useState(false);
-  const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
   
 
   const visibleCategories = categories.filter((c) => c.is_visible);
@@ -87,35 +80,8 @@ const Header = () => {
 
   const closeMenu = () => setOpen(false);
 
-  const handleInstall = async () => {
-    logInstallEvent("prompt_shown", isIOS ? "ios" : undefined);
-    // iOS has no native prompt — show the Safari guide immediately,
-    // don't await a hook call that just resolves to "ios".
-    if (isIOS) {
-      logInstallEvent("ios_guide_opened", "ios");
-      setShowIOSGuide(true);
-      return;
-    }
-    const result = await triggerInstall();
-    if (result === "accepted") {
-      logInstallEvent("accepted");
-      logInstallEvent("installed");
-      toast.success("Eraya installed! Find it on your home screen 💛");
-      closeMenu();
-    } else if (result === "dismissed") {
-      logInstallEvent("dismissed");
-      toast("Installation cancelled");
-    } else if (result === "installed") {
-      toast("Eraya is already on your home screen ✓");
-    } else if (result === "unavailable") {
-      logInstallEvent("unavailable");
-      setShowTroubleshoot(true);
-    }
-  };
 
-  // Show install button only when there is something actionable:
-  // iOS (always — guided flow) OR Android/Desktop with a captured native prompt.
-  const showInstallButton = !isInstalled && (isIOS || isInstallable);
+
 
   const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-[hsl(var(--champagne))]";
 
@@ -270,26 +236,6 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[hsl(var(--champagne))] mt-6 mb-1">
                     Info
                   </p>
-                  {showInstallButton && (
-                    <button
-                      onClick={handleInstall}
-                      className={`${drawerLinkClass} w-full text-left`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <Download className="h-4 w-4 text-gold" />
-                        Install Eraya App
-                      </span>
-                      <span
-                        className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full shrink-0 ${
-                          isIOS
-                            ? "bg-[#F0F0F0] text-[#555]"
-                            : "bg-[#E8F5E9] text-[#2E7D32]"
-                        }`}
-                      >
-                        {isIOS ? "iPhone" : "Android"}
-                      </span>
-                    </button>
-                  )}
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     <span>About Eraya</span>
                   </Link>
@@ -339,8 +285,6 @@ const Header = () => {
 
               </SheetContent>
             </Sheet>
-            <IOSInstallGuide open={showIOSGuide} onClose={() => setShowIOSGuide(false)} />
-            <InstallTroubleshootSheet open={showTroubleshoot} onClose={() => setShowTroubleshoot(false)} />
 
             {/* Mobile/tablet primary dropdown — quick access to Shop, Support, About */}
             <DropdownMenu>

@@ -12,7 +12,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import {
-  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, Smartphone, ExternalLink, Heart,
+  Users, Eye, MessageCircle, ShoppingBag, TrendingUp, ExternalLink, Heart,
 } from "lucide-react";
 
 type RangeKey = "1" | "7" | "30" | "90";
@@ -67,7 +67,7 @@ const AnalyticsAdmin = () => {
   const [enquiryItems, setEnquiryItems] = useState<{ product_id: string | null; product_name: string | null }[]>([]);
   const [orders, setOrders] = useState<{ created_at: string }[]>([]);
   const [orderItems, setOrderItems] = useState<{ product_id: string | null; product_name: string | null; quantity: number | null }[]>([]);
-  const [installs, setInstalls] = useState<{ occurred_at: string; event_type: string | null; platform: string | null }[]>([]);
+  
   const [bannerClicks, setBannerClicks] = useState<{ banner_id: string | null }[]>([]);
   const [bannerImps, setBannerImps] = useState<{ banner_id: string | null }[]>([]);
   const [bannerNames, setBannerNames] = useState<Record<string, string>>({});
@@ -79,7 +79,7 @@ const AnalyticsAdmin = () => {
     setLoading(true);
     (async () => {
       const [
-        vRes, wRes, eRes, eiRes, oRes, oiRes, iRes, bcRes, biRes, bRes, sRes, wlRes,
+        vRes, wRes, eRes, eiRes, oRes, oiRes, bcRes, biRes, bRes, sRes, wlRes,
       ] = await Promise.all([
         supabase.from("product_views").select("viewed_at, product_id, session_id, user_id").gte("viewed_at", startISO),
         supabase.from("whatsapp_clicks").select("clicked_at, source, product_id").gte("clicked_at", startISO),
@@ -87,7 +87,6 @@ const AnalyticsAdmin = () => {
         supabase.from("enquiry_items").select("product_id, product_name").gte("created_at", startISO),
         supabase.from("orders").select("created_at").gte("created_at", startISO),
         supabase.from("order_items").select("product_id, product_name, quantity").gte("created_at", startISO),
-        supabase.from("install_events").select("occurred_at, event_type, platform").gte("occurred_at", startISO),
         supabase.from("banner_clicks").select("banner_id").gte("clicked_at", startISO),
         supabase.from("banner_impressions").select("banner_id").gte("viewed_at", startISO),
         supabase.from("banners").select("id, title"),
@@ -101,7 +100,6 @@ const AnalyticsAdmin = () => {
       setEnquiryItems((eiRes.data || []) as any);
       setOrders((oRes.data || []) as any);
       setOrderItems((oiRes.data || []) as any);
-      setInstalls((iRes.data || []) as any);
       setBannerClicks((bcRes.data || []) as any);
       setBannerImps((biRes.data || []) as any);
       const bm: Record<string, string> = {};
@@ -140,20 +138,6 @@ const AnalyticsAdmin = () => {
     return series.map((s) => idx[s.date]);
   }, [views, enquiries, orders, days]);
 
-  // Install funnel
-  const installCounts = useMemo(() => {
-    const c = { prompt_shown: 0, accepted: 0, installed: 0, ios: 0, android: 0 };
-    installs.forEach((i) => {
-      const t = (i.event_type || "").toLowerCase();
-      if (t.includes("prompt")) c.prompt_shown++;
-      if (t.includes("accept")) c.accepted++;
-      if (t.includes("install")) c.installed++;
-      const p = (i.platform || "").toLowerCase();
-      if (p.includes("ios")) c.ios++;
-      if (p.includes("android")) c.android++;
-    });
-    return c;
-  }, [installs]);
 
   // Products tab
   const productMap = useMemo(() => {
@@ -327,35 +311,6 @@ const AnalyticsAdmin = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base flex items-center gap-2"><Smartphone className="h-4 w-4" /> Install funnel</CardTitle></CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Prompt shown</p>
-                  <p className="text-2xl font-serif">{installCounts.prompt_shown}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Accepted</p>
-                  <p className="text-2xl font-serif">{installCounts.accepted}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Installed</p>
-                  <p className="text-2xl font-serif">{installCounts.installed}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">iOS</p>
-                  <p className="text-lg font-medium">{installCounts.ios}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Android</p>
-                  <p className="text-lg font-medium">{installCounts.android}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* PRODUCTS */}

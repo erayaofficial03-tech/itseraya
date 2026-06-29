@@ -17,6 +17,7 @@ import { uploadImage, uploadProductImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
 import { logAdminActivity } from "@/lib/adminLog";
 import { useAuth } from "@/hooks/useAuth";
+import ImageEditorSheet from "@/components/admin/ImageEditorSheet";
 
 const empty = {
   name: "", slug: "", category_id: "", description: "", original_price: 0,

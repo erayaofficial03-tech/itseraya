@@ -45,9 +45,6 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   
   const [cartOpen, setCartOpen] = useState(false);
-  const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [showTroubleshoot, setShowTroubleshoot] = useState(false);
-  const { isIOS, isInstalled, isInstallable, triggerInstall } = useInstallPrompt();
   
 
   const visibleCategories = categories.filter((c) => c.is_visible);

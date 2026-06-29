@@ -95,7 +95,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
             {/* Guest banner */}
             {!user && (
               <button
-                onClick={() => goTo('/login')}
+                onClick={() => goTo('/login?redirect=/checkout')}
                 className="border-b bg-accent/30 px-5 py-2.5 text-left text-xs text-muted-foreground transition hover:bg-accent/50"
               >
                 <span className="font-medium text-foreground">Sign in</span> to

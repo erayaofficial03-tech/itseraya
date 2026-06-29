@@ -56,6 +56,7 @@ const Checkout = lazyWithRetry(() => import("./pages/Checkout"), { reloadKey: "C
 const OrderConfirmed = lazyWithRetry(() => import("./pages/OrderConfirmed"), { reloadKey: "OrderConfirmed" });
 const MyOrders = lazyWithRetry(() => import("./pages/MyOrders"), { reloadKey: "MyOrders" });
 const OrderDetail = lazyWithRetry(() => import("./pages/OrderDetail"), { reloadKey: "OrderDetail" });
+const OxidisedJewelleryStylingGuide = lazyWithRetry(() => import("./pages/blog/OxidisedJewelleryStylingGuide"), { reloadKey: "OxidisedJewelleryStylingGuide" });
 const DomainAdmin = lazyWithRetry(() => import("./pages/admin/DomainAdmin"), { reloadKey: "DomainAdmin" });
 const AdminProfile = lazyWithRetry(() => import("./pages/admin/AdminProfile"), { reloadKey: "AdminProfile" });
 const CompleteProfile = lazyWithRetry(() => import("./pages/CompleteProfile"), { reloadKey: "CompleteProfile" });

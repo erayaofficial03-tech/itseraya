@@ -67,7 +67,7 @@ const AnalyticsAdmin = () => {
   const [enquiryItems, setEnquiryItems] = useState<{ product_id: string | null; product_name: string | null }[]>([]);
   const [orders, setOrders] = useState<{ created_at: string }[]>([]);
   const [orderItems, setOrderItems] = useState<{ product_id: string | null; product_name: string | null; quantity: number | null }[]>([]);
-  const [installs, setInstalls] = useState<{ occurred_at: string; event_type: string | null; platform: string | null }[]>([]);
+  
   const [bannerClicks, setBannerClicks] = useState<{ banner_id: string | null }[]>([]);
   const [bannerImps, setBannerImps] = useState<{ banner_id: string | null }[]>([]);
   const [bannerNames, setBannerNames] = useState<Record<string, string>>({});

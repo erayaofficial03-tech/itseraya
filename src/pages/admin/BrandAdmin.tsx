@@ -280,20 +280,34 @@ const BrandAdmin = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <Label>Logo</Label>
-                  <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], "logo_url")} />
+                  <Input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setPendingFile(f); setPendingKey("logo_url"); } e.target.value = ""; }} />
                   {form.logo_url && <img src={form.logo_url} className="mt-2 h-12 object-contain" alt="Logo" />}
                 </div>
                 <div>
                   <Label>Favicon</Label>
-                  <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], "favicon_url")} />
+                  <Input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setPendingFile(f); setPendingKey("favicon_url"); } e.target.value = ""; }} />
                   {form.favicon_url && <img src={form.favicon_url} className="mt-2 h-8 w-8" alt="Favicon" />}
                 </div>
                 <div>
                   <Label>App icon</Label>
-                  <Input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], "app_icon_url")} />
+                  <Input type="file" accept="image/*" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setPendingFile(f); setPendingKey("app_icon_url"); } e.target.value = ""; }} />
                   {form.app_icon_url && <img src={form.app_icon_url} className="mt-2 h-12 w-12 rounded" alt="App icon" />}
                 </div>
               </div>
+              <ImageEditorSheet
+                file={pendingFile}
+                open={!!pendingFile && !!pendingKey}
+                onConfirm={async (blob, filename) => {
+                  const key = pendingKey;
+                  setPendingFile(null);
+                  setPendingKey(null);
+                  if (!key) return;
+                  const wrapped = new File([blob], filename, { type: "image/webp" });
+                  await upload(wrapped, key);
+                }}
+                onCancel={() => { setPendingFile(null); setPendingKey(null); }}
+              />
+
             </CardContent>
           </Card>
         </TabsContent>

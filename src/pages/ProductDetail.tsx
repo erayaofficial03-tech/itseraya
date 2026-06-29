@@ -360,7 +360,67 @@ const ProductDetail = () => {
               </div>
             )}
 
+            {(() => {
+              const sizes = ((product as any).sizes as string[] | null | undefined) ?? [];
+              const colours = ((product as any).colours as string[] | null | undefined) ?? [];
+              return (
+                <>
+                  {sizes.length > 0 && (
+                    <div>
+                      <h3 className="font-serif text-sm mb-2">Size</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {sizes.map((sz) => {
+                          const active = selectedSize === sz;
+                          return (
+                            <button
+                              key={sz}
+                              type="button"
+                              onClick={() => setSelectedSize(sz)}
+                              aria-pressed={active}
+                              className={`min-h-[44px] min-w-[44px] px-4 rounded-md border text-sm transition-colors ${
+                                active
+                                  ? "border-gold text-gold"
+                                  : "border-border text-muted-foreground hover:border-foreground/40"
+                              }`}
+                            >
+                              {sz}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {colours.length > 0 && (
+                    <div>
+                      <h3 className="font-serif text-sm mb-2">Colour</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {colours.map((c) => {
+                          const active = selectedColour === c;
+                          return (
+                            <button
+                              key={c}
+                              type="button"
+                              onClick={() => setSelectedColour(c)}
+                              aria-pressed={active}
+                              className={`min-h-[44px] min-w-[44px] px-4 rounded-md border text-sm capitalize transition-colors ${
+                                active
+                                  ? "border-gold text-gold"
+                                  : "border-border text-muted-foreground hover:border-foreground/40"
+                              }`}
+                            >
+                              {c}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+
             <div className="border-t border-border" />
+
 
             <div className="flex flex-col gap-3">
               {/* Save (wishlist) + Enquire + Add to Cart */}

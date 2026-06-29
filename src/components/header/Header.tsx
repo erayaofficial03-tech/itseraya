@@ -80,35 +80,8 @@ const Header = () => {
 
   const closeMenu = () => setOpen(false);
 
-  const handleInstall = async () => {
-    logInstallEvent("prompt_shown", isIOS ? "ios" : undefined);
-    // iOS has no native prompt — show the Safari guide immediately,
-    // don't await a hook call that just resolves to "ios".
-    if (isIOS) {
-      logInstallEvent("ios_guide_opened", "ios");
-      setShowIOSGuide(true);
-      return;
-    }
-    const result = await triggerInstall();
-    if (result === "accepted") {
-      logInstallEvent("accepted");
-      logInstallEvent("installed");
-      toast.success("Eraya installed! Find it on your home screen 💛");
-      closeMenu();
-    } else if (result === "dismissed") {
-      logInstallEvent("dismissed");
-      toast("Installation cancelled");
-    } else if (result === "installed") {
-      toast("Eraya is already on your home screen ✓");
-    } else if (result === "unavailable") {
-      logInstallEvent("unavailable");
-      setShowTroubleshoot(true);
-    }
-  };
 
-  // Show install button only when there is something actionable:
-  // iOS (always — guided flow) OR Android/Desktop with a captured native prompt.
-  const showInstallButton = !isInstalled && (isIOS || isInstallable);
+
 
   const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-[hsl(var(--champagne))]";
 

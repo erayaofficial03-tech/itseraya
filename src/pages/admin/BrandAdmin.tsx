@@ -15,6 +15,7 @@ import { uploadImage } from "@/lib/upload";
 import { RotateCcw } from "lucide-react";
 import HomepageSectionsAdmin from "./HomepageSectionsAdmin";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import ImageEditorSheet from "@/components/admin/ImageEditorSheet";
 
 // ─── Font catalogues ──────────────────────────────────────────────────────
 const HEADING_FONTS = [

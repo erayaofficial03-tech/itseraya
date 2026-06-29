@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Loader2, MessageCircle, Truck, ArrowLeft } from "lucide-react";
+import { Loader2, MessageCircle, Truck, ArrowLeft, Star } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { Button } from "@/components/ui/button";

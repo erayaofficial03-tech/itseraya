@@ -93,22 +93,26 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
     ? Math.round(((form.original_price - form.discounted_price) / form.original_price) * 100)
     : 0;
 
-  const handleFiles = async (files: FileList | null) => {
-    if (!files) return;
-    const id = toast.loading(`Processing ${files.length} image${files.length > 1 ? "s" : ""}…`);
-    let ok = 0;
-    for (const f of Array.from(files)) {
-      try {
-        const url = await uploadProductImage(f);
-        setImages((cur) => [...cur, { url }]);
-        ok += 1;
-      } catch {
-        // uploadProductImage already toasts the specific reason (low-res, etc.)
-      }
-    }
-    toast.dismiss(id);
-    if (ok > 0) toast.success(`${ok} image${ok > 1 ? "s" : ""} ready (4:5, WEBP)`);
+  const handleFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setEditQueue((q) => [...q, ...Array.from(files)]);
   };
+
+  const handleEditorConfirm = async (blob: Blob, filename: string) => {
+    const wrapped = new File([blob], filename, { type: "image/webp" });
+    setEditQueue((q) => q.slice(1));
+    try {
+      const url = await uploadProductImage(wrapped);
+      setImages((cur) => [...cur, { url }]);
+    } catch {
+      // uploadProductImage toasts its own errors
+    }
+  };
+
+  const handleEditorCancel = () => {
+    setEditQueue((q) => q.slice(1));
+  };
+
 
   const moveImg = (i: number, dir: -1 | 1) => {
     setImages((cur) => {

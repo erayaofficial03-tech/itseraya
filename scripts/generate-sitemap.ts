@@ -36,6 +36,9 @@ const staticPages: Entry[] = [
   { loc: "/catalogue", changefreq: "daily", priority: "0.9" },
   { loc: "/about", changefreq: "monthly", priority: "0.7" },
   { loc: "/contact", changefreq: "monthly", priority: "0.6" },
+  { loc: "/track", changefreq: "monthly", priority: "0.5" },
+  { loc: "/wishlist", changefreq: "monthly", priority: "0.4" },
+  { loc: "/checkout", changefreq: "monthly", priority: "0.4" },
   { loc: "/faq", changefreq: "monthly", priority: "0.4" },
   { loc: "/care", changefreq: "monthly", priority: "0.4" },
   { loc: "/return-policy", changefreq: "monthly", priority: "0.3" },
@@ -44,6 +47,7 @@ const staticPages: Entry[] = [
   { loc: "/privacy-policy", changefreq: "monthly", priority: "0.3" },
   { loc: "/terms-of-service", changefreq: "monthly", priority: "0.3" },
 ];
+
 
 async function main() {
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);

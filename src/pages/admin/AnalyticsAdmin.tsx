@@ -327,35 +327,6 @@ const AnalyticsAdmin = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader><CardTitle className="text-base flex items-center gap-2"><Smartphone className="h-4 w-4" /> Install funnel</CardTitle></CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Prompt shown</p>
-                  <p className="text-2xl font-serif">{installCounts.prompt_shown}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Accepted</p>
-                  <p className="text-2xl font-serif">{installCounts.accepted}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Installed</p>
-                  <p className="text-2xl font-serif">{installCounts.installed}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">iOS</p>
-                  <p className="text-lg font-medium">{installCounts.ios}</p>
-                </div>
-                <div className="rounded-lg border p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Android</p>
-                  <p className="text-lg font-medium">{installCounts.android}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* PRODUCTS */}

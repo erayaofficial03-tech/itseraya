@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, MessageCircle, Sparkles } from "lucide-react";
 import erayaLogo from "@/assets/eraya-logo.png";
 import SeoHead from "@/components/providers/SeoHead";
-import JsonLd from "@/components/seo/JsonLd";
+import JsonLd from "@/components/providers/JsonLd";
 import { useSettings } from "@/lib/queries";
 import { s } from "@/lib/settingsDefaults";
 import { openWhatsApp } from "@/lib/whatsapp";

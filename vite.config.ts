@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           supabase: ["@supabase/supabase-js"],

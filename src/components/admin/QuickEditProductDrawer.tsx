@@ -148,12 +148,8 @@ const QuickEditProductDrawer = () => {
                 <Switch id="qe-feat" checked={form.is_featured}
                   onCheckedChange={(v) => setForm({ ...form, is_featured: v })} />
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="qe-new" className="cursor-pointer">Marked as new</Label>
-                <Switch id="qe-new" checked={form.is_new}
-                  onCheckedChange={(v) => setForm({ ...form, is_new: v })} />
-              </div>
             </div>
+
 
             <div className="flex items-center justify-between gap-2 pt-2">
               <Link

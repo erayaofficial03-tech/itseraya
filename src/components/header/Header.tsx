@@ -62,7 +62,7 @@ const Header = () => {
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium tracking-wide transition-colors px-1 py-1 ${focusRing} ${
-      isActive ? "text-[hsl(var(--champagne))]" : "text-ivory hover:text-[hsl(var(--champagne))]"
+      isActive ? "text-ivory" : "text-ivory hover:text-ivory/80"
     }`;
 
   
@@ -83,7 +83,7 @@ const Header = () => {
 
 
 
-  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-[hsl(var(--champagne))]";
+  const drawerLinkClass = "flex items-center justify-between py-3 text-base font-medium text-ivory border-b border-ivory/10 active:bg-ivory/5 -mx-6 px-6 transition-colors hover:text-ivory/80";
 
   return (
     <>
@@ -292,7 +292,7 @@ const Header = () => {
                 <button
                   type="button"
                   aria-label="Quick navigation: Shop, Support, About"
-                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-ivory hover:text-[hsl(var(--champagne))] transition-colors ${focusRing}`}
+                  className={`hidden md:inline-flex lg:hidden items-center gap-1 px-2 h-9 rounded-md text-sm font-medium text-ivory hover:text-ivory/80 transition-colors ${focusRing}`}
                 >
                   Menu
                   <ChevronDown className="h-4 w-4" aria-hidden="true" />
@@ -300,7 +300,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
                 <DropdownMenuItem onClick={() => navigate("/catalogue")}>
-                  <Sparkles className="h-4 w-4 mr-2 text-gold" />
+                  <Sparkles className="h-4 w-4 mr-2 text-ivory/70" />
                   {s(settings, "nav_catalogue_label")}
                 </DropdownMenuItem>
                 {visibleCategories.length > 0 && <DropdownMenuSeparator />}
@@ -321,11 +321,11 @@ const Header = () => {
                 })}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleWhatsAppClick}>
-                  <MessageCircle className="h-4 w-4 mr-2 text-gold" />
+                  <MessageCircle className="h-4 w-4 mr-2 text-ivory/70" />
                   Support
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/about")}>
-                  <Shield className="h-4 w-4 mr-2 text-gold" />
+                  <Shield className="h-4 w-4 mr-2 text-ivory/70" />
                   About
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -338,7 +338,7 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger
                   aria-label="Shop menu – browse catalogue and categories"
-                  className={`text-sm font-medium tracking-wide text-ivory hover:text-[hsl(var(--champagne))] transition-colors px-1 py-1 ${focusRing}`}
+                  className={`text-sm font-medium tracking-wide text-ivory hover:text-ivory/80 transition-colors px-1 py-1 ${focusRing}`}
                 >
                   {s(settings, "nav_catalogue_label")}
                 </DropdownMenuTrigger>

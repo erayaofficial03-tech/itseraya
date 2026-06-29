@@ -61,7 +61,7 @@
     --sand: 32 22% 88%;
     --champagne: 38 42% 58%;
     --champagne-soft: 38 55% 78%;
-    --champagne-deep: 36 45% 44%;
+    --champagne-deep: 36 48% 32%;
     --ink: 25 14% 16%;
     --ink-soft: 25 10% 32%;
     --ink-mute: 25 8% 52%;
@@ -147,7 +147,7 @@
   .price-now {
     font-family: 'Inter', system-ui, sans-serif;
     font-weight: 600;
-    color: hsl(var(--ink));
+    color: hsl(var(--champagne-deep));
     letter-spacing: 0.005em;
   }
   .price-was {

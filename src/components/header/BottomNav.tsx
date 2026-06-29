@@ -110,7 +110,7 @@ const BottomNav = () => {
 
   const base = 'flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium tracking-wide transition-colors relative';
 
-  const active = 'text-[#C9A84C]';
+  const active = 'text-charcoal';
 
   const inactive = 'text-muted-foreground';
 
@@ -254,11 +254,10 @@ const BottomNav = () => {
 
             {user ? (
 
-              <Avatar className="h-[22px] w-[22px] border border-[#C9A84C]">
+              <Avatar className="h-[22px] w-[22px] border border-ink/30">
+                <AvatarImage src={user?.user_metadata?.avatar_url || undefined} />
+                <AvatarFallback className="text-[8px] bg-ink text-ivory">
 
-                <AvatarImage src={profile?.avatar_url || undefined} />
-
-                <AvatarFallback className="text-[8px] bg-[#C9A84C] text-white">
 
                   {(profile?.full_name || user.email || 'U').slice(0, 2).toUpperCase()}
 

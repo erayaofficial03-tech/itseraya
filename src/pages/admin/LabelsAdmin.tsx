@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const TEXT_KEYS = [
   "nav_home_label", "nav_catalogue_label",

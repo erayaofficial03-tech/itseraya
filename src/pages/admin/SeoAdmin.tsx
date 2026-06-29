@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const SeoAdmin = () => {
   const { data: settings } = useAdminSettings();

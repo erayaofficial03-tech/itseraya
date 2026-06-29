@@ -16,6 +16,7 @@ import { Download, Inbox, Search, MessageCircle, Star, Eye } from "lucide-react"
 import { formatINR, useAdminSettings } from "@/lib/queries";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
+import { logAdminActivity } from "@/lib/adminLog";
 import * as XLSX from "xlsx";
 
 type Enquiry = {

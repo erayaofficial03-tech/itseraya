@@ -29,6 +29,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { useHomepageSections, useAdminSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 
 // ─── Catalog of section types ────────────────────────────────────────────

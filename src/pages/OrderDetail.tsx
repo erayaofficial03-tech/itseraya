@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Loader2, MessageCircle, Truck, ArrowLeft } from "lucide-react";
+import { Loader2, MessageCircle, Truck, ArrowLeft, Star } from "lucide-react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ type OrderRow = {
 
 type ItemRow = {
   id: string;
+  product_id: string;
   product_name: string;
   product_image_url: string | null;
   variant_size: string | null;
@@ -169,6 +170,42 @@ const OrderDetail = () => {
             {order.order_status}
           </span>
         </div>
+
+        {order.order_status === "delivered" && items.length > 0 && (
+          <div className="bg-[#C9A84C]/10 border border-[#C9A84C]/30 p-5 rounded-lg mb-6">
+            <div className="flex items-start gap-3">
+              <Star className="h-5 w-5 text-[#C9A84C] fill-[#C9A84C] flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-foreground">
+                  Loved your order?
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Share your experience to help other customers
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {items[0].product_name}
+                  {items.length > 1 ? " and more" : ""}
+                </p>
+                <Button
+                  onClick={async () => {
+                    const { data } = await supabase
+                      .from("products")
+                      .select("slug")
+                      .eq("id", items[0].product_id)
+                      .single();
+                    if (data?.slug) {
+                      navigate(`/jewellery/${data.slug}#reviews`);
+                    }
+                  }}
+                  className="mt-3 rounded-full bg-[#C9A84C] hover:bg-[#C9A84C]/90 text-white"
+                  size="sm"
+                >
+                  Write a Review
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {order.tracking_number && (
           <div className="bg-purple-50 border border-purple-200 p-4 rounded-lg mb-6 flex items-center gap-3">

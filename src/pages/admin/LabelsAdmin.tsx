@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const TEXT_KEYS = [
   "nav_home_label", "nav_catalogue_label",
@@ -49,7 +50,11 @@ const LabelsAdmin = () => {
     const { error } = await supabase.from("settings").update(form as any).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Labels saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Labels saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "labels_updated", entity: "settings" });
+    }
   };
 
   const text = (key: typeof TEXT_KEYS[number], label: string, multiline = false, hint?: string) => (

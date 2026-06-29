@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useAdminSettings } from "@/lib/queries";
 import { uploadImage } from "@/lib/upload";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 const SeoAdmin = () => {
   const { data: settings } = useAdminSettings();
@@ -65,7 +66,11 @@ const SeoAdmin = () => {
     const { error } = await supabase.from("settings").update(form).eq("id", 1);
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "seo_updated", entity: "settings" });
+    }
   };
 
   const saveReviews = async () => {
@@ -81,7 +86,11 @@ const SeoAdmin = () => {
     });
     setReviewsBusy(false);
     if (e1 || e2) toast.error((e1 || e2)!.message);
-    else { toast.success("Google Reviews settings saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Google Reviews settings saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "seo_updated", entity: "settings", details: { google_reviews: true } });
+    }
   };
 
   const testConnection = async () => {

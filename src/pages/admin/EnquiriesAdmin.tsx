@@ -16,6 +16,7 @@ import { Download, Inbox, Search, MessageCircle, Star, Eye } from "lucide-react"
 import { formatINR, useAdminSettings } from "@/lib/queries";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { toast } from "sonner";
+import { logAdminActivity } from "@/lib/adminLog";
 import * as XLSX from "xlsx";
 
 type Enquiry = {
@@ -129,6 +130,13 @@ const EnquiriesAdmin = () => {
     const { error } = await supabase.from("enquiries").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["enquiries"] });
+    const e = enquiries.find((x) => x.id === id);
+    void logAdminActivity({
+      action: "enquiry_updated",
+      entity: "enquiry",
+      entity_id: id,
+      details: { ref: e?.enquiry_ref ?? id.slice(0, 8), changed: Object.keys(patch) },
+    });
   };
 
   const openView = async (e: Enquiry) => {

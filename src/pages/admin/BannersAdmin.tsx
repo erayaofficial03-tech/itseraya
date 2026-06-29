@@ -560,6 +560,7 @@ const BannersAdmin = () => {
       } else {
         setItems((prev) => prev.map((b) => (b.id === id ? draft : b)));
         invalidate();
+        void logAdminActivity({ action: "banner_updated", entity: "banner", entity_id: id });
       }
     }, 800);
     return () => { if (saveTimer.current) window.clearTimeout(saveTimer.current); };

@@ -29,6 +29,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { useHomepageSections, useAdminSettings, type HomepageSection, type HomepageSectionType } from "@/lib/queries";
 import { invalidateSettings } from "@/lib/invalidateSettings";
+import { logAdminActivity } from "@/lib/adminLog";
 
 
 // ─── Catalog of section types ────────────────────────────────────────────
@@ -282,7 +283,11 @@ const HomepageSectionsAdmin = () => {
     const { error } = await supabase.from("settings").update(headings as never).eq("id", 1);
     setSavingHeadings(false);
     if (error) toast.error(error.message);
-    else { toast.success("Headings saved"); invalidateSettings(qc); }
+    else {
+      toast.success("Headings saved");
+      invalidateSettings(qc);
+      void logAdminActivity({ action: "homepage_updated", entity: "settings", details: { headings: true } });
+    }
   };
 
 
@@ -306,11 +311,13 @@ const HomepageSectionsAdmin = () => {
       await supabase.from("homepage_sections" as any).update({ display_order: u.display_order }).eq("id", u.id);
     }
     refresh();
+    void logAdminActivity({ action: "homepage_updated", entity: "homepage_sections", details: { reordered: true } });
   };
 
   const toggleVisible = async (s: HomepageSection) => {
     await supabase.from("homepage_sections" as any).update({ is_visible: !s.is_visible }).eq("id", s.id);
     refresh();
+    void logAdminActivity({ action: "homepage_updated", entity: "homepage_section", entity_id: s.id, details: { visible: !s.is_visible } });
   };
   const toggleDevice = async (s: HomepageSection, device: "mobile" | "desktop") => {
     const key = device === "mobile" ? "visible_mobile" : "visible_desktop";

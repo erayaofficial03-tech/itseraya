@@ -298,7 +298,7 @@ const Dashboard = () => {
         <EnquiryTrendWidget />
         <ConversionFunnelWidget />
         <BannerPerformanceWidget />
-        <InstallEventsWidget />
+        
       </div>
 
       {isAdmin && (

@@ -1,87 +1,36 @@
+## Changes
 
-# Manifest-Only PWA — Remove Service Worker, Keep Install
+### 1. `index.html` — aggressive SW eviction script
+Replace lines 18–53 (current conditional script) with an inline synchronous script placed as the first child of `<head>` (move it above charset is not necessary — keep after charset/viewport for parser sanity, but before all other scripts; it's already the only script in head).
 
-Goal: customers can still install Eraya to their home screen, but there is no service worker, no Workbox caching, no offline mode, and therefore no stale-content problems.
+The replacement script:
+- If `'serviceWorker' in navigator` is false, do nothing.
+- Unconditionally call `navigator.serviceWorker.getRegistrations()` → unregister every registration.
+- Unconditionally call `caches.keys()` → delete every cache.
+- After `Promise.all` resolves: if `localStorage.getItem('eraya_cache_cleared_v3')` is missing, set it and call `location.reload()` (the boolean arg to `reload` is non-standard/ignored — omit it; cache-busting comes from no-store headers + hashed filenames). If the key exists, do nothing.
+- Wrapped in try/catch.
 
-## Files to edit
-
-### 1. `vite.config.ts`
-- Remove `import { VitePWA } from "vite-plugin-pwa"`.
-- Remove the entire `VitePWA({...})` entry from the `plugins` array.
-- Remove the `define.__APP_BUILD__` block (it only existed for SW versioning).
-- Keep everything else (react plugin, componentTagger, aliases, manualChunks).
-
-### 2. `src/App.tsx`
-- Remove the `PwaUpdateHandler` import and its `<PwaUpdateHandler />` render.
-
-### 3. `src/main.tsx`
-- Remove the `import("virtual:pwa-register")` block (no longer resolvable once the plugin is gone).
-- Keep the iframe/preview detection and the `navigator.serviceWorker.getRegistrations().unregister()` cleanup — this still helps users who already installed the old SW.
-- Remove the `controllerchange` reload listener (no controller to change).
-
-### 4. `index.html`
-- Keep `<link rel="manifest" href="/manifest.webmanifest">`, theme-color, apple-touch-icon, apple-mobile-web-app-* meta tags, splash links.
-- Add a small inline cleanup script in `<head>` that, on load, unregisters any existing service workers and deletes all caches. This evicts the old PWA for returning customers.
-
-### 5. `public/manifest.webmanifest`
-Replace with the exact spec:
-```json
-{
-  "name": "Eraya",
-  "short_name": "Eraya",
-  "start_url": "/",
-  "scope": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#FAF8F5",
-  "theme_color": "#C9A84C",
-  "categories": ["shopping"],
-  "screenshots": [],
-  "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ],
-  "lang": "en-IN"
-}
+Add three cache-prevention meta tags right after the viewport meta (currently absent — the comment on line 7 will be removed):
+```
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 ```
 
-## Files to delete
-
-- `src/components/PwaUpdateHandler.tsx`
-- `dev-dist/` folder (stale SW artifacts: `sw.js`, `workbox-*.js`, `registerSW.js`, `manifest`)
-
-## Files to keep untouched
-
-- `src/components/IOSInstallGuide.tsx` — iOS manual install instructions.
-- `src/components/InstallTroubleshootSheet.tsx` — install help UI.
-- `src/hooks/useInstallPrompt.ts` — Android `beforeinstallprompt` capture.
-- `src/lib/installAnalytics.ts` — install event logging.
-- Install button in mobile menu header.
-- Install prompt settings in admin Store Settings.
-
-## Packages to uninstall
-
+### 2. `vite.config.ts` — hashed filenames
+Inside `build.rollupOptions.output` (lines 25–39), add alongside `manualChunks`:
 ```
-bun remove vite-plugin-pwa workbox-core workbox-precaching workbox-routing workbox-strategies workbox-window
+chunkFileNames: 'assets/[name]-[hash].js',
+entryFileNames: 'assets/[name]-[hash].js',
 ```
 
-(Will use `bun remove` since this project uses bun; equivalent to the requested `npm uninstall`.)
+### 3. `src/components/header/BottomNav.tsx` — verify
+Already the correct 5-tab version: Home, Shop (Catalogue), Search, Saved (Wishlist), Account. No changes needed. Will confirm in the report.
 
-## TypeScript fix
+### 4. Verification
+Run `npx tsc --noEmit` and confirm 0 errors.
 
-`src/vite-env.d.ts` may reference `vite-plugin-pwa/client` types via the virtual module. If a triple-slash reference exists, remove it so `tsgo` stays at 0 errors after the plugin is gone.
-
-## Verification
-
-1. `bun run build` completes without errors.
-2. No `sw.js` or `workbox-*.js` in `dist/`.
-3. `dist/manifest.webmanifest` is present and matches spec.
-4. `index.html` still has the manifest link and the SW-cleanup inline script.
-5. Mobile menu install button still renders.
-6. `tsgo` → 0 errors.
-
-## Report
-
-At the end I will list every file changed/deleted and confirm icon files (`/icon-192.png`, `/icon-512.png`, `/maskable-192.png`, `/maskable-512.png`) exist in `public/` — flagging any that are missing.
+## Report at the end
+- Files changed: `index.html`, `vite.config.ts`
+- Files verified unchanged: `src/components/header/BottomNav.tsx` (already 5-tab Home/Shop/Search/Saved/Account)
+- TypeScript: 0 errors

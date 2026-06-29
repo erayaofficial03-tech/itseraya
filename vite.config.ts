@@ -23,6 +23,8 @@ export default defineConfig(({ mode }) => ({
     minify: "esbuild",
     rollupOptions: {
       output: {
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           supabase: ["@supabase/supabase-js"],
@@ -38,5 +40,6 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
+
   },
 }));

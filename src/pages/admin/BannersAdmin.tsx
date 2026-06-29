@@ -114,10 +114,18 @@ const ImageField = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const handle = async (f?: File | null) => {
+  const [pending, setPending] = useState<File | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const handle = (f?: File | null) => {
     if (!f) return;
+    setPending(f);
+    setEditorOpen(true);
+  };
+  const handleConfirm = async (blob: Blob, filename: string) => {
+    setEditorOpen(false);
+    const wrapped = new File([blob], filename, { type: "image/webp" });
     setBusy(true);
-    try { await onUpload(f); } finally { setBusy(false); }
+    try { await onUpload(wrapped); } finally { setBusy(false); setPending(null); }
   };
   return (
     <div>
@@ -127,8 +135,15 @@ const ImageField = ({
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => { void handle(e.target.files?.[0]); e.target.value = ""; }}
+        onChange={(e) => { handle(e.target.files?.[0]); e.target.value = ""; }}
       />
+      <ImageEditorSheet
+        file={pending}
+        open={editorOpen}
+        onConfirm={handleConfirm}
+        onCancel={() => { setEditorOpen(false); setPending(null); }}
+      />
+
       {url ? (
         <div className="flex items-start gap-3">
           <img src={url} className={cn("object-cover rounded border border-border", previewWidth, aspect)} alt="" />

@@ -75,7 +75,7 @@ const QuickEditProductDrawer = () => {
         description: data.description ?? "",
         is_visible: data.is_visible ?? true,
         is_featured: data.is_featured ?? false,
-        is_new: data.is_new ?? false,
+
       });
       setLoading(false);
     })();

@@ -17,6 +17,7 @@ import { uploadImage, uploadProductImage } from "@/lib/upload";
 import PriceCalculator from "@/components/admin/PriceCalculator";
 import { logAdminActivity } from "@/lib/adminLog";
 import { useAuth } from "@/hooks/useAuth";
+import ImageEditorSheet from "@/components/admin/ImageEditorSheet";
 
 const empty = {
   name: "", slug: "", category_id: "", description: "", original_price: 0,
@@ -86,27 +87,32 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
   const [tagInput, setTagInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [useCalc, setUseCalc] = useState(false);
+  const [editQueue, setEditQueue] = useState<File[]>([]);
 
   const pct = form.discounted_price && form.original_price > form.discounted_price
     ? Math.round(((form.original_price - form.discounted_price) / form.original_price) * 100)
     : 0;
 
-  const handleFiles = async (files: FileList | null) => {
-    if (!files) return;
-    const id = toast.loading(`Processing ${files.length} image${files.length > 1 ? "s" : ""}…`);
-    let ok = 0;
-    for (const f of Array.from(files)) {
-      try {
-        const url = await uploadProductImage(f);
-        setImages((cur) => [...cur, { url }]);
-        ok += 1;
-      } catch {
-        // uploadProductImage already toasts the specific reason (low-res, etc.)
-      }
-    }
-    toast.dismiss(id);
-    if (ok > 0) toast.success(`${ok} image${ok > 1 ? "s" : ""} ready (4:5, WEBP)`);
+  const handleFiles = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setEditQueue((q) => [...q, ...Array.from(files)]);
   };
+
+  const handleEditorConfirm = async (blob: Blob, filename: string) => {
+    const wrapped = new File([blob], filename, { type: "image/webp" });
+    setEditQueue((q) => q.slice(1));
+    try {
+      const url = await uploadProductImage(wrapped);
+      setImages((cur) => [...cur, { url }]);
+    } catch {
+      // uploadProductImage toasts its own errors
+    }
+  };
+
+  const handleEditorCancel = () => {
+    setEditQueue((q) => q.slice(1));
+  };
+
 
   const moveImg = (i: number, dir: -1 | 1) => {
     setImages((cur) => {
@@ -302,7 +308,14 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
           <p className="text-xs text-muted-foreground -mt-1">
             Auto cropped to 4:5 and saved as WEBP (thumb/medium/full). Recommended source: 1600×2000+.
           </p>
-          <Input type="file" accept="image/*" multiple onChange={(e) => handleFiles(e.target.files)} />
+          <Input type="file" accept="image/*" multiple onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }} />
+          <ImageEditorSheet
+            file={editQueue[0] ?? null}
+            open={editQueue.length > 0}
+            onConfirm={handleEditorConfirm}
+            onCancel={handleEditorCancel}
+            aspectRatio={4 / 5}
+          />
           <div className="grid grid-cols-4 gap-2 mt-2">
             {images.map((img, i) => (
               <div key={i} className="relative group">

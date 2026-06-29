@@ -526,7 +526,7 @@ const ProductDetail = () => {
             return visible.length > 0 ? (
               <div className="border-t border-[#EDE8E1] pt-6 flex items-center gap-4 mb-4">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-[#C9A84C]">{avg.toFixed(1)}</div>
+                  <div className="text-4xl font-bold text-champagne-deep">{avg.toFixed(1)}</div>
                   <StarRating rating={avg} size="md" showCount={false} />
                   <div className="text-xs text-[#9A8F85] mt-1">{visible.length} reviews</div>
                 </div>
@@ -586,7 +586,7 @@ const ProductDetail = () => {
           ) : (
             <div className="mt-4 p-4 bg-[#FAF8F5] rounded-2xl border border-[#EDE8E1] text-center">
               <p className="text-sm text-[#9A8F85]">
-                <Link to="/login" className="text-[#C9A84C] underline">
+                <Link to="/login" className="text-champagne-deep underline">
                   Sign in
                 </Link>{" "}
                 to write a review

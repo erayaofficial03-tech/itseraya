@@ -21,7 +21,6 @@ interface FormState {
   description: string;
   is_visible: boolean;
   is_featured: boolean;
-  is_new: boolean;
 }
 
 const empty: FormState = {
@@ -31,7 +30,6 @@ const empty: FormState = {
   description: "",
   is_visible: true,
   is_featured: false,
-  is_new: false,
 };
 
 const QuickEditProductDrawer = () => {

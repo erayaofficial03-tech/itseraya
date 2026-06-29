@@ -144,7 +144,7 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
-        <SheetHeader className="px-5 py-4 border-b border-border">
+        <SheetHeader className="px-5 py-4 border-b border-border flex-shrink-0">
           <SheetTitle className="font-serif flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-gold" />
             Your Cart

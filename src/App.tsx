@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import WhatsAppFallbackDialog from "@/components/WhatsAppFallbackDialog";
 import QuickEditProductDrawer from "@/components/admin/QuickEditProductDrawer";
+import SearchOverlay from "@/components/eraya/SearchOverlay";
 import { ConfirmDialogRoot } from "@/components/ui/confirm-dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

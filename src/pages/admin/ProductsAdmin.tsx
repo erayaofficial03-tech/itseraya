@@ -87,6 +87,7 @@ const ProductForm = ({ product, onClose }: { product?: Product; onClose: () => v
   const [tagInput, setTagInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [useCalc, setUseCalc] = useState(false);
+  const [editQueue, setEditQueue] = useState<File[]>([]);
 
   const pct = form.discounted_price && form.original_price > form.discounted_price
     ? Math.round(((form.original_price - form.discounted_price) / form.original_price) * 100)

@@ -370,35 +370,37 @@ const ProductsAdmin = () => {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((p) => (
-          <Card key={p.id} className="p-4 flex gap-3">
-            <img src={productImage(p)} className="w-20 h-20 object-cover rounded" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
-                <div className="min-w-0">
-                  <p className="font-medium truncate">{p.name}</p>
-                  <p className="text-[10px] font-mono tracking-wider text-muted-foreground">{p.sku}</p>
-                  <p className="text-xs text-muted-foreground">{p.categories?.name}</p>
-                  <p className="text-sm text-gold mt-1">
-                    {formatINR(p.discounted_price ?? p.original_price)}
-                    {!p.is_visible && <span className="ml-2 text-xs text-muted-foreground">(hidden)</span>}
-                  </p>
+      <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-w-[640px] md:min-w-0">
+          {products.map((p) => (
+            <Card key={p.id} className="p-4 flex gap-3">
+              <img src={productImage(p)} className="w-20 h-20 object-cover rounded" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{p.name}</p>
+                    <p className="text-[10px] font-mono tracking-wider text-muted-foreground">{p.sku}</p>
+                    <p className="text-xs text-muted-foreground">{p.categories?.name}</p>
+                    <p className="text-sm text-gold mt-1">
+                      {formatINR(p.discounted_price ?? p.original_price)}
+                      {!p.is_visible && <span className="ml-2 text-xs text-muted-foreground">(hidden)</span>}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-1 mt-2">
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(p); setOpen(true); }}>
+                    <Pencil className="h-3 w-3" />
+                  </Button>
+                  {isAdmin && (
+                    <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
+                      <Trash2 className="h-3 w-3 text-destructive" />
+                    </Button>
+                  )}
                 </div>
               </div>
-              <div className="flex gap-1 mt-2">
-                <Button size="sm" variant="ghost" onClick={() => { setEditing(p); setOpen(true); }}>
-                  <Pencil className="h-3 w-3" />
-                </Button>
-                {isAdmin && (
-                  <Button size="sm" variant="ghost" onClick={() => remove(p.id)}>
-                    <Trash2 className="h-3 w-3 text-destructive" />
-                  </Button>
-                )}
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

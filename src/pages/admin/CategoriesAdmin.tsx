@@ -67,15 +67,26 @@ const CategoryForm = ({ cat, onClose }: { cat?: Category; onClose: () => void })
       </div>
       <div>
         <Label>Image</Label>
-        <Input type="file" accept="image/*" onChange={async (e) => {
+        <Input type="file" accept="image/*" onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) {
-            const url = await uploadImage(f, "category-images");
-            setForm({ ...form, image_url: url });
-          }
+          if (f) { setPendingFile(f); setEditorOpen(true); }
+          e.target.value = "";
         }} />
+        <ImageEditorSheet
+          file={pendingFile}
+          open={editorOpen}
+          onConfirm={async (blob, filename) => {
+            setEditorOpen(false);
+            const wrapped = new File([blob], filename, { type: "image/webp" });
+            const url = await uploadImage(wrapped, "category-images");
+            setForm({ ...form, image_url: url });
+            setPendingFile(null);
+          }}
+          onCancel={() => { setEditorOpen(false); setPendingFile(null); }}
+        />
         {form.image_url && <img src={form.image_url} className="mt-2 w-24 h-24 object-cover rounded" />}
       </div>
+
       <div>
         <Label>Display order</Label>
         <Input type="number" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: Number(e.target.value) })} />

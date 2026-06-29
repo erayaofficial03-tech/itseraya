@@ -121,7 +121,20 @@ const ProductDetail = () => {
   const price = product.discounted_price ?? product.original_price;
   const pct = discountPct(product);
   const handleAddToCart = () => {
-    void addToCart(product);
+    const sizes = (product as any).sizes as string[] | null | undefined;
+    const colours = (product as any).colours as string[] | null | undefined;
+    if (sizes?.length && !selectedSize) {
+      toast.error("Please select a size");
+      return;
+    }
+    if (colours?.length && !selectedColour) {
+      toast.error("Please select a colour");
+      return;
+    }
+    void addToCart(product, {
+      size: selectedSize ?? undefined,
+      colour: selectedColour ?? undefined,
+    });
     toast.success("Added to cart");
   };
   const handleEnquire = () => {

@@ -140,20 +140,6 @@ const AnalyticsAdmin = () => {
     return series.map((s) => idx[s.date]);
   }, [views, enquiries, orders, days]);
 
-  // Install funnel
-  const installCounts = useMemo(() => {
-    const c = { prompt_shown: 0, accepted: 0, installed: 0, ios: 0, android: 0 };
-    installs.forEach((i) => {
-      const t = (i.event_type || "").toLowerCase();
-      if (t.includes("prompt")) c.prompt_shown++;
-      if (t.includes("accept")) c.accepted++;
-      if (t.includes("install")) c.installed++;
-      const p = (i.platform || "").toLowerCase();
-      if (p.includes("ios")) c.ios++;
-      if (p.includes("android")) c.android++;
-    });
-    return c;
-  }, [installs]);
 
   // Products tab
   const productMap = useMemo(() => {

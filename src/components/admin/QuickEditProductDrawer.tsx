@@ -58,7 +58,7 @@ const QuickEditProductDrawer = () => {
     void (async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("name, original_price, discounted_price, description, is_visible, is_featured, is_new")
+        .select("name, original_price, discounted_price, description, is_visible, is_featured")
         .eq("id", productId)
         .maybeSingle();
       if (cancelled) return;

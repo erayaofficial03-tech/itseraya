@@ -94,7 +94,7 @@ const QuickEditProductDrawer = () => {
         description: form.description,
         is_visible: form.is_visible,
         is_featured: form.is_featured,
-        is_new: form.is_new,
+
       })
       .eq("id", productId);
     setSaving(false);

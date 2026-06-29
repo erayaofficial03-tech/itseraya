@@ -356,7 +356,7 @@ const ProductDetail = () => {
                 );
               })()}
               <div className="flex items-center gap-3 flex-wrap mt-2">
-                <span className="text-2xl font-bold text-[#C9A84C]">
+                <span className="text-2xl font-bold text-champagne-deep">
                   ₹{price.toLocaleString("en-IN")}
                 </span>
                 {product.discounted_price && product.original_price > product.discounted_price && (
@@ -477,7 +477,7 @@ const ProductDetail = () => {
                   variant="outline"
                   onClick={handleEnquire}
                   size="lg"
-                  className="h-12 text-base border-gold text-charcoal hover:bg-gold/10"
+                  className="h-12 text-base border-border text-charcoal hover:bg-muted"
                 >
                   <MessageCircle className="mr-1 h-5 w-5 text-[#25D366]" />
                   Enquire Now
@@ -604,7 +604,7 @@ const ProductDetail = () => {
       >
         <button
           onClick={handleEnquire}
-          className="flex-1 h-12 rounded-full border-2 border-[#C9A84C] text-[#C9A84C] font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform"
+          className="flex-1 h-12 rounded-full border-2 border-charcoal text-charcoal font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform"
         >
           <MessageCircle className="h-4 w-4" />
           Enquire

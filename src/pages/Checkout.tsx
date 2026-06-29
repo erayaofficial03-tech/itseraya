@@ -437,7 +437,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between text-base font-semibold pt-2 border-t border-muted-foreground/20">
                     <span>Total</span>
-                    <span className="text-[#C9A84C]">
+                    <span className="text-champagne-deep">
                       ₹{total.toLocaleString("en-IN")}
                     </span>
                   </div>
@@ -545,7 +545,7 @@ const Checkout = () => {
 
                   <div className="bg-background p-6 rounded-lg text-center space-y-4">
                     <p className="text-sm text-muted-foreground">
-                      Pay <span className="font-bold text-[#C9A84C]">₹{total.toLocaleString("en-IN")}</span>{" "}
+                      Pay <span className="font-bold text-champagne-deep">₹{total.toLocaleString("en-IN")}</span>{" "}
                       to <strong>{upiName}</strong>
                     </p>
 

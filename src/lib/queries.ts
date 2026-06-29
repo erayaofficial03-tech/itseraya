@@ -233,7 +233,7 @@ const ONE_HOUR = 60 * 60 * 1000;
 export const useSettings = () =>
   useQuery({
     queryKey: ["settings"],
-    staleTime: ONE_HOUR,
+    staleTime: TEN_MIN,
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("public_settings")

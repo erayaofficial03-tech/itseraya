@@ -190,7 +190,7 @@ const Navigation = () => {
           <Link to="/" className="block">
             <img 
               src="/LINEA-1.svg" 
-              alt="LINEA" 
+              alt="Eraya Jewellery Logo" 
               className="h-6 w-auto"
             />
           </Link>

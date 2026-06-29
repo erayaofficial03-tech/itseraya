@@ -131,6 +131,7 @@ const App = () => (
         <Sonner position="top-center" richColors closeButton />
         <WhatsAppFallbackDialog />
         <QuickEditProductDrawer />
+        <SearchOverlay />
         <ConfirmDialogRoot />
           <ScrollToTop />
           <AdminPreviewBanner />

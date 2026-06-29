@@ -27,6 +27,8 @@ const CategoryForm = ({ cat, onClose }: { cat?: Category; onClose: () => void })
     is_visible: cat?.is_visible ?? true,
   });
   const [busy, setBusy] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const submit = async () => {
     setBusy(true);

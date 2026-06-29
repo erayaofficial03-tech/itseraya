@@ -166,73 +166,75 @@ const EnquiryCartDrawer = ({ open, onOpenChange }: Props) => {
               </p>
             </div>
           ) : (
-            items.map((item, idx) => (
-              <div
-                key={`${item.product_id}-${idx}`}
-                className="flex gap-3 p-3 rounded-lg border border-border bg-card"
-              >
-                {item.product_image ? (
-                  <img
-                    src={item.product_image}
-                    alt={item.product_name}
-                    className="h-16 w-16 rounded object-cover bg-muted flex-shrink-0"
-                  />
-                ) : (
-                  <div className="h-16 w-16 rounded bg-muted flex-shrink-0" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium line-clamp-2">{item.product_name}</p>
-                  {(item.size || item.colour) && (
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {[item.size, item.colour].filter(Boolean).join(" • ")}
-                    </p>
-                  )}
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="inline-flex items-center border border-border rounded-md">
-                      <button
-                        onClick={() => updateQuantity(idx, item.quantity - 1)}
-                        aria-label="Decrease quantity"
-                        className="h-7 w-7 flex items-center justify-center hover:bg-muted"
-                      >
-                        <Minus className="h-3 w-3" />
-                      </button>
-                      <span className="px-2 text-xs font-medium w-6 text-center">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(idx, item.quantity + 1)}
-                        aria-label="Increase quantity"
-                        className="h-7 w-7 flex items-center justify-center hover:bg-muted"
-                      >
-                        <Plus className="h-3 w-3" />
-                      </button>
-                    </div>
-                    {item.price != null && (
-                      <span className="text-sm font-semibold text-gold">
-                        {formatINR(item.price * item.quantity)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeFromCart(idx)}
-                  aria-label="Remove"
-                  className="text-muted-foreground hover:text-destructive p-1 self-start"
+            <>
+              {items.map((item, idx) => (
+                <div
+                  key={`${item.product_id}-${idx}`}
+                  className="flex gap-3 p-3 rounded-lg border border-border bg-card"
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            ))
+                  {item.product_image ? (
+                    <img
+                      src={item.product_image}
+                      alt={item.product_name}
+                      className="h-16 w-16 rounded object-cover bg-muted flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="h-16 w-16 rounded bg-muted flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium line-clamp-2">{item.product_name}</p>
+                    {(item.size || item.colour) && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {[item.size, item.colour].filter(Boolean).join(" • ")}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="inline-flex items-center border border-border rounded-md">
+                        <button
+                          onClick={() => updateQuantity(idx, item.quantity - 1)}
+                          aria-label="Decrease quantity"
+                          className="h-7 w-7 flex items-center justify-center hover:bg-muted"
+                        >
+                          <Minus className="h-3 w-3" />
+                        </button>
+                        <span className="px-2 text-xs font-medium w-6 text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(idx, item.quantity + 1)}
+                          aria-label="Increase quantity"
+                          className="h-7 w-7 flex items-center justify-center hover:bg-muted"
+                        >
+                          <Plus className="h-3 w-3" />
+                        </button>
+                      </div>
+                      {item.price != null && (
+                        <span className="text-sm font-semibold text-gold">
+                          {formatINR(item.price * item.quantity)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeFromCart(idx)}
+                    aria-label="Remove"
+                    className="text-muted-foreground hover:text-destructive p-1 self-start"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+              <Textarea
+                placeholder="Add a note (size preference, customisation, occasion…)"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={2}
+                className="text-sm resize-none"
+              />
+            </>
           )}
         </div>
 
         {items.length > 0 && (
-          <div className="border-t border-border px-5 py-4 space-y-3 bg-background">
-            <Textarea
-              placeholder="Add a note (size preference, customisation, occasion…)"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={2}
-              className="text-sm resize-none"
-            />
+          <div className="border-t border-border px-5 py-4 space-y-3 bg-background flex-shrink-0">
 
             {/* Breakdown */}
             <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-1.5 text-sm">

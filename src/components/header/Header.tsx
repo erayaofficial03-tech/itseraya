@@ -236,26 +236,6 @@ const Header = () => {
                   <p className="text-[11px] font-semibold tracking-[0.28em] uppercase text-[hsl(var(--champagne))] mt-6 mb-1">
                     Info
                   </p>
-                  {showInstallButton && (
-                    <button
-                      onClick={handleInstall}
-                      className={`${drawerLinkClass} w-full text-left`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <Download className="h-4 w-4 text-gold" />
-                        Install Eraya App
-                      </span>
-                      <span
-                        className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full shrink-0 ${
-                          isIOS
-                            ? "bg-[#F0F0F0] text-[#555]"
-                            : "bg-[#E8F5E9] text-[#2E7D32]"
-                        }`}
-                      >
-                        {isIOS ? "iPhone" : "Android"}
-                      </span>
-                    </button>
-                  )}
                   <Link to="/about" onClick={closeMenu} className={drawerLinkClass}>
                     <span>About Eraya</span>
                   </Link>

@@ -1,7 +1,9 @@
 import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, Pencil, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useProductRatings } from "@/hooks/useProductRatings";
 import { useAuth } from "@/hooks/useAuth";
 import { useWishlist, useToggleWishlist } from "@/hooks/useWishlist";
@@ -15,6 +17,7 @@ import {
 import { useCartContext } from "@/components/providers/CartProvider";
 import SafeImage from "@/components/ui/SafeImage";
 import StarRating from "@/components/eraya/StarRating";
+import { QUICK_EDIT_EVENT } from "@/components/admin/QuickEditProductDrawer";
 
 interface Props {
   product: Product;
@@ -25,11 +28,6 @@ interface Props {
   priority?: boolean;
 }
 
-/**
- * Pick the first matching admin-defined label for this product.
- * Labels come from public.product_labels (managed in /admin/tags).
- * A product matches a label when its `tags` array includes the label's slug.
- */
 const pickLabel = (tags: string[] = [], labels: ProductLabel[] = []) => {
   const normalized = tags.map((t) => t.trim().toLowerCase());
   for (const l of labels) {
@@ -54,8 +52,9 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
   const { data: ratings = {} } = useProductRatings();
   const { data: labels = [] } = useProductLabels();
   const { addToCart } = useCartContext();
-  const { user } = useAuth();
+  const { user, isStaff } = useAuth();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const { data: wishlistItems = [] } = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const isSaved = wishlistItems.some((w) => w.product_id === product.id);
@@ -71,6 +70,28 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
   const current = product.discounted_price ?? product.original_price;
   const rating = ratings[product.id];
   const label = showLabel ? pickLabel(product.tags, labels) : null;
+  const isVisible = product.is_visible !== false;
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.dispatchEvent(
+      new CustomEvent(QUICK_EDIT_EVENT, { detail: { productId: product.id } }),
+    );
+  };
+
+  const handleToggleVisibility = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const next = !isVisible;
+    const { error } = await supabase
+      .from("products")
+      .update({ is_visible: next })
+      .eq("id", product.id);
+    if (error) { toast.error(error.message); return; }
+    qc.invalidateQueries({ queryKey: ["products"] });
+    toast.success(next ? "Now visible to customers" : "Hidden from customers");
+  };
 
   return (
     <Link
@@ -99,6 +120,13 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             );
           })()}
 
+          {/* Hidden overlay (staff only — customers never see hidden products) */}
+          {isStaff && !isVisible && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/55 text-ivory text-xs tracking-[0.18em] uppercase font-body z-[5]">
+              Hidden
+            </div>
+          )}
+
           {/* Micro-label */}
           {label && (
             <span
@@ -110,44 +138,74 @@ const ProductCard = ({ product, showLabel = true, priority = false }: Props) => 
             </span>
           )}
 
-          {/* Wishlist (Heart) */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (!user) {
-                requireLogin("Sign in to save favourites");
-                return;
-              }
-              toggleWishlist.mutate({ productId: product.id, isSaved });
-            }}
-            aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
-            title={isSaved ? "Remove from wishlist" : "Save for later"}
-            className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-90"
-          >
-            <Heart
-              className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-charcoal"}`}
-              strokeWidth={1.8}
-            />
-          </button>
+          {isStaff ? (
+            <>
+              {/* Quick edit (Pencil) */}
+              <button
+                onClick={handleEdit}
+                aria-label="Quick edit product"
+                title="Quick edit"
+                className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-90 z-10"
+              >
+                <Pencil className="h-4 w-4 text-charcoal" strokeWidth={1.8} />
+              </button>
 
-          {/* Add to Cart */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (!user) {
-                requireLogin("Sign in to add to cart");
-                return;
-              }
-              void addToCart(product);
-            }}
-            aria-label="Add to cart"
-            title="Add to Cart"
-            className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center transition-transform active:scale-90 shadow-soft z-10"
-          >
-            <Plus className="h-4 w-4" strokeWidth={2.5} />
-          </button>
+              {/* Visibility toggle (Eye / EyeOff) */}
+              <button
+                onClick={handleToggleVisibility}
+                aria-label={isVisible ? "Hide from customers" : "Show to customers"}
+                title={isVisible ? "Hide from customers" : "Show to customers"}
+                className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/95 text-ink flex items-center justify-center transition-transform active:scale-90 shadow-soft z-10"
+              >
+                {isVisible ? (
+                  <Eye className="h-4 w-4" strokeWidth={2} />
+                ) : (
+                  <EyeOff className="h-4 w-4" strokeWidth={2} />
+                )}
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Wishlist (Heart) */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (!user) {
+                    requireLogin("Sign in to save favourites");
+                    return;
+                  }
+                  toggleWishlist.mutate({ productId: product.id, isSaved });
+                }}
+                aria-label={isSaved ? "Remove from wishlist" : "Save to wishlist"}
+                title={isSaved ? "Remove from wishlist" : "Save for later"}
+                className="absolute top-2.5 right-2.5 md:top-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-soft transition-all active:scale-90"
+              >
+                <Heart
+                  className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-charcoal"}`}
+                  strokeWidth={1.8}
+                />
+              </button>
+
+              {/* Add to Cart */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (!user) {
+                    requireLogin("Sign in to add to cart");
+                    return;
+                  }
+                  void addToCart(product);
+                }}
+                aria-label="Add to cart"
+                title="Add to Cart"
+                className="absolute bottom-2.5 right-2.5 md:bottom-3 md:right-3 h-10 w-10 md:h-9 md:w-9 rounded-full bg-champagne text-ink flex items-center justify-center transition-transform active:scale-90 shadow-soft z-10"
+              >
+                <Plus className="h-4 w-4" strokeWidth={2.5} />
+              </button>
+            </>
+          )}
         </div>
 
 

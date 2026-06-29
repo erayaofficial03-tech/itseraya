@@ -13,6 +13,7 @@ import { Trash2, Pencil, Plus } from "lucide-react";
 import { useCategories, type Category } from "@/lib/queries";
 import { confirm } from "@/components/ui/confirm-dialog";
 import { uploadImage } from "@/lib/upload";
+import ImageEditorSheet from "@/components/admin/ImageEditorSheet";
 
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 

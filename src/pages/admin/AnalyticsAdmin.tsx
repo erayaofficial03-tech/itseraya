@@ -79,7 +79,7 @@ const AnalyticsAdmin = () => {
     setLoading(true);
     (async () => {
       const [
-        vRes, wRes, eRes, eiRes, oRes, oiRes, iRes, bcRes, biRes, bRes, sRes, wlRes,
+        vRes, wRes, eRes, eiRes, oRes, oiRes, bcRes, biRes, bRes, sRes, wlRes,
       ] = await Promise.all([
         supabase.from("product_views").select("viewed_at, product_id, session_id, user_id").gte("viewed_at", startISO),
         supabase.from("whatsapp_clicks").select("clicked_at, source, product_id").gte("clicked_at", startISO),
@@ -87,7 +87,6 @@ const AnalyticsAdmin = () => {
         supabase.from("enquiry_items").select("product_id, product_name").gte("created_at", startISO),
         supabase.from("orders").select("created_at").gte("created_at", startISO),
         supabase.from("order_items").select("product_id, product_name, quantity").gte("created_at", startISO),
-        supabase.from("install_events").select("occurred_at, event_type, platform").gte("occurred_at", startISO),
         supabase.from("banner_clicks").select("banner_id").gte("clicked_at", startISO),
         supabase.from("banner_impressions").select("banner_id").gte("viewed_at", startISO),
         supabase.from("banners").select("id, title"),
@@ -101,7 +100,6 @@ const AnalyticsAdmin = () => {
       setEnquiryItems((eiRes.data || []) as any);
       setOrders((oRes.data || []) as any);
       setOrderItems((oiRes.data || []) as any);
-      setInstalls((iRes.data || []) as any);
       setBannerClicks((bcRes.data || []) as any);
       setBannerImps((biRes.data || []) as any);
       const bm: Record<string, string> = {};
